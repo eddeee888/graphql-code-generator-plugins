@@ -1,0 +1,30 @@
+{
+  "name": "typescript-resolver-files",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/typescript-resolver-files/src",
+  "projectType": "library",
+  "targets": {
+    "graphql-codegen": {
+      "executor": "@eddeee888/nx-graphql-code-generator:codegen",
+      "options": {
+        "configFile": "packages/typescript-resolver-files-e2e/codegen.yml",
+        "watch": false
+      },
+      "configurations": {
+        "watch": {
+          "watch": true
+        }
+      },
+      "dependsOn": ["^build"]
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/typescript-resolver-files/**/*.ts"]
+      }
+    }
+  },
+  "implicitDependencies": ["typescript-resolver-files"],
+  "tags": []
+}

@@ -1,0 +1,20 @@
+{
+  "extends": ["config:base", "github>whitesource/merge-confidence:beta"],
+  "branchConcurrentLimit": 3,
+  "ignoreDeps": [
+    "@types/jest",
+    "@typescript-eslint/eslint-plugin",
+    "@typescript-eslint/parser",
+    "babel-jest",
+    "eslint",
+    "eslint-config-prettier",
+    "jest",
+    "prettier",
+    "ts-jest",
+    "ts-node",
+    "typescript"
+  ],
+  "patch": {
+    "enabled": false
+  }
+}

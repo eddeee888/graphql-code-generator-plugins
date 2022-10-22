@@ -1,0 +1,20 @@
+# https://www.graphql-code-generator.com/docs/config-reference/codegen-config
+overwrite: true
+schema: packages/typescript-resolver-files-e2e/**/*.graphqls
+generates:
+  packages/typescript-resolver-files-e2e/src/graphql/types.generated.ts:
+    plugins:
+      - typescript
+      - typescript-resolvers
+    config:
+      nonOptionalTypename: true
+      namingConvention:
+        enumValues: change-case#upperCase
+      useIndexSignature: true
+      enumsAsTypes: true
+      scalars:
+        DateTime: string
+
+  packages/typescript-resolver-files-e2e/src/graphql/resolvers:
+    plugins:
+      - ./dist/packages/typescript-resolver-files/src/index.js
