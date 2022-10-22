@@ -1,0 +1,35 @@
+{
+  "name": "typescript-resolver-files",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/typescript-resolver-files/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/typescript-resolver-files",
+        "tsConfig": "packages/typescript-resolver-files/tsconfig.lib.json",
+        "packageJson": "packages/typescript-resolver-files/package.json",
+        "main": "packages/typescript-resolver-files/src/index.ts",
+        "assets": ["packages/typescript-resolver-files/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/typescript-resolver-files/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/typescript-resolver-files/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

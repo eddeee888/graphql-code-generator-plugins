@@ -8,7 +8,11 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@eddeee888/nx-graphql-code-generator": "0.0.14",
+    "@graphql-codegen/cli": "2.13.7",
     "@graphql-codegen/plugin-helpers": "2.7.1",
+    "@graphql-codegen/typescript": "2.7.5",
+    "@graphql-codegen/typescript-resolvers": "2.7.5",
     "@nrwl/cli": "15.0.1",
     "@nrwl/eslint-plugin-nx": "15.0.1",
     "@nrwl/jest": "15.0.1",
@@ -22,6 +26,7 @@
     "@typescript-eslint/parser": "^5.36.1",
     "eslint": "~8.15.0",
     "eslint-config-prettier": "8.1.0",
+    "graphql": "16.6.0",
     "jest": "28.1.1",
     "jest-environment-jsdom": "28.1.1",
     "nx": "15.0.1",
