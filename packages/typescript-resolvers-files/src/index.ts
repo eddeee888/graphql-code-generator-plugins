@@ -1,1 +1,3 @@
-export * from './lib/typescript-resolvers-files';
+import { plugin } from './plugin';
+
+export default { plugin };
