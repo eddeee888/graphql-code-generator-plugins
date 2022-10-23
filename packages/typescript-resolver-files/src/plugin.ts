@@ -1,6 +1,6 @@
 import { PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { mkdir, writeFile } from 'fs/promises';
-import type { GraphQLObjectType } from 'graphql';
+import { GraphQLObjectType, isObjectType } from 'graphql';
 import * as path from 'path';
 
 interface PluginConfig {
@@ -18,7 +18,7 @@ interface Result {
 
 export const plugin: PluginFunction<PluginConfig> = async (
   schema,
-  documents,
+  _documents,
   config,
   info
 ) => {
@@ -35,35 +35,32 @@ export const plugin: PluginFunction<PluginConfig> = async (
     files: {},
   };
 
-  // Handle Query fields
-  parseRootGraphQLType(
-    {
-      baseOutputDir,
-      completeResolverTypesPath,
-      objectType: schema.getQueryType(),
-    },
-    result
-  );
+  // DEBUG
+  result.files['packages/typescript-resolver-files-e2e/src/graphql/test.json'] =
+    { content: '' };
 
-  // Handle Mutation fields
-  parseRootGraphQLType(
-    {
-      baseOutputDir,
-      completeResolverTypesPath,
-      objectType: schema.getMutationType(),
-    },
-    result
-  );
-
-  // Handle Subscription fields
-  parseRootGraphQLType(
-    {
-      baseOutputDir,
-      completeResolverTypesPath,
-      objectType: schema.getSubscriptionType(),
-    },
-    result
-  );
+  //Handle all other types
+  Object.entries(schema.getTypeMap())
+    .filter(([schemaType]) => !schemaType.startsWith('__')) // There are a few internal types with `__` prefixes. We don't want them.
+    .forEach(([schemaType, namedType]) => {
+      if (isObjectType(namedType)) {
+        const params: ParseObjectTypeParams = {
+          baseOutputDir,
+          completeResolverTypesPath,
+          objectType: namedType,
+        };
+        switch (schemaType) {
+          case 'Query':
+          case 'Mutation':
+          case 'Subscription':
+            parseRootObjectType(params, result);
+            break;
+          default:
+            parseObjectType(params, result);
+            break;
+        }
+      }
+    });
 
   // Write dirs and files
   await Promise.all(
@@ -79,23 +76,21 @@ export const plugin: PluginFunction<PluginConfig> = async (
 };
 
 /* GraphQL stuff */
-type ParseRootGraphQLType = (
-  params: {
-    baseOutputDir: string;
-    completeResolverTypesPath: string;
-    objectType?: GraphQLObjectType | null;
-  },
-  result: Result
-) => void;
-const parseRootGraphQLType: ParseRootGraphQLType = (
+interface ParseObjectTypeParams {
+  baseOutputDir: string;
+  completeResolverTypesPath: string;
+  objectType?: GraphQLObjectType | null;
+}
+type ParseObjectType = (params: ParseObjectTypeParams, result: Result) => void;
+const parseRootObjectType: ParseObjectType = (
   { objectType, baseOutputDir, completeResolverTypesPath },
   result
 ) => {
-  if (!objectType) {
+  if (!objectType || !isRootObjectType(objectType.name)) {
     return;
   }
 
-  const typeName = objectType.name; // Query, Mutation, Subscription
+  const typeName = objectType.name;
   const fields = objectType.getFields();
   const outputDir = path.join(baseOutputDir, typeName);
 
@@ -109,7 +104,7 @@ const parseRootGraphQLType: ParseRootGraphQLType = (
       );
     }
 
-    const relativePathToResolverTypes = path.relative(
+    const relativePathToResolverTypes = relativeModulePath(
       outputDir,
       completeResolverTypesPath
     );
@@ -119,17 +114,66 @@ const parseRootGraphQLType: ParseRootGraphQLType = (
       content: `import type { ${resolverTypeName} } from '${printImportModule(
         relativePathToResolverTypes
       )}';
-        export const ${fieldName}: ${resolverTypeName}['${fieldName}'] = async (_parent, _arg, _ctx) => {
-          /* Implement ${typeName}.${fieldName} logic here */
-        };`,
+      export const ${fieldName}: ${resolverTypeName}['${fieldName}'] = async (_parent, _arg, _ctx) => {
+        /* Implement ${typeName}.${fieldName} resolver logic here */
+      };`,
     };
   });
 };
 
-/* File Utils */
+const parseObjectType: ParseObjectType = (
+  { objectType, baseOutputDir, completeResolverTypesPath },
+  result
+) => {
+  if (!objectType || isRootObjectType(objectType.name)) {
+    return;
+  }
+
+  const typeName = objectType.name;
+  const fieldFilePath = path.join(baseOutputDir, `${typeName}.ts`);
+  if (result.files[fieldFilePath]) {
+    throw new Error(
+      `Unexpected duplication in field filename. Type: ${typeName}, file: ${fieldFilePath}`
+    );
+  }
+
+  const relativePathToResolverTypes = relativeModulePath(
+    baseOutputDir,
+    completeResolverTypesPath
+  );
+  const resolverTypeName = `${typeName}Resolvers`; // Generated type from typescript-resolvers plugin
+
+  result.files[fieldFilePath] = {
+    content: `import type { ${resolverTypeName} } from '${printImportModule(
+      relativePathToResolverTypes
+    )}';
+      export const ${typeName}: ${resolverTypeName} = { 
+        /* Implement ${typeName} resolver logic here */ 
+      };`,
+  };
+};
+
+/* Utils */
 const printImportModule = (moduleName: string) => {
   if (moduleName.endsWith('.ts')) {
     return moduleName.split('.').slice(0, -1).join('.');
   }
   return moduleName;
+};
+
+const isRootObjectType = (
+  typeName: string
+): typeName is 'Query' | 'Mutation' | 'Subscription' =>
+  typeName === 'Query' ||
+  typeName === 'Mutation' ||
+  typeName === 'Subscription';
+
+const relativeModulePath = (from: string, to: string) => {
+  const rawPath = path.relative(from, to);
+
+  if (!rawPath.startsWith('../') || !rawPath.startsWith('./')) {
+    return `./${rawPath}`;
+  }
+
+  return rawPath;
 };
