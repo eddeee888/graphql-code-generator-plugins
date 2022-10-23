@@ -77,10 +77,8 @@ export const fixExistingResolvers = (result: RunResult) => {
 
     // Overwrite existing files with fixes
     result.files[normalisedRelativePath] = {
-      __filetype: 'resolver',
+      ...file,
       content: sourceFile.getText(),
-      mainImportIdentifier: file.mainImportIdentifier,
-      meta: file.meta,
     };
   });
 };

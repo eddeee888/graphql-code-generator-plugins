@@ -1,6 +1,8 @@
 extend type Query {
   topicById(id: ID!): TopicByIdPayload!
-  topicsCreatedByUser(input: TopicsCreatedByUserInput!): TopicsCreatedByUserPayload!
+  topicsCreatedByUser(
+    input: TopicsCreatedByUserInput!
+  ): TopicsCreatedByUserPayload!
 }
 
 extend type Mutation {

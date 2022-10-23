@@ -1,9 +1,20 @@
 {
-  "name": "typescript-resolver-files",
+  "name": "typescript-resolver-files-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/typescript-resolver-files/src",
+  "sourceRoot": "packages/typescript-resolver-files-e2e/src",
   "projectType": "library",
   "targets": {
+    "e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx graphql-codegen typescript-resolver-files-e2e",
+          "nx format:write",
+          "packages/typescript-resolver-files-e2e/bin/assert-e2e.sh"
+        ],
+        "parallel": false
+      }
+    },
     "graphql-codegen": {
       "executor": "@eddeee888/nx-graphql-code-generator:codegen",
       "options": {
