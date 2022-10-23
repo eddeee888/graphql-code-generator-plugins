@@ -1,53 +1,22 @@
-import { GraphQLSchema, isObjectType, isUnionType } from 'graphql';
-import type { RunResult } from '../types';
+import { isObjectType, isUnionType } from 'graphql';
+import type { RunConfig, RunResult } from '../types';
+import { isRootObjectType } from '../utils';
 import { handleGraphQLRootObjectType } from './handleGraphQLRootObjectType';
 import { handleGraphQLObjectType } from './handleGraphQLObjectType';
 import { handleGraphQLUninionType } from './handleGraphQLUninionType';
 import { addResolversIndexFile } from './addResolversIndexFile';
 import { fixExistingResolvers } from './fixExistingResolvers';
 
-interface RunParams {
-  schema: GraphQLSchema;
-  baseOutputDir: string;
-  resolverTypesPath: string;
-}
-export const run = (
-  { schema, baseOutputDir, resolverTypesPath }: RunParams,
-  result: RunResult
-): void => {
-  Object.entries(schema.getTypeMap())
+export const run = (config: RunConfig, result: RunResult): void => {
+  Object.entries(config.schema.getTypeMap())
     .filter(([schemaType]) => !schemaType.startsWith('__')) // There are a few internal types with `__` prefixes. We don't want them.
     .forEach(([schemaType, namedType]) => {
-      if (isObjectType(namedType)) {
-        switch (schemaType) {
-          case 'Query':
-          case 'Mutation':
-          case 'Subscription':
-            handleGraphQLRootObjectType(
-              {
-                baseOutputDir,
-                resolverTypesPath,
-                type: namedType,
-              },
-              result
-            );
-            break;
-          default:
-            handleGraphQLObjectType(
-              {
-                baseOutputDir,
-                resolverTypesPath,
-                type: namedType,
-              },
-              result
-            );
-            break;
-        }
+      if (isObjectType(namedType) && isRootObjectType(schemaType)) {
+        handleGraphQLRootObjectType(namedType, config, result);
+      } else if (isObjectType(namedType) && !isRootObjectType(schemaType)) {
+        handleGraphQLObjectType(namedType, config, result);
       } else if (isUnionType(namedType)) {
-        handleGraphQLUninionType(
-          { baseOutputDir, resolverTypesPath, type: namedType },
-          result
-        );
+        handleGraphQLUninionType(namedType, config, result);
       }
     });
 
@@ -55,5 +24,5 @@ export const run = (
   fixExistingResolvers(result);
 
   // Put all resolvers into a barrel file
-  addResolversIndexFile({ baseOutputDir, resolverTypesPath }, result);
+  addResolversIndexFile(config, result);
 };

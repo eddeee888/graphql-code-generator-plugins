@@ -4,7 +4,8 @@ import type { HandleGraphQLType } from '../types';
 import { printImportModule, relativeModulePath } from '../utils';
 
 export const handleGraphQLUninionType: HandleGraphQLType<GraphQLUnionType> = (
-  { baseOutputDir, resolverTypesPath, type },
+  type,
+  { baseOutputDir, resolverTypesPath },
   result
 ) => {
   const typeName = type.name;

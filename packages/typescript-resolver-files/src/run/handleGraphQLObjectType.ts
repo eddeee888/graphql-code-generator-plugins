@@ -1,42 +1,34 @@
 import * as path from 'path';
 import type { GraphQLObjectType } from 'graphql';
 import type { HandleGraphQLType } from '../types';
-import {
-  isRootObjectType,
-  printImportModule,
-  relativeModulePath,
-} from '../utils';
+import { printImportModule, relativeModulePath } from '../utils';
 
 export const handleGraphQLObjectType: HandleGraphQLType<GraphQLObjectType> = (
-  { type, baseOutputDir, resolverTypesPath },
+  type,
+  { baseOutputDir, resolverTypesPath },
   result
 ) => {
-  if (isRootObjectType(type.name)) {
-    return;
-  }
-
-  const typeName = type.name;
-  const fieldFilePath = path.join(baseOutputDir, `${typeName}.ts`);
+  const fieldFilePath = path.join(baseOutputDir, `${type.name}.ts`);
   if (result.files[fieldFilePath]) {
     throw new Error(
-      `Unexpected duplication in field filename. Type: ${typeName}, file: ${fieldFilePath}`
+      `Unexpected duplication in field filename. Type: ${type.name}, file: ${fieldFilePath}`
     );
   }
 
-  const resolverTypeName = `${typeName}Resolvers`; // Generated type from typescript-resolvers plugin
+  const resolverTypeName = `${type.name}Resolvers`; // Generated type from typescript-resolvers plugin
   const relativePathToResolverTypes = relativeModulePath(
     baseOutputDir,
     resolverTypesPath
   );
   const pathToResolverModule = printImportModule(relativePathToResolverTypes);
-  const resolverVariableStatement = `export const ${typeName}: ${resolverTypeName} = { 
-  /* Implement ${typeName} resolver logic here */ 
+  const resolverVariableStatement = `export const ${type.name}: ${resolverTypeName} = { 
+  /* Implement ${type.name} resolver logic here */ 
 };`;
   result.files[fieldFilePath] = {
     __filetype: 'resolver',
     content: `import type { ${resolverTypeName} } from '${pathToResolverModule}';
     ${resolverVariableStatement}`,
-    mainImportIdentifier: typeName,
+    mainImportIdentifier: type.name,
     meta: {
       belongsToRootObject: null,
       resolverVariableStatement,

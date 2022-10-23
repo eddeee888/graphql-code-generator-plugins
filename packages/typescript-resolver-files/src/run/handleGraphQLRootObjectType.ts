@@ -9,7 +9,7 @@ import {
 
 export const handleGraphQLRootObjectType: HandleGraphQLType<
   GraphQLObjectType
-> = ({ type, baseOutputDir, resolverTypesPath }, result) => {
+> = (type, { baseOutputDir, resolverTypesPath }, result) => {
   const typeName = type.name;
   if (!isRootObjectType(typeName)) {
     return;
