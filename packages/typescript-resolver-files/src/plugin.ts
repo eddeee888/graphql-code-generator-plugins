@@ -1,5 +1,7 @@
 import { PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { existsSync } from 'fs';
 import { mkdir, writeFile } from 'fs/promises';
+import { Project } from 'ts-morph';
 import {
   GraphQLObjectType,
   GraphQLUnionType,
@@ -19,13 +21,13 @@ interface BaseVirtualFile {
 }
 interface VirtualFile extends BaseVirtualFile {
   __filetype: 'file';
-  content: string;
 }
 
 interface ResolverFile extends BaseVirtualFile {
   __filetype: 'resolver';
   meta: {
     belongsToRootObject: RootObjectType | null;
+    resolverVariableStatement: string;
   };
 }
 
@@ -94,6 +96,85 @@ export const plugin: PluginFunction<PluginConfig> = async (
       }
     });
 
+  // Check to see which resolver file exists already
+  const existingResolverFiles = Object.entries(result.files).reduce<
+    Record<string, ResolverFile>
+  >((res, [filePath, file]) => {
+    if (existsSync(filePath) && file.__filetype === 'resolver') {
+      res[filePath] = file;
+    }
+    return res;
+  }, {});
+
+  const project = new Project();
+  project.addSourceFilesAtPaths(Object.keys(existingResolverFiles));
+  const sourceFiles = project.getSourceFiles();
+  sourceFiles.forEach((sourceFile) => {
+    const normalisedRelativePath = path.relative(
+      process.cwd(),
+      sourceFile.getFilePath()
+    );
+    const file = existingResolverFiles[normalisedRelativePath];
+    if (!file) {
+      throw new Error(
+        `Unable to find resolver file: ${normalisedRelativePath}`
+      );
+    }
+
+    // TODO: Check missing import
+    // Check expected identifier
+    let isExpectedIdentifierExportedInVariableStatement = false;
+    const variableStatementWithExpectedIdentifier =
+      sourceFile.getVariableStatement((statement) => {
+        let hasExpectedIdentifier = false;
+        statement
+          .getDeclarationList()
+          .getDeclarations()
+          .forEach((declarationNode) => {
+            if (declarationNode.getName() === file.mainImportIdentifier) {
+              hasExpectedIdentifier = true;
+              if (statement.isExported()) {
+                isExpectedIdentifierExportedInVariableStatement = true;
+              }
+            }
+          });
+
+        if (!hasExpectedIdentifier) {
+          return false;
+        }
+        return true;
+      });
+
+    // Did not find variable statement with expected identifier, add it to the end with a warning
+    if (!variableStatementWithExpectedIdentifier) {
+      sourceFile.addStatements(
+        '/* WARNING: The following resolver was missing from this file. Make sure it is properly implemented or there could be runtime errors. */'
+      );
+      sourceFile.addStatements(file.meta.resolverVariableStatement);
+    } else if (
+      variableStatementWithExpectedIdentifier &&
+      !isExpectedIdentifierExportedInVariableStatement
+    ) {
+      // If has identifier but not exported
+      // Add export keyword to statement
+      const isExpectedIdentifierExported = Boolean(
+        sourceFile.getExportedDeclarations().get(file.mainImportIdentifier)
+      );
+      if (!isExpectedIdentifierExported) {
+        variableStatementWithExpectedIdentifier.setIsExported(true);
+      }
+      // else, if identifier's been exported do nothing
+    }
+
+    // Overwrite existing files with fixes if needed
+    result.files[normalisedRelativePath] = {
+      __filetype: 'resolver',
+      content: sourceFile.getText(),
+      mainImportIdentifier: file.mainImportIdentifier,
+      meta: file.meta,
+    };
+  });
+
   // Put all resolvers into a barrel file
   addResolversIndexFile({ baseOutputDir, resolverTypesPath }, result);
 
@@ -149,15 +230,19 @@ const parseRootObjectType: ParseGraphQLType<GraphQLObjectType> = (
       resolverTypesPath
     );
     const pathToResolverModule = printImportModule(relativePathToResolverTypes);
+    const resolverVariableStatement = `export const ${fieldName}: ${resolverTypeName}['${fieldName}'] = async (_parent, _arg, _ctx) => {
+      /* Implement ${typeName}.${fieldName} resolver logic here */
+    };`;
 
     result.files[fieldFilePath] = {
       __filetype: 'resolver',
       content: `import type { ${resolverTypeName} } from '${pathToResolverModule}';
-      export const ${fieldName}: ${resolverTypeName}['${fieldName}'] = async (_parent, _arg, _ctx) => {
-        /* Implement ${typeName}.${fieldName} resolver logic here */
-      };`,
+      ${resolverVariableStatement}`,
       mainImportIdentifier: fieldName,
-      meta: { belongsToRootObject: typeName },
+      meta: {
+        belongsToRootObject: typeName,
+        resolverVariableStatement,
+      },
     };
   });
 };
@@ -184,15 +269,18 @@ const parseObjectType: ParseGraphQLType<GraphQLObjectType> = (
     resolverTypesPath
   );
   const pathToResolverModule = printImportModule(relativePathToResolverTypes);
-
+  const resolverVariableStatement = `export const ${typeName}: ${resolverTypeName} = { 
+  /* Implement ${typeName} resolver logic here */ 
+};`;
   result.files[fieldFilePath] = {
     __filetype: 'resolver',
     content: `import type { ${resolverTypeName} } from '${pathToResolverModule}';
-      export const ${typeName}: ${resolverTypeName} = { 
-        /* Implement ${typeName} resolver logic here */ 
-      };`,
+    ${resolverVariableStatement}`,
     mainImportIdentifier: typeName,
-    meta: { belongsToRootObject: null },
+    meta: {
+      belongsToRootObject: null,
+      resolverVariableStatement,
+    },
   };
 };
 
@@ -214,13 +302,16 @@ const parseUnionType: ParseGraphQLType<GraphQLUnionType> = (
     resolverTypesPath
   );
   const pathToResolverModule = printImportModule(relativePathToResolverTypes);
-
+  const resolverVariableStatement = `export const ${typeName}: ${resolverTypeName} = { __resolveType: (parent) => parent.__typename };`;
   result.files[fieldFilePath] = {
     __filetype: 'resolver',
     content: `import type { ${resolverTypeName} } from '${pathToResolverModule}';
-    export const ${typeName}: ${resolverTypeName} = { __resolveType: (parent) => parent.__typename };`,
+    ${resolverVariableStatement}`,
     mainImportIdentifier: typeName,
-    meta: { belongsToRootObject: null },
+    meta: {
+      belongsToRootObject: null,
+      resolverVariableStatement,
+    },
   };
 };
 
