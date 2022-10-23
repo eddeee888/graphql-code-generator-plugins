@@ -12,13 +12,26 @@ interface PluginConfig {
   resolverTypesPath: string;
 }
 
-interface File {
+interface BaseVirtualFile {
+  __filetype: string;
   content: string;
+  mainImportIdentifier: string;
+}
+interface VirtualFile extends BaseVirtualFile {
+  __filetype: 'file';
+  content: string;
+}
+
+interface ResolverFile extends BaseVirtualFile {
+  __filetype: 'resolver';
+  meta: {
+    belongsToRootObject: RootObjectType | null;
+  };
 }
 
 interface Result {
   dirs: string[];
-  files: Record<string, File>;
+  files: Record<string, VirtualFile | ResolverFile>;
 }
 
 export const plugin: PluginFunction<PluginConfig> = async (
@@ -43,10 +56,6 @@ export const plugin: PluginFunction<PluginConfig> = async (
     dirs: [],
     files: {},
   };
-
-  // DEBUG
-  result.files['packages/typescript-resolver-files-e2e/src/graphql/test.json'] =
-    { content: '' };
 
   // Handle GraphQL types
   Object.entries(schema.getTypeMap())
@@ -85,6 +94,9 @@ export const plugin: PluginFunction<PluginConfig> = async (
       }
     });
 
+  // Put all resolvers into a barrel file
+  addResolversIndexFile({ baseOutputDir, resolverTypesPath }, result);
+
   // Write dirs and files
   await Promise.all(
     result.dirs.map(async (dir) => await mkdir(dir, { recursive: true }))
@@ -113,11 +125,11 @@ const parseRootObjectType: ParseGraphQLType<GraphQLObjectType> = (
   { type, baseOutputDir, resolverTypesPath },
   result
 ) => {
-  if (!isRootObjectType(type.name)) {
+  const typeName = type.name;
+  if (!isRootObjectType(typeName)) {
     return;
   }
 
-  const typeName = type.name;
   const fields = type.getFields();
   const outputDir = path.join(baseOutputDir, typeName);
 
@@ -139,10 +151,13 @@ const parseRootObjectType: ParseGraphQLType<GraphQLObjectType> = (
     const pathToResolverModule = printImportModule(relativePathToResolverTypes);
 
     result.files[fieldFilePath] = {
+      __filetype: 'resolver',
       content: `import type { ${resolverTypeName} } from '${pathToResolverModule}';
       export const ${fieldName}: ${resolverTypeName}['${fieldName}'] = async (_parent, _arg, _ctx) => {
         /* Implement ${typeName}.${fieldName} resolver logic here */
       };`,
+      mainImportIdentifier: fieldName,
+      meta: { belongsToRootObject: typeName },
     };
   });
 };
@@ -171,10 +186,13 @@ const parseObjectType: ParseGraphQLType<GraphQLObjectType> = (
   const pathToResolverModule = printImportModule(relativePathToResolverTypes);
 
   result.files[fieldFilePath] = {
+    __filetype: 'resolver',
     content: `import type { ${resolverTypeName} } from '${pathToResolverModule}';
       export const ${typeName}: ${resolverTypeName} = { 
         /* Implement ${typeName} resolver logic here */ 
       };`,
+    mainImportIdentifier: typeName,
+    meta: { belongsToRootObject: null },
   };
 };
 
@@ -198,8 +216,106 @@ const parseUnionType: ParseGraphQLType<GraphQLUnionType> = (
   const pathToResolverModule = printImportModule(relativePathToResolverTypes);
 
   result.files[fieldFilePath] = {
+    __filetype: 'resolver',
     content: `import type { ${resolverTypeName} } from '${pathToResolverModule}';
     export const ${typeName}: ${resolverTypeName} = { __resolveType: (parent) => parent.__typename };`,
+    mainImportIdentifier: typeName,
+    meta: { belongsToRootObject: null },
+  };
+};
+
+interface AddResolversIndexFileParams {
+  baseOutputDir: string;
+  resolverTypesPath: string;
+}
+const addResolversIndexFile = (
+  { baseOutputDir, resolverTypesPath }: AddResolversIndexFileParams,
+  result: Result
+): void => {
+  const filename = path.join(baseOutputDir, 'index.ts');
+
+  const relativePathToResolverTypes = relativeModulePath(
+    baseOutputDir,
+    resolverTypesPath
+  );
+  const pathToResolverModule = printImportModule(relativePathToResolverTypes);
+
+  const resolversDetails = Object.entries(result.files).reduce<{
+    importLines: string[];
+    queryFields: string[];
+    mutationFields: string[];
+    subscriptionFields: string[];
+    objectTypes: string[];
+  }>(
+    (res, [filepath, file]) => {
+      if (file.__filetype === 'file') {
+        return res;
+      }
+
+      const pathToModule = printImportModule(
+        relativeModulePath(baseOutputDir, filepath)
+      );
+      res.importLines.push(
+        `import { ${file.mainImportIdentifier} } from '${pathToModule}'`
+      );
+
+      if (!file.meta.belongsToRootObject) {
+        res.objectTypes.push(file.mainImportIdentifier);
+        return res;
+      }
+      const rootObjectMap: Record<RootObjectType, () => void> = {
+        Query: () => res.queryFields.push(file.mainImportIdentifier),
+        Mutation: () => res.mutationFields.push(file.mainImportIdentifier),
+        Subscription: () =>
+          res.subscriptionFields.push(file.mainImportIdentifier),
+      };
+      rootObjectMap[file.meta.belongsToRootObject]();
+
+      return res;
+    },
+    {
+      importLines: [],
+      queryFields: [],
+      mutationFields: [],
+      subscriptionFields: [],
+      objectTypes: [],
+    }
+  );
+
+  const resolversIdentifier = 'resolvers';
+  const resolversTypeName = 'Resolvers'; // Generated type from typescript-resolvers plugin
+
+  const queries =
+    resolversDetails.queryFields.length > 0
+      ? `Query: { ${resolversDetails.queryFields
+          .map((field) => field)
+          .join(',\n')} },`
+      : '';
+  const mutations =
+    resolversDetails.mutationFields.length > 0
+      ? `Mutation: { ${resolversDetails.mutationFields
+          .map((field) => field)
+          .join(',\n')} },`
+      : '';
+  const suscriptions =
+    resolversDetails.subscriptionFields.length > 0
+      ? `Subscription: { ${resolversDetails.subscriptionFields
+          .map((field) => field)
+          .join(',\n')} },`
+      : '';
+
+  result.files[filename] = {
+    __filetype: 'file',
+    content: `/* This file was automatically generated. DO NOT UPDATE MANUALLY. */
+    import type { ${resolversTypeName} } from '${pathToResolverModule}';
+    ${resolversDetails.importLines.map((line) => line).join(';\n')}
+    export const ${resolversIdentifier}: ${resolversTypeName} = {
+      ${queries}
+      ${mutations}
+      ${suscriptions}
+      ${resolversDetails.objectTypes.map((type) => type).join(',\n')}
+    }`,
+    mainImportIdentifier: 'resolvers',
   };
 };
 
@@ -211,9 +327,8 @@ const printImportModule = (moduleName: string) => {
   return moduleName;
 };
 
-const isRootObjectType = (
-  typeName: string
-): typeName is 'Query' | 'Mutation' | 'Subscription' =>
+type RootObjectType = 'Query' | 'Mutation' | 'Subscription';
+const isRootObjectType = (typeName: string): typeName is RootObjectType =>
   typeName === 'Query' ||
   typeName === 'Mutation' ||
   typeName === 'Subscription';
