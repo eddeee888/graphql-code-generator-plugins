@@ -1,3 +1,3 @@
 # @eddeee888/gcg-typescript-resolver-files
 
-This GraphQL Code Generator plugin creates resolvers given GraphQL schema.
+This [GraphQL Code Generator](https://www.the-guild.dev/graphql/codegen) plugin creates resolvers given GraphQL schema.

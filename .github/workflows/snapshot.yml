@@ -1,4 +1,4 @@
-name: snapshot
+name: Release snapshot
 
 on:
   issue_comment:
@@ -65,6 +65,7 @@ jobs:
 
       - name: Deploy snapshot
         run: |
+          ls
           yarn changeset version --snapshot pr${{ github.event.issue.number }}
           yarn nx run-many --target=build
           yarn changeset publish --tag pr${{ github.event.issue.number }} --no-git-tag
