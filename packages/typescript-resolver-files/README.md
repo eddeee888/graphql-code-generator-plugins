@@ -1,11 +1,3 @@
 # @eddeee888/gcg-typescript-resolver-files
 
-This library was generated with [Nx](https://nx.dev).
-
-## Running unit tests
-
-Run `nx test typescript-resolver-files` to execute the unit tests via [Jest](https://jestjs.io).
-
-## Running lint
-
-Run `nx lint typescript-resolver-files` to execute the lint via [ESLint](https://eslint.org/).
+This GraphQL Code Generator library creates resolvers given GraphQL schema.
