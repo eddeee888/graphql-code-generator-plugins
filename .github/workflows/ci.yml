@@ -11,7 +11,7 @@ env:
 jobs:
   precheck:
     name: Check jobs to run
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     outputs:
       affected-typescript-resolver-files: ${{ steps.affected.outputs.typescript-resolver-files }}
     steps:
@@ -42,7 +42,7 @@ jobs:
 
   typescript-resolver-files:
     name:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     needs: precheck
     if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' }}
     steps:
@@ -67,7 +67,7 @@ jobs:
 
   typescript-resolver-files-e2e:
     name:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     needs: precheck
     if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' }}
     steps:
