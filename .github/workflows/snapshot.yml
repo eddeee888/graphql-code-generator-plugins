@@ -10,12 +10,12 @@ env:
   node-version: '16.x'
 
 jobs:
-  deploy-check:
+  release-check:
     runs-on: ubuntu-22.04
+    outputs:
+      triggered: ${{ steps.check.outputs.triggered }}
     steps:
       - name: Acknowledge deployment request to commenter
-        outputs:
-          triggered: ${{ steps.check.outputs.triggered }}
         id: check
         uses: khan/pull-request-comment-trigger@v1.1.0
         with:
@@ -38,8 +38,8 @@ jobs:
 
   deploy:
     runs-on: ubuntu-22.04
-    needs: deploy-check
-    if: needs.deploy-check.outputs.triggered == 'true'
+    needs: release-check
+    if: needs.release-check.outputs.triggered == 'true'
     steps:
       - name: Get Pull Request ref
         id: get_pull_request_ref
