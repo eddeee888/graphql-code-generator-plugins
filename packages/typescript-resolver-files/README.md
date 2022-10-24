@@ -1,4 +1,4 @@
-# typescript-resolver-files
+# @eddeee888/gcg-typescript-resolver-files
 
 This library was generated with [Nx](https://nx.dev).
 

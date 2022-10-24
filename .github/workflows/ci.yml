@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches-ignore:
+      - master
+
+env:
+  node-version: '16.x'
+
+jobs:
+  precheck:
+    name: Check jobs to run
+    runs-on: ubuntu-22.04
+    outputs:
+      affected-typescript-resolver-files: ${{ steps.affected.outputs.typescript-resolver-files }}
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node-version }}
+          cache: yarn
+          cache-dependency-path: '**/yarn.lock'
+
+      - name: Install deps
+        run: yarn install --prefer-offline
+
+      - name: Check affected projects
+        id: affected
+        run: |
+          echo "::set-output name=typescript-resolver-files::$(./ops/bin/check-affected.sh libs typescript-resolver-files origin/master)"
+
+  typescript-resolver-files:
+    name:
+    runs-on: ubuntu-22.04
+    needs: precheck
+    if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node-version }}
+          cache: yarn
+          cache-dependency-path: '**/yarn.lock'
+
+      - name: Install deps
+        run: yarn install --prefer-offline
+
+      - name: Lint
+        run: yarn nx lint typescript-resolver-files
+
+      - name: Build
+        run: yarn nx build typescript-resolver-files
+
+  typescript-resolver-files-e2e:
+    name:
+    runs-on: ubuntu-22.04
+    needs: precheck
+    if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node-version }}
+          cache: yarn
+          cache-dependency-path: '**/yarn.lock'
+
+      - name: Install deps
+        run: yarn install --prefer-offline
+
+      - name: e2e
+        run: yarn nx e2e typescript-resolver-files-e2e
