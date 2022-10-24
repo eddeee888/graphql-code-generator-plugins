@@ -12,7 +12,9 @@
         "tsConfig": "packages/typescript-resolver-files/tsconfig.lib.json",
         "packageJson": "packages/typescript-resolver-files/package.json",
         "main": "packages/typescript-resolver-files/src/index.ts",
-        "assets": ["packages/typescript-resolver-files/*.md"]
+        "assets": ["packages/typescript-resolver-files/*.md"],
+        "clean": true,
+        "updateBuildableProjectDepsInPackageJson": false
       }
     },
     "lint": {
