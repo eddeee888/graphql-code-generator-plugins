@@ -5,6 +5,9 @@ on:
     branches-ignore:
       - master
 
+env:
+  node-version: '16.x'
+
 jobs:
   precheck:
     name: Check jobs to run
