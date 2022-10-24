@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Acknowledge deployment request to commenter
+        outputs:
+          triggered: ${{ steps.check.outputs.triggered }}
         id: check
         uses: khan/pull-request-comment-trigger@v1.1.0
         with:
@@ -33,11 +35,6 @@ jobs:
           fi
         env:
           AUTHOR_ASSOCIATION: ${{ github.event.comment.author_association }}
-      - name: check outputs
-        run: echo ${{ steps.check.outputs.triggered }}
-
-    outputs:
-      triggered: ${{ steps.check.outputs.triggered }}
 
   deploy:
     runs-on: ubuntu-22.04
