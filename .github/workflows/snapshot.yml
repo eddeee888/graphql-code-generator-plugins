@@ -33,6 +33,11 @@ jobs:
           fi
         env:
           AUTHOR_ASSOCIATION: ${{ github.event.comment.author_association }}
+      - name: check outputs
+        run: echo ${{ steps.check.outputs.triggered }}
+
+    outputs:
+      triggered: ${{ steps.check.outputs.triggered }}
 
   deploy:
     runs-on: ubuntu-22.04
