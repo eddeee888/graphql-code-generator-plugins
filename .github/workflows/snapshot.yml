@@ -15,14 +15,13 @@ jobs:
     steps:
       - name: Acknowledge deployment request to commenter
         id: check
-        uses: khan/pull-request-comment-trigger@master
+        uses: khan/pull-request-comment-trigger@v1.1.0
         with:
           trigger: '/snapshot'
           reaction: rocket
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
-      - name: validate user
-        id: validate_user
+      - name: Validate user
         if: ${{ steps.check.outputs.triggered == 'true' }}
         run: |
           if [[ "${AUTHOR_ASSOCIATION}" != 'OWNER' ]]
@@ -34,34 +33,14 @@ jobs:
           fi
         env:
           AUTHOR_ASSOCIATION: ${{ github.event.comment.author_association }}
-      - name: check outputs
-        run: echo ${{ steps.check.outputs.triggered }}
-
-    outputs:
-      triggered: ${{ steps.check.outputs.triggered }}
-      comment_body: ${{ github.event.comment.body }}
 
   deploy:
     runs-on: ubuntu-22.04
     needs: deploy-check
     if: needs.deploy-check.outputs.triggered == 'true'
     steps:
-      - name: Get pull request ref
-        id: get_pull_request_ref
-        uses: octokit/request-action@v2.1.0
-        with:
-          route: GET /repos/{owner}/{repository}/pulls/{issue_id}
-          owner: ${{ github.repository_owner }}
-          repository: ${{ github.event.repository.name }}
-          issue_id: ${{ github.event.issue.number }}
-        env:
-          GITHUB_TOKEN: ${{ env.github-token }}
-
       - name: Check out repository
         uses: actions/checkout@v3
-        with:
-          persist-credentials: true
-          repository: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.repo.full_name }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
