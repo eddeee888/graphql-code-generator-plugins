@@ -1,8 +1,13 @@
 import * as path from 'path';
-import { PluginFunction } from '@graphql-codegen/plugin-helpers';
+import {
+  PluginFunction,
+  PluginValidateFn,
+} from '@graphql-codegen/plugin-helpers';
 import { mkdir, writeFile } from 'fs/promises';
 import { run } from './run';
 import { RunResult } from './types';
+
+const pluginName = '@eddeee888/gcg-typescript-resolver-files';
 
 interface PluginConfig {
   resolverTypesPath: string;
@@ -43,4 +48,19 @@ export const plugin: PluginFunction<PluginConfig> = async (
   );
 
   return { content: '' };
+};
+
+interface RawPluginConfig {
+  resolverTypesPath?: string;
+}
+export const validate: PluginValidateFn<RawPluginConfig> = async (
+  _schema,
+  _documents,
+  config
+) => {
+  if (!config.resolverTypesPath) {
+    throw new Error(
+      `Validation Error - ${pluginName} - config.resolverTypesPath is required`
+    );
+  }
 };
