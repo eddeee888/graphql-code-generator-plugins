@@ -8,7 +8,8 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "nx graphql-codegen typescript-resolver-files-e2e",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-standard",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-modules",
           "nx format:write",
           "packages/typescript-resolver-files-e2e/bin/assert-e2e.sh"
         ],
@@ -17,13 +18,13 @@
     },
     "graphql-codegen": {
       "executor": "@eddeee888/nx-graphql-code-generator:codegen",
-      "options": {
-        "configFile": "packages/typescript-resolver-files-e2e/codegen.yml",
-        "watch": false
-      },
+      "options": {},
       "configurations": {
-        "watch": {
-          "watch": true
+        "test-standard": {
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-standard/codegen.yml"
+        },
+        "test-modules": {
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-modules/codegen.yml"
         }
       },
       "dependsOn": ["^build"]
