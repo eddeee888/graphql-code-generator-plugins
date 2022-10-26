@@ -6,21 +6,27 @@ import {
   printImportModule,
   relativeModulePath,
 } from '../utils';
+import { getPathToLocation } from './getPathToLocation';
 
 export const handleGraphQLRootObjectType: HandleGraphQLType<
-  GraphQLObjectType
-> = (type, { baseOutputDir, resolverTypesPath }, result) => {
+  GraphQLObjectType,
+  undefined
+> = ({ type }, runConfig, result) => {
   const typeName = type.name;
   if (!isRootObjectType(typeName)) {
     return;
   }
 
   const fields = type.getFields();
-  const outputDir = path.join(baseOutputDir, typeName);
 
-  result.dirs.push(outputDir);
+  Object.entries(fields).forEach(([fieldName, fieldNode]) => {
+    const outputDirWithoutRootType = getPathToLocation(
+      runConfig,
+      fieldNode.astNode?.loc
+    );
+    const outputDir = path.join(outputDirWithoutRootType, typeName);
+    result.dirs.push(outputDir);
 
-  Object.keys(fields).forEach((fieldName) => {
     const fieldFilePath = path.join(outputDir, `${fieldName}.ts`);
     if (result.files[fieldFilePath]) {
       throw new Error(
@@ -31,7 +37,7 @@ export const handleGraphQLRootObjectType: HandleGraphQLType<
     const resolverTypeName = `${typeName}Resolvers`; // Generated type from typescript-resolvers plugin
     const relativePathToResolverTypes = relativeModulePath(
       outputDir,
-      resolverTypesPath
+      runConfig.resolverTypesPath
     );
     const pathToResolverModule = printImportModule(relativePathToResolverTypes);
     const resolverVariableStatement = `export const ${fieldName}: ${resolverTypeName}['${fieldName}'] = async (_parent, _arg, _ctx) => {

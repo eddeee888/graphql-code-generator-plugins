@@ -5,15 +5,20 @@ import { printImportModule, relativeModulePath } from '../utils';
 interface AddResolversIndexFileParams {
   baseOutputDir: string;
   resolverTypesPath: string;
+  mainFile: string;
 }
 export const addResolversIndexFile = (
-  { baseOutputDir, resolverTypesPath }: AddResolversIndexFileParams,
+  { baseOutputDir, resolverTypesPath, mainFile }: AddResolversIndexFileParams,
   result: RunResult
 ): void => {
-  const filename = path.join(baseOutputDir, 'index.ts');
+  const filename = path.join(baseOutputDir, mainFile.split('/').join(path.sep));
+  const outputDir = path.dirname(filename);
+
+  // Make sure to create target dir to main file, in case mainFile is a path!
+  result.dirs.push(outputDir);
 
   const relativePathToResolverTypes = relativeModulePath(
-    baseOutputDir,
+    outputDir,
     resolverTypesPath
   );
   const pathToResolverModule = printImportModule(relativePathToResolverTypes);
@@ -31,7 +36,7 @@ export const addResolversIndexFile = (
       }
 
       const pathToModule = printImportModule(
-        relativeModulePath(baseOutputDir, filepath)
+        relativeModulePath(outputDir, filepath)
       );
       res.importLines.push(
         `import { ${file.mainImportIdentifier} } from '${pathToModule}'`

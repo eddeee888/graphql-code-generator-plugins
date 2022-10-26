@@ -4,20 +4,22 @@ import type { HandleGraphQLType } from '../types';
 import { printImportModule, relativeModulePath } from '../utils';
 
 export const handleGraphQLObjectType: HandleGraphQLType<GraphQLObjectType> = (
-  type,
-  { baseOutputDir, resolverTypesPath },
+  { type, outputDir },
+  { resolverTypesPath },
   result
 ) => {
-  const fieldFilePath = path.join(baseOutputDir, `${type.name}.ts`);
+  const fieldFilePath = path.join(outputDir, `${type.name}.ts`);
   if (result.files[fieldFilePath]) {
     throw new Error(
       `Unexpected duplication in field filename. Type: ${type.name}, file: ${fieldFilePath}`
     );
   }
 
+  result.dirs.push(outputDir);
+
   const resolverTypeName = `${type.name}Resolvers`; // Generated type from typescript-resolvers plugin
   const relativePathToResolverTypes = relativeModulePath(
-    baseOutputDir,
+    outputDir,
     resolverTypesPath
   );
   const pathToResolverModule = printImportModule(relativePathToResolverTypes);

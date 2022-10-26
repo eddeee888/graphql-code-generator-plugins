@@ -1,5 +1,6 @@
 import * as path from 'path';
-import type { RootObjectType } from './types';
+import type { Source } from '@graphql-tools/utils';
+import type { RootObjectType, SourcesMap } from './types';
 
 export const printImportModule = (moduleName: string) => {
   if (moduleName.endsWith('.ts')) {
@@ -24,3 +25,25 @@ export const relativeModulePath = (from: string, to: string) => {
 
   return rawPath;
 };
+
+export function parseSources(sources: Source[]): SourcesMap {
+  const sourcesMap: SourcesMap = {};
+
+  sources.forEach((source) => {
+    if (!source.location) {
+      throw new Error('Missing source location');
+    }
+
+    const [moduleName] = path
+      .dirname(source.location)
+      .split(path.sep)
+      .slice(-1);
+
+    sourcesMap[source.location] = {
+      source,
+      moduleName,
+    };
+  });
+
+  return sourcesMap;
+}
