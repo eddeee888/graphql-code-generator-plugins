@@ -1,6 +1,8 @@
 # https://www.graphql-code-generator.com/docs/config-reference/codegen-config
 overwrite: true
-schema: packages/typescript-resolver-files-e2e/src/test-standard/**/*.graphqls
+schema:
+  - packages/typescript-resolver-files-e2e/src/test-standard/**/*.graphqls
+  - packages/typescript-resolver-files-e2e/src/test-standard/**/*.graphqls.ts
 generates:
   packages/typescript-resolver-files-e2e/src/test-standard/resolvers/types.generated.ts:
     plugins:
@@ -18,5 +20,6 @@ generates:
   packages/typescript-resolver-files-e2e/src/test-standard/resolvers:
     config:
       resolverTypesPath: ./types.generated.ts
+      mode: merged
     plugins:
       - ./dist/packages/typescript-resolver-files/src/index.js
