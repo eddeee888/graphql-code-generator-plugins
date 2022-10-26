@@ -36,7 +36,7 @@ jobs:
         env:
           AUTHOR_ASSOCIATION: ${{ github.event.comment.author_association }}
 
-  deploy:
+  release:
     runs-on: ubuntu-22.04
     needs: release-check
     if: needs.release-check.outputs.triggered == 'true'
@@ -76,7 +76,6 @@ jobs:
 
       - name: Deploy snapshot
         run: |
-          ls
           yarn changeset version --snapshot pr${{ github.event.issue.number }}
           yarn nx run-many --target=build
           yarn changeset publish --tag pr${{ github.event.issue.number }} --no-git-tag
