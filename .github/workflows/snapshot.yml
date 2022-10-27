@@ -47,7 +47,7 @@ jobs:
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
           issue_number: ${{ github.event.issue.number }}
-          body: '❌ Access Denied'
+          body: '❌ No permission to release snapshot'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
