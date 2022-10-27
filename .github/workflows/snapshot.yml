@@ -52,14 +52,12 @@ jobs:
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
-      - name: DEBUG - check repo ref
-        run: echo ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
-
       - name: Check out repository
         uses: actions/checkout@v3
         with:
           persist-credentials: true
           repository: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.repo.full_name }}
+          ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
