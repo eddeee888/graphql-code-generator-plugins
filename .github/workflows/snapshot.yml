@@ -76,8 +76,9 @@ jobs:
 
       - name: Deploy snapshot
         run: |
-          yarn changeset version --snapshot pr${{ github.event.issue.number }}
+          yarn changeset version --snapshot $RELEASE_TAG
           yarn nx run-many --target=build
-          yarn changeset publish --tag pr${{ github.event.issue.number }} --no-git-tag
+          yarn changeset publish --tag $RELEASE_TAG --no-git-tag
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
+          RELEASE_TAG: pr${{ github.event.issue.number }}-run${{ github.run_number }}-${{ github.run_attempt }}
