@@ -9,12 +9,14 @@ import { RunResult } from './types';
 import { parseSources } from './utils';
 
 const pluginName = '@eddeee888/gcg-typescript-resolver-files';
+const configDefaultMode = 'modules';
 
 interface PluginConfig {
   resolverTypesPath: string;
   relativeTargetDir?: string;
   mainFile?: string;
   mode?: 'merged' | 'modules';
+  whitelistedModules?: string[];
 }
 
 export const plugin: PluginFunction<PluginConfig> = async (
@@ -41,7 +43,8 @@ export const plugin: PluginFunction<PluginConfig> = async (
     resolverTypesPath: relativeResolverTypesPathFromBaseOutputDir,
     relativeTargetDir = '',
     mainFile = 'index.ts',
-    mode = 'modules',
+    mode = configDefaultMode,
+    whitelistedModules = [],
   } = config;
 
   const resolverTypesPath = path.join(
@@ -86,31 +89,41 @@ interface RawPluginConfig {
   relativeTargetDir?: string;
   mainFile?: string;
   mode?: string;
+  whitelistedModules?: string[];
 }
 export const validate: PluginValidateFn<RawPluginConfig> = async (
   _schema,
   _documents,
-  config
+  { resolverTypesPath, mainFile, mode = configDefaultMode, whitelistedModules }
 ) => {
-  if (!config.resolverTypesPath) {
+  if (!resolverTypesPath) {
     throw new Error(
       `Validation Error - ${pluginName} - config.resolverTypesPath is required`
     );
   }
 
-  if (config.mainFile && path.extname(config.mainFile) === '') {
+  if (mainFile && path.extname(mainFile) === '') {
     throw new Error(
       `Validation Error - ${pluginName} - config.mainFile must be a valid file name`
     );
   }
 
-  if (
-    config.mode !== undefined &&
-    config.mode !== 'merged' &&
-    config.mode !== 'modules'
-  ) {
+  if (mode !== 'merged' && mode !== 'modules') {
     throw new Error(
       `Validation Error - ${pluginName} - config.mode must be "merged" or "modules" (default is "modules")`
     );
+  }
+
+  if (whitelistedModules) {
+    if (!Array.isArray(whitelistedModules)) {
+      throw new Error(
+        `Validation Error - ${pluginName} - config.whitelistedModules must be an array if provided`
+      );
+    }
+    if (mode !== 'modules') {
+      throw new Error(
+        `Validation Error - ${pluginName} - config.whitelistedModules can only be used with config.mode == "modules"`
+      );
+    }
   }
 };
