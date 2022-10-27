@@ -32,7 +32,7 @@ export interface RunConfig {
 }
 
 export interface RunResult {
-  dirs: string[];
+  dirs: Record<string, true>;
   files: Record<string, StandardFile | ResolverFile>;
 }
 

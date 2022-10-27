@@ -25,7 +25,7 @@ export const handleGraphQLRootObjectType: HandleGraphQLType<
       fieldNode.astNode?.loc
     );
     const outputDir = path.join(outputDirWithoutRootType, typeName);
-    result.dirs.push(outputDir);
+    result.dirs[outputDir] = true;
 
     const fieldFilePath = path.join(outputDir, `${fieldName}.ts`);
     if (result.files[fieldFilePath]) {

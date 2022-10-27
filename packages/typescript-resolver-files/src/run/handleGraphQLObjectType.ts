@@ -15,7 +15,7 @@ export const handleGraphQLObjectType: HandleGraphQLType<GraphQLObjectType> = (
     );
   }
 
-  result.dirs.push(outputDir);
+  result.dirs[outputDir] = true;
 
   const resolverTypeName = `${type.name}Resolvers`; // Generated type from typescript-resolvers plugin
   const relativePathToResolverTypes = relativeModulePath(

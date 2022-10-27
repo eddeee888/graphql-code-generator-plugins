@@ -50,7 +50,7 @@ export const plugin: PluginFunction<PluginConfig> = async (
   );
 
   const result: RunResult = {
-    dirs: [], // TODO: make dirs a map
+    dirs: {},
     files: {},
   };
   run(
@@ -68,7 +68,9 @@ export const plugin: PluginFunction<PluginConfig> = async (
 
   // Write dirs and files
   await Promise.all(
-    result.dirs.map(async (dir) => await mkdir(dir, { recursive: true }))
+    Object.keys(result.dirs).map(
+      async (dir) => await mkdir(dir, { recursive: true })
+    )
   );
   await Promise.all(
     Object.entries(result.files).map(

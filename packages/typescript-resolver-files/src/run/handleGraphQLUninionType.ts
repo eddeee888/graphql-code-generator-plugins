@@ -16,7 +16,7 @@ export const handleGraphQLUninionType: HandleGraphQLType<GraphQLUnionType> = (
     );
   }
 
-  result.dirs.push(outputDir);
+  result.dirs[outputDir] = true;
 
   const resolverTypeName = `${typeName}Resolvers`; // Generated type from typescript-resolvers plugin
   const relativePathToResolverTypes = relativeModulePath(
