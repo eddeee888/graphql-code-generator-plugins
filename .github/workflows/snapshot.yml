@@ -85,14 +85,28 @@ jobs:
           GITHUB_TOKEN: ${{ env.github-token }}
           RELEASE_TAG: ${{ env.release-tag }}
 
-      - name: Post comment
+      - name: Report success
+        if: success()
         uses: octokit/request-action@v2.1.0
         with:
           route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
           issue_number: ${{ github.event.issue.number }}
-          body: '🚀 Successfully published packages with tag `$RELEASE_TAG`!'
+          body: '✅ Successfully published package/s with tag `$RELEASE_TAG`!'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ env.release-tag }}
+
+      - name: Report failure
+        if: failure()
+        uses: octokit/request-action@v2.1.0
+        with:
+          route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          issue_number: ${{ github.event.issue.number }}
+          body: '❌ Failed to publish package/s with tag `$RELEASE_TAG`'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ env.release-tag }}
