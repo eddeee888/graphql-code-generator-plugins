@@ -53,7 +53,7 @@ jobs:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
       - name: DEBUG - check repo ref
-        run: echo ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.repo.full_name }}
+        run: echo ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
 
       - name: Check out repository
         uses: actions/checkout@v3
