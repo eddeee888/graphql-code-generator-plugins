@@ -24,6 +24,7 @@ jobs:
           reaction: rocket
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
+
       - name: Validate user
         if: ${{ steps.check.outputs.triggered == 'true' }}
         run: |
@@ -33,9 +34,22 @@ jobs:
             exit 1
           else
             echo "User authorization successful"
+            exit 1
           fi
         env:
           AUTHOR_ASSOCIATION: ${{ github.event.comment.author_association }}
+
+      - name: Report failure
+        if: failure()
+        uses: octokit/request-action@v2.1.0
+        with:
+          route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          issue_number: ${{ github.event.issue.number }}
+          body: '❌ Access Denied'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
     runs-on: ubuntu-22.04
