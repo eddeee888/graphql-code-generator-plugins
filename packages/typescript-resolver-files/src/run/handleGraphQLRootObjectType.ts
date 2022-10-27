@@ -10,7 +10,7 @@ import { getPathToLocation } from './getPathToLocation';
 
 export const handleGraphQLRootObjectType: HandleGraphQLType<
   GraphQLObjectType,
-  undefined
+  null
 > = ({ type }, runConfig, result) => {
   const typeName = type.name;
   if (!isRootObjectType(typeName)) {

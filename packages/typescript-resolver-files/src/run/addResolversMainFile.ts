@@ -2,13 +2,13 @@ import * as path from 'path';
 import type { RootObjectType, RunResult } from '../types';
 import { printImportModule, relativeModulePath } from '../utils';
 
-interface AddResolversIndexFileParams {
+interface AddResolversMainFileParams {
   baseOutputDir: string;
   resolverTypesPath: string;
   mainFile: string;
 }
-export const addResolversIndexFile = (
-  { baseOutputDir, resolverTypesPath, mainFile }: AddResolversIndexFileParams,
+export const addResolversMainFile = (
+  { baseOutputDir, resolverTypesPath, mainFile }: AddResolversMainFileParams,
   result: RunResult
 ): void => {
   const filename = path.join(baseOutputDir, mainFile.split('/').join(path.sep));

@@ -4,7 +4,7 @@ import { isRootObjectType } from '../utils';
 import { handleGraphQLRootObjectType } from './handleGraphQLRootObjectType';
 import { handleGraphQLObjectType } from './handleGraphQLObjectType';
 import { handleGraphQLUninionType } from './handleGraphQLUninionType';
-import { addResolversIndexFile } from './addResolversIndexFile';
+import { addResolversMainFile } from './addResolversMainFile';
 import { fixExistingResolvers } from './fixExistingResolvers';
 import { getPathToLocation } from './getPathToLocation';
 
@@ -22,7 +22,7 @@ export const run = (config: RunConfig, result: RunResult): void => {
 
       if (isObjectType(namedType) && isRootObjectType(schemaType)) {
         handleGraphQLRootObjectType(
-          { type: namedType, outputDir: undefined },
+          { type: namedType, outputDir: null },
           config,
           result
         );
@@ -51,6 +51,6 @@ export const run = (config: RunConfig, result: RunResult): void => {
   // Check to see which resolver file exists already
   fixExistingResolvers(result);
 
-  // Put all resolvers into a barrel file
-  addResolversIndexFile(config, result);
+  // Put all resolvers into a barrel file (or main file)
+  addResolversMainFile(config, result);
 };
