@@ -78,7 +78,6 @@ jobs:
 
       - name: Deploy snapshot
         run: |
-          asdjasdjasdajsd
           yarn changeset version --snapshot $RELEASE_TAG
           yarn nx run-many --target=build
           yarn changeset publish --tag $RELEASE_TAG --no-git-tag
