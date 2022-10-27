@@ -8,6 +8,7 @@ env:
   npm-token: ${{ secrets.NPM_TOKEN }}
   github-token: ${{ secrets.GITHUB_TOKEN }}
   node-version: '16.x'
+  release-tag: pr${{ github.event.issue.number }}-run${{ github.run_number }}-${{ github.run_attempt }}
 
 jobs:
   release-check:
@@ -45,12 +46,12 @@ jobs:
         id: get_pull_request_ref
         uses: octokit/request-action@v2.1.0
         with:
-          route: GET /repos/{owner}/{repository}/pulls/{issue_id}
+          route: GET /repos/{owner}/{repo}/pulls/{issue_number}
           owner: ${{ github.repository_owner }}
-          repository: ${{ github.event.repository.name }}
-          issue_id: ${{ github.event.issue.number }}
+          repo: ${{ github.event.repository.name }}
+          issue_number: ${{ github.event.issue.number }}
         env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check out repository
         uses: actions/checkout@v3
@@ -82,4 +83,16 @@ jobs:
           yarn changeset publish --tag $RELEASE_TAG --no-git-tag
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
-          RELEASE_TAG: pr${{ github.event.issue.number }}-run${{ github.run_number }}-${{ github.run_attempt }}
+          RELEASE_TAG: ${{ env.release-tag }}
+
+      - name: Post comment
+        uses: octokit/request-action@v2.1.0
+        with:
+          route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          issue_number: ${{ github.event.issue.number }}
+          body: '🚀 Successfully published packages with tag `$RELEASE_TAG`!'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ env.release-tag }}
