@@ -1,9 +1,9 @@
 import * as path from 'path';
 import type { GraphQLObjectType } from 'graphql';
-import type { HandleGraphQLType } from '../types';
+import type { GraphQLTypeHandler } from '../types';
 import { printImportModule, relativeModulePath } from '../utils';
 
-export const handleGraphQLObjectType: HandleGraphQLType<GraphQLObjectType> = (
+export const handleGraphQLObjectType: GraphQLTypeHandler<GraphQLObjectType> = (
   { type, outputDir },
   { resolverTypesPath },
   result

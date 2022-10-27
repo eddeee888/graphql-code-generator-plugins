@@ -1,9 +1,9 @@
 import * as path from 'path';
 import type { GraphQLUnionType } from 'graphql';
-import type { HandleGraphQLType } from '../types';
+import type { GraphQLTypeHandler } from '../types';
 import { printImportModule, relativeModulePath } from '../utils';
 
-export const handleGraphQLUninionType: HandleGraphQLType<GraphQLUnionType> = (
+export const handleGraphQLUninionType: GraphQLTypeHandler<GraphQLUnionType> = (
   { type, outputDir },
   { resolverTypesPath },
   result

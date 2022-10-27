@@ -1,14 +1,14 @@
 import * as path from 'path';
 import type { GraphQLObjectType } from 'graphql';
-import type { HandleGraphQLType } from '../types';
+import type { GraphQLTypeHandler } from '../types';
 import {
   isRootObjectType,
   printImportModule,
   relativeModulePath,
 } from '../utils';
-import { getPathToLocation } from './getPathToLocation';
+import { parseLocation } from './parseLocation';
 
-export const handleGraphQLRootObjectType: HandleGraphQLType<
+export const handleGraphQLRootObjectType: GraphQLTypeHandler<
   GraphQLObjectType,
   null
 > = ({ type }, runConfig, result) => {

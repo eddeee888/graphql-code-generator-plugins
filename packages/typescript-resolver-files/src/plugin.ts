@@ -65,6 +65,7 @@ export const plugin: PluginFunction<PluginConfig> = async (
       relativeTargetDir,
       mainFile,
       mode,
+      whitelistedModules,
     },
     result
   );
