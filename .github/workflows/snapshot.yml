@@ -34,7 +34,7 @@ jobs:
             exit 1
           else
             echo "User authorization successful"
-            exit 1
+            exit 0
           fi
         env:
           AUTHOR_ASSOCIATION: ${{ github.event.comment.author_association }}
