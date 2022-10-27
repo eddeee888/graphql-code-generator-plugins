@@ -20,11 +20,12 @@ export const handleGraphQLRootObjectType: GraphQLTypeHandler<
   const fields = type.getFields();
 
   Object.entries(fields).forEach(([fieldName, fieldNode]) => {
-    const outputDirWithoutRootType = getPathToLocation(
-      runConfig,
-      fieldNode.astNode?.loc
-    );
-    const outputDir = path.join(outputDirWithoutRootType, typeName);
+    const locationInfo = parseLocation(runConfig, fieldNode.astNode?.loc);
+    if (!locationInfo.isWhitelisted) {
+      return;
+    }
+
+    const outputDir = path.join(locationInfo.pathToLocation, typeName);
     result.dirs[outputDir] = true;
 
     const fieldFilePath = path.join(outputDir, `${fieldName}.ts`);

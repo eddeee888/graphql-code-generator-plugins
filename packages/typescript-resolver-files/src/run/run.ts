@@ -6,7 +6,7 @@ import { handleGraphQLObjectType } from './handleGraphQLObjectType';
 import { handleGraphQLUninionType } from './handleGraphQLUninionType';
 import { addResolversMainFile } from './addResolversMainFile';
 import { fixExistingResolvers } from './fixExistingResolvers';
-import { getPathToLocation } from './getPathToLocation';
+import { parseLocation } from './parseLocation';
 
 export const run = (config: RunConfig, result: RunResult): void => {
   Object.entries(config.schema.getTypeMap()).forEach(
@@ -27,20 +27,22 @@ export const run = (config: RunConfig, result: RunResult): void => {
           result
         );
       } else if (isObjectType(namedType) && !isRootObjectType(schemaType)) {
+        const localtionInfo = parseLocation(config, namedType.astNode.loc);
+        if (!localtionInfo.isWhitelisted) {
+          return;
+        }
         handleGraphQLObjectType(
-          {
-            type: namedType,
-            outputDir: getPathToLocation(config, namedType.astNode.loc),
-          },
+          { type: namedType, outputDir: localtionInfo.pathToLocation },
           config,
           result
         );
       } else if (isUnionType(namedType)) {
+        const locationInfo = parseLocation(config, namedType.astNode.loc);
+        if (!locationInfo.isWhitelisted) {
+          return;
+        }
         handleGraphQLUninionType(
-          {
-            type: namedType,
-            outputDir: getPathToLocation(config, namedType.astNode.loc),
-          },
+          { type: namedType, outputDir: locationInfo.pathToLocation },
           config,
           result
         );
