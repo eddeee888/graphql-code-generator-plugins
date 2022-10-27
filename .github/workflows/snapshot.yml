@@ -106,7 +106,6 @@ jobs:
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
           issue_number: ${{ github.event.issue.number }}
-          body: '❌ Failed to publish package/s with tag `$RELEASE_TAG`'
+          body: '❌ Failed to publish package/s with tag `${{ env.release-tag }}`'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_TAG: ${{ env.release-tag }}
