@@ -11,7 +11,11 @@ export const parseLocation = (
     relativeTargetDir,
   }: RunConfig,
   location?: Location
-): { location: Location; isWhitelisted: boolean; pathToLocation: string } => {
+): {
+  location: Location;
+  isInWhitelistedModule: boolean;
+  pathToLocation: string;
+} => {
   if (!location) {
     throw new Error('Location is invalid');
   }
@@ -22,7 +26,7 @@ export const parseLocation = (
   if (mode === 'merged') {
     return {
       location,
-      isWhitelisted: true,
+      isInWhitelistedModule: true,
       pathToLocation: path.join(baseOutputDir, relativeTargetDir),
     };
   }
@@ -37,7 +41,7 @@ export const parseLocation = (
 
   return {
     location,
-    isWhitelisted:
+    isInWhitelistedModule:
       // whitelistedModules is empty a.k.a. all are whitelisted
       whitelistedModules.length === 0
         ? true

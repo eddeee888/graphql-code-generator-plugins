@@ -21,7 +21,7 @@ export const handleGraphQLRootObjectType: GraphQLTypeHandler<
 
   Object.entries(fields).forEach(([fieldName, fieldNode]) => {
     const locationInfo = parseLocation(runConfig, fieldNode.astNode?.loc);
-    if (!locationInfo.isWhitelisted) {
+    if (!locationInfo.isInWhitelistedModule) {
       return;
     }
 

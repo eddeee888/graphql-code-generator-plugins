@@ -28,7 +28,7 @@ export const run = (config: RunConfig, result: RunResult): void => {
         );
       } else if (isObjectType(namedType) && !isRootObjectType(schemaType)) {
         const localtionInfo = parseLocation(config, namedType.astNode.loc);
-        if (!localtionInfo.isWhitelisted) {
+        if (!localtionInfo.isInWhitelistedModule) {
           return;
         }
         handleGraphQLObjectType(
@@ -38,7 +38,7 @@ export const run = (config: RunConfig, result: RunResult): void => {
         );
       } else if (isUnionType(namedType)) {
         const locationInfo = parseLocation(config, namedType.astNode.loc);
-        if (!locationInfo.isWhitelisted) {
+        if (!locationInfo.isInWhitelistedModule) {
           return;
         }
         handleGraphQLUninionType(
