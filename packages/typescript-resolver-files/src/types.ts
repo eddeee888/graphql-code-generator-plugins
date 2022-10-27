@@ -1,4 +1,5 @@
 import type { GraphQLSchema } from 'graphql';
+import type { Source } from '@graphql-tools/utils';
 
 interface BaseVirtualFile {
   __filetype: string;
@@ -18,21 +19,27 @@ export interface ResolverFile extends BaseVirtualFile {
   };
 }
 
+export type SourcesMap = Record<string, { source: Source; moduleName: string }>;
+
 export interface RunConfig {
+  schema: GraphQLSchema;
+  sourcesMap: SourcesMap;
   baseOutputDir: string;
   resolverTypesPath: string;
-  schema: GraphQLSchema;
+  relativeTargetDir: string;
+  mainFile: string;
+  mode: 'merged' | 'modules';
 }
 
 export interface RunResult {
-  dirs: string[];
+  dirs: Record<string, true>;
   files: Record<string, StandardFile | ResolverFile>;
 }
 
 export type RootObjectType = 'Query' | 'Mutation' | 'Subscription';
 
-export type HandleGraphQLType<T> = (
-  type: T,
-  params: RunConfig,
+export type HandleGraphQLType<T, O = string> = (
+  params: { type: T; outputDir: O },
+  runConfig: RunConfig,
   result: RunResult
 ) => void;
