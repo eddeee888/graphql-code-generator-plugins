@@ -29,6 +29,7 @@ export interface RunConfig {
   relativeTargetDir: string;
   mainFile: string;
   mode: 'merged' | 'modules';
+  whitelistedModules: string[];
 }
 
 export interface RunResult {
@@ -38,7 +39,7 @@ export interface RunResult {
 
 export type RootObjectType = 'Query' | 'Mutation' | 'Subscription';
 
-export type HandleGraphQLType<T, O = string> = (
+export type GraphQLTypeHandler<T, O = string> = (
   params: { type: T; outputDir: O },
   runConfig: RunConfig,
   result: RunResult

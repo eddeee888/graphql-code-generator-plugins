@@ -1,14 +1,14 @@
 import * as path from 'path';
 import type { GraphQLObjectType } from 'graphql';
-import type { HandleGraphQLType } from '../types';
+import type { GraphQLTypeHandler } from '../types';
 import {
   isRootObjectType,
   printImportModule,
   relativeModulePath,
 } from '../utils';
-import { getPathToLocation } from './getPathToLocation';
+import { parseLocation } from './parseLocation';
 
-export const handleGraphQLRootObjectType: HandleGraphQLType<
+export const handleGraphQLRootObjectType: GraphQLTypeHandler<
   GraphQLObjectType,
   null
 > = ({ type }, runConfig, result) => {
@@ -20,11 +20,12 @@ export const handleGraphQLRootObjectType: HandleGraphQLType<
   const fields = type.getFields();
 
   Object.entries(fields).forEach(([fieldName, fieldNode]) => {
-    const outputDirWithoutRootType = getPathToLocation(
-      runConfig,
-      fieldNode.astNode?.loc
-    );
-    const outputDir = path.join(outputDirWithoutRootType, typeName);
+    const locationInfo = parseLocation(runConfig, fieldNode.astNode?.loc);
+    if (!locationInfo.isInWhitelistedModule) {
+      return;
+    }
+
+    const outputDir = path.join(locationInfo.pathToLocation, typeName);
     result.dirs[outputDir] = true;
 
     const fieldFilePath = path.join(outputDir, `${fieldName}.ts`);

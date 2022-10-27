@@ -10,6 +10,7 @@
         "commands": [
           "nx graphql-codegen typescript-resolver-files-e2e -c test-standard",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-modules",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-whitelisted",
           "nx format:write",
           "packages/typescript-resolver-files-e2e/bin/assert-e2e.sh"
         ],
@@ -25,6 +26,9 @@
         },
         "test-modules": {
           "configFile": "packages/typescript-resolver-files-e2e/src/test-modules/codegen.yml"
+        },
+        "test-whitelisted": {
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-whitelisted/codegen.yml"
         }
       },
       "dependsOn": ["^build"]
