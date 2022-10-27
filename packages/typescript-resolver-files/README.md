@@ -4,6 +4,10 @@ This [GraphQL Code Generator](https://www.the-guild.dev/graphql/codegen) plugin 
 
 This relies on types generated from [@graphql-codegen/typescript-resolvers](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-resolvers) plugin.
 
+```bash
+yarn add -D @eddeee888/gcg-typescript-resolver-files
+```
+
 ## Features
 
 - Follows opinionated folder/file structure with type-safety in mind to help finding query, mutation or object types easily
