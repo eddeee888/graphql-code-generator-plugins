@@ -1,6 +1,6 @@
 {
   "name": "@eddeee888/gcg-typescript-resolver-files",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "^2.7.1",
     "graphql": "^16.6.0",
