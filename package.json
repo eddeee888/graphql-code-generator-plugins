@@ -2,7 +2,9 @@
   "name": "graphql-code-generator-plugins",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "release": "yarn nx run-many --target=build --all && yarn changeset publish"
+  },
   "private": true,
   "dependencies": {
     "tslib": "^2.3.0"

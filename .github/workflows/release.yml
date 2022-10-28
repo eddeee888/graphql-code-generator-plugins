@@ -36,7 +36,7 @@ jobs:
         id: changesets
         uses: changesets/action@v1.3.0
         with:
-          publish: yarn nx run-many --target=build --all && yarn changeset publish
+          publish: yarn release
           commit: 'chore(release): update packages versions'
           title: 'Upcoming Release Changes'
         env:
