@@ -1,0 +1,44 @@
+name: 'Release'
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  npm-token: ${{ secrets.NPM_TOKEN }}
+  github-token: ${{ secrets.GITHUB_TOKEN }}
+  node-version: '16.x'
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node-version }}
+          cache: yarn
+          cache-dependency-path: '**/yarn.lock'
+
+      - name: Install packages
+        run: yarn install --prefer-offline
+
+      - name: Create Release Pull Request or Publish to NPM
+        id: changesets
+        uses: changesets/action@v1.3.0
+        with:
+          publish: yarn nx run-many --target=build --all && yarn changeset publish
+          commit: 'chore(release): update packages versions'
+          title: 'Upcoming Release Changes'
+        env:
+          GITHUB_TOKEN: ${{ env.github-token }}
+          NPM_TOKEN: ${{ env.npm-token }}
