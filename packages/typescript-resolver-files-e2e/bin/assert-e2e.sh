@@ -10,6 +10,7 @@ if [[ `git status --porcelain $output_pattern` ]]; then
   echo -e "\nx> Error!\n"
   echo "=> Following files do not have expected result:"
   git --no-pager diff HEAD --color -- $output_pattern
+  git ls-files --others --exclude-standard
   echo -e "=> Run 'nx e2e typescript-resolver-files-e2e', commit the changes and try again.\n"
   exit 1
 fi
