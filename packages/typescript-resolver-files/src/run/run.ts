@@ -36,31 +36,27 @@ export const run = (config: RunConfig, result: RunResult): void => {
           config,
           result
         );
-      } else if (isObjectType(namedType) && !isRootObjectType(schemaType)) {
-        const localtionInfo = parseLocation(config, namedType.astNode.loc);
-        if (!localtionInfo.isInWhitelistedModule) {
-          return;
-        }
+        return;
+      }
+
+      const locationInfo = parseLocation(config, namedType.astNode.loc);
+      if (!locationInfo.isInWhitelistedModule) {
+        return;
+      }
+
+      if (isObjectType(namedType) && !isRootObjectType(schemaType)) {
         handleGraphQLObjectType(
-          { type: namedType, outputDir: localtionInfo.pathToLocation },
+          { type: namedType, outputDir: locationInfo.pathToLocation },
           config,
           result
         );
       } else if (isUnionType(namedType)) {
-        const locationInfo = parseLocation(config, namedType.astNode.loc);
-        if (!locationInfo.isInWhitelistedModule) {
-          return;
-        }
         handleGraphQLUninionType(
           { type: namedType, outputDir: locationInfo.pathToLocation },
           config,
           result
         );
       } else if (isScalarType(namedType)) {
-        const locationInfo = parseLocation(config, namedType.astNode.loc);
-        if (!locationInfo.isInWhitelistedModule) {
-          return;
-        }
         handleGraphQLScalarType(
           { type: namedType, outputDir: locationInfo.pathToLocation },
           config,
