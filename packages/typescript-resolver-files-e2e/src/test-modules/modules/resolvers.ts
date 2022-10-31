@@ -3,11 +3,13 @@ import type { Resolvers } from './types.generated';
 import { topicCreate } from './topic/resolvers/Mutation/topicCreate';
 import { topicEdit } from './topic/resolvers/Mutation/topicEdit';
 import { PaginationResult } from './base/resolvers/PaginationResult';
+import { Profile } from './user/resolvers/Profile';
 import { me } from './user/resolvers/Query/me';
 import { topicById } from './topic/resolvers/Query/topicById';
 import { topicsCreatedByUser } from './topic/resolvers/Query/topicsCreatedByUser';
 import { userByAccountName } from './user/resolvers/Query/userByAccountName';
 import { StandardError } from './base/resolvers/StandardError';
+import { profileChanges } from './user/resolvers/Subscription/profileChanges';
 import { Topic } from './topic/resolvers/Topic';
 import { TopicByIdPayload } from './topic/resolvers/TopicByIdPayload';
 import { TopicByIdResult } from './topic/resolvers/TopicByIdResult';
@@ -23,8 +25,9 @@ import { UserResult } from './user/resolvers/UserResult';
 export const resolvers: Resolvers = {
   Query: { me, topicById, topicsCreatedByUser, userByAccountName },
   Mutation: { topicCreate, topicEdit },
-
+  Subscription: { profileChanges },
   PaginationResult,
+  Profile,
   StandardError,
   Topic,
   TopicByIdPayload,

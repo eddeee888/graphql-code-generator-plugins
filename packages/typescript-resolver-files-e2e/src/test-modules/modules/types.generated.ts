@@ -64,6 +64,12 @@ export type PaginationResult = {
   totalPageCount: Scalars['Int'];
 };
 
+export type Profile = {
+  __typename?: 'Profile';
+  id: Scalars['ID'];
+  user: User;
+};
+
 export type Query = {
   __typename?: 'Query';
   me: UserPayload;
@@ -87,6 +93,11 @@ export type QueryUserByAccountNameArgs = {
 export type StandardError = Error & {
   __typename?: 'StandardError';
   error: ErrorType;
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  profileChanges: Profile;
 };
 
 export type Topic = {
@@ -278,9 +289,11 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   PaginationInput: PaginationInput;
   PaginationResult: ResolverTypeWrapper<PaginationResult>;
+  Profile: ResolverTypeWrapper<Profile>;
   Query: ResolverTypeWrapper<{}>;
   StandardError: ResolverTypeWrapper<StandardError>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  Subscription: ResolverTypeWrapper<{}>;
   Topic: ResolverTypeWrapper<Topic>;
   TopicByIdPayload:
     | ResolversTypes['StandardError']
@@ -316,9 +329,11 @@ export type ResolversParentTypes = {
   Mutation: {};
   PaginationInput: PaginationInput;
   PaginationResult: PaginationResult;
+  Profile: Profile;
   Query: {};
   StandardError: StandardError;
   String: Scalars['String'];
+  Subscription: {};
   Topic: Topic;
   TopicByIdPayload:
     | ResolversParentTypes['StandardError']
@@ -387,6 +402,15 @@ export type PaginationResultResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ProfileResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type QueryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
@@ -418,6 +442,18 @@ export type StandardErrorResolvers<
 > = {
   error?: Resolver<ResolversTypes['ErrorType'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SubscriptionResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']
+> = {
+  profileChanges?: SubscriptionResolver<
+    ResolversTypes['Profile'],
+    'profileChanges',
+    ParentType,
+    ContextType
+  >;
 };
 
 export type TopicResolvers<
@@ -563,8 +599,10 @@ export type Resolvers<ContextType = any> = {
   Error?: ErrorResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   PaginationResult?: PaginationResultResolvers<ContextType>;
+  Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   StandardError?: StandardErrorResolvers<ContextType>;
+  Subscription?: SubscriptionResolvers<ContextType>;
   Topic?: TopicResolvers<ContextType>;
   TopicByIdPayload?: TopicByIdPayloadResolvers<ContextType>;
   TopicByIdResult?: TopicByIdResultResolvers<ContextType>;
