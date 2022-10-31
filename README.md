@@ -15,5 +15,3 @@ List of [GraphQL Code Generator[https://www.the-guild.dev/graphql/codegen] plugi
 - [ ] Add Scalar handler
 - [ ] Add Interface handler
 - [ ] Resolvers from root object types (`Query`, `Mutation`, `Subscription`) needs to be prefixed with alias to avoid naming spacing issue in `mainFile` (caused by having the same field name)
-- [ ] Add e2e tests for multiple shchema files in one module
-- [ ] Add e2e tests with Subscriptions

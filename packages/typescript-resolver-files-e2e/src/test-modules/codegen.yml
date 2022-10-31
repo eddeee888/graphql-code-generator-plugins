@@ -8,14 +8,6 @@ generates:
     plugins:
       - typescript
       - typescript-resolvers
-    config:
-      nonOptionalTypename: true
-      namingConvention:
-        enumValues: change-case#upperCase
-      useIndexSignature: true
-      enumsAsTypes: true
-      scalars:
-        DateTime: string
 
   packages/typescript-resolver-files-e2e/src/test-modules/modules:
     config:
