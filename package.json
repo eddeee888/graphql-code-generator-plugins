@@ -17,6 +17,7 @@
     "@graphql-codegen/typescript": "2.7.5",
     "@graphql-codegen/typescript-resolvers": "2.7.5",
     "@nrwl/cli": "15.0.1",
+    "@nrwl/devkit": "15.0.1",
     "@nrwl/eslint-plugin-nx": "15.0.1",
     "@nrwl/jest": "15.0.1",
     "@nrwl/js": "15.0.1",

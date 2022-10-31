@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "cli": "nx",
+  "$id": "typescript-resolver-files-add-e2e-test",
+  "type": "object",
+  "properties": {
+    "testName": {
+      "type": "string",
+      "description": "Name of the test (kebab-case)",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    }
+  },
+  "required": ["testName"]
+}
