@@ -17,14 +17,14 @@ export const fixExistingResolvers = (result: RunResult) => {
   project.addSourceFilesAtPaths(Object.keys(existingResolverFiles));
   const sourceFiles = project.getSourceFiles();
   sourceFiles.forEach((sourceFile) => {
-    const normalisedRelativePath = path.relative(
+    const normalizedRelativePath = path.relative(
       process.cwd(),
       sourceFile.getFilePath()
     );
-    const file = existingResolverFiles[normalisedRelativePath];
+    const file = existingResolverFiles[normalizedRelativePath];
     if (!file) {
       throw new Error(
-        `Unable to find resolver file: ${normalisedRelativePath}`
+        `Unable to find resolver file: ${normalizedRelativePath}`
       );
     }
 
@@ -76,7 +76,7 @@ export const fixExistingResolvers = (result: RunResult) => {
     }
 
     // Overwrite existing files with fixes
-    result.files[normalisedRelativePath] = {
+    result.files[normalizedRelativePath] = {
       ...file,
       content: sourceFile.getText(),
     };
