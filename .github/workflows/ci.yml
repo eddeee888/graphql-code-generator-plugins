@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-22.04
     outputs:
       affected-typescript-resolver-files: ${{ steps.affected.outputs.typescript-resolver-files }}
+      affected-typescript-resolver-files-e2e: ${{ steps.affected.outputs.typescript-resolver-files-e2e }}
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.1
@@ -39,6 +40,7 @@ jobs:
         id: affected
         run: |
           echo "::set-output name=typescript-resolver-files::$(./ops/bin/check-affected.sh libs typescript-resolver-files origin/master)"
+          echo "::set-output name=typescript-resolver-files-e2e::$(./ops/bin/check-affected.sh libs typescript-resolver-files-e2e origin/master)"
 
   typescript-resolver-files:
     name:
@@ -69,7 +71,7 @@ jobs:
     name:
     runs-on: ubuntu-22.04
     needs: precheck
-    if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' }}
+    if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' || needs.precheck.outputs.affected-typescript-resolver-files-e2e == 'true' }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
