@@ -7,9 +7,10 @@ import {
 } from 'graphql';
 import type { RunConfig, RunResult } from '../types';
 import { isRootObjectType } from '../utils';
+import { parseLocation } from './parseLocation';
+import { addExternalResolverImport } from './addExternalResolverImport';
 import { addResolversMainFile } from './addResolversMainFile';
 import { fixExistingResolvers } from './fixExistingResolvers';
-import { parseLocation } from './parseLocation';
 import { handleGraphQLRootObjectType } from './handleGraphQLRootObjectType';
 import { handleGraphQLObjectType } from './handleGraphQLObjectType';
 import { handleGraphQLUninionType } from './handleGraphQLUninionType';
@@ -29,11 +30,23 @@ export const run = (config: RunConfig, result: RunResult): void => {
         return;
       }
 
+      //
       // "Visitor" pattern
+      //
+
       if (isObjectType(namedType) && isRootObjectType(schemaType)) {
         handleGraphQLRootObjectType(
           { type: namedType, outputDir: null },
           config,
+          result
+        );
+        return;
+      }
+
+      const configImportSyntax = config.resolverImports[namedType.name];
+      if (configImportSyntax) {
+        addExternalResolverImport(
+          { resolverName: namedType.name, configImportSyntax },
           result
         );
         return;

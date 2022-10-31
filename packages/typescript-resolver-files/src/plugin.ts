@@ -17,6 +17,7 @@ interface PluginConfig {
   mainFile?: string;
   mode?: 'merged' | 'modules';
   whitelistedModules?: string[];
+  resolverImports?: Record<string, string>;
 }
 
 export const plugin: PluginFunction<PluginConfig> = async (
@@ -45,6 +46,7 @@ export const plugin: PluginFunction<PluginConfig> = async (
     mainFile = 'index.ts',
     mode = configDefaultMode,
     whitelistedModules = [],
+    resolverImports = {},
   } = config;
 
   const resolverTypesPath = path.join(
@@ -55,6 +57,7 @@ export const plugin: PluginFunction<PluginConfig> = async (
   const result: RunResult = {
     dirs: {},
     files: {},
+    externalImports: {},
   };
   run(
     {
@@ -66,6 +69,7 @@ export const plugin: PluginFunction<PluginConfig> = async (
       mainFile,
       mode,
       whitelistedModules,
+      resolverImports,
     },
     result
   );
@@ -91,6 +95,7 @@ interface RawPluginConfig {
   mainFile?: string;
   mode?: string;
   whitelistedModules?: string[];
+  resolverImports?: Record<string, string>;
 }
 export const validate: PluginValidateFn<RawPluginConfig> = async (
   _schema,

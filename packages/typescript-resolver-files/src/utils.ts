@@ -1,8 +1,8 @@
 import * as path from 'path';
 import type { Source } from '@graphql-tools/utils';
-import type { RootObjectType, SourcesMap } from './types';
+import type { ImportLineMeta, RootObjectType, SourcesMap } from './types';
 
-export const printImportModule = (moduleName: string) => {
+export const printImportModule = (moduleName: string): string => {
   if (moduleName.endsWith('.ts')) {
     return moduleName.split('.').slice(0, -1).join('.');
   }
@@ -16,14 +16,16 @@ export const isRootObjectType = (
   typeName === 'Mutation' ||
   typeName === 'Subscription';
 
-export const relativeModulePath = (from: string, to: string) => {
+export const relativeModulePath = (from: string, to: string): string => {
   const rawPath = path.relative(from, to);
+  return normalizeRelativePath(rawPath);
+};
 
-  if (!rawPath.startsWith('../') || !rawPath.startsWith('./')) {
-    return `./${rawPath}`;
+export const normalizeRelativePath = (path: string): string => {
+  if (!path.startsWith('../') || !path.startsWith('./')) {
+    return `./${path}`;
   }
-
-  return rawPath;
+  return path;
 };
 
 export function parseSources(sources: Source[]): SourcesMap {
@@ -46,4 +48,20 @@ export function parseSources(sources: Source[]): SourcesMap {
   });
 
   return sourcesMap;
+}
+
+export function printImportLine({
+  isTypeImport,
+  module,
+  namedImports,
+  defaultImport,
+}: ImportLineMeta): string {
+  const typeImportKeyword = isTypeImport ? 'type' : '';
+  const hasDefaultImport = Boolean(defaultImport);
+  const hasNamedImports = namedImports.length > 0;
+  const namedImportsString = `{ ${namedImports.join(',')} }`;
+
+  return `import ${typeImportKeyword} ${defaultImport || ''} ${
+    hasDefaultImport && hasNamedImports ? ',' : ''
+  } ${namedImportsString} from '${module}';`;
 }
