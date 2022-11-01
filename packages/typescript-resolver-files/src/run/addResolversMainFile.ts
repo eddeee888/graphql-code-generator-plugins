@@ -183,4 +183,4 @@ interface ObjectFieldMapping {
 const printObjectMapping = ({
   propertyName,
   identifierName,
-}: ObjectFieldMapping) => `${propertyName}: ${identifierName}`;
+}: ObjectFieldMapping): string => `${propertyName}: ${identifierName}`;

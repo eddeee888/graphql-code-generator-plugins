@@ -24,7 +24,16 @@
     {
       "files": ["*.ts", "*.tsx"],
       "extends": ["plugin:@nrwl/nx/typescript"],
-      "rules": {}
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": [
+          "error",
+          { "allowExpressions": true, "allowTypedFunctionExpressions": true }
+        ],
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+        ]
+      }
     },
     {
       "files": ["*.js", "*.jsx"],
