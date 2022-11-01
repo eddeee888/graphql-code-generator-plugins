@@ -13,5 +13,7 @@ generates:
     config:
       resolverTypesPath: ./types.generated.ts
       mode: merged
+      externalResolvers:
+        DateTime: ~graphql-tags#DateTimeResolver
     plugins:
       - ./dist/packages/typescript-resolver-files/src/index.js

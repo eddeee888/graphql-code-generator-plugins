@@ -20,6 +20,7 @@ import { TopicsCreatedByUserResult } from './TopicsCreatedByUserResult';
 import { User } from './User';
 import { UserPayload } from './UserPayload';
 import { UserResult } from './UserResult';
+import { DateTimeResolver } from 'graphql-tags';
 export const resolvers: Resolvers = {
   Query: {
     me: Query_me,
@@ -46,4 +47,5 @@ export const resolvers: Resolvers = {
   User: User,
   UserPayload: UserPayload,
   UserResult: UserResult,
+  DateTime: DateTimeResolver,
 };
