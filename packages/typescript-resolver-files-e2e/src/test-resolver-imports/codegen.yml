@@ -23,5 +23,7 @@ generates:
         RelativeDefault: scalars/DefaultScalar.ts#default as RelativeDefaultResolver
         RelativeNamedImport: scalars/Scalars.ts#NamedImportResolver
         RelativeNamedImportWithAlias: scalars/Scalars.ts#NamedImportResolver as NamedImportWithAliasResolver
+        Query.me: '~@org/meResolver#default as meResolver'
+        User: 'otherResolvers#User as UserResolver'
     plugins:
       - ./dist/packages/typescript-resolver-files/src/index.js
