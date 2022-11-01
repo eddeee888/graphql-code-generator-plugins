@@ -53,7 +53,7 @@ export const run = (config: RunConfig, result: RunResult): void => {
             addExternalResolverImport(actionData, result);
           },
           generateResolverFile: ({ outputDir }) => {
-            if (isObjectType(namedType) && !isRootObjectType(schemaType)) {
+            if (isObjectType(namedType)) {
               handleGraphQLObjectType(
                 { type: namedType, outputDir },
                 config,
