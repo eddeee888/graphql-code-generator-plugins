@@ -30,7 +30,7 @@ export interface RunConfig {
   mainFile: string;
   mode: 'merged' | 'modules';
   whitelistedModules: string[];
-  resolverImports: Record<string, string>;
+  externalResolvers: Record<string, string>;
 }
 
 export interface RunResult {

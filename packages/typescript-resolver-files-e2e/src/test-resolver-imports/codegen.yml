@@ -14,7 +14,7 @@ generates:
       resolverTypesPath: ./types.generated.ts
       mainFile: resolvers.ts
       relativeTargetDir: resolvers
-      resolverImports:
+      externalResolvers:
         DateTimeNamedImport: ~graphql-scalars#DateTimeNamedResolver
         DateTimeSameNamedImport: ~graphql-scalars#DateTimeSameNamedImportResolver
         BigIntNamedWithAlias: ~graphql-scalars#BigIntResolver as BigIntNamedWithAliasResolver

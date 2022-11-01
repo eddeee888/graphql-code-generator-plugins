@@ -22,7 +22,8 @@ export const matchActionForNormalizedResolverName = (
   matchers: Matchers,
   runConfig: RunConfig
 ): void => {
-  const configImportSyntax = runConfig.resolverImports[normalizedResolverName];
+  const configImportSyntax =
+    runConfig.externalResolvers[normalizedResolverName];
   if (configImportSyntax) {
     matchers['addExternalImport']({
       normalizedResolverName,
