@@ -7,9 +7,9 @@ import {
 } from 'graphql';
 import type { RunConfig, RunResult } from '../types';
 import { normalizeResolverName, isRootObjectType } from '../utils';
-import { parseLocation } from './parseLocation';
 import { addExternalResolverImport } from './addExternalResolverImport';
 import { addResolversMainFile } from './addResolversMainFile';
+import { matchActionForNormalizedResolverName } from './matchActionForNormalizedResolverName';
 import { fixExistingResolvers } from './fixExistingResolvers';
 import { handleGraphQLRootObjectType } from './handleGraphQLRootObjectType';
 import { handleGraphQLObjectType } from './handleGraphQLObjectType';
@@ -43,42 +43,39 @@ export const run = (config: RunConfig, result: RunResult): void => {
         return;
       }
 
-      const configImportSyntax = config.resolverImports[namedType.name];
-      if (configImportSyntax) {
-        addExternalResolverImport(
-          {
-            normalizedResolverName: normalizeResolverName(namedType.name),
-            configImportSyntax,
+      matchActionForNormalizedResolverName(
+        {
+          normalizedResolverName: normalizeResolverName(namedType.name),
+          location: namedType.astNode.loc,
+        },
+        {
+          addExternalImport: (actionData) => {
+            addExternalResolverImport(actionData, result);
           },
-          result
-        );
-        return;
-      }
-
-      const locationInfo = parseLocation(config, namedType.astNode.loc);
-      if (!locationInfo.isInWhitelistedModule) {
-        return;
-      }
-
-      if (isObjectType(namedType) && !isRootObjectType(schemaType)) {
-        handleGraphQLObjectType(
-          { type: namedType, outputDir: locationInfo.pathToLocation },
-          config,
-          result
-        );
-      } else if (isUnionType(namedType)) {
-        handleGraphQLUninionType(
-          { type: namedType, outputDir: locationInfo.pathToLocation },
-          config,
-          result
-        );
-      } else if (isScalarType(namedType)) {
-        handleGraphQLScalarType(
-          { type: namedType, outputDir: locationInfo.pathToLocation },
-          config,
-          result
-        );
-      }
+          generateResolverFile: ({ outputDir }) => {
+            if (isObjectType(namedType) && !isRootObjectType(schemaType)) {
+              handleGraphQLObjectType(
+                { type: namedType, outputDir },
+                config,
+                result
+              );
+            } else if (isUnionType(namedType)) {
+              handleGraphQLUninionType(
+                { type: namedType, outputDir },
+                config,
+                result
+              );
+            } else if (isScalarType(namedType)) {
+              handleGraphQLScalarType(
+                { type: namedType, outputDir },
+                config,
+                result
+              );
+            }
+          },
+        },
+        config
+      );
     }
   );
 

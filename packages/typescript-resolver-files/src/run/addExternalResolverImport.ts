@@ -61,7 +61,7 @@ export const addExternalResolverImport = (
       });
       break;
     default:
-      // importIdentifier is never unless new __type is added
+      // importIdentifier is `never` unless new __type is added
       // i.e. this is here for typesafety
       return importIdentifier;
   }
