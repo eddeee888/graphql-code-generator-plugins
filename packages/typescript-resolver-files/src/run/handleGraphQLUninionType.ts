@@ -1,33 +1,24 @@
-import * as path from 'path';
 import type { GraphQLUnionType } from 'graphql';
 import type { GraphQLTypeHandler } from '../types';
-import { printImportLine, relativeModulePath } from '../utils';
+import { printImportLine } from '../utils';
+import { validateAndPrepareForGraphQLType } from './validateAndPrepareForGraphQLType';
 
 export const handleGraphQLUninionType: GraphQLTypeHandler<GraphQLUnionType> = (
-  { type, outputDir },
-  { resolverTypesPath },
-  result
+  params,
+  runConfig,
+  runResult
 ) => {
-  const typeName = type.name;
-  const fieldFilePath = path.join(outputDir, `${typeName}.ts`);
-  if (result.files[fieldFilePath]) {
-    throw new Error(
-      `Unexpected duplication in field filename. Type: ${typeName}, file: ${fieldFilePath}`
-    );
-  }
-
-  result.dirs[outputDir] = true;
-
-  const resolverTypeName = `${typeName}Resolvers`; // Generated type from typescript-resolvers plugin
+  const { typeName, resolverTypeName, fieldFilePath, relativeModulePath } =
+    validateAndPrepareForGraphQLType(params, runConfig, runResult);
 
   const resolverVariableStatement = `export const ${typeName}: ${resolverTypeName} = { __resolveType: (parent) => parent.__typename };`;
 
-  result.files[fieldFilePath] = {
+  runResult.files[fieldFilePath] = {
     __filetype: 'resolver',
     content: `
     ${printImportLine({
       isTypeImport: true,
-      module: relativeModulePath(outputDir, resolverTypesPath),
+      module: relativeModulePath,
       namedImports: [resolverTypeName],
     })}
     ${resolverVariableStatement}`,
