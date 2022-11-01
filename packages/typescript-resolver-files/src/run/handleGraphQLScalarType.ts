@@ -1,24 +1,15 @@
-import type { GraphQLScalarType } from 'graphql';
 import type { GraphQLTypeHandler } from '../types';
 import { printImportLine } from '../utils';
-import { validateAndPrepareForGraphQLType } from './validateAndPrepareForGraphQLType';
 
 const graphQLScalarType = 'GraphQLScalarType';
 
-export const handleGraphQLScalarType: GraphQLTypeHandler<GraphQLScalarType> = (
-  params,
-  runConfig,
-  runResult
+export const handleGraphQLScalarType: GraphQLTypeHandler = (
+  { resolverName, fieldFilePath },
+  { result }
 ) => {
-  const { typeName, fieldFilePath } = validateAndPrepareForGraphQLType(
-    params,
-    runConfig,
-    runResult
-  );
+  const resolverVariableStatement = `export const ${resolverName}: ${graphQLScalarType} = { /* Implement ${resolverName} scalar logic here */ };`;
 
-  const resolverVariableStatement = `export const ${typeName}: ${graphQLScalarType} = { /* Implement ${typeName} scalar logic here */ };`;
-
-  runResult.files[fieldFilePath] = {
+  result.files[fieldFilePath] = {
     __filetype: 'resolver',
     content: `
     ${printImportLine({

@@ -1,28 +1,22 @@
-import type { GraphQLUnionType } from 'graphql';
 import type { GraphQLTypeHandler } from '../types';
 import { printImportLine } from '../utils';
-import { validateAndPrepareForGraphQLType } from './validateAndPrepareForGraphQLType';
 
-export const handleGraphQLUninionType: GraphQLTypeHandler<GraphQLUnionType> = (
-  params,
-  runConfig,
-  runResult
+export const handleGraphQLUninionType: GraphQLTypeHandler = (
+  { resolverName, resolverType, fieldFilePath, relativeModulePath },
+  { result }
 ) => {
-  const { typeName, resolverTypeName, fieldFilePath, relativeModulePath } =
-    validateAndPrepareForGraphQLType(params, runConfig, runResult);
+  const resolverVariableStatement = `export const ${resolverName}: ${resolverType.type} = { __resolveType: (parent) => parent.__typename };`;
 
-  const resolverVariableStatement = `export const ${typeName}: ${resolverTypeName} = { __resolveType: (parent) => parent.__typename };`;
-
-  runResult.files[fieldFilePath] = {
+  result.files[fieldFilePath] = {
     __filetype: 'resolver',
     content: `
     ${printImportLine({
       isTypeImport: true,
       module: relativeModulePath,
-      namedImports: [resolverTypeName],
+      namedImports: [resolverType.namedImport],
     })}
     ${resolverVariableStatement}`,
-    mainImportIdentifier: typeName,
+    mainImportIdentifier: resolverName,
     meta: {
       belongsToRootObject: null,
       resolverVariableStatement,

@@ -1,23 +1,23 @@
 import {
   isObjectType,
-  isUnionType,
   isIntrospectionType,
   isSpecifiedScalarType,
-  isScalarType,
 } from 'graphql';
-import type { RunConfig, RunResult } from '../types';
-import { normalizeResolverName, isRootObjectType } from '../utils';
-import { addExternalResolverImport } from './addExternalResolverImport';
+import type { GraphQLTypeHandler, RunContext } from '../types';
+import {
+  normalizeResolverName,
+  isRootObjectType,
+  printImportLine,
+} from '../utils';
 import { addResolversMainFile } from './addResolversMainFile';
-import { matchActionForNormalizedResolverName } from './matchActionForNormalizedResolverName';
 import { fixExistingResolvers } from './fixExistingResolvers';
-import { handleGraphQLRootObjectType } from './handleGraphQLRootObjectType';
 import { handleGraphQLObjectType } from './handleGraphQLObjectType';
 import { handleGraphQLUninionType } from './handleGraphQLUninionType';
 import { handleGraphQLScalarType } from './handleGraphQLScalarType';
+import { processNormalizedResolverName } from './processNormalizedResolverName';
 
-export const run = (config: RunConfig, result: RunResult): void => {
-  Object.entries(config.schema.getTypeMap()).forEach(
+export const run = (ctx: RunContext): void => {
+  Object.entries(ctx.config.schema.getTypeMap()).forEach(
     ([schemaType, namedType]) => {
       const isPredefinedScalar = isSpecifiedScalarType(namedType);
       const isIntrospection = isIntrospectionType(namedType);

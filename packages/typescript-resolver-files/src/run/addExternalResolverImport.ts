@@ -1,4 +1,4 @@
-import { RunResult } from '../types';
+import type { RunContext } from '../types';
 import { normalizeRelativePath } from '../utils';
 
 interface AddExternalResolverImportParams {
@@ -16,13 +16,13 @@ interface AddExternalResolverImportParams {
 
 export const addExternalResolverImport = (
   params: AddExternalResolverImportParams,
-  runResult: RunResult
+  { result }: RunContext
 ): void => {
   const { importIdentifier, identifierUsage, moduleImport } =
     getImportLineMetaFromImportSyntax(params);
 
-  runResult.externalImports[moduleImport] =
-    runResult.externalImports[moduleImport] ||
+  result.externalImports[moduleImport] =
+    result.externalImports[moduleImport] ||
     ({
       importLineMeta: {
         isTypeImport: false,
@@ -31,9 +31,9 @@ export const addExternalResolverImport = (
         defaultImport: undefined,
       },
       identifierUsages: [],
-    } as RunResult['externalImports'][number]);
+    } as RunContext['result']['externalImports'][number]);
 
-  const externalImport = runResult.externalImports[moduleImport];
+  const externalImport = result.externalImports[moduleImport];
 
   switch (importIdentifier.__type) {
     case 'default':

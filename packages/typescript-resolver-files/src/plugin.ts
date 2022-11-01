@@ -5,8 +5,8 @@ import {
 } from '@graphql-codegen/plugin-helpers';
 import { mkdir, writeFile } from 'fs/promises';
 import { run } from './run';
-import { RunResult } from './types';
 import { parseSources } from './utils';
+import { RunContext } from './types';
 
 const pluginName = '@eddeee888/gcg-typescript-resolver-files';
 const configDefaultMode = 'modules';
@@ -54,13 +54,14 @@ export const plugin: PluginFunction<PluginConfig> = async (
     relativeResolverTypesPathFromBaseOutputDir
   );
 
-  const result: RunResult = {
+  const result: RunContext['result'] = {
     dirs: {},
     files: {},
     externalImports: {},
   };
-  run(
-    {
+
+  run({
+    config: {
       schema,
       sourcesMap,
       baseOutputDir,
@@ -71,8 +72,8 @@ export const plugin: PluginFunction<PluginConfig> = async (
       whitelistedModules,
       externalResolvers,
     },
-    result
-  );
+    result,
+  });
 
   // Write dirs and files
   await Promise.all(
