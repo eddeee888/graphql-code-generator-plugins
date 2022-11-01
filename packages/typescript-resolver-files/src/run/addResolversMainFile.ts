@@ -1,6 +1,6 @@
 import * as path from 'path';
 import type { RootObjectType, RunResult } from '../types';
-import { printImportModule, relativeModulePath } from '../utils';
+import { printImportLine, relativeModulePath } from '../utils';
 
 interface AddResolversMainFileParams {
   baseOutputDir: string;
@@ -21,29 +21,32 @@ export const addResolversMainFile = (
     outputDir,
     resolverTypesPath
   );
-  const pathToResolverModule = printImportModule(relativePathToResolverTypes);
 
   const resolversDetails = Object.entries(result.files).reduce<{
     importLines: string[];
     queryFields: string[];
     mutationFields: string[];
     subscriptionFields: string[];
-    objectTypes: string[];
+    objectTypes: { propertyName: string; identifierName: string }[];
   }>(
     (res, [filepath, file]) => {
       if (file.__filetype === 'file') {
         return res;
       }
 
-      const pathToModule = printImportModule(
-        relativeModulePath(outputDir, filepath)
-      );
       res.importLines.push(
-        `import { ${file.mainImportIdentifier} } from '${pathToModule}'`
+        printImportLine({
+          isTypeImport: false,
+          module: relativeModulePath(outputDir, filepath),
+          namedImports: [file.mainImportIdentifier],
+        })
       );
 
       if (!file.meta.belongsToRootObject) {
-        res.objectTypes.push(file.mainImportIdentifier);
+        res.objectTypes.push({
+          propertyName: file.mainImportIdentifier,
+          identifierName: file.mainImportIdentifier,
+        });
         return res;
       }
       const rootObjectMap: Record<RootObjectType, () => void> = {
@@ -64,6 +67,26 @@ export const addResolversMainFile = (
       objectTypes: [],
     }
   );
+
+  Object.entries(result.externalImports).reduce((res, [module, meta]) => {
+    res.importLines.push(
+      printImportLine({
+        isTypeImport: false,
+        module,
+        namedImports: meta.importLineMeta.namedImports,
+        defaultImport: meta.importLineMeta.defaultImport,
+      })
+    );
+
+    meta.identifierUsages.forEach((usage) => {
+      res.objectTypes.push({
+        propertyName: usage.resolverName,
+        identifierName: usage.identifierName,
+      });
+    });
+
+    return res;
+  }, resolversDetails);
 
   const resolversIdentifier = 'resolvers';
   const resolversTypeName = 'Resolvers'; // Generated type from typescript-resolvers plugin
@@ -90,14 +113,23 @@ export const addResolversMainFile = (
   result.files[filename] = {
     __filetype: 'file',
     content: `/* This file was automatically generated. DO NOT UPDATE MANUALLY. */
-    import type { ${resolversTypeName} } from '${pathToResolverModule}';
-    ${resolversDetails.importLines.map((line) => line).join(';\n')}
+    ${printImportLine({
+      isTypeImport: true,
+      module: relativePathToResolverTypes,
+      namedImports: [resolversTypeName],
+    })}
+    ${resolversDetails.importLines.map((line) => line).join('\n')}
     export const ${resolversIdentifier}: ${resolversTypeName} = {
       ${queries}
       ${mutations}
       ${suscriptions}
-      ${resolversDetails.objectTypes.map((type) => type).join(',\n')}
+      ${resolversDetails.objectTypes
+        .map(
+          ({ propertyName, identifierName }) =>
+            `${propertyName}: ${identifierName}`
+        )
+        .join(',\n')}
     }`,
-    mainImportIdentifier: 'resolvers',
+    mainImportIdentifier: resolversIdentifier,
   };
 };
