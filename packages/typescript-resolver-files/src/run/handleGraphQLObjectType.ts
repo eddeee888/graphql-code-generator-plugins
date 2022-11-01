@@ -1,7 +1,7 @@
 import * as path from 'path';
 import type { GraphQLObjectType } from 'graphql';
 import type { GraphQLTypeHandler } from '../types';
-import { printImportModule, relativeModulePath } from '../utils';
+import { printImportLine, relativeModulePath } from '../utils';
 
 export const handleGraphQLObjectType: GraphQLTypeHandler<GraphQLObjectType> = (
   { type, outputDir },
@@ -18,17 +18,18 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<GraphQLObjectType> = (
   result.dirs[outputDir] = true;
 
   const resolverTypeName = `${type.name}Resolvers`; // Generated type from typescript-resolvers plugin
-  const relativePathToResolverTypes = relativeModulePath(
-    outputDir,
-    resolverTypesPath
-  );
-  const pathToResolverModule = printImportModule(relativePathToResolverTypes);
+
   const resolverVariableStatement = `export const ${type.name}: ${resolverTypeName} = { 
   /* Implement ${type.name} resolver logic here */ 
 };`;
   result.files[fieldFilePath] = {
     __filetype: 'resolver',
-    content: `import type { ${resolverTypeName} } from '${pathToResolverModule}';
+    content: `
+    ${printImportLine({
+      isTypeImport: true,
+      module: relativeModulePath(outputDir, resolverTypesPath),
+      namedImports: [resolverTypeName],
+    })}
     ${resolverVariableStatement}`,
     mainImportIdentifier: type.name,
     meta: {

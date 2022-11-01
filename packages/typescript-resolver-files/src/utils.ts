@@ -2,13 +2,6 @@ import * as path from 'path';
 import type { Source } from '@graphql-tools/utils';
 import type { ImportLineMeta, RootObjectType, SourcesMap } from './types';
 
-export const printImportModule = (moduleName: string): string => {
-  if (moduleName.endsWith('.ts')) {
-    return moduleName.split('.').slice(0, -1).join('.');
-  }
-  return moduleName;
-};
-
 export const isRootObjectType = (
   typeName: string
 ): typeName is RootObjectType =>
@@ -63,5 +56,12 @@ export function printImportLine({
 
   return `import ${typeImportKeyword} ${defaultImport || ''} ${
     hasDefaultImport && hasNamedImports ? ',' : ''
-  } ${namedImportsString} from '${module}';`;
+  } ${namedImportsString} from '${normalizeModuleExtensionForImport(module)}';`;
 }
+
+const normalizeModuleExtensionForImport = (module: string): string => {
+  if (module.endsWith('.ts')) {
+    return module.split('.').slice(0, -1).join('.');
+  }
+  return module;
+};
