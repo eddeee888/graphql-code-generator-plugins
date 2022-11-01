@@ -21,7 +21,8 @@
         "commands": [
           "nx graphql-codegen typescript-resolver-files-e2e -c test-standard",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-modules",
-          "nx graphql-codegen typescript-resolver-files-e2e -c test-whitelisted"
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-whitelisted",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-resolver-imports"
         ],
         "parallel": false
       }
@@ -38,6 +39,9 @@
         },
         "test-whitelisted": {
           "configFile": "packages/typescript-resolver-files-e2e/src/test-whitelisted/codegen.yml"
+        },
+        "test-resolver-imports": {
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-resolver-imports/codegen.yml"
         }
       },
       "dependsOn": ["^build"]
