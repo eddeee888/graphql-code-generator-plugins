@@ -40,7 +40,10 @@ export interface RunResult {
     string,
     {
       importLineMeta: ImportLineMeta;
-      identifierUsages: { identifierName: string; resolverName: string }[];
+      identifierUsages: {
+        identifierName: string;
+        normalizedResolverName: string;
+      }[];
     }
   >;
 }

@@ -2,11 +2,13 @@ import * as path from 'path';
 import type { GraphQLObjectType } from 'graphql';
 import type { GraphQLTypeHandler } from '../types';
 import {
+  normalizeResolverName,
   isRootObjectType,
   printImportLine,
   relativeModulePath,
 } from '../utils';
 import { parseLocation } from './parseLocation';
+import { addExternalResolverImport } from './addExternalResolverImport';
 
 export const handleGraphQLRootObjectType: GraphQLTypeHandler<
   GraphQLObjectType,
@@ -20,6 +22,20 @@ export const handleGraphQLRootObjectType: GraphQLTypeHandler<
   const fields = type.getFields();
 
   Object.entries(fields).forEach(([fieldName, fieldNode]) => {
+    const normalizedResolverName = normalizeResolverName(fieldName, typeName);
+    const configImportSyntax =
+      runConfig.resolverImports[normalizedResolverName];
+    if (configImportSyntax) {
+      addExternalResolverImport(
+        {
+          normalizedResolverName: normalizeResolverName(normalizedResolverName),
+          configImportSyntax,
+        },
+        result
+      );
+      return;
+    }
+
     const locationInfo = parseLocation(runConfig, fieldNode.astNode?.loc);
     if (!locationInfo.isInWhitelistedModule) {
       return;
@@ -38,7 +54,7 @@ export const handleGraphQLRootObjectType: GraphQLTypeHandler<
     const resolverTypeName = `${typeName}Resolvers`; // Generated type from typescript-resolvers plugin
 
     const resolverVariableStatement = `export const ${fieldName}: ${resolverTypeName}['${fieldName}'] = async (_parent, _arg, _ctx) => {
-      /* Implement ${typeName}.${fieldName} resolver logic here */
+      /* Implement ${normalizedResolverName} resolver logic here */
     };`;
 
     result.files[fieldFilePath] = {

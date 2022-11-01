@@ -1,12 +1,16 @@
-// importString has 2 forms
-// 1. relative import:  <relativePath>#{default as AliasIdentifier|named_import (as AliasIdentifier)}
-// 2. absolute import: ~<absolutePath>#{default as AliasIdentifier|named_import (as AliasIdentifier)}
-
 import { RunResult } from '../types';
 import { normalizeRelativePath } from '../utils';
 
 interface AddExternalResolverImportParams {
-  resolverName: string;
+  /**
+   * See packages/typescript-resolver-files/src/utils#normalizeResolverName
+   */
+  normalizedResolverName: string;
+  /*
+   * configImportSyntax has 2 forms
+   * 1. relative import:  <relativePath>#{default as AliasIdentifier|named_import (as AliasIdentifier)}
+   * 2. absolute import: ~<absolutePath>#{default as AliasIdentifier|named_import (as AliasIdentifier)}
+   */
   configImportSyntax: string;
 }
 
@@ -67,7 +71,7 @@ export const addExternalResolverImport = (
 
 const getImportLineMetaFromImportSyntax = ({
   configImportSyntax,
-  resolverName,
+  normalizedResolverName,
 }: AddExternalResolverImportParams): {
   importIdentifier:
     | { __type: 'default'; defaultImport: string }
@@ -77,7 +81,7 @@ const getImportLineMetaFromImportSyntax = ({
         propertyName: string;
         identifierName: string;
       };
-  identifierUsage: { identifierName: string; resolverName: string };
+  identifierUsage: { identifierName: string; normalizedResolverName: string };
   moduleImport: string;
 } => {
   const isAbsoluteImport = configImportSyntax[0] === '~';
@@ -107,7 +111,7 @@ const getImportLineMetaFromImportSyntax = ({
       },
       identifierUsage: {
         identifierName: defaultImportIdentifier,
-        resolverName,
+        normalizedResolverName,
       },
       moduleImport,
     };
@@ -122,7 +126,7 @@ const getImportLineMetaFromImportSyntax = ({
       },
       identifierUsage: {
         identifierName: namedImportParts[0],
-        resolverName,
+        normalizedResolverName,
       },
       moduleImport,
     };
@@ -136,7 +140,7 @@ const getImportLineMetaFromImportSyntax = ({
     },
     identifierUsage: {
       identifierName: namedImportParts[1],
-      resolverName,
+      normalizedResolverName,
     },
     moduleImport,
   };

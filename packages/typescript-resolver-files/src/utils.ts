@@ -80,3 +80,18 @@ const printNamedImportSpecifier = (
 
   return `${namedImport.propertyName} as ${namedImport.identifierName}`;
 };
+
+/**
+ * Function to get format resolver name based on its definition in the schema
+ * - Root object type resolver e.g Query.me, Mutation.updateUser
+ * - Object type e.g. User, Profile
+ */
+export const normalizeResolverName = (
+  name: string,
+  rootObject?: RootObjectType
+): string => {
+  if (!rootObject) {
+    return name;
+  }
+  return `${rootObject}.${name}`;
+};

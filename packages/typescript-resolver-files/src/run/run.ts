@@ -6,7 +6,7 @@ import {
   isScalarType,
 } from 'graphql';
 import type { RunConfig, RunResult } from '../types';
-import { isRootObjectType } from '../utils';
+import { normalizeResolverName, isRootObjectType } from '../utils';
 import { parseLocation } from './parseLocation';
 import { addExternalResolverImport } from './addExternalResolverImport';
 import { addResolversMainFile } from './addResolversMainFile';
@@ -46,7 +46,10 @@ export const run = (config: RunConfig, result: RunResult): void => {
       const configImportSyntax = config.resolverImports[namedType.name];
       if (configImportSyntax) {
         addExternalResolverImport(
-          { resolverName: namedType.name, configImportSyntax },
+          {
+            normalizedResolverName: normalizeResolverName(namedType.name),
+            configImportSyntax,
+          },
           result
         );
         return;
