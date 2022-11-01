@@ -3,7 +3,7 @@ import { Project } from 'ts-morph';
 import * as path from 'path';
 import type { ResolverFile, RunResult } from '../types';
 
-export const fixExistingResolvers = (result: RunResult) => {
+export const fixExistingResolvers = (result: RunResult): void => {
   const existingResolverFiles = Object.entries(result.files).reduce<
     Record<string, ResolverFile>
   >((res, [filePath, file]) => {
