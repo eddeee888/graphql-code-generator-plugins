@@ -1,24 +1,38 @@
-import { isObjectType, isUnionType } from 'graphql';
+import {
+  isObjectType,
+  isUnionType,
+  isIntrospectionType,
+  isSpecifiedScalarType,
+  isScalarType,
+} from 'graphql';
 import type { RunConfig, RunResult } from '../types';
-import { isRootObjectType } from '../utils';
+import { normalizeResolverName, isRootObjectType } from '../utils';
+import { addExternalResolverImport } from './addExternalResolverImport';
+import { addResolversMainFile } from './addResolversMainFile';
+import { matchActionForNormalizedResolverName } from './matchActionForNormalizedResolverName';
+import { fixExistingResolvers } from './fixExistingResolvers';
 import { handleGraphQLRootObjectType } from './handleGraphQLRootObjectType';
 import { handleGraphQLObjectType } from './handleGraphQLObjectType';
 import { handleGraphQLUninionType } from './handleGraphQLUninionType';
-import { addResolversMainFile } from './addResolversMainFile';
-import { fixExistingResolvers } from './fixExistingResolvers';
-import { parseLocation } from './parseLocation';
+import { handleGraphQLScalarType } from './handleGraphQLScalarType';
 
 export const run = (config: RunConfig, result: RunResult): void => {
   Object.entries(config.schema.getTypeMap()).forEach(
     ([schemaType, namedType]) => {
-      // There are a few internal types with `__` prefixes. We don't want them.
-      if (schemaType.startsWith('__')) {
+      const isPredefinedScalar = isSpecifiedScalarType(namedType);
+      const isIntrospection = isIntrospectionType(namedType);
+
+      // Ignore certain types:
+      // 1. introspection types i.e. with `__` prefixes
+      // 2. base scalars e.g. Boolean, Int, etc.
+      // 3. Other natives (mostly base scalars) which was not defined in the schema i.e. no `astNode`
+      if (isPredefinedScalar || isIntrospection || !namedType.astNode) {
         return;
       }
-      // Types without astNode are natives such as Boolean, Int, etc.
-      if (!namedType.astNode) {
-        return;
-      }
+
+      //
+      // "Visitor" pattern
+      //
 
       if (isObjectType(namedType) && isRootObjectType(schemaType)) {
         handleGraphQLRootObjectType(
@@ -26,27 +40,42 @@ export const run = (config: RunConfig, result: RunResult): void => {
           config,
           result
         );
-      } else if (isObjectType(namedType) && !isRootObjectType(schemaType)) {
-        const localtionInfo = parseLocation(config, namedType.astNode.loc);
-        if (!localtionInfo.isInWhitelistedModule) {
-          return;
-        }
-        handleGraphQLObjectType(
-          { type: namedType, outputDir: localtionInfo.pathToLocation },
-          config,
-          result
-        );
-      } else if (isUnionType(namedType)) {
-        const locationInfo = parseLocation(config, namedType.astNode.loc);
-        if (!locationInfo.isInWhitelistedModule) {
-          return;
-        }
-        handleGraphQLUninionType(
-          { type: namedType, outputDir: locationInfo.pathToLocation },
-          config,
-          result
-        );
+        return;
       }
+
+      matchActionForNormalizedResolverName(
+        {
+          normalizedResolverName: normalizeResolverName(namedType.name),
+          location: namedType.astNode.loc,
+        },
+        {
+          addExternalImport: (actionData) => {
+            addExternalResolverImport(actionData, result);
+          },
+          generateResolverFile: ({ outputDir }) => {
+            if (isObjectType(namedType) && !isRootObjectType(schemaType)) {
+              handleGraphQLObjectType(
+                { type: namedType, outputDir },
+                config,
+                result
+              );
+            } else if (isUnionType(namedType)) {
+              handleGraphQLUninionType(
+                { type: namedType, outputDir },
+                config,
+                result
+              );
+            } else if (isScalarType(namedType)) {
+              handleGraphQLScalarType(
+                { type: namedType, outputDir },
+                config,
+                result
+              );
+            }
+          },
+        },
+        config
+      );
     }
   );
 

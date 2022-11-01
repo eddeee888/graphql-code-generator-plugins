@@ -4,7 +4,6 @@ import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/
 import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
 import { PaginationResult } from './base/resolvers/PaginationResult';
 import { Profile } from './user/resolvers/Profile';
-import { me as Query_me } from './user/resolvers/Query/me';
 import { topicById as Query_topicById } from './topic/resolvers/Query/topicById';
 import { topicsCreatedByUser as Query_topicsCreatedByUser } from './topic/resolvers/Query/topicsCreatedByUser';
 import { userByAccountName as Query_userByAccountName } from './user/resolvers/Query/userByAccountName';
@@ -19,15 +18,27 @@ import { TopicEditPayload } from './topic/resolvers/TopicEditPayload';
 import { TopicEditResult } from './topic/resolvers/TopicEditResult';
 import { TopicsCreatedByUserPayload } from './topic/resolvers/TopicsCreatedByUserPayload';
 import { TopicsCreatedByUserResult } from './topic/resolvers/TopicsCreatedByUserResult';
-import { User } from './user/resolvers/User';
 import { UserPayload } from './user/resolvers/UserPayload';
 import { UserResult } from './user/resolvers/UserResult';
+import AbsoluteDefaultResolver, {
+  BigIntResolver as BigIntNamedWithAliasResolver,
+  BigIntResolver as BigIntSameNamedWithAliasResolver,
+  DateTimeNamedResolver,
+  DateTimeSameNamedImportResolver,
+} from 'graphql-scalars';
+import meResolver from '@org/meResolver';
+import RelativeDefaultResolver from './scalars/DefaultScalar';
+import {
+  NamedImportResolver,
+  NamedImportResolver as NamedImportWithAliasResolver,
+} from './scalars/Scalars';
+import { User as UserResolver } from './otherResolvers';
 export const resolvers: Resolvers = {
   Query: {
-    me: Query_me,
     topicById: Query_topicById,
     topicsCreatedByUser: Query_topicsCreatedByUser,
     userByAccountName: Query_userByAccountName,
+    me: meResolver,
   },
   Mutation: {
     topicCreate: Mutation_topicCreate,
@@ -46,7 +57,15 @@ export const resolvers: Resolvers = {
   TopicEditResult: TopicEditResult,
   TopicsCreatedByUserPayload: TopicsCreatedByUserPayload,
   TopicsCreatedByUserResult: TopicsCreatedByUserResult,
-  User: User,
   UserPayload: UserPayload,
   UserResult: UserResult,
+  AbsoluteDefault: AbsoluteDefaultResolver,
+  BigIntNamedWithAlias: BigIntNamedWithAliasResolver,
+  BigIntSameNamedWithAlias: BigIntSameNamedWithAliasResolver,
+  DateTimeNamedImport: DateTimeNamedResolver,
+  DateTimeSameNamedImport: DateTimeSameNamedImportResolver,
+  RelativeDefault: RelativeDefaultResolver,
+  RelativeNamedImport: NamedImportResolver,
+  RelativeNamedImportWithAlias: NamedImportWithAliasResolver,
+  User: UserResolver,
 };

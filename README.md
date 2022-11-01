@@ -22,4 +22,3 @@ nx workspace-generator typescript-resolver-files-add-e2e-test <test-name-in-keba
 
 - [ ] Add Scalar handler
 - [ ] Add Interface handler
-- [ ] Resolvers from root object types (`Query`, `Mutation`, `Subscription`) needs to be prefixed with alias to avoid naming spacing issue in `mainFile` (caused by having the same field name)

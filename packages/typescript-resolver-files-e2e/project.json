@@ -19,9 +19,10 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "nx graphql-codegen typescript-resolver-files-e2e -c test-standard",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-merged",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-modules",
-          "nx graphql-codegen typescript-resolver-files-e2e -c test-whitelisted"
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-whitelisted",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-external-resolvers"
         ],
         "parallel": false
       }
@@ -30,14 +31,17 @@
       "executor": "@eddeee888/nx-graphql-code-generator:codegen",
       "options": {},
       "configurations": {
-        "test-standard": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-standard/codegen.yml"
+        "test-merged": {
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-merged/codegen.yml"
         },
         "test-modules": {
           "configFile": "packages/typescript-resolver-files-e2e/src/test-modules/codegen.yml"
         },
         "test-whitelisted": {
           "configFile": "packages/typescript-resolver-files-e2e/src/test-whitelisted/codegen.yml"
+        },
+        "test-external-resolvers": {
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-external-resolvers/codegen.yml"
         }
       },
       "dependsOn": ["^build"]

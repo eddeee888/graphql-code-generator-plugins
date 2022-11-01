@@ -1,13 +1,6 @@
 import * as path from 'path';
 import type { Source } from '@graphql-tools/utils';
-import type { RootObjectType, SourcesMap } from './types';
-
-export const printImportModule = (moduleName: string) => {
-  if (moduleName.endsWith('.ts')) {
-    return moduleName.split('.').slice(0, -1).join('.');
-  }
-  return moduleName;
-};
+import type { ImportLineMeta, RootObjectType, SourcesMap } from './types';
 
 export const isRootObjectType = (
   typeName: string
@@ -16,14 +9,16 @@ export const isRootObjectType = (
   typeName === 'Mutation' ||
   typeName === 'Subscription';
 
-export const relativeModulePath = (from: string, to: string) => {
+export const relativeModulePath = (from: string, to: string): string => {
   const rawPath = path.relative(from, to);
+  return normalizeRelativePath(rawPath);
+};
 
-  if (!rawPath.startsWith('../') || !rawPath.startsWith('./')) {
-    return `./${rawPath}`;
+export const normalizeRelativePath = (path: string): string => {
+  if (!path.startsWith('../') || !path.startsWith('./')) {
+    return `./${path}`;
   }
-
-  return rawPath;
+  return path;
 };
 
 export function parseSources(sources: Source[]): SourcesMap {
@@ -47,3 +42,56 @@ export function parseSources(sources: Source[]): SourcesMap {
 
   return sourcesMap;
 }
+
+export function printImportLine({
+  isTypeImport,
+  module,
+  namedImports,
+  defaultImport,
+}: ImportLineMeta): string {
+  const typeImportKeyword = isTypeImport ? 'type' : '';
+  const hasDefaultImport = Boolean(defaultImport);
+  const hasNamedImports = namedImports.length > 0;
+  const namedImportsString = hasNamedImports
+    ? `{ ${namedImports.map(printNamedImportSpecifier).join(',')} }`
+    : '';
+
+  return `import ${typeImportKeyword} ${defaultImport || ''} ${
+    hasDefaultImport && hasNamedImports ? ',' : ''
+  } ${namedImportsString} from '${normalizeModuleExtensionForImport(module)}';`;
+}
+
+const normalizeModuleExtensionForImport = (module: string): string => {
+  if (module.endsWith('.ts')) {
+    return module.split('.').slice(0, -1).join('.');
+  }
+  return module;
+};
+const printNamedImportSpecifier = (
+  namedImport: ImportLineMeta['namedImports'][number]
+): string => {
+  if (typeof namedImport === 'string') {
+    return namedImport;
+  }
+
+  if (namedImport.propertyName === namedImport.identifierName) {
+    return namedImport.identifierName;
+  }
+
+  return `${namedImport.propertyName} as ${namedImport.identifierName}`;
+};
+
+/**
+ * Function to get format resolver name based on its definition in the schema
+ * - Root object type resolver e.g Query.me, Mutation.updateUser
+ * - Object type e.g. User, Profile
+ */
+export const normalizeResolverName = (
+  name: string,
+  rootObject?: RootObjectType
+): string => {
+  if (!rootObject) {
+    return name;
+  }
+  return `${rootObject}.${name}`;
+};
