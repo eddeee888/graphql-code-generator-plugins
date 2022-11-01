@@ -10,9 +10,9 @@ import { UserResult } from './user/resolvers/UserResult';
 export const resolvers: Resolvers = {
   Query: { me, userByAccountName },
 
-  PaginationResult,
-  StandardError,
-  User,
-  UserPayload,
-  UserResult,
+  PaginationResult: PaginationResult,
+  StandardError: StandardError,
+  User: User,
+  UserPayload: UserPayload,
+  UserResult: UserResult,
 };
