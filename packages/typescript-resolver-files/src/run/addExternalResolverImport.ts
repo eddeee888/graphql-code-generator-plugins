@@ -35,11 +35,11 @@ export const addExternalResolverImport = (
     case 'default':
       if (
         externalImport.importLineMeta.defaultImport &&
-        externalImport.importLineMeta.defaultImport ===
+        externalImport.importLineMeta.defaultImport !==
           importIdentifier.defaultImport
       ) {
         throw new Error(
-          `There can be only one default import from '${moduleImport}'`
+          `There can be only one default import from '${moduleImport}'. Current: ${externalImport.importLineMeta.defaultImport}. New: ${importIdentifier.defaultImport}`
         );
       }
       externalImport.importLineMeta.defaultImport =
