@@ -13,6 +13,21 @@
           "packages/typescript-resolver-files-e2e/bin/assert-e2e.sh"
         ],
         "parallel": false
+      },
+      "configurations": {
+        "clean-run": {
+          "commands": [
+            "nx e2e-cleanup typescript-resolver-files-e2e",
+            "nx e2e typescript-resolver-files-e2e --skip-nx-cache"
+          ],
+          "parallel": false
+        }
+      }
+    },
+    "e2e-cleanup": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "rimraf packages/typescript-resolver-files-e2e/src/test-*/**/resolvers/"
       }
     },
     "e2e-run": {
