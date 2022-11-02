@@ -21,6 +21,12 @@ export interface ResolverFile extends BaseVirtualFile {
 }
 
 export type SourcesMap = Record<string, { source: Source; moduleName: string }>;
+export interface ImportLineMeta {
+  isTypeImport: boolean;
+  module: string;
+  namedImports: (string | { propertyName: string; identifierName: string })[];
+  defaultImport?: string;
+}
 
 export interface RunContext {
   config: {
@@ -68,10 +74,3 @@ export type GraphQLTypeHandler = (
   params: GraphQLTypeHandlerParams,
   ctx: RunContext
 ) => void;
-
-export interface ImportLineMeta {
-  isTypeImport: boolean;
-  module: string;
-  namedImports: (string | { propertyName: string; identifierName: string })[];
-  defaultImport?: string;
-}

@@ -60,7 +60,6 @@ export function printImportLine({
     hasDefaultImport && hasNamedImports ? ',' : ''
   } ${namedImportsString} from '${normalizeModuleExtensionForImport(module)}';`;
 }
-
 const normalizeModuleExtensionForImport = (module: string): string => {
   if (module.endsWith('.ts')) {
     return module.split('.').slice(0, -1).join('.');
