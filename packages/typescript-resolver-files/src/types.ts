@@ -16,49 +16,68 @@ export interface ResolverFile extends BaseVirtualFile {
   meta: {
     belongsToRootObject: RootObjectType | null;
     resolverVariableStatement: string;
+    normalizedResolverName: string;
   };
 }
 
 export type SourcesMap = Record<string, { source: Source; moduleName: string }>;
-
-export interface RunConfig {
-  schema: GraphQLSchema;
-  sourcesMap: SourcesMap;
-  baseOutputDir: string;
-  resolverTypesPath: string;
-  relativeTargetDir: string;
-  mainFile: string;
-  mode: 'merged' | 'modules';
-  whitelistedModules: string[];
-  externalResolvers: Record<string, string>;
-}
-
-export interface RunResult {
-  dirs: Record<string, true>;
-  files: Record<string, StandardFile | ResolverFile>;
-  externalImports: Record<
-    string,
-    {
-      importLineMeta: ImportLineMeta;
-      identifierUsages: {
-        identifierName: string;
-        normalizedResolverName: string;
-      }[];
-    }
-  >;
-}
-
-export type RootObjectType = 'Query' | 'Mutation' | 'Subscription';
-
-export type GraphQLTypeHandler<T, O = string> = (
-  params: { type: T; outputDir: O },
-  runConfig: RunConfig,
-  result: RunResult
-) => void;
-
 export interface ImportLineMeta {
   isTypeImport: boolean;
   module: string;
   namedImports: (string | { propertyName: string; identifierName: string })[];
   defaultImport?: string;
 }
+
+export interface RunContext {
+  config: {
+    schema: GraphQLSchema;
+    sourcesMap: SourcesMap;
+    baseOutputDir: string;
+    resolverTypesPath: string;
+    relativeTargetDir: string;
+    mainFile: string;
+    mode: 'merged' | 'modules';
+    whitelistedModules: string[];
+    externalResolvers: Record<string, string>;
+  };
+  result: {
+    dirs: Record<string, true>;
+    files: Record<string, StandardFile | ResolverFile>;
+    externalImports: Record<
+      string,
+      {
+        importLineMeta: ImportLineMeta;
+        identifierUsages: {
+          identifierName: string;
+          normalizedResolverName: string;
+        }[];
+      }
+    >;
+  };
+}
+
+export type RootObjectType = 'Query' | 'Mutation' | 'Subscription';
+
+export interface GraphQLTypeHandlerParams {
+  fieldFilePath: string;
+  resolverName: string;
+  belongsToRootObject: RootObjectType | null;
+  normalizedResolverName: string;
+  resolversTypeMeta: {
+    // typeNamedImport: name of the type to be imported from `module`.
+    // If it's a root object type field, this is the root type (e.g. Query, Mutation, Subscription).
+    // Otherwise, it's the object type e.g. User, Profile, etc.
+    typeNamedImport: `${string}Resolvers`;
+    // path to typescript-resolvers file
+    module: string;
+    // typeString: valid type specified for a field or object type
+    typeString:
+      | `${string}Resolvers`
+      | `${RootObjectType}Resolvers['${string}']`;
+  };
+}
+
+export type GraphQLTypeHandler = (
+  params: GraphQLTypeHandlerParams,
+  ctx: RunContext
+) => void;

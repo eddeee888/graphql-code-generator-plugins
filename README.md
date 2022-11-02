@@ -20,5 +20,4 @@ nx workspace-generator typescript-resolver-files-add-e2e-test <test-name-in-keba
 
 ### @eddeee888/gcg-typescript-resolver-files
 
-- [ ] Add Scalar handler
 - [ ] Add Interface handler

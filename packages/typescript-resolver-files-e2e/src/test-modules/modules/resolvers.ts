@@ -1,5 +1,6 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.generated';
+import { DateTime } from './base/resolvers/DateTime';
 import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/topicCreate';
 import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
 import { PaginationResult } from './base/resolvers/PaginationResult';
@@ -34,6 +35,7 @@ export const resolvers: Resolvers = {
     topicEdit: Mutation_topicEdit,
   },
   Subscription: { profileChanges: Subscription_profileChanges },
+  DateTime: DateTime,
   PaginationResult: PaginationResult,
   Profile: Profile,
   StandardError: StandardError,

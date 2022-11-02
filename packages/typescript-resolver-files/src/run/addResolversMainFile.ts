@@ -1,21 +1,15 @@
 import * as path from 'path';
-import type { RootObjectType, RunResult } from '../types';
+import type { RootObjectType, RunContext } from '../types';
 import {
   isRootObjectType,
-  normalizeResolverName,
   printImportLine,
   relativeModulePath,
 } from '../utils';
 
-interface AddResolversMainFileParams {
-  baseOutputDir: string;
-  resolverTypesPath: string;
-  mainFile: string;
-}
-export const addResolversMainFile = (
-  { baseOutputDir, resolverTypesPath, mainFile }: AddResolversMainFileParams,
-  result: RunResult
-): void => {
+export const addResolversMainFile = ({
+  config: { baseOutputDir, resolverTypesPath, mainFile },
+  result,
+}: RunContext): void => {
   const filename = path.join(baseOutputDir, mainFile.split('/').join(path.sep));
   const outputDir = path.dirname(filename);
 
@@ -56,10 +50,7 @@ export const addResolversMainFile = (
       }
 
       // Root object fields
-      const identifierName = normalizeResolverName(
-        file.mainImportIdentifier,
-        file.meta.belongsToRootObject
-      )
+      const identifierName = file.meta.normalizedResolverName
         .split('.')
         .join('_');
 

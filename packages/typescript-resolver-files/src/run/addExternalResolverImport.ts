@@ -1,10 +1,7 @@
-import { RunResult } from '../types';
+import type { RunContext } from '../types';
 import { normalizeRelativePath } from '../utils';
 
 interface AddExternalResolverImportParams {
-  /**
-   * See packages/typescript-resolver-files/src/utils#normalizeResolverName
-   */
   normalizedResolverName: string;
   /*
    * configImportSyntax has 2 forms
@@ -16,13 +13,13 @@ interface AddExternalResolverImportParams {
 
 export const addExternalResolverImport = (
   params: AddExternalResolverImportParams,
-  runResult: RunResult
+  { result }: RunContext
 ): void => {
   const { importIdentifier, identifierUsage, moduleImport } =
-    getImportLineMetaFromImportSyntax(params);
+    parseImportSyntax(params);
 
-  runResult.externalImports[moduleImport] =
-    runResult.externalImports[moduleImport] ||
+  result.externalImports[moduleImport] =
+    result.externalImports[moduleImport] ||
     ({
       importLineMeta: {
         isTypeImport: false,
@@ -31,9 +28,9 @@ export const addExternalResolverImport = (
         defaultImport: undefined,
       },
       identifierUsages: [],
-    } as RunResult['externalImports'][number]);
+    } as RunContext['result']['externalImports'][number]);
 
-  const externalImport = runResult.externalImports[moduleImport];
+  const externalImport = result.externalImports[moduleImport];
 
   switch (importIdentifier.__type) {
     case 'default':
@@ -69,7 +66,7 @@ export const addExternalResolverImport = (
   externalImport.identifierUsages.push(identifierUsage);
 };
 
-const getImportLineMetaFromImportSyntax = ({
+const parseImportSyntax = ({
   configImportSyntax,
   normalizedResolverName,
 }: AddExternalResolverImportParams): {
