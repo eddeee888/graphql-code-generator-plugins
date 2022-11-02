@@ -5,8 +5,8 @@ import {
 } from '@graphql-codegen/plugin-helpers';
 import { mkdir, writeFile } from 'fs/promises';
 import { run } from './run';
+import type { RunContext } from './types';
 import { parseSources } from './utils';
-import { RunContext } from './types';
 
 const pluginName = '@eddeee888/gcg-typescript-resolver-files';
 const configDefaultMode = 'modules';

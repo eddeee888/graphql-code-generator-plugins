@@ -69,19 +69,19 @@ export const visitNamedType = (
   }
 
   // Generate resolver files based on its type
-  const visitorParams = validateAndPrepareForGraphQLType(
+  const visitorHandlerParams = validateAndPrepareForGraphQLTypeHandler(
     { resolverName, normalizedResolverName, outputDir, belongsToRootObject },
     ctx
   );
 
   if (isObjectType(namedType)) {
     belongsToRootObject
-      ? visitor['RootObjectTypeField'](visitorParams, ctx)
-      : visitor['ObjectType'](visitorParams, ctx);
+      ? visitor['RootObjectTypeField'](visitorHandlerParams, ctx)
+      : visitor['ObjectType'](visitorHandlerParams, ctx);
   } else if (isUnionType(namedType)) {
-    visitor['UnionType'](visitorParams, ctx);
+    visitor['UnionType'](visitorHandlerParams, ctx);
   } else if (isScalarType(namedType)) {
-    visitor['ScalarType'](visitorParams, ctx);
+    visitor['ScalarType'](visitorHandlerParams, ctx);
   }
 };
 
@@ -139,7 +139,7 @@ interface ValidateAndPrepareForGraphQLTypeParams {
   outputDir: string;
   belongsToRootObject: RootObjectType | null;
 }
-const validateAndPrepareForGraphQLType = (
+const validateAndPrepareForGraphQLTypeHandler = (
   {
     resolverName,
     normalizedResolverName,
@@ -158,23 +158,29 @@ const validateAndPrepareForGraphQLType = (
   result.dirs[outputDir] = true;
 
   // resolverTypeName are generated from typescript-resolvers plugin
-  const resolverType = belongsToRootObject
-    ? {
-        namedImport: `${belongsToRootObject}Resolvers`,
-        type: `${belongsToRootObject}Resolvers['${resolverName}']`,
-      }
-    : {
-        namedImport: `${resolverName}Resolvers`,
-        type: `${resolverName}Resolvers`,
-      };
+  const resolversTypeMetaModule = relativeModulePath(
+    outputDir,
+    config.resolverTypesPath
+  );
+  const resolversTypeMeta: GraphQLTypeHandlerParams['resolversTypeMeta'] =
+    belongsToRootObject
+      ? {
+          typeNamedImport: `${belongsToRootObject}Resolvers`,
+          module: resolversTypeMetaModule,
+          typeString: `${belongsToRootObject}Resolvers['${resolverName}']`,
+        }
+      : {
+          typeNamedImport: `${resolverName}Resolvers`,
+          module: resolversTypeMetaModule,
+          typeString: `${resolverName}Resolvers`,
+        };
 
   return {
-    resolverName,
-    resolverType,
-    normalizedResolverName,
     fieldFilePath,
+    resolverName,
     belongsToRootObject,
-    relativeModulePath: relativeModulePath(outputDir, config.resolverTypesPath),
+    normalizedResolverName,
+    resolversTypeMeta,
   };
 };
 

@@ -3,24 +3,23 @@ import { printImportLine } from '../utils';
 
 export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler = (
   {
-    resolverName,
-    resolverType,
-    relativeModulePath,
-    normalizedResolverName,
     fieldFilePath,
+    resolverName,
     belongsToRootObject,
+    normalizedResolverName,
+    resolversTypeMeta,
   },
   { result }
 ) => {
-  const resolverVariableStatement = `export const ${resolverName}: ${resolverType.type} = async (_parent, _arg, _ctx) => { /* Implement ${normalizedResolverName} resolver logic here */ };`;
+  const resolverVariableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = async (_parent, _arg, _ctx) => { /* Implement ${normalizedResolverName} resolver logic here */ };`;
 
   result.files[fieldFilePath] = {
     __filetype: 'resolver',
     content: `
         ${printImportLine({
           isTypeImport: true,
-          module: relativeModulePath,
-          namedImports: [resolverType.namedImport],
+          module: resolversTypeMeta.module,
+          namedImports: [resolversTypeMeta.typeNamedImport],
         })}
         ${resolverVariableStatement}`,
     mainImportIdentifier: resolverName,

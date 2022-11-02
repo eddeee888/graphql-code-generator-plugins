@@ -59,15 +59,22 @@ export interface RunContext {
 export type RootObjectType = 'Query' | 'Mutation' | 'Subscription';
 
 export interface GraphQLTypeHandlerParams {
-  resolverName: string;
-  normalizedResolverName: string;
-  resolverType: {
-    namedImport: string;
-    type: string;
-  };
   fieldFilePath: string;
-  relativeModulePath: string;
+  resolverName: string;
   belongsToRootObject: RootObjectType | null;
+  normalizedResolverName: string;
+  resolversTypeMeta: {
+    // typeNamedImport: name of the type to be imported from `module`.
+    // If it's a root object type field, this is the root type (e.g. Query, Mutation, Subscription).
+    // Otherwise, it's the object type e.g. User, Profile, etc.
+    typeNamedImport: `${string}Resolvers`;
+    // path to typescript-resolvers file
+    module: string;
+    // typeString: valid type specified for a field or object type
+    typeString:
+      | `${string}Resolvers`
+      | `${RootObjectType}Resolvers['${string}']`;
+  };
 }
 
 export type GraphQLTypeHandler = (

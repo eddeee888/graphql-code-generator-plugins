@@ -4,7 +4,7 @@ import { printImportLine } from '../utils';
 const graphQLScalarType = 'GraphQLScalarType';
 
 export const handleGraphQLScalarType: GraphQLTypeHandler = (
-  { resolverName, fieldFilePath, normalizedResolverName },
+  { fieldFilePath, resolverName, normalizedResolverName },
   { result }
 ) => {
   const resolverVariableStatement = `export const ${resolverName}: ${graphQLScalarType} = { /* Implement ${resolverName} scalar logic here */ };`;
