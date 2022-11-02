@@ -16,44 +16,57 @@ export interface ResolverFile extends BaseVirtualFile {
   meta: {
     belongsToRootObject: RootObjectType | null;
     resolverVariableStatement: string;
+    normalizedResolverName: string;
   };
 }
 
 export type SourcesMap = Record<string, { source: Source; moduleName: string }>;
 
-export interface RunConfig {
-  schema: GraphQLSchema;
-  sourcesMap: SourcesMap;
-  baseOutputDir: string;
-  resolverTypesPath: string;
-  relativeTargetDir: string;
-  mainFile: string;
-  mode: 'merged' | 'modules';
-  whitelistedModules: string[];
-  externalResolvers: Record<string, string>;
-}
-
-export interface RunResult {
-  dirs: Record<string, true>;
-  files: Record<string, StandardFile | ResolverFile>;
-  externalImports: Record<
-    string,
-    {
-      importLineMeta: ImportLineMeta;
-      identifierUsages: {
-        identifierName: string;
-        normalizedResolverName: string;
-      }[];
-    }
-  >;
+export interface RunContext {
+  config: {
+    schema: GraphQLSchema;
+    sourcesMap: SourcesMap;
+    baseOutputDir: string;
+    resolverTypesPath: string;
+    relativeTargetDir: string;
+    mainFile: string;
+    mode: 'merged' | 'modules';
+    whitelistedModules: string[];
+    externalResolvers: Record<string, string>;
+  };
+  result: {
+    dirs: Record<string, true>;
+    files: Record<string, StandardFile | ResolverFile>;
+    externalImports: Record<
+      string,
+      {
+        importLineMeta: ImportLineMeta;
+        identifierUsages: {
+          identifierName: string;
+          normalizedResolverName: string;
+        }[];
+      }
+    >;
+  };
 }
 
 export type RootObjectType = 'Query' | 'Mutation' | 'Subscription';
 
-export type GraphQLTypeHandler<T, O = string> = (
-  params: { type: T; outputDir: O },
-  runConfig: RunConfig,
-  result: RunResult
+export interface GraphQLTypeHandlerParams {
+  resolverName: string;
+  normalizedResolverName: string;
+  resolverType: {
+    namedImport: string;
+    type: string;
+  };
+  fieldFilePath: string;
+  relativeModulePath: string;
+  belongsToRootObject: RootObjectType | null;
+}
+
+export type GraphQLTypeHandler = (
+  params: GraphQLTypeHandlerParams,
+  ctx: RunContext
 ) => void;
 
 export interface ImportLineMeta {

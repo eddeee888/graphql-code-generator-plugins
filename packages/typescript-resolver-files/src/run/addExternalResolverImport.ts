@@ -2,9 +2,6 @@ import type { RunContext } from '../types';
 import { normalizeRelativePath } from '../utils';
 
 interface AddExternalResolverImportParams {
-  /**
-   * See packages/typescript-resolver-files/src/utils#normalizeResolverName
-   */
   normalizedResolverName: string;
   /*
    * configImportSyntax has 2 forms

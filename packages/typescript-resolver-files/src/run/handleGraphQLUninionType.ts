@@ -2,7 +2,13 @@ import type { GraphQLTypeHandler } from '../types';
 import { printImportLine } from '../utils';
 
 export const handleGraphQLUninionType: GraphQLTypeHandler = (
-  { resolverName, resolverType, fieldFilePath, relativeModulePath },
+  {
+    resolverName,
+    resolverType,
+    fieldFilePath,
+    relativeModulePath,
+    normalizedResolverName,
+  },
   { result }
 ) => {
   const resolverVariableStatement = `export const ${resolverName}: ${resolverType.type} = { __resolveType: (parent) => parent.__typename };`;
@@ -19,6 +25,7 @@ export const handleGraphQLUninionType: GraphQLTypeHandler = (
     mainImportIdentifier: resolverName,
     meta: {
       belongsToRootObject: null,
+      normalizedResolverName,
       resolverVariableStatement,
     },
   };

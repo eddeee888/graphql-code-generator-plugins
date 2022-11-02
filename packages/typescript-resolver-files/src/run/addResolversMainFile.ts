@@ -2,7 +2,6 @@ import * as path from 'path';
 import type { RootObjectType, RunContext } from '../types';
 import {
   isRootObjectType,
-  normalizeResolverName,
   printImportLine,
   relativeModulePath,
 } from '../utils';
@@ -51,10 +50,7 @@ export const addResolversMainFile = ({
       }
 
       // Root object fields
-      const identifierName = normalizeResolverName(
-        file.mainImportIdentifier,
-        file.meta.belongsToRootObject
-      )
+      const identifierName = file.meta.normalizedResolverName
         .split('.')
         .join('_');
 

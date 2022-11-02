@@ -1,30 +1,31 @@
-import type { GraphQLObjectType } from 'graphql';
 import type { GraphQLTypeHandler } from '../types';
 import { printImportLine } from '../utils';
-import { validateAndPrepareForGraphQLType } from './validateAndPrepareForGraphQLType';
 
-export const handleGraphQLObjectType: GraphQLTypeHandler<GraphQLObjectType> = (
-  params,
-  runConfig,
-  runResult
+export const handleGraphQLObjectType: GraphQLTypeHandler = (
+  {
+    resolverName,
+    resolverType,
+    fieldFilePath,
+    relativeModulePath,
+    normalizedResolverName,
+  },
+  { result }
 ) => {
-  const { typeName, resolverTypeName, fieldFilePath, relativeModulePath } =
-    validateAndPrepareForGraphQLType(params, runConfig, runResult);
+  const resolverVariableStatement = `export const ${resolverName}: ${resolverType.type} = { /* Implement ${resolverName} resolver logic here */ };`;
 
-  const resolverVariableStatement = `export const ${typeName}: ${resolverTypeName} = { /* Implement ${typeName} resolver logic here */ };`;
-
-  runResult.files[fieldFilePath] = {
+  result.files[fieldFilePath] = {
     __filetype: 'resolver',
     content: `
     ${printImportLine({
       isTypeImport: true,
       module: relativeModulePath,
-      namedImports: [resolverTypeName],
+      namedImports: [resolverType.namedImport],
     })}
     ${resolverVariableStatement}`,
-    mainImportIdentifier: typeName,
+    mainImportIdentifier: resolverName,
     meta: {
       belongsToRootObject: null,
+      normalizedResolverName,
       resolverVariableStatement,
     },
   };

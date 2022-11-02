@@ -3,18 +3,15 @@ import {
   isIntrospectionType,
   isSpecifiedScalarType,
 } from 'graphql';
-import type { GraphQLTypeHandler, RunContext } from '../types';
-import {
-  normalizeResolverName,
-  isRootObjectType,
-  printImportLine,
-} from '../utils';
+import type { RunContext } from '../types';
+import { isRootObjectType } from '../utils';
 import { addResolversMainFile } from './addResolversMainFile';
 import { fixExistingResolvers } from './fixExistingResolvers';
+import { handleGraphQLRootObjectTypeField } from './handleGraphQLRootObjectTypeField';
 import { handleGraphQLObjectType } from './handleGraphQLObjectType';
 import { handleGraphQLUninionType } from './handleGraphQLUninionType';
 import { handleGraphQLScalarType } from './handleGraphQLScalarType';
-import { processNormalizedResolverName } from './processNormalizedResolverName';
+import { visitNamedType, VisitNamedTypeParams } from './visitNamedType';
 
 export const run = (ctx: RunContext): void => {
   Object.entries(ctx.config.schema.getTypeMap()).forEach(
@@ -33,55 +30,46 @@ export const run = (ctx: RunContext): void => {
       //
       // "Visitor" pattern
       //
+      const visitor: VisitNamedTypeParams['visitor'] = {
+        RootObjectTypeField: handleGraphQLRootObjectTypeField,
+        ObjectType: handleGraphQLObjectType,
+        UnionType: handleGraphQLUninionType,
+        ScalarType: handleGraphQLScalarType,
+      };
 
       if (isObjectType(namedType) && isRootObjectType(schemaType)) {
-        handleGraphQLRootObjectType(
-          { type: namedType, outputDir: null },
-          config,
-          result
+        Object.entries(namedType.getFields()).forEach(
+          ([fieldName, fieldNode]) =>
+            visitNamedType(
+              {
+                namedType,
+                resolverName: fieldName,
+                belongsToRootObject: schemaType,
+                location: fieldNode.astNode?.loc,
+                visitor,
+              },
+              ctx
+            )
         );
         return;
       }
 
-      matchActionForNormalizedResolverName(
+      visitNamedType(
         {
-          normalizedResolverName: normalizeResolverName(namedType.name),
+          namedType,
+          resolverName: namedType.name,
+          belongsToRootObject: null,
           location: namedType.astNode.loc,
+          visitor,
         },
-        {
-          addExternalImport: (actionData) => {
-            addExternalResolverImport(actionData, result);
-          },
-          generateResolverFile: ({ outputDir }) => {
-            if (isObjectType(namedType)) {
-              handleGraphQLObjectType(
-                { type: namedType, outputDir },
-                config,
-                result
-              );
-            } else if (isUnionType(namedType)) {
-              handleGraphQLUninionType(
-                { type: namedType, outputDir },
-                config,
-                result
-              );
-            } else if (isScalarType(namedType)) {
-              handleGraphQLScalarType(
-                { type: namedType, outputDir },
-                config,
-                result
-              );
-            }
-          },
-        },
-        config
+        ctx
       );
     }
   );
 
   // Check to see which resolver file exists already
-  fixExistingResolvers(result);
+  fixExistingResolvers(ctx);
 
   // Put all resolvers into a barrel file (or main file)
-  addResolversMainFile(config, result);
+  addResolversMainFile(ctx);
 };
