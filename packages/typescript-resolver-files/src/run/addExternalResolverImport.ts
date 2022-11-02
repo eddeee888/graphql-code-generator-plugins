@@ -16,7 +16,7 @@ export const addExternalResolverImport = (
   { result }: RunContext
 ): void => {
   const { importIdentifier, identifierUsage, moduleImport } =
-    getImportLineMetaFromImportSyntax(params);
+    parseImportSyntax(params);
 
   result.externalImports[moduleImport] =
     result.externalImports[moduleImport] ||
@@ -66,7 +66,7 @@ export const addExternalResolverImport = (
   externalImport.identifierUsages.push(identifierUsage);
 };
 
-const getImportLineMetaFromImportSyntax = ({
+const parseImportSyntax = ({
   configImportSyntax,
   normalizedResolverName,
 }: AddExternalResolverImportParams): {
