@@ -17,7 +17,7 @@ jobs:
       affected-typescript-resolver-files-e2e: ${{ steps.affected.outputs.typescript-resolver-files-e2e }}
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
+        uses: styfle/cancel-workflow-action@0.11.0
         with:
           access_token: ${{ github.token }}
 
