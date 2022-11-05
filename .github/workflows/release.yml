@@ -34,7 +34,7 @@ jobs:
 
       - name: Create Release Pull Request or Publish to NPM
         id: changesets
-        uses: changesets/action@v1.3.0
+        uses: changesets/action@v1.4.0
         with:
           publish: yarn release
           commit: 'chore(release): update packages versions'
