@@ -10,11 +10,10 @@ generates:
       - typescript-resolvers
 
   packages/typescript-resolver-files-e2e/src/test-whitelisted/modules:
-    config:
+    preset: ./dist/packages/typescript-resolver-files/src/index.js
+    presetConfig:
       resolverTypesPath: ./types.generated.ts
       relativeTargetDir: resolvers
       whitelistedModules:
         - base
         - user
-    plugins:
-      - ./dist/packages/typescript-resolver-files/src/index.js
