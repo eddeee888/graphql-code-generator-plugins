@@ -3,6 +3,9 @@ overwrite: true
 schema:
   - packages/typescript-resolver-files-e2e/src/test-external-resolvers/**/*.graphqls
   - packages/typescript-resolver-files-e2e/src/test-external-resolvers/**/*.graphqls.ts
+hooks:
+  afterAllFileWrite:
+    - prettier --write
 generates:
   packages/typescript-resolver-files-e2e/src/test-external-resolvers/modules/types.generated.ts:
     plugins:

@@ -9,7 +9,6 @@
       "options": {
         "commands": [
           "nx e2e-run typescript-resolver-files-e2e",
-          "nx format:write",
           "packages/typescript-resolver-files-e2e/bin/assert-e2e.sh"
         ],
         "parallel": false
