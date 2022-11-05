@@ -3,7 +3,7 @@ import {
   PluginFunction,
   PluginValidateFn,
 } from '@graphql-codegen/plugin-helpers';
-import { mkdir, writeFile } from 'fs/promises';
+import { writeFile } from 'fs/promises';
 import { run } from './run';
 import type { RunContext } from './types';
 import { parseSources } from './utils';
@@ -55,7 +55,6 @@ export const plugin: PluginFunction<PluginConfig> = async (
   );
 
   const result: RunContext['result'] = {
-    dirs: {},
     files: {},
     externalImports: {},
   };
@@ -75,12 +74,6 @@ export const plugin: PluginFunction<PluginConfig> = async (
     result,
   });
 
-  // Write dirs and files
-  await Promise.all(
-    Object.keys(result.dirs).map(
-      async (dir) => await mkdir(dir, { recursive: true })
-    )
-  );
   await Promise.all(
     Object.entries(result.files).map(
       async ([filePath, file]) => await writeFile(filePath, file.content)

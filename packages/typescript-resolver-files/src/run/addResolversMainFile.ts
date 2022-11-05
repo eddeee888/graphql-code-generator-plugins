@@ -13,9 +13,6 @@ export const addResolversMainFile = ({
   const filename = path.join(baseOutputDir, mainFile.split('/').join(path.sep));
   const outputDir = path.dirname(filename);
 
-  // Make sure to create target dir to main file, in case mainFile is a path!
-  result.dirs[outputDir] = true;
-
   const relativePathToResolverTypes = relativeModulePath(
     outputDir,
     resolverTypesPath

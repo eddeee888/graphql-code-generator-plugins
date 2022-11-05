@@ -41,7 +41,6 @@ export interface RunContext {
     externalResolvers: Record<string, string>;
   };
   result: {
-    dirs: Record<string, true>;
     files: Record<string, StandardFile | ResolverFile>;
     externalImports: Record<
       string,

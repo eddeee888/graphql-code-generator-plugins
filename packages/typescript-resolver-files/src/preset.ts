@@ -50,7 +50,6 @@ export const preset: Types.OutputPreset<PresetConfig> = {
     );
 
     const result: RunContext['result'] = {
-      dirs: {},
       files: {},
       externalImports: {},
     };
