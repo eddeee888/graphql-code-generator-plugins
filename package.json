@@ -26,7 +26,7 @@
     "@nrwl/node": "15.0.1",
     "@nrwl/workspace": "15.0.1",
     "@types/jest": "28.1.1",
-    "@types/node": "16.11.7",
+    "@types/node": "16.18.3",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
     "eslint": "~8.15.0",
