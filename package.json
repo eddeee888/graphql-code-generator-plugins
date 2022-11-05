@@ -12,6 +12,7 @@
   "devDependencies": {
     "@changesets/cli": "2.25.0",
     "@eddeee888/nx-graphql-code-generator": "0.0.14",
+    "@graphql-codegen/add": "3.2.1",
     "@graphql-codegen/cli": "2.13.7",
     "@graphql-codegen/plugin-helpers": "2.7.1",
     "@graphql-codegen/typescript": "2.7.5",

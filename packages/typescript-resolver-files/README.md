@@ -25,9 +25,8 @@ generates:
       - typescript-resolvers
 
   src/graphql/resolvers:
-    plugins:
-      - '@eddeee888/gcg-typescript-resolver-files'
-    config:
+    preset: '@eddeee888/gcg-typescript-resolver-files'
+    presetConfig:
       resolverTypesPath: ./types.generated.ts
 ```
 

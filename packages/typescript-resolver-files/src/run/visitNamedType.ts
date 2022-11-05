@@ -155,8 +155,6 @@ const validateAndPrepareForGraphQLTypeHandler = (
     );
   }
 
-  result.dirs[outputDir] = true;
-
   // resolverTypeName are generated from typescript-resolvers plugin
   const resolversTypeMetaModule = relativeModulePath(
     outputDir,
