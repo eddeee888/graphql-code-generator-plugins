@@ -36,7 +36,8 @@
           "nx graphql-codegen typescript-resolver-files-e2e -c test-merged",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-modules",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-whitelisted",
-          "nx graphql-codegen typescript-resolver-files-e2e -c test-external-resolvers"
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-external-resolvers",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-config-overrides"
         ]
       }
     },
@@ -55,6 +56,9 @@
         },
         "test-external-resolvers": {
           "configFile": "packages/typescript-resolver-files-e2e/src/test-external-resolvers/codegen.yml"
+        },
+        "test-config-overrides": {
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-config-overrides/codegen.yml"
         }
       },
       "dependsOn": ["^build"]
