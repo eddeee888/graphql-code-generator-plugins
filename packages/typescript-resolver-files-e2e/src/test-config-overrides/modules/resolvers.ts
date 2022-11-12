@@ -1,5 +1,6 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.generated';
+import { BigInt } from './base/resolvers/BigInt';
 import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/topicCreate';
 import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
 import { PaginationResult } from './base/resolvers/PaginationResult';
@@ -8,6 +9,7 @@ import { me as Query_me } from './user/resolvers/Query/me';
 import { topicById as Query_topicById } from './topic/resolvers/Query/topicById';
 import { topicsCreatedByUser as Query_topicsCreatedByUser } from './topic/resolvers/Query/topicsCreatedByUser';
 import { userByAccountName as Query_userByAccountName } from './user/resolvers/Query/userByAccountName';
+import { SomeOtherScalars } from './base/resolvers/SomeOtherScalars';
 import { StandardError } from './base/resolvers/StandardError';
 import { profileChanges as Subscription_profileChanges } from './user/resolvers/Subscription/profileChanges';
 import { Topic } from './topic/resolvers/Topic';
@@ -35,8 +37,10 @@ export const resolvers: Resolvers = {
     topicEdit: Mutation_topicEdit,
   },
   Subscription: { profileChanges: Subscription_profileChanges },
+  BigInt: BigInt,
   PaginationResult: PaginationResult,
   Profile: Profile,
+  SomeOtherScalars: SomeOtherScalars,
   StandardError: StandardError,
   Topic: Topic,
   TopicByIdPayload: TopicByIdPayload,

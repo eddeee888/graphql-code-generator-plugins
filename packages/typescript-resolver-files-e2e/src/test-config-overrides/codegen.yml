@@ -1,0 +1,23 @@
+# https://www.graphql-code-generator.com/docs/config-reference/codegen-config
+overwrite: true
+schema:
+  - packages/typescript-resolver-files-e2e/src/test-config-overrides/**/*.graphqls
+  - packages/typescript-resolver-files-e2e/src/test-config-overrides/**/*.graphqls.ts
+hooks:
+  afterAllFileWrite:
+    - prettier --write
+generates:
+  packages/typescript-resolver-files-e2e/src/test-config-overrides/modules:
+    preset: ./dist/packages/typescript-resolver-files/src/index.js
+    presetConfig:
+      resolverTypesPath: ./types.generated.ts
+      mainFile: resolvers.ts
+      relativeTargetDir: resolvers
+      externalResolvers:
+        BigInt: ''
+      typeScriptPluginConfig:
+        enumsAsTypes: false
+        scalars:
+          BigInt: number
+      typeScriptResolversPluginConfig:
+        contextType: ./customTypes#ResolverContext

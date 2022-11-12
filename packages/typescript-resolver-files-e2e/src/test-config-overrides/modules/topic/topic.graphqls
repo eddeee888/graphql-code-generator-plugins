@@ -1,0 +1,58 @@
+extend type Query {
+  topicById(id: ID!): TopicByIdPayload!
+  topicsCreatedByUser(
+    input: TopicsCreatedByUserInput!
+  ): TopicsCreatedByUserPayload!
+}
+
+extend type Mutation {
+  topicCreate(input: TopicCreateInput!): TopicCreatePayload!
+  topicEdit(input: TopicEditInput!): TopicEditPayload!
+}
+
+type Topic {
+  id: ID!
+  name: String!
+  url: String
+  creator: User!
+  createdAt: DateTime!
+}
+
+type TopicByIdResult {
+  result: Topic
+}
+
+union TopicByIdPayload = TopicByIdResult | StandardError
+
+input TopicsCreatedByUserInput {
+  userId: ID!
+}
+
+type TopicsCreatedByUserResult {
+  result: [Topic!]!
+}
+
+union TopicsCreatedByUserPayload = TopicsCreatedByUserResult | StandardError
+
+input TopicCreateInput {
+  name: String!
+  url: String
+}
+
+type TopicCreateResult {
+  result: Topic!
+}
+
+union TopicCreatePayload = TopicCreateResult | StandardError
+
+input TopicEditInput {
+  id: ID!
+  name: String!
+  url: String
+}
+
+type TopicEditResult {
+  result: Topic!
+}
+
+union TopicEditPayload = TopicEditResult | StandardError
