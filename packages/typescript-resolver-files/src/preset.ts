@@ -14,6 +14,8 @@ interface ParsedPresetConfig {
   mode: 'merged' | 'modules';
   whitelistedModules: string[];
   externalResolvers: Record<string, string>;
+  typescriptPluginConfig: typescriptPlugin.TypeScriptPluginConfig;
+  typescriptResolversPluginConfig: typescriptResolversPlugin.TypeScriptResolversPluginConfig;
 }
 
 const presetName = '@eddeee888/gcg-typescript-resolver-files';
@@ -44,6 +46,8 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
       mode,
       whitelistedModules,
       externalResolvers,
+      typescriptPluginConfig,
+      typescriptResolversPluginConfig,
     } = validatePresetConfig(rawPresetConfig);
 
     const resolverTypesPath = path.join(
@@ -92,11 +96,17 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
         typescript: typescriptPlugin,
         'typescript-resolvers': typescriptResolversPlugin,
       },
-      plugins: [{ typescript: {} }, { ['typescript-resolvers']: {} }],
-      config: {
-        nonOptionalTypename: true,
-        enumsAsTypes: true,
-      },
+      plugins: [
+        {
+          typescript: {
+            enumsAsTypes: true,
+            nonOptionalTypename: true,
+            ...typescriptPluginConfig,
+          },
+        },
+        { ['typescript-resolvers']: { ...typescriptResolversPluginConfig } },
+      ],
+      config: {},
       schema,
       documents: [],
     });
@@ -112,6 +122,8 @@ interface RawPresetConfig {
   mode?: string;
   whitelistedModules?: string[];
   externalResolvers?: Record<string, string>;
+  typescriptPluginConfig?: typescriptPlugin.TypeScriptPluginConfig;
+  typescriptResolversPluginConfig?: typescriptResolversPlugin.TypeScriptResolversPluginConfig;
 }
 const validatePresetConfig = ({
   resolverTypesPath,
@@ -120,6 +132,8 @@ const validatePresetConfig = ({
   mode = 'modules',
   whitelistedModules,
   externalResolvers = {},
+  typescriptPluginConfig = {},
+  typescriptResolversPluginConfig = {},
 }: RawPresetConfig): ParsedPresetConfig => {
   if (!resolverTypesPath) {
     throw new Error(
@@ -160,5 +174,7 @@ const validatePresetConfig = ({
     mode: mode,
     whitelistedModules: whitelistedModules || [],
     externalResolvers,
+    typescriptPluginConfig,
+    typescriptResolversPluginConfig,
   };
 };
