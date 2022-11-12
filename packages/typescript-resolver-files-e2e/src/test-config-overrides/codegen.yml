@@ -13,3 +13,11 @@ generates:
       resolverTypesPath: ./types.generated.ts
       mainFile: resolvers.ts
       relativeTargetDir: resolvers
+      externalResolvers:
+        BigInt: ''
+      typescriptPluginConfig:
+        enumsAsTypes: false
+        scalars:
+          BigInt: number
+      typescriptResolversPluginConfig:
+        contextType: ./customTypes#ResolverContext

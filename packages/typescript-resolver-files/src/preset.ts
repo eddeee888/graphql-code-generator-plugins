@@ -2,10 +2,16 @@ import * as path from 'path';
 import * as addPlugin from '@graphql-codegen/add';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
 import * as typescriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
+import { resolvers as scalarResolvers } from 'graphql-scalars';
 import type { Types } from '@graphql-codegen/plugin-helpers';
 import { parseSources } from './utils';
 import { RunContext } from './types';
 import { run } from './run';
+
+interface ParsedTypeScriptPluginConfig
+  extends typescriptPlugin.TypeScriptPluginConfig {
+  scalars: Record<string, string>;
+}
 
 interface ParsedPresetConfig {
   resolverTypesPath: string;
@@ -14,7 +20,7 @@ interface ParsedPresetConfig {
   mode: 'merged' | 'modules';
   whitelistedModules: string[];
   externalResolvers: Record<string, string>;
-  typescriptPluginConfig: typescriptPlugin.TypeScriptPluginConfig;
+  typescriptPluginConfig: ParsedTypeScriptPluginConfig;
   typescriptResolversPluginConfig: typescriptResolversPlugin.TypeScriptResolversPluginConfig;
 }
 
@@ -50,44 +56,33 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
       typescriptResolversPluginConfig,
     } = validatePresetConfig(rawPresetConfig);
 
-    const resolverTypesPath = path.join(
-      baseOutputDir,
-      relativeResolverTypesPathFromBaseOutputDir
-    );
+    // typescript and typescript-resolvers
+    const { defaultScalarTypesMap, defaultScalarExternalResolvers } =
+      Object.entries(scalarResolvers).reduce<
+        Record<
+          'defaultScalarTypesMap' | 'defaultScalarExternalResolvers',
+          Record<string, string>
+        >
+      >(
+        (res, [scalarName, scalarResolver]) => {
+          if (
+            scalarResolver.extensions.codegenScalarType &&
+            typeof scalarResolver.extensions.codegenScalarType === 'string'
+          ) {
+            res.defaultScalarTypesMap[scalarName] =
+              scalarResolver.extensions.codegenScalarType;
+          }
 
-    const result: RunContext['result'] = {
-      files: {},
-      externalImports: {},
-    };
+          res.defaultScalarExternalResolvers[
+            scalarName
+          ] = `~graphql-scalars#${scalarResolver.name}Resolver`;
 
-    run({
-      config: {
-        schema: schemaAst,
-        sourcesMap,
-        baseOutputDir,
-        resolverTypesPath,
-        relativeTargetDir,
-        mainFile,
-        mode,
-        whitelistedModules,
-        externalResolvers,
-      },
-      result,
-    });
+          return res;
+        },
+        { defaultScalarTypesMap: {}, defaultScalarExternalResolvers: {} }
+      );
 
-    const generatesSection: Types.GenerateOptions[] = Object.entries(
-      result.files
-    ).map(([filename, { content }]) => ({
-      filename,
-      pluginMap: { add: addPlugin },
-      plugins: [{ add: { content } }],
-      config: {},
-      schema,
-      documents: [],
-    }));
-
-    // Resolvers type file
-    generatesSection.push({
+    const resolverTypesFile: Types.GenerateOptions = {
       filename: path.join(
         baseOutputDir,
         relativeResolverTypesPathFromBaseOutputDir
@@ -102,15 +97,61 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
             enumsAsTypes: true,
             nonOptionalTypename: true,
             ...typescriptPluginConfig,
+            scalars: {
+              ...defaultScalarTypesMap,
+              ...typescriptPluginConfig.scalars,
+            },
           },
         },
-        { ['typescript-resolvers']: { ...typescriptResolversPluginConfig } },
+        {
+          ['typescript-resolvers']: {
+            ...typescriptResolversPluginConfig,
+          },
+        },
       ],
       config: {},
       schema,
       documents: [],
+    };
+
+    // typescript-resolver-types
+    const result: RunContext['result'] = {
+      files: {},
+      externalImports: {},
+    };
+    run({
+      config: {
+        schema: schemaAst,
+        sourcesMap,
+        baseOutputDir,
+        resolverTypesPath: path.join(
+          baseOutputDir,
+          relativeResolverTypesPathFromBaseOutputDir
+        ),
+        relativeTargetDir,
+        mainFile,
+        mode,
+        whitelistedModules,
+        externalResolvers: {
+          ...defaultScalarExternalResolvers,
+          ...externalResolvers,
+        },
+      },
+      result,
     });
 
+    // Prepare `generatesSection`
+    const generatesSection: Types.GenerateOptions[] = Object.entries(
+      result.files
+    ).map(([filename, { content }]) => ({
+      filename,
+      pluginMap: { add: addPlugin },
+      plugins: [{ add: { content } }],
+      config: {},
+      schema,
+      documents: [],
+    }));
+    generatesSection.push(resolverTypesFile);
     return generatesSection;
   },
 };
@@ -167,6 +208,10 @@ const validatePresetConfig = ({
     }
   }
 
+  if (!validateTypescriptPluginConfig(typescriptPluginConfig)) {
+    throw new Error('Invalid typescriptPluginConfig. Should not see this.');
+  }
+
   return {
     resolverTypesPath,
     relativeTargetDir,
@@ -177,4 +222,16 @@ const validatePresetConfig = ({
     typescriptPluginConfig,
     typescriptResolversPluginConfig,
   };
+};
+
+const validateTypescriptPluginConfig = (
+  config: typescriptPlugin.TypeScriptPluginConfig
+): config is ParsedTypeScriptPluginConfig => {
+  config.scalars = config.scalars || {};
+  if (typeof config.scalars === 'string') {
+    throw new Error(
+      `Validation Error - ${presetName} - presetConfig.typescriptPluginConfig.scalars of type "string" is not supported`
+    );
+  }
+  return true;
 };

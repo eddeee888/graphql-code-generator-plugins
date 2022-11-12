@@ -3,6 +3,7 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from 'graphql';
+import { ResolverContext } from './customTypes';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -24,18 +25,21 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  DateTime: any;
+  BigInt: number;
+  DateTime: Date | string;
+  SomeOtherScalars: any;
 };
 
 export type Error = {
   error: ErrorType;
 };
 
-export type ErrorType =
-  | 'FORBIDDEN_ERROR'
-  | 'INPUT_VALIDATION_ERROR'
-  | 'NOT_FOUND'
-  | 'UNEXPECTED_ERROR';
+export enum ErrorType {
+  ForbiddenError = 'FORBIDDEN_ERROR',
+  InputValidationError = 'INPUT_VALIDATION_ERROR',
+  NotFound = 'NOT_FOUND',
+  UnexpectedError = 'UNEXPECTED_ERROR',
+}
 
 export type Mutation = {
   __typename: 'Mutation';
@@ -279,6 +283,7 @@ export type DirectiveResolverFn<
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   Error: ResolversTypes['StandardError'];
   ErrorType: ErrorType;
@@ -290,6 +295,7 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  SomeOtherScalars: ResolverTypeWrapper<Scalars['SomeOtherScalars']>;
   StandardError: ResolverTypeWrapper<StandardError>;
   Subscription: ResolverTypeWrapper<{}>;
   Topic: ResolverTypeWrapper<Topic>;
@@ -320,6 +326,7 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  BigInt: Scalars['BigInt'];
   DateTime: Scalars['DateTime'];
   Error: ResolversParentTypes['StandardError'];
   Mutation: {};
@@ -330,6 +337,7 @@ export type ResolversParentTypes = {
   ID: Scalars['ID'];
   Query: {};
   String: Scalars['String'];
+  SomeOtherScalars: Scalars['SomeOtherScalars'];
   StandardError: StandardError;
   Subscription: {};
   Topic: Topic;
@@ -360,13 +368,18 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
 };
 
+export interface BigIntScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['BigInt'], any> {
+  name: 'BigInt';
+}
+
 export interface DateTimeScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
   name: 'DateTime';
 }
 
 export type ErrorResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['Error'] = ResolversParentTypes['Error']
 > = {
   __resolveType: TypeResolveFn<'StandardError', ParentType, ContextType>;
@@ -374,7 +387,7 @@ export type ErrorResolvers<
 };
 
 export type MutationResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
 > = {
   topicCreate?: Resolver<
@@ -392,7 +405,7 @@ export type MutationResolvers<
 };
 
 export type PaginationResultResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['PaginationResult'] = ResolversParentTypes['PaginationResult']
 > = {
   currentPage?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -402,7 +415,7 @@ export type PaginationResultResolvers<
 };
 
 export type ProfileResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -411,7 +424,7 @@ export type ProfileResolvers<
 };
 
 export type QueryResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
   me?: Resolver<ResolversTypes['UserPayload'], ParentType, ContextType>;
@@ -435,8 +448,13 @@ export type QueryResolvers<
   >;
 };
 
+export interface SomeOtherScalarsScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['SomeOtherScalars'], any> {
+  name: 'SomeOtherScalars';
+}
+
 export type StandardErrorResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['StandardError'] = ResolversParentTypes['StandardError']
 > = {
   error?: Resolver<ResolversTypes['ErrorType'], ParentType, ContextType>;
@@ -444,7 +462,7 @@ export type StandardErrorResolvers<
 };
 
 export type SubscriptionResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']
 > = {
   profileChanges?: SubscriptionResolver<
@@ -456,7 +474,7 @@ export type SubscriptionResolvers<
 };
 
 export type TopicResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['Topic'] = ResolversParentTypes['Topic']
 > = {
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -468,7 +486,7 @@ export type TopicResolvers<
 };
 
 export type TopicByIdPayloadResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['TopicByIdPayload'] = ResolversParentTypes['TopicByIdPayload']
 > = {
   __resolveType: TypeResolveFn<
@@ -479,7 +497,7 @@ export type TopicByIdPayloadResolvers<
 };
 
 export type TopicByIdResultResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['TopicByIdResult'] = ResolversParentTypes['TopicByIdResult']
 > = {
   result?: Resolver<Maybe<ResolversTypes['Topic']>, ParentType, ContextType>;
@@ -487,7 +505,7 @@ export type TopicByIdResultResolvers<
 };
 
 export type TopicCreatePayloadResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['TopicCreatePayload'] = ResolversParentTypes['TopicCreatePayload']
 > = {
   __resolveType: TypeResolveFn<
@@ -498,7 +516,7 @@ export type TopicCreatePayloadResolvers<
 };
 
 export type TopicCreateResultResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['TopicCreateResult'] = ResolversParentTypes['TopicCreateResult']
 > = {
   result?: Resolver<ResolversTypes['Topic'], ParentType, ContextType>;
@@ -506,7 +524,7 @@ export type TopicCreateResultResolvers<
 };
 
 export type TopicEditPayloadResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['TopicEditPayload'] = ResolversParentTypes['TopicEditPayload']
 > = {
   __resolveType: TypeResolveFn<
@@ -517,7 +535,7 @@ export type TopicEditPayloadResolvers<
 };
 
 export type TopicEditResultResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['TopicEditResult'] = ResolversParentTypes['TopicEditResult']
 > = {
   result?: Resolver<ResolversTypes['Topic'], ParentType, ContextType>;
@@ -525,7 +543,7 @@ export type TopicEditResultResolvers<
 };
 
 export type TopicsCreatedByUserPayloadResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['TopicsCreatedByUserPayload'] = ResolversParentTypes['TopicsCreatedByUserPayload']
 > = {
   __resolveType: TypeResolveFn<
@@ -536,7 +554,7 @@ export type TopicsCreatedByUserPayloadResolvers<
 };
 
 export type TopicsCreatedByUserResultResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['TopicsCreatedByUserResult'] = ResolversParentTypes['TopicsCreatedByUserResult']
 > = {
   result?: Resolver<Array<ResolversTypes['Topic']>, ParentType, ContextType>;
@@ -544,7 +562,7 @@ export type TopicsCreatedByUserResultResolvers<
 };
 
 export type UserResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
 > = {
   accountGitHub?: Resolver<
@@ -575,7 +593,7 @@ export type UserResolvers<
 };
 
 export type UserPayloadResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['UserPayload'] = ResolversParentTypes['UserPayload']
 > = {
   __resolveType: TypeResolveFn<
@@ -586,20 +604,22 @@ export type UserPayloadResolvers<
 };
 
 export type UserResultResolvers<
-  ContextType = any,
+  ContextType = ResolverContext,
   ParentType extends ResolversParentTypes['UserResult'] = ResolversParentTypes['UserResult']
 > = {
   result?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type Resolvers<ContextType = any> = {
+export type Resolvers<ContextType = ResolverContext> = {
+  BigInt?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
   Error?: ErrorResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   PaginationResult?: PaginationResultResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  SomeOtherScalars?: GraphQLScalarType;
   StandardError?: StandardErrorResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
   Topic?: TopicResolvers<ContextType>;

@@ -1,6 +1,6 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.generated';
-import { DateTime } from './base/resolvers/DateTime';
+import { BigInt } from './base/resolvers/BigInt';
 import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/topicCreate';
 import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
 import { PaginationResult } from './base/resolvers/PaginationResult';
@@ -9,6 +9,7 @@ import { me as Query_me } from './user/resolvers/Query/me';
 import { topicById as Query_topicById } from './topic/resolvers/Query/topicById';
 import { topicsCreatedByUser as Query_topicsCreatedByUser } from './topic/resolvers/Query/topicsCreatedByUser';
 import { userByAccountName as Query_userByAccountName } from './user/resolvers/Query/userByAccountName';
+import { SomeOtherScalars } from './base/resolvers/SomeOtherScalars';
 import { StandardError } from './base/resolvers/StandardError';
 import { profileChanges as Subscription_profileChanges } from './user/resolvers/Subscription/profileChanges';
 import { Topic } from './topic/resolvers/Topic';
@@ -23,6 +24,7 @@ import { TopicsCreatedByUserResult } from './topic/resolvers/TopicsCreatedByUser
 import { User } from './user/resolvers/User';
 import { UserPayload } from './user/resolvers/UserPayload';
 import { UserResult } from './user/resolvers/UserResult';
+import { DateTimeResolver } from 'graphql-scalars';
 export const resolvers: Resolvers = {
   Query: {
     me: Query_me,
@@ -35,9 +37,10 @@ export const resolvers: Resolvers = {
     topicEdit: Mutation_topicEdit,
   },
   Subscription: { profileChanges: Subscription_profileChanges },
-  DateTime: DateTime,
+  BigInt: BigInt,
   PaginationResult: PaginationResult,
   Profile: Profile,
+  SomeOtherScalars: SomeOtherScalars,
   StandardError: StandardError,
   Topic: Topic,
   TopicByIdPayload: TopicByIdPayload,
@@ -51,4 +54,5 @@ export const resolvers: Resolvers = {
   User: User,
   UserPayload: UserPayload,
   UserResult: UserResult,
+  DateTime: DateTimeResolver,
 };
