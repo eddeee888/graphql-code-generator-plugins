@@ -1,5 +1,12 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.0.4
+
+### Patch Changes
+
+- bcfe20d: Use graphql-scalars types and config
+- bcfe20d: Add support with overrides for typescript and typescript-resolvers plugins
+
 ## 0.0.3
 
 ### Patch Changes
