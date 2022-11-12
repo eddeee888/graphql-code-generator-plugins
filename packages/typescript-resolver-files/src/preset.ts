@@ -1,5 +1,7 @@
 import * as path from 'path';
 import * as addPlugin from '@graphql-codegen/add';
+import * as typescriptPlugin from '@graphql-codegen/typescript';
+import * as typescriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import type { Types } from '@graphql-codegen/plugin-helpers';
 import { parseSources } from './utils';
 import { RunContext } from './types';
@@ -69,14 +71,37 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
       result,
     });
 
-    return Object.entries(result.files).map(([filename, { content }]) => ({
+    const generatesSection: Types.GenerateOptions[] = Object.entries(
+      result.files
+    ).map(([filename, { content }]) => ({
       filename,
       pluginMap: { add: addPlugin },
       plugins: [{ add: { content } }],
-      schema,
       config: {},
+      schema,
       documents: [],
     }));
+
+    // Resolvers type file
+    generatesSection.push({
+      filename: path.join(
+        baseOutputDir,
+        relativeResolverTypesPathFromBaseOutputDir
+      ),
+      pluginMap: {
+        typescript: typescriptPlugin,
+        'typescript-resolvers': typescriptResolversPlugin,
+      },
+      plugins: [{ typescript: {} }, { ['typescript-resolvers']: {} }],
+      config: {
+        nonOptionalTypename: true,
+        enumsAsTypes: true,
+      },
+      schema,
+      documents: [],
+    });
+
+    return generatesSection;
   },
 };
 
