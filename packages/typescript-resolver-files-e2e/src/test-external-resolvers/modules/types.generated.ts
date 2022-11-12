@@ -27,7 +27,7 @@ export type Scalars = {
   AbsoluteDefault: any;
   BigIntNamedWithAlias: any;
   BigIntSameNamedWithAlias: any;
-  DateTime: any;
+  DateTime: Date | string;
   DateTimeNamedImport: any;
   DateTimeSameNamedImport: any;
   RelativeDefault: any;
