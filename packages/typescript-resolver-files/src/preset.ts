@@ -7,6 +7,7 @@ import type { Types } from '@graphql-codegen/plugin-helpers';
 import { parseSources } from './utils';
 import { RunContext } from './types';
 import { run } from './run';
+import { isScalarType } from 'graphql';
 
 type ParsedTypesPluginsConfig = Omit<
   typeScriptPlugin.TypeScriptPluginConfig,
@@ -59,23 +60,32 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
 
     // typescript and typescript-resolvers
     const { defaultScalarTypesMap, defaultScalarExternalResolvers } =
-      Object.entries(scalarResolvers).reduce<
+      Object.entries(schemaAst.getTypeMap()).reduce<
         Record<
           'defaultScalarTypesMap' | 'defaultScalarExternalResolvers',
           Record<string, string>
         >
       >(
-        (res, [scalarName, scalarResolver]) => {
+        (res, [schemaType, namedType]) => {
+          if (!isScalarType(namedType)) {
+            return res;
+          }
+
+          const scalarResolver = scalarResolvers[schemaType];
+          if (!scalarResolver) {
+            return res;
+          }
+
           if (
             scalarResolver.extensions.codegenScalarType &&
             typeof scalarResolver.extensions.codegenScalarType === 'string'
           ) {
-            res.defaultScalarTypesMap[scalarName] =
+            res.defaultScalarTypesMap[schemaType] =
               scalarResolver.extensions.codegenScalarType;
           }
 
           res.defaultScalarExternalResolvers[
-            scalarName
+            schemaType
           ] = `~graphql-scalars#${scalarResolver.name}Resolver`;
 
           return res;

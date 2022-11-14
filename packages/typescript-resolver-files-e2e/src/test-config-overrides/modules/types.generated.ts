@@ -30,6 +30,11 @@ export type Scalars = {
   SomeOtherScalars: any;
 };
 
+export enum Currency {
+  Aud = 'AUD',
+  Usd = 'USD',
+}
+
 export type Error = {
   error: ErrorType;
 };
@@ -284,6 +289,7 @@ export type DirectiveResolverFn<
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
+  Currency: Currency;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   Error: ResolversTypes['StandardError'];
   ErrorType: ErrorType;
