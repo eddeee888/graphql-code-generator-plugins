@@ -1,6 +1,5 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.generated';
-import { BigInt } from './base/resolvers/BigInt';
 import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/topicCreate';
 import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
 import { PaginationResult } from './base/resolvers/PaginationResult';
@@ -24,6 +23,7 @@ import { TopicsCreatedByUserResult } from './topic/resolvers/TopicsCreatedByUser
 import { User } from './user/resolvers/User';
 import { UserPayload } from './user/resolvers/UserPayload';
 import { UserResult } from './user/resolvers/UserResult';
+import CustomBigInt from './base/resolvers/CustomBigInt';
 import { DateTimeResolver } from 'graphql-scalars';
 export const resolvers: Resolvers = {
   Query: {
@@ -37,7 +37,6 @@ export const resolvers: Resolvers = {
     topicEdit: Mutation_topicEdit,
   },
   Subscription: { profileChanges: Subscription_profileChanges },
-  BigInt: BigInt,
   PaginationResult: PaginationResult,
   Profile: Profile,
   SomeOtherScalars: SomeOtherScalars,
@@ -54,5 +53,6 @@ export const resolvers: Resolvers = {
   User: User,
   UserPayload: UserPayload,
   UserResult: UserResult,
+  BigInt: CustomBigInt,
   DateTime: DateTimeResolver,
 };
