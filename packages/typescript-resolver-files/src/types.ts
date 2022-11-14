@@ -38,6 +38,7 @@ export interface RunContext {
     mainFile: string;
     mode: 'merged' | 'modules';
     whitelistedModules: string[];
+    blacklistedModules: string[];
     externalResolvers: Record<string, string>;
   };
   result: {

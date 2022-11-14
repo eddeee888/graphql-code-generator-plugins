@@ -23,6 +23,7 @@ interface ParsedPresetConfig {
   mainFile: string;
   mode: 'merged' | 'modules';
   whitelistedModules: string[];
+  blacklistedModules: string[];
   externalResolvers: Record<string, string>;
   typesPluginsConfig: ParsedTypesPluginsConfig;
 }
@@ -54,6 +55,7 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
       mainFile,
       mode,
       whitelistedModules,
+      blacklistedModules,
       externalResolvers,
       typesPluginsConfig,
     } = validatePresetConfig(rawPresetConfig);
@@ -134,6 +136,7 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
         mainFile,
         mode,
         whitelistedModules,
+        blacklistedModules,
         externalResolvers: {
           ...defaultScalarExternalResolvers,
           ...externalResolvers,
@@ -164,6 +167,7 @@ export interface TypeScriptResolverFilesPresetConfig {
   mainFile?: string;
   mode?: string;
   whitelistedModules?: string[];
+  blacklistedModules?: string[];
   externalResolvers?: Record<string, string>;
   typesPluginsConfig?: typeScriptPlugin.TypeScriptPluginConfig &
     typeScriptResolversPlugin.TypeScriptResolversPluginConfig;
@@ -174,6 +178,7 @@ const validatePresetConfig = ({
   mainFile = 'index.ts',
   mode = 'modules',
   whitelistedModules,
+  blacklistedModules,
   externalResolvers = {},
   typesPluginsConfig = {},
 }: TypeScriptResolverFilesPresetConfig): ParsedPresetConfig => {
@@ -209,6 +214,20 @@ const validatePresetConfig = ({
     }
   }
 
+  if (blacklistedModules) {
+    if (!Array.isArray(blacklistedModules)) {
+      throw new Error(
+        `Validation Error - ${presetName} - presetConfig.blacklistedModules must be an array if provided`
+      );
+    }
+
+    if (mode !== 'modules') {
+      throw new Error(
+        `Validation Error - ${presetName} - presetConfig.blacklistedModules can only be used with presetConfig.mode == "modules"`
+      );
+    }
+  }
+
   if (!validateTypesPluginsConfig(typesPluginsConfig)) {
     throw new Error('Invalid typescriptPluginConfig. Should not see this.');
   }
@@ -219,6 +238,7 @@ const validatePresetConfig = ({
     mainFile,
     mode: mode,
     whitelistedModules: whitelistedModules || [],
+    blacklistedModules: blacklistedModules || [],
     externalResolvers,
     typesPluginsConfig,
   };

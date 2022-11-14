@@ -64,6 +64,9 @@ jobs:
       - name: Lint
         run: yarn nx lint typescript-resolver-files
 
+      - name: Test
+        run: yarn nx test typescript-resolver-files
+
       - name: Build
         run: yarn nx build typescript-resolver-files
 
