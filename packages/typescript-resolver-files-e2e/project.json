@@ -16,8 +16,8 @@
       "configurations": {
         "clean-run": {
           "commands": [
-            "nx e2e-cleanup typescript-resolver-files-e2e",
-            "nx e2e typescript-resolver-files-e2e"
+            "nx e2e-run typescript-resolver-files-e2e -c clean-run",
+            "packages/typescript-resolver-files-e2e/bin/assert-e2e.sh"
           ],
           "parallel": false
         }
@@ -26,7 +26,10 @@
     "e2e-cleanup": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "rimraf packages/typescript-resolver-files-e2e/src/test-*/**/resolvers/"
+        "commands": [
+          "rimraf packages/typescript-resolver-files-e2e/src/test-*/**/resolvers/",
+          "rimraf packages/typescript-resolver-files-e2e/src/**/*.generated.*"
+        ]
       }
     },
     "e2e-run": {
@@ -39,6 +42,15 @@
           "nx graphql-codegen typescript-resolver-files-e2e -c test-external-resolvers",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-config-overrides"
         ]
+      },
+      "configurations": {
+        "clean-run": {
+          "commands": [
+            "nx e2e-cleanup typescript-resolver-files-e2e",
+            "nx e2e-run typescript-resolver-files-e2e"
+          ],
+          "parallel": false
+        }
       }
     },
     "graphql-codegen": {

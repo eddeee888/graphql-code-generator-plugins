@@ -14,6 +14,7 @@ import {
   RunContext,
 } from '../types';
 import { addExternalResolverImport } from './addExternalResolverImport';
+import { checkIfModuleIsWhitelisted } from './checkIfModuleIsWhitelisted';
 
 export interface VisitNamedTypeParams {
   namedType: GraphQLNamedType;
@@ -59,7 +60,7 @@ export const visitNamedType = (
   }
 
   // Check to see if need to generate resolver files
-  const outputDir = parseLocation(
+  const outputDir = parseLocationForOutputDir(
     belongsToRootObject ? [belongsToRootObject] : [],
     ctx,
     location
@@ -85,13 +86,18 @@ export const visitNamedType = (
   }
 };
 
-const parseLocation = (
+/**
+ * Parse location to see which module it belongs to.
+ * Also check against whitelisted and blacklisted to see if need to generate file.
+ */
+const parseLocationForOutputDir = (
   nestedDirs: string[],
   {
     config: {
       mode,
       sourcesMap,
       whitelistedModules,
+      blacklistedModules,
       baseOutputDir,
       relativeTargetDir,
     },
@@ -117,13 +123,13 @@ const parseLocation = (
     throw new Error(`Unable to find ${sourceFilename} in sourcesMap`);
   }
 
-  const isInWhitelistedModule =
-    // whitelistedModules is empty a.k.a. all are whitelisted
-    whitelistedModules.length === 0
-      ? true
-      : whitelistedModules.includes(sourceFile.moduleName);
+  const isWhitelistedModule = checkIfModuleIsWhitelisted({
+    moduleName: sourceFile.moduleName,
+    whitelistedModules,
+    blacklistedModules,
+  });
 
-  return isInWhitelistedModule
+  return isWhitelistedModule
     ? path.join(
         baseOutputDir,
         sourceFile.moduleName,
