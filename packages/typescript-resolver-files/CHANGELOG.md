@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.0.6
+
+### Patch Changes
+
+- eda27b7: Add blacklistedModules config
+
 ## 0.0.5
 
 ### Patch Changes
