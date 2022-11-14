@@ -15,9 +15,8 @@ generates:
       relativeTargetDir: resolvers
       externalResolvers:
         BigInt: ''
-      typeScriptPluginConfig:
+      typesPluginsConfig:
         enumsAsTypes: false
         scalars:
           BigInt: number
-      typeScriptResolversPluginConfig:
         contextType: ./customTypes#ResolverContext

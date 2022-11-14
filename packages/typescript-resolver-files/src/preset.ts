@@ -8,10 +8,13 @@ import { parseSources } from './utils';
 import { RunContext } from './types';
 import { run } from './run';
 
-interface ParsedTypeScriptPluginConfig
-  extends typeScriptPlugin.TypeScriptPluginConfig {
-  scalars: Record<string, string>;
-}
+type ParsedTypesPluginsConfig = Omit<
+  typeScriptPlugin.TypeScriptPluginConfig,
+  'scalars'
+> &
+  Omit<typeScriptResolversPlugin.TypeScriptResolversPluginConfig, 'scalars'> & {
+    scalars: Record<string, string>;
+  };
 
 interface ParsedPresetConfig {
   resolverTypesPath: string;
@@ -20,8 +23,7 @@ interface ParsedPresetConfig {
   mode: 'merged' | 'modules';
   whitelistedModules: string[];
   externalResolvers: Record<string, string>;
-  typeScriptPluginConfig: ParsedTypeScriptPluginConfig;
-  typeScriptResolversPluginConfig: typeScriptResolversPlugin.TypeScriptResolversPluginConfig;
+  typesPluginsConfig: ParsedTypesPluginsConfig;
 }
 
 const presetName = '@eddeee888/gcg-typescript-resolver-files';
@@ -52,8 +54,7 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
       mode,
       whitelistedModules,
       externalResolvers,
-      typeScriptPluginConfig,
-      typeScriptResolversPluginConfig,
+      typesPluginsConfig,
     } = validatePresetConfig(rawPresetConfig);
 
     // typescript and typescript-resolvers
@@ -91,25 +92,16 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
         typescript: typeScriptPlugin,
         'typescript-resolvers': typeScriptResolversPlugin,
       },
-      plugins: [
-        {
-          typescript: {
-            enumsAsTypes: true,
-            nonOptionalTypename: true,
-            ...typeScriptPluginConfig,
-            scalars: {
-              ...defaultScalarTypesMap,
-              ...typeScriptPluginConfig.scalars,
-            },
-          },
+      plugins: [{ typescript: {} }, { ['typescript-resolvers']: {} }],
+      config: {
+        enumsAsTypes: true,
+        nonOptionalTypename: true,
+        ...typesPluginsConfig,
+        scalars: {
+          ...defaultScalarTypesMap,
+          ...typesPluginsConfig.scalars,
         },
-        {
-          ['typescript-resolvers']: {
-            ...typeScriptResolversPluginConfig,
-          },
-        },
-      ],
-      config: {},
+      },
       schema,
       documents: [],
     };
@@ -163,8 +155,8 @@ export interface TypeScriptResolverFilesPresetConfig {
   mode?: string;
   whitelistedModules?: string[];
   externalResolvers?: Record<string, string>;
-  typeScriptPluginConfig?: typeScriptPlugin.TypeScriptPluginConfig;
-  typeScriptResolversPluginConfig?: typeScriptResolversPlugin.TypeScriptResolversPluginConfig;
+  typesPluginsConfig?: typeScriptPlugin.TypeScriptPluginConfig &
+    typeScriptResolversPlugin.TypeScriptResolversPluginConfig;
 }
 const validatePresetConfig = ({
   resolverTypesPath,
@@ -173,8 +165,7 @@ const validatePresetConfig = ({
   mode = 'modules',
   whitelistedModules,
   externalResolvers = {},
-  typeScriptPluginConfig = {},
-  typeScriptResolversPluginConfig = {},
+  typesPluginsConfig = {},
 }: TypeScriptResolverFilesPresetConfig): ParsedPresetConfig => {
   if (!resolverTypesPath) {
     throw new Error(
@@ -208,7 +199,7 @@ const validatePresetConfig = ({
     }
   }
 
-  if (!validateTypeScriptPluginConfig(typeScriptPluginConfig)) {
+  if (!validateTypesPluginsConfig(typesPluginsConfig)) {
     throw new Error('Invalid typescriptPluginConfig. Should not see this.');
   }
 
@@ -219,18 +210,17 @@ const validatePresetConfig = ({
     mode: mode,
     whitelistedModules: whitelistedModules || [],
     externalResolvers,
-    typeScriptPluginConfig,
-    typeScriptResolversPluginConfig,
+    typesPluginsConfig,
   };
 };
 
-const validateTypeScriptPluginConfig = (
-  config: typeScriptPlugin.TypeScriptPluginConfig
-): config is ParsedTypeScriptPluginConfig => {
+const validateTypesPluginsConfig = (
+  config: NonNullable<TypeScriptResolverFilesPresetConfig['typesPluginsConfig']>
+): config is ParsedPresetConfig['typesPluginsConfig'] => {
   config.scalars = config.scalars || {};
   if (typeof config.scalars === 'string') {
     throw new Error(
-      `Validation Error - ${presetName} - presetConfig.typescriptPluginConfig.scalars of type "string" is not supported`
+      `Validation Error - ${presetName} - presetConfig.typesPluginsConfig.scalars of type "string" is not supported`
     );
   }
   return true;
