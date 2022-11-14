@@ -15,3 +15,5 @@ generates:
       whitelistedModules:
         - base
         - user
+      blacklistedModules:
+        - user
