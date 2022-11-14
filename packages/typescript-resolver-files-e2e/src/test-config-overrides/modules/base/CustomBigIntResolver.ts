@@ -1,5 +1,5 @@
 import type { GraphQLScalarType } from 'graphql';
-const CustomBigInt: GraphQLScalarType = {
+const CustomBigIntResolver: GraphQLScalarType = {
   /* Implement BigInt scalar logic here */
 };
-export default CustomBigInt;
+export default CustomBigIntResolver;

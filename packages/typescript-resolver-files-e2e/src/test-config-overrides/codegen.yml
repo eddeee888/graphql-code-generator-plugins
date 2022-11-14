@@ -14,7 +14,7 @@ generates:
       mainFile: resolvers.ts
       relativeTargetDir: resolvers
       externalResolvers:
-        BigInt: base/resolvers/CustomBigInt#default as CustomBigInt # graphql-scalars' default is `~graphql-scalars#BigIntResolver`
+        BigInt: base/CustomBigIntResolver#default as CustomBigIntResolver # graphql-scalars' default is `~graphql-scalars#BigIntResolver`
       typesPluginsConfig:
         enumsAsTypes: false
         scalars:
