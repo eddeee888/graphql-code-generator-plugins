@@ -27,6 +27,11 @@ type PaginationResult {
   totalPageCount: Int!
 }
 
+enum Currency {
+  USD
+  AUD
+}
+
 scalar DateTime
 scalar BigInt
 scalar SomeOtherScalars
