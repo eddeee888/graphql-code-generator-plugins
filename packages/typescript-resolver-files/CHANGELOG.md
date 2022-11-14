@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.0.5
+
+### Patch Changes
+
+- a15db13: Merge internal `typescript` and `typescript-resolvers` plugins config to one `typesPluginsConfig` field
+
 ## 0.0.4
 
 ### Patch Changes
