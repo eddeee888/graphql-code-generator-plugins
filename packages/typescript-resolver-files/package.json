@@ -1,6 +1,28 @@
 {
   "name": "@eddeee888/gcg-typescript-resolver-files",
   "version": "0.0.6",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eddeee888/graphql-code-generator-plugins.git",
+    "directory": "packages/typescript-resolver-files"
+  },
+  "homepage": "https://github.com/eddeee888/graphql-code-generator-plugins#readme",
+  "keywords": [
+    "plugins",
+    "graphql",
+    "code",
+    "generator",
+    "resolvers",
+    "types",
+    "interfaces",
+    "codegen",
+    "node",
+    "typescript",
+    "ts",
+    "typings"
+  ],
+  "author": "Eddy Nguyen <ch@eddeee888.me>",
+  "license": "MIT",
   "dependencies": {
     "@graphql-codegen/add": "^3.2.1",
     "@graphql-codegen/typescript": "^2.8.1",

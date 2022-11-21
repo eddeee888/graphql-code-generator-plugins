@@ -11,7 +11,7 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler = (
   },
   { result }
 ) => {
-  const resolverVariableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = async (_parent, _arg, _ctx) => { /* Implement ${normalizedResolverName} resolver logic here */ };`;
+  const resolverVariableStatement = `export const ${resolverName}: NonNullable<${resolversTypeMeta.typeString}> = async (_parent, _arg, _ctx) => { /* Implement ${normalizedResolverName} resolver logic here */ };`;
 
   result.files[fieldFilePath] = {
     __filetype: 'resolver',
