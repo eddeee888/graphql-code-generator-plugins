@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.0.7
+
+### Patch Changes
+
+- a53b315: Make generated RootObjectTypeFields NonNullable to make reexports easier
+
 ## 0.0.6
 
 ### Patch Changes
