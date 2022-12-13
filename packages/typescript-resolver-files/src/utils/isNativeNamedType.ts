@@ -5,7 +5,7 @@ import {
 } from 'graphql';
 
 export const isNativeNamedType = (namedType: GraphQLNamedType): boolean => {
-  // Ignore certain types:
+  // "Native" NamedType in this context means the following:
   // 1. introspection types i.e. with `__` prefixes
   // 2. base scalars e.g. Boolean, Int, etc.
   // 3. Other natives (mostly base scalars) which was not defined in the schema i.e. no `astNode`
