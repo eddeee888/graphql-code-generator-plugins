@@ -1,6 +1,6 @@
 import * as path from 'path';
 import type { Source } from '@graphql-tools/utils';
-import type { ImportLineMeta, RootObjectType, SourcesMap } from './types';
+import type { ImportLineMeta, RootObjectType, SourcesMap } from '../types';
 
 export const isRootObjectType = (
   typeName: string
