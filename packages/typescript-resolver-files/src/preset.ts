@@ -2,16 +2,11 @@ import * as path from 'path';
 import * as addPlugin from '@graphql-codegen/add';
 import * as typeScriptPlugin from '@graphql-codegen/typescript';
 import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
-import { resolvers as scalarResolvers } from 'graphql-scalars';
 import type { Types } from '@graphql-codegen/plugin-helpers';
-import {
-  isNativeNamedType,
-  parseLocationForWhitelistedModule,
-  parseSources,
-} from './utils';
+import { parseSources } from './utils';
 import { RunContext } from './types';
 import { run } from './run';
-import { isScalarType } from 'graphql';
+import { getPluginsConfig } from './getPluginsConfig';
 
 type ParsedTypesPluginsConfig = Omit<
   typeScriptPlugin.TypeScriptPluginConfig,
@@ -64,50 +59,14 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
       typesPluginsConfig,
     } = validatePresetConfig(rawPresetConfig);
 
-    // typescript and typescript-resolvers
+    // typescript and typescript-resolvers plugins config
     const { defaultScalarTypesMap, defaultScalarExternalResolvers } =
-      Object.entries(schemaAst.getTypeMap()).reduce<
-        Record<
-          'defaultScalarTypesMap' | 'defaultScalarExternalResolvers',
-          Record<string, string>
-        >
-      >(
-        (res, [schemaType, namedType]) => {
-          if (!isScalarType(namedType) || isNativeNamedType(namedType)) {
-            return res;
-          }
-
-          const parsedSource = parseLocationForWhitelistedModule({
-            location: namedType.astNode?.loc,
-            sourcesMap,
-            whitelistedModules,
-            blacklistedModules,
-          });
-          if (!parsedSource) {
-            return res;
-          }
-
-          const scalarResolver = scalarResolvers[schemaType];
-          if (!scalarResolver) {
-            return res;
-          }
-
-          if (
-            scalarResolver.extensions.codegenScalarType &&
-            typeof scalarResolver.extensions.codegenScalarType === 'string'
-          ) {
-            res.defaultScalarTypesMap[schemaType] =
-              scalarResolver.extensions.codegenScalarType;
-          }
-
-          res.defaultScalarExternalResolvers[
-            schemaType
-          ] = `~graphql-scalars#${scalarResolver.name}Resolver`;
-
-          return res;
-        },
-        { defaultScalarTypesMap: {}, defaultScalarExternalResolvers: {} }
-      );
+      getPluginsConfig({
+        schemaAst,
+        sourcesMap,
+        whitelistedModules,
+        blacklistedModules,
+      });
 
     const resolverTypesFile: Types.GenerateOptions = {
       filename: path.join(
