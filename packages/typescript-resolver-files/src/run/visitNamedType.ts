@@ -6,7 +6,7 @@ import {
   isUnionType,
   Location,
 } from 'graphql';
-import { relativeModulePath } from '../utils';
+import { relativeModulePath, checkIfModuleIsWhitelisted } from '../utils';
 import {
   GraphQLTypeHandler,
   GraphQLTypeHandlerParams,
@@ -14,7 +14,6 @@ import {
   RunContext,
 } from '../types';
 import { addExternalResolverImport } from './addExternalResolverImport';
-import { checkIfModuleIsWhitelisted } from './checkIfModuleIsWhitelisted';
 
 export interface VisitNamedTypeParams {
   namedType: GraphQLNamedType;
