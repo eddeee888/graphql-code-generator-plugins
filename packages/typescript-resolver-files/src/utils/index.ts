@@ -3,6 +3,7 @@ import type { ImportLineMeta, RootObjectType } from '../types';
 
 export * from './parseLocationForWhitelistedModule';
 export * from './parseSources';
+export * from './isNativeNamedType';
 
 // TODO: break the functions below this line into smaller files
 // -----------

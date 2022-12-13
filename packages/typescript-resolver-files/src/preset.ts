@@ -4,7 +4,11 @@ import * as typeScriptPlugin from '@graphql-codegen/typescript';
 import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import { resolvers as scalarResolvers } from 'graphql-scalars';
 import type { Types } from '@graphql-codegen/plugin-helpers';
-import { parseSources } from './utils';
+import {
+  isNativeNamedType,
+  parseLocationForWhitelistedModule,
+  parseSources,
+} from './utils';
 import { RunContext } from './types';
 import { run } from './run';
 import { isScalarType } from 'graphql';
@@ -69,7 +73,17 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
         >
       >(
         (res, [schemaType, namedType]) => {
-          if (!isScalarType(namedType)) {
+          if (!isScalarType(namedType) || isNativeNamedType(namedType)) {
+            return res;
+          }
+
+          const parsedSource = parseLocationForWhitelistedModule({
+            location: namedType.astNode?.loc,
+            sourcesMap,
+            whitelistedModules,
+            blacklistedModules,
+          });
+          if (!parsedSource) {
             return res;
           }
 

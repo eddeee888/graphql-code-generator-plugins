@@ -1,10 +1,6 @@
-import {
-  isObjectType,
-  isIntrospectionType,
-  isSpecifiedScalarType,
-} from 'graphql';
+import { isObjectType } from 'graphql';
 import type { RunContext } from '../types';
-import { isRootObjectType } from '../utils';
+import { isNativeNamedType, isRootObjectType } from '../utils';
 import { addResolversMainFile } from './addResolversMainFile';
 import { fixExistingResolvers } from './fixExistingResolvers';
 import { handleGraphQLRootObjectTypeField } from './handleGraphQLRootObjectTypeField';
@@ -16,14 +12,7 @@ import { visitNamedType, VisitNamedTypeParams } from './visitNamedType';
 export const run = (ctx: RunContext): void => {
   Object.entries(ctx.config.schema.getTypeMap()).forEach(
     ([schemaType, namedType]) => {
-      const isPredefinedScalar = isSpecifiedScalarType(namedType);
-      const isIntrospection = isIntrospectionType(namedType);
-
-      // Ignore certain types:
-      // 1. introspection types i.e. with `__` prefixes
-      // 2. base scalars e.g. Boolean, Int, etc.
-      // 3. Other natives (mostly base scalars) which was not defined in the schema i.e. no `astNode`
-      if (isPredefinedScalar || isIntrospection || !namedType.astNode) {
+      if (isNativeNamedType(namedType)) {
         return;
       }
 
@@ -59,7 +48,7 @@ export const run = (ctx: RunContext): void => {
           namedType,
           resolverName: namedType.name,
           belongsToRootObject: null,
-          location: namedType.astNode.loc,
+          location: namedType.astNode?.loc,
           visitor,
         },
         ctx
