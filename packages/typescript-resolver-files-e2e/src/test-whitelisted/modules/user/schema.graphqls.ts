@@ -22,4 +22,6 @@ export const userTypeDefs = gql`
   }
 
   union UserPayload = UserResult | StandardError
+
+  scalar Date
 `;
