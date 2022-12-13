@@ -1,7 +1,7 @@
 import * as path from 'path';
 import type { ImportLineMeta, RootObjectType } from '../types';
 
-export * from './checkIfModuleIsWhitelisted';
+export * from './parseLocationForWhitelistedModule';
 export * from './parseSources';
 
 // TODO: break the functions below this line into smaller files

@@ -1,7 +1,11 @@
 import * as path from 'path';
 import type { Source } from '@graphql-tools/utils';
 
-export type SourcesMap = Record<string, { source: Source; moduleName: string }>;
+export interface ParsedSource {
+  source: Source;
+  moduleName: string;
+}
+export type SourcesMap = Record<string, ParsedSource>;
 
 export function parseSources(sources: Source[]): SourcesMap {
   const sourcesMap: SourcesMap = {};
