@@ -1,0 +1,30 @@
+type Query
+type Mutation
+
+interface Error {
+  error: ErrorType!
+}
+
+type StandardError implements Error {
+  error: ErrorType!
+}
+
+enum ErrorType {
+  NOT_FOUND
+  INPUT_VALIDATION_ERROR
+  FORBIDDEN_ERROR
+  UNEXPECTED_ERROR
+}
+
+input PaginationInput {
+  recordsPerPage: Int
+  page: Int
+}
+
+type PaginationResult {
+  currentPage: Int!
+  recordsPerPage: Int!
+  totalPageCount: Int!
+}
+
+scalar DateTime
