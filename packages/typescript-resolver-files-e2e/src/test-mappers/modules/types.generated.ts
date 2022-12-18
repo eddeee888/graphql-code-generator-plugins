@@ -3,7 +3,7 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from 'graphql';
-import { ProfileTypeMapper } from './user/typeMappers';
+import { Profile_Mapper } from './user/mappers/type-mappers';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -287,7 +287,7 @@ export type ResolversTypes = {
   PaginationInput: PaginationInput;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   PaginationResult: ResolverTypeWrapper<PaginationResult>;
-  Profile: ResolverTypeWrapper<ProfileTypeMapper>;
+  Profile: ResolverTypeWrapper<Profile_Mapper>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
@@ -327,7 +327,7 @@ export type ResolversParentTypes = {
   PaginationInput: PaginationInput;
   Int: Scalars['Int'];
   PaginationResult: PaginationResult;
-  Profile: ProfileTypeMapper;
+  Profile: Profile_Mapper;
   ID: Scalars['ID'];
   Query: {};
   String: Scalars['String'];

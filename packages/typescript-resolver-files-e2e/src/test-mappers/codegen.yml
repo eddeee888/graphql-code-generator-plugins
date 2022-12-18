@@ -13,3 +13,5 @@ generates:
       resolverTypesPath: ./types.generated.ts
       mainFile: resolvers.ts
       relativeTargetDir: resolvers
+      mappersFile: ./mappers/type-mappers.ts
+      mapperSuffix: _Mapper

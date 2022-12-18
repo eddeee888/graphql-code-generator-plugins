@@ -19,6 +19,8 @@ type ParsedTypesPluginsConfig = Omit<
 interface ParsedPresetConfig {
   resolverTypesPath: string;
   relativeTargetDir: string;
+  mappersFile: string;
+  mapperSuffix: string;
   mainFile: string;
   mode: 'merged' | 'modules';
   whitelistedModules: string[];
@@ -49,6 +51,8 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
     const {
       resolverTypesPath: relativeResolverTypesPathFromBaseOutputDir,
       relativeTargetDir,
+      mappersFile: typeMapperFilename,
+      mapperSuffix: typeMapperSuffix,
       mainFile,
       mode,
       whitelistedModules,
@@ -67,8 +71,8 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
     const typeMappersMap = parseTypeMappers({
       sourcesMap,
       resolverTypesPath,
-      typeMapperFilename: 'typeMappers.ts',
-      typeMapperSuffix: 'TypeMapper',
+      typeMapperFilename,
+      typeMapperSuffix,
     });
 
     // typescript and typescript-resolvers plugins config
@@ -151,6 +155,8 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
 export interface TypeScriptResolverFilesPresetConfig {
   resolverTypesPath?: string;
   relativeTargetDir?: string;
+  mappersFile?: string;
+  mapperSuffix?: string;
   mainFile?: string;
   mode?: string;
   whitelistedModules?: string[];
@@ -162,6 +168,8 @@ export interface TypeScriptResolverFilesPresetConfig {
 const validatePresetConfig = ({
   resolverTypesPath,
   relativeTargetDir = '',
+  mappersFile = 'typeMappers.ts',
+  mapperSuffix = 'Mapper',
   mainFile = 'index.ts',
   mode = 'modules',
   whitelistedModules,
@@ -224,6 +232,8 @@ const validatePresetConfig = ({
     relativeTargetDir,
     mainFile,
     mode: mode,
+    mappersFile,
+    mapperSuffix,
     whitelistedModules: whitelistedModules || [],
     blacklistedModules: blacklistedModules || [],
     externalResolvers,
