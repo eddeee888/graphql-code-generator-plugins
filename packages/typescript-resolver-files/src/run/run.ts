@@ -26,7 +26,7 @@ export const run = (ctx: RunContext): void => {
         ScalarType: handleGraphQLScalarType,
       };
 
-      if (isObjectType(namedType) && isRootObjectType(schemaType)) {
+      if (isRootObjectType(schemaType) && isObjectType(namedType)) {
         Object.entries(namedType.getFields()).forEach(
           ([fieldName, fieldNode]) =>
             visitNamedType(

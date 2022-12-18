@@ -1,7 +1,8 @@
-import { GraphQLSchema, isScalarType } from 'graphql';
+import { GraphQLSchema, isObjectType, isScalarType } from 'graphql';
 import { resolvers as scalarResolvers } from 'graphql-scalars';
 import {
   isNativeNamedType,
+  isRootObjectType,
   parseLocationForWhitelistedModule,
   SourcesMap,
 } from '../utils';
@@ -42,6 +43,10 @@ export const getPluginsConfig = ({
 
       if (isScalarType(namedType)) {
         handleScalarType(schemaType, res);
+      }
+
+      if (isRootObjectType(schemaType) && isObjectType(namedType)) {
+        // Do mapper config logic
       }
 
       return res;
