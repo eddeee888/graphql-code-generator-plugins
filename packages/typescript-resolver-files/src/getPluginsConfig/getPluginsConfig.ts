@@ -4,7 +4,7 @@ import {
   isNativeNamedType,
   parseLocationForWhitelistedModule,
   SourcesMap,
-} from './utils';
+} from '../utils';
 
 interface GetPluginsConfigParams {
   schemaAst: GraphQLSchema;
