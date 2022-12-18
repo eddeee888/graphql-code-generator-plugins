@@ -1,7 +1,7 @@
 import { existsSync } from 'fs';
 import { Project } from 'ts-morph';
 import * as path from 'path';
-import type { ResolverFile, RunContext } from '../types';
+import type { ResolverFile, RunContext } from './types';
 
 export const fixExistingResolvers = ({ result }: RunContext): void => {
   const existingResolverFiles = Object.entries(result.files).reduce<

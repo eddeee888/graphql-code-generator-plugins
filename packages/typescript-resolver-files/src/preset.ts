@@ -5,8 +5,7 @@ import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolver
 import type { Types } from '@graphql-codegen/plugin-helpers';
 import { parseSources } from './parseSources';
 import { getPluginsConfig } from './getPluginsConfig';
-import { run } from './run';
-import { RunContext } from './types';
+import { run, RunContext } from './run';
 
 type ParsedTypesPluginsConfig = Omit<
   typeScriptPlugin.TypeScriptPluginConfig,

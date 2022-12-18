@@ -15,7 +15,7 @@ import {
   GraphQLTypeHandler,
   GraphQLTypeHandlerParams,
   RunContext,
-} from '../types';
+} from './types';
 import { addExternalResolverImport } from './addExternalResolverImport';
 
 export interface VisitNamedTypeParams {

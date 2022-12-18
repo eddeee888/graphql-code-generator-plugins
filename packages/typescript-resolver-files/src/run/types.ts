@@ -1,6 +1,6 @@
 import type { GraphQLSchema } from 'graphql';
-import type { RootObjectType } from './utils';
-import type { SourcesMap } from './parseSources';
+import type { SourcesMap } from '../parseSources';
+import type { ImportLineMeta, RootObjectType } from '../utils';
 
 interface BaseVirtualFile {
   __filetype: string;
@@ -19,13 +19,6 @@ export interface ResolverFile extends BaseVirtualFile {
     resolverVariableStatement: string;
     normalizedResolverName: string;
   };
-}
-
-export interface ImportLineMeta {
-  isTypeImport: boolean;
-  module: string;
-  namedImports: (string | { propertyName: string; identifierName: string })[];
-  defaultImport?: string;
 }
 
 export interface RunContext {
