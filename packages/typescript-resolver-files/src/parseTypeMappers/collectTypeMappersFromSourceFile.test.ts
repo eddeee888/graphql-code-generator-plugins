@@ -39,32 +39,32 @@ describe('collectTypeMappersFromSourceFile', () => {
       Billing: {
         schemaType: 'Billing',
         typeMapperName: 'BillingTypeMapper',
-        configImportPath: 'module1/typeMappers#BillingTypeMapper',
+        configImportPath: './module1/typeMappers#BillingTypeMapper',
       },
       Payment: {
         schemaType: 'Payment',
         typeMapperName: 'PaymentTypeMapper',
-        configImportPath: 'module1/typeMappers#PaymentTypeMapper',
+        configImportPath: './module1/typeMappers#PaymentTypeMapper',
       },
       Address: {
         schemaType: 'Address',
         typeMapperName: 'AddressTypeMapper',
-        configImportPath: 'module1/typeMappers#AddressTypeMapper',
+        configImportPath: './module1/typeMappers#AddressTypeMapper',
       },
       Geo: {
         schemaType: 'Geo',
         typeMapperName: 'GeoTypeMapper',
-        configImportPath: 'module1/typeMappers#GeoTypeMapper',
+        configImportPath: './module1/typeMappers#GeoTypeMapper',
       },
       Preference: {
         schemaType: 'Preference',
         typeMapperName: 'PreferenceTypeMapper',
-        configImportPath: 'module1/typeMappers#PreferenceTypeMapper',
+        configImportPath: './module1/typeMappers#PreferenceTypeMapper',
       },
       Flag: {
         schemaType: 'Flag',
         typeMapperName: 'FlagTypeMapper',
-        configImportPath: 'module1/typeMappers#FlagTypeMapper',
+        configImportPath: './module1/typeMappers#FlagTypeMapper',
       },
     });
   });
@@ -119,32 +119,32 @@ describe('collectTypeMappersFromSourceFile', () => {
       Billing: {
         schemaType: 'Billing',
         typeMapperName: 'BillingTypeMapper',
-        configImportPath: 'module1/typeMappers#BillingTypeMapper',
+        configImportPath: './module1/typeMappers#BillingTypeMapper',
       },
       Payment: {
         schemaType: 'Payment',
         typeMapperName: 'PaymentTypeMapper',
-        configImportPath: 'module1/typeMappers#PaymentTypeMapper',
+        configImportPath: './module1/typeMappers#PaymentTypeMapper',
       },
       Address: {
         schemaType: 'Address',
         typeMapperName: 'AddressTypeMapper',
-        configImportPath: 'module1/typeMappers#AddressTypeMapper',
+        configImportPath: './module1/typeMappers#AddressTypeMapper',
       },
       Geo: {
         schemaType: 'Geo',
         typeMapperName: 'GeoTypeMapper',
-        configImportPath: 'module1/typeMappers#GeoTypeMapper',
+        configImportPath: './module1/typeMappers#GeoTypeMapper',
       },
       Preference: {
         schemaType: 'Preference',
         typeMapperName: 'PreferenceTypeMapper',
-        configImportPath: 'module1/typeMappers#PreferenceTypeMapper',
+        configImportPath: './module1/typeMappers#PreferenceTypeMapper',
       },
       Flag: {
         schemaType: 'Flag',
         typeMapperName: 'FlagTypeMapper',
-        configImportPath: 'module1/typeMappers#FlagTypeMapper',
+        configImportPath: './module1/typeMappers#FlagTypeMapper',
       },
     });
   });
@@ -205,22 +205,22 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     expect(result).toEqual({
       Profile: {
-        configImportPath: 'module1/typeMappers#ProfileTypeMapper',
+        configImportPath: './module1/typeMappers#ProfileTypeMapper',
         schemaType: 'Profile',
         typeMapperName: 'ProfileTypeMapper',
       },
       User: {
-        configImportPath: 'module1/typeMappers#UserTypeMapper',
+        configImportPath: './module1/typeMappers#UserTypeMapper',
         schemaType: 'User',
         typeMapperName: 'UserTypeMapper',
       },
       Like: {
-        configImportPath: 'module1/typeMappers#LikeTypeMapper',
+        configImportPath: './module1/typeMappers#LikeTypeMapper',
         schemaType: 'Like',
         typeMapperName: 'LikeTypeMapper',
       },
       Password: {
-        configImportPath: 'module1/typeMappers#PasswordTypeMapper',
+        configImportPath: './module1/typeMappers#PasswordTypeMapper',
         schemaType: 'Password',
         typeMapperName: 'PasswordTypeMapper',
       },

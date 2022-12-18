@@ -15,6 +15,7 @@ const createPartialLocation = (
 const createParsedSource = (moduleName: string): ParsedSource => {
   return {
     moduleName,
+    moduleDir: `/path/to/${moduleName}`,
     source: { location: `/path/to/${moduleName}/schema.graphqls` },
   };
 };
