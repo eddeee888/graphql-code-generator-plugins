@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as fs from 'fs';
 import { Project } from 'ts-morph';
 import type { SourcesMap } from '../parseSources';
 import { collectTypeMappersFromSourceFile } from './collectTypeMappersFromSourceFile';
@@ -30,6 +31,10 @@ export const parseTypeMappers = ({
         parsedSource.moduleDir,
         typeMapperFilename
       );
+
+      if (!fs.existsSync(typeMapperFilePath)) {
+        return res;
+      }
 
       const project = new Project();
       const [typeMappersSourceFile] =

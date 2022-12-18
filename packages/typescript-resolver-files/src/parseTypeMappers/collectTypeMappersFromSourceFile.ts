@@ -1,5 +1,6 @@
 import * as path from 'path';
 import type { SourceFile } from 'ts-morph';
+import { normalizeRelativePath } from '../utils';
 import type { TypeMappersMap } from './parseTypeMappers';
 
 export const collectTypeMappersFromSourceFile = (
@@ -99,9 +100,11 @@ const addTypeMapperDetailsIfValid = (
   const parsedRelativePathFromResolverTypesToSourceFile = path.parse(
     path.relative(path.dirname(resolverTypesPath), typeMappersFilePath)
   );
-  const relativeImportPathFromResolverTypesToSourceFile = path.join(
-    parsedRelativePathFromResolverTypesToSourceFile.dir,
-    parsedRelativePathFromResolverTypesToSourceFile.name
+  const relativeImportPathFromResolverTypesToSourceFile = normalizeRelativePath(
+    path.join(
+      parsedRelativePathFromResolverTypesToSourceFile.dir,
+      parsedRelativePathFromResolverTypesToSourceFile.name
+    )
   );
 
   result[schemaType] = {

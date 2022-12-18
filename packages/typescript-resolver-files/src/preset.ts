@@ -67,7 +67,7 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
     const typeMappersMap = parseTypeMappers({
       sourcesMap,
       resolverTypesPath,
-      typeMapperFilename: 'typeMapper.ts',
+      typeMapperFilename: 'typeMappers.ts',
       typeMapperSuffix: 'TypeMapper',
     });
 
