@@ -2,7 +2,7 @@ import {
   ParseLocationForWhitelistedModule,
   parseLocationForWhitelistedModule,
 } from './parseLocationForWhitelistedModule';
-import type { ParsedSource, SourcesMap } from './parseSources';
+import type { ParsedSource, SourcesMap } from '../parseSources';
 
 const createPartialLocation = (
   moduleName: string
