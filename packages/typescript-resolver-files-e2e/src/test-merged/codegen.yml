@@ -12,5 +12,6 @@ generates:
     presetConfig:
       resolverTypesPath: ./types.generated.ts
       mode: merged
+      mappersFile: ../mappers/index.ts
       externalResolvers:
         DateTime: ~graphql-tags#DateTimeResolver
