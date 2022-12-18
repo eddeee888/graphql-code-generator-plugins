@@ -1,5 +1,5 @@
 import type { GraphQLSchema } from 'graphql';
-import type { SourcesMap } from './utils';
+import type { SourcesMap, RootObjectType } from './utils';
 
 interface BaseVirtualFile {
   __filetype: string;
@@ -54,8 +54,6 @@ export interface RunContext {
     >;
   };
 }
-
-export type RootObjectType = 'Query' | 'Mutation' | 'Subscription';
 
 export interface GraphQLTypeHandlerParams {
   fieldFilePath: string;

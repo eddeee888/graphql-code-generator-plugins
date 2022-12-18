@@ -1,18 +1,13 @@
 import * as path from 'path';
-import type { ImportLineMeta, RootObjectType } from '../types';
+import type { ImportLineMeta } from '../types';
 
 export * from './parseLocationForWhitelistedModule';
 export * from './parseSources';
 export * from './isNativeNamedType';
+export * from './isRootObjectType';
 
 // TODO: break the functions below this line into smaller files
 // -----------
-export const isRootObjectType = (
-  typeName: string
-): typeName is RootObjectType =>
-  typeName === 'Query' ||
-  typeName === 'Mutation' ||
-  typeName === 'Subscription';
 
 export const relativeModulePath = (from: string, to: string): string => {
   const rawPath = path.relative(from, to);

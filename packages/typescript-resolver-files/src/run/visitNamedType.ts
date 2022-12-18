@@ -9,11 +9,11 @@ import {
 import {
   relativeModulePath,
   parseLocationForWhitelistedModule,
+  RootObjectType,
 } from '../utils';
 import {
   GraphQLTypeHandler,
   GraphQLTypeHandlerParams,
-  RootObjectType,
   RunContext,
 } from '../types';
 import { addExternalResolverImport } from './addExternalResolverImport';

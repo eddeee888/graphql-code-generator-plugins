@@ -1,9 +1,10 @@
 import * as path from 'path';
-import type { RootObjectType, RunContext } from '../types';
+import type { RunContext } from '../types';
 import {
   isRootObjectType,
   printImportLine,
   relativeModulePath,
+  RootObjectType,
 } from '../utils';
 
 export const addResolversMainFile = ({

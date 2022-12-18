@@ -26,7 +26,7 @@ export const getPluginsConfig = ({
 }: GetPluginsConfigParams): GetPluginsConfigResult => {
   return Object.entries(schemaAst.getTypeMap()).reduce<GetPluginsConfigResult>(
     (res, [schemaType, namedType]) => {
-      if (!isScalarType(namedType) || isNativeNamedType(namedType)) {
+      if (isNativeNamedType(namedType)) {
         return res;
       }
 
@@ -40,7 +40,9 @@ export const getPluginsConfig = ({
         return res;
       }
 
-      handleScalarType(schemaType, res);
+      if (isScalarType(namedType)) {
+        handleScalarType(schemaType, res);
+      }
 
       return res;
     },
