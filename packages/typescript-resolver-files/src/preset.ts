@@ -56,6 +56,11 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
       typesPluginsConfig,
     } = validatePresetConfig(rawPresetConfig);
 
+    const generatedResolverTypesFilename = path.join(
+      baseOutputDir,
+      relativeResolverTypesPathFromBaseOutputDir
+    );
+
     const sourcesMap = parseSources(sources);
 
     // typescript and typescript-resolvers plugins config
@@ -68,10 +73,7 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
       });
 
     const resolverTypesFile: Types.GenerateOptions = {
-      filename: path.join(
-        baseOutputDir,
-        relativeResolverTypesPathFromBaseOutputDir
-      ),
+      filename: generatedResolverTypesFilename,
       pluginMap: {
         typescript: typeScriptPlugin,
         'typescript-resolvers': typeScriptResolversPlugin,
@@ -100,10 +102,7 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
         schema: schemaAst,
         sourcesMap,
         baseOutputDir,
-        resolverTypesPath: path.join(
-          baseOutputDir,
-          relativeResolverTypesPathFromBaseOutputDir
-        ),
+        resolverTypesPath: generatedResolverTypesFilename,
         relativeTargetDir,
         mainFile,
         mode,
