@@ -1,10 +1,11 @@
-import { GraphQLSchema, isScalarType } from 'graphql';
+import { GraphQLSchema, isObjectType, isScalarType } from 'graphql';
 import { resolvers as scalarResolvers } from 'graphql-scalars';
+import type { SourcesMap } from '../parseSources';
 import {
   isNativeNamedType,
+  isRootObjectType,
   parseLocationForWhitelistedModule,
-  SourcesMap,
-} from './utils';
+} from '../utils';
 
 interface GetPluginsConfigParams {
   schemaAst: GraphQLSchema;
@@ -26,7 +27,7 @@ export const getPluginsConfig = ({
 }: GetPluginsConfigParams): GetPluginsConfigResult => {
   return Object.entries(schemaAst.getTypeMap()).reduce<GetPluginsConfigResult>(
     (res, [schemaType, namedType]) => {
-      if (!isScalarType(namedType) || isNativeNamedType(namedType)) {
+      if (isNativeNamedType(namedType)) {
         return res;
       }
 
@@ -40,25 +41,38 @@ export const getPluginsConfig = ({
         return res;
       }
 
-      const scalarResolver = scalarResolvers[schemaType];
-      if (!scalarResolver) {
-        return res;
+      if (isScalarType(namedType)) {
+        handleScalarType(schemaType, res);
       }
 
-      if (
-        scalarResolver.extensions.codegenScalarType &&
-        typeof scalarResolver.extensions.codegenScalarType === 'string'
-      ) {
-        res.defaultScalarTypesMap[schemaType] =
-          scalarResolver.extensions.codegenScalarType;
+      if (isRootObjectType(schemaType) && isObjectType(namedType)) {
+        // Do mapper config logic
       }
-
-      res.defaultScalarExternalResolvers[
-        schemaType
-      ] = `~graphql-scalars#${scalarResolver.name}Resolver`;
 
       return res;
     },
     { defaultScalarTypesMap: {}, defaultScalarExternalResolvers: {} }
   );
+};
+
+const handleScalarType = (
+  schemaType: string,
+  result: GetPluginsConfigResult
+): void => {
+  const scalarResolver = scalarResolvers[schemaType];
+  if (!scalarResolver) {
+    return;
+  }
+
+  if (
+    scalarResolver.extensions.codegenScalarType &&
+    typeof scalarResolver.extensions.codegenScalarType === 'string'
+  ) {
+    result.defaultScalarTypesMap[schemaType] =
+      scalarResolver.extensions.codegenScalarType;
+  }
+
+  result.defaultScalarExternalResolvers[
+    schemaType
+  ] = `~graphql-scalars#${scalarResolver.name}Resolver`;
 };

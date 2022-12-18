@@ -1,5 +1,5 @@
-import type { GraphQLTypeHandler } from '../types';
 import { printImportLine } from '../utils';
+import type { GraphQLTypeHandler } from './types';
 
 export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler = (
   {

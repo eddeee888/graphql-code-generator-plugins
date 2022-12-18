@@ -1,5 +1,4 @@
 import { isObjectType } from 'graphql';
-import type { RunContext } from '../types';
 import { isNativeNamedType, isRootObjectType } from '../utils';
 import { addResolversMainFile } from './addResolversMainFile';
 import { fixExistingResolvers } from './fixExistingResolvers';
@@ -8,6 +7,7 @@ import { handleGraphQLObjectType } from './handleGraphQLObjectType';
 import { handleGraphQLUninionType } from './handleGraphQLUninionType';
 import { handleGraphQLScalarType } from './handleGraphQLScalarType';
 import { visitNamedType, VisitNamedTypeParams } from './visitNamedType';
+import type { RunContext } from './types';
 
 export const run = (ctx: RunContext): void => {
   Object.entries(ctx.config.schema.getTypeMap()).forEach(
@@ -26,7 +26,7 @@ export const run = (ctx: RunContext): void => {
         ScalarType: handleGraphQLScalarType,
       };
 
-      if (isObjectType(namedType) && isRootObjectType(schemaType)) {
+      if (isRootObjectType(schemaType) && isObjectType(namedType)) {
         Object.entries(namedType.getFields()).forEach(
           ([fieldName, fieldNode]) =>
             visitNamedType(

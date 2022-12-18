@@ -1,5 +1,5 @@
-import type { RunContext } from '../types';
 import { normalizeRelativePath } from '../utils';
+import type { RunContext } from './types';
 
 interface AddExternalResolverImportParams {
   normalizedResolverName: string;
