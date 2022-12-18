@@ -3,6 +3,7 @@ import type { Source } from '@graphql-tools/utils';
 
 export interface ParsedSource {
   source: Source;
+  moduleDir: string;
   moduleName: string;
 }
 export type SourcesMap = Record<string, ParsedSource>;
@@ -15,13 +16,13 @@ export function parseSources(sources: Source[]): SourcesMap {
       throw new Error('Missing source location');
     }
 
-    const [moduleName] = path
-      .dirname(source.location)
-      .split(path.sep)
-      .slice(-1);
+    const moduleDir = path.dirname(source.location);
+
+    const [moduleName] = moduleDir.split(path.sep).slice(-1);
 
     sourcesMap[source.location] = {
       source,
+      moduleDir,
       moduleName,
     };
   });
