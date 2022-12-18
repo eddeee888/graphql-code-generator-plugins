@@ -24,6 +24,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Date: any;
   DateTime: Date | string;
 };
 
@@ -268,6 +269,7 @@ export type DirectiveResolverFn<
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Date: ResolverTypeWrapper<Scalars['Date']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   Error: ResolversTypes['StandardError'];
   ErrorType: ErrorType;
@@ -307,6 +309,7 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Date: Scalars['Date'];
   DateTime: Scalars['DateTime'];
   Error: ResolversParentTypes['StandardError'];
   Mutation: {};
@@ -344,6 +347,11 @@ export type ResolversParentTypes = {
   UserResult: UserResult;
   Boolean: Scalars['Boolean'];
 };
+
+export interface DateScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
+  name: 'Date';
+}
 
 export interface DateTimeScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
@@ -558,6 +566,7 @@ export type UserResultResolvers<
 };
 
 export type Resolvers<ContextType = any> = {
+  Date?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
   Error?: ErrorResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;

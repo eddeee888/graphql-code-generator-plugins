@@ -6,7 +6,10 @@ import {
   isUnionType,
   Location,
 } from 'graphql';
-import { relativeModulePath } from '../utils';
+import {
+  relativeModulePath,
+  parseLocationForWhitelistedModule,
+} from '../utils';
 import {
   GraphQLTypeHandler,
   GraphQLTypeHandlerParams,
@@ -14,7 +17,6 @@ import {
   RunContext,
 } from '../types';
 import { addExternalResolverImport } from './addExternalResolverImport';
-import { checkIfModuleIsWhitelisted } from './checkIfModuleIsWhitelisted';
 
 export interface VisitNamedTypeParams {
   namedType: GraphQLNamedType;
@@ -104,10 +106,6 @@ const parseLocationForOutputDir = (
   }: RunContext,
   location?: Location
 ): string | undefined => {
-  if (!location) {
-    throw new Error('Location is invalid');
-  }
-
   // If mode is "merged", there's only one module:
   //   - always generate a.k.a  it's always whitelisted
   //   - put them together at degsinated relativeTargetDir
@@ -117,22 +115,17 @@ const parseLocationForOutputDir = (
 
   // 2. mode is "modules", each module is the folder containing the schema files
   // This means one or multiple schema files can add up to one module
-  const sourceFilename = location.source.name;
-  const sourceFile = sourcesMap[sourceFilename];
-  if (!sourceFile) {
-    throw new Error(`Unable to find ${sourceFilename} in sourcesMap`);
-  }
-
-  const isWhitelistedModule = checkIfModuleIsWhitelisted({
-    moduleName: sourceFile.moduleName,
+  const parsedSource = parseLocationForWhitelistedModule({
+    location,
+    sourcesMap,
     whitelistedModules,
     blacklistedModules,
   });
 
-  return isWhitelistedModule
+  return parsedSource
     ? path.join(
         baseOutputDir,
-        sourceFile.moduleName,
+        parsedSource.moduleName,
         relativeTargetDir,
         ...nestedDirs
       )

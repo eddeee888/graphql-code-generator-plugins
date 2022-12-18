@@ -1,5 +1,5 @@
 import type { GraphQLSchema } from 'graphql';
-import type { Source } from '@graphql-tools/utils';
+import type { SourcesMap } from './utils';
 
 interface BaseVirtualFile {
   __filetype: string;
@@ -20,7 +20,6 @@ export interface ResolverFile extends BaseVirtualFile {
   };
 }
 
-export type SourcesMap = Record<string, { source: Source; moduleName: string }>;
 export interface ImportLineMeta {
   isTypeImport: boolean;
   module: string;

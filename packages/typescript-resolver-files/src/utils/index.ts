@@ -1,7 +1,12 @@
 import * as path from 'path';
-import type { Source } from '@graphql-tools/utils';
-import type { ImportLineMeta, RootObjectType, SourcesMap } from './types';
+import type { ImportLineMeta, RootObjectType } from '../types';
 
+export * from './parseLocationForWhitelistedModule';
+export * from './parseSources';
+export * from './isNativeNamedType';
+
+// TODO: break the functions below this line into smaller files
+// -----------
 export const isRootObjectType = (
   typeName: string
 ): typeName is RootObjectType =>
@@ -20,28 +25,6 @@ export const normalizeRelativePath = (path: string): string => {
   }
   return path;
 };
-
-export function parseSources(sources: Source[]): SourcesMap {
-  const sourcesMap: SourcesMap = {};
-
-  sources.forEach((source) => {
-    if (!source.location) {
-      throw new Error('Missing source location');
-    }
-
-    const [moduleName] = path
-      .dirname(source.location)
-      .split(path.sep)
-      .slice(-1);
-
-    sourcesMap[source.location] = {
-      source,
-      moduleName,
-    };
-  });
-
-  return sourcesMap;
-}
 
 export function printImportLine({
   isTypeImport,
