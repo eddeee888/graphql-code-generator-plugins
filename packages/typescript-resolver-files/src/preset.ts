@@ -6,6 +6,7 @@ import type { Types } from '@graphql-codegen/plugin-helpers';
 import { parseSources } from './parseSources';
 import { getPluginsConfig } from './getPluginsConfig';
 import { run, RunContext } from './run';
+import { parseTypeMappers } from './parseTypeMappers';
 
 type ParsedTypesPluginsConfig = Omit<
   typeScriptPlugin.TypeScriptPluginConfig,
@@ -56,24 +57,35 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
       typesPluginsConfig,
     } = validatePresetConfig(rawPresetConfig);
 
-    const generatedResolverTypesFilename = path.join(
+    const resolverTypesPath = path.join(
       baseOutputDir,
       relativeResolverTypesPathFromBaseOutputDir
     );
 
     const sourcesMap = parseSources(sources);
 
+    const typeMappersMap = parseTypeMappers({
+      sourcesMap,
+      resolverTypesPath,
+      typeMapperFilename: 'typeMapper.ts',
+      typeMapperSuffix: 'TypeMapper',
+    });
+
     // typescript and typescript-resolvers plugins config
-    const { defaultScalarTypesMap, defaultScalarExternalResolvers } =
-      getPluginsConfig({
-        schemaAst,
-        sourcesMap,
-        whitelistedModules,
-        blacklistedModules,
-      });
+    const {
+      defaultScalarTypesMap,
+      defaultScalarExternalResolvers,
+      defaultTypeMappers,
+    } = getPluginsConfig({
+      schemaAst,
+      sourcesMap,
+      typeMappersMap,
+      whitelistedModules,
+      blacklistedModules,
+    });
 
     const resolverTypesFile: Types.GenerateOptions = {
-      filename: generatedResolverTypesFilename,
+      filename: resolverTypesPath,
       pluginMap: {
         typescript: typeScriptPlugin,
         'typescript-resolvers': typeScriptResolversPlugin,
@@ -86,6 +98,10 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
         scalars: {
           ...defaultScalarTypesMap,
           ...typesPluginsConfig.scalars,
+        },
+        mappers: {
+          ...defaultTypeMappers,
+          ...typesPluginsConfig.mappers,
         },
       },
       schema,
@@ -102,7 +118,7 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
         schema: schemaAst,
         sourcesMap,
         baseOutputDir,
-        resolverTypesPath: generatedResolverTypesFilename,
+        resolverTypesPath,
         relativeTargetDir,
         mainFile,
         mode,

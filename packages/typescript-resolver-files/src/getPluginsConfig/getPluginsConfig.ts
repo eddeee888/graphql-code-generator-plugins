@@ -1,6 +1,7 @@
 import { GraphQLSchema, isObjectType, isScalarType } from 'graphql';
 import { resolvers as scalarResolvers } from 'graphql-scalars';
 import type { SourcesMap } from '../parseSources';
+import type { TypeMappersMap } from '../parseTypeMappers';
 import {
   isNativeNamedType,
   isRootObjectType,
@@ -10,18 +11,22 @@ import {
 interface GetPluginsConfigParams {
   schemaAst: GraphQLSchema;
   sourcesMap: SourcesMap;
+  typeMappersMap: TypeMappersMap;
   whitelistedModules: string[];
   blacklistedModules: string[];
 }
 
 type GetPluginsConfigResult = Record<
-  'defaultScalarTypesMap' | 'defaultScalarExternalResolvers',
+  | 'defaultScalarTypesMap'
+  | 'defaultScalarExternalResolvers'
+  | 'defaultTypeMappers',
   Record<string, string>
 >;
 
 export const getPluginsConfig = ({
   schemaAst,
   sourcesMap,
+  typeMappersMap,
   whitelistedModules,
   blacklistedModules,
 }: GetPluginsConfigParams): GetPluginsConfigResult => {
@@ -45,13 +50,21 @@ export const getPluginsConfig = ({
         handleScalarType(schemaType, res);
       }
 
-      if (isRootObjectType(schemaType) && isObjectType(namedType)) {
-        // Do mapper config logic
+      if (!isRootObjectType(schemaType) && isObjectType(namedType)) {
+        const typeMapperDetails = typeMappersMap[schemaType];
+        if (typeMapperDetails) {
+          res.defaultTypeMappers[typeMapperDetails.schemaType] =
+            typeMapperDetails.configImportPath;
+        }
       }
 
       return res;
     },
-    { defaultScalarTypesMap: {}, defaultScalarExternalResolvers: {} }
+    {
+      defaultScalarTypesMap: {},
+      defaultScalarExternalResolvers: {},
+      defaultTypeMappers: {},
+    }
   );
 };
 

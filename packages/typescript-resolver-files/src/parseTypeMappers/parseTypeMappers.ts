@@ -16,15 +16,15 @@ export interface TypeMapperDetails {
   configImportPath: string;
 }
 
-export type TypeMappersResult = Record<string, TypeMapperDetails>;
+export type TypeMappersMap = Record<string, TypeMapperDetails>;
 
 export const parseTypeMappers = ({
   sourcesMap,
   resolverTypesPath,
   typeMapperFilename,
   typeMapperSuffix,
-}: ParseTypeMappersParams): TypeMappersResult => {
-  const result = Object.entries(sourcesMap).reduce<TypeMappersResult>(
+}: ParseTypeMappersParams): TypeMappersMap => {
+  const result = Object.entries(sourcesMap).reduce<TypeMappersMap>(
     (res, [_, parsedSource]) => {
       const typeMapperFilePath = path.join(
         parsedSource.moduleDir,

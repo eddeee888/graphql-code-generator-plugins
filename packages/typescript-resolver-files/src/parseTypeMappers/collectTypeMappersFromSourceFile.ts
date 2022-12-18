@@ -1,6 +1,6 @@
 import * as path from 'path';
 import type { SourceFile } from 'ts-morph';
-import type { TypeMappersResult } from './parseTypeMappers';
+import type { TypeMappersMap } from './parseTypeMappers';
 
 export const collectTypeMappersFromSourceFile = (
   {
@@ -12,7 +12,7 @@ export const collectTypeMappersFromSourceFile = (
     typeMapperSuffix: string;
     resolverTypesPath: string;
   },
-  result: TypeMappersResult
+  result: TypeMappersMap
 ): void => {
   // Look for interfaces with exported keywords
   typeMappersSourceFile.getInterfaces().forEach((interfaceDeclaration) => {
@@ -85,7 +85,7 @@ const addTypeMapperDetailsIfValid = (
     typeMappersFilePath: string;
     resolverTypesPath: string;
   },
-  result: TypeMappersResult
+  result: TypeMappersMap
 ): void => {
   if (!identifierName.endsWith(typeMapperSuffix)) {
     return;
