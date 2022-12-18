@@ -1,5 +1,5 @@
 import type { Location } from 'graphql';
-import type { SourcesMap, ParsedSource } from './parseSources';
+import type { SourcesMap, ParsedSource } from '../parseSources';
 
 export interface ParseLocationForWhitelistedModule {
   location: Location | undefined;

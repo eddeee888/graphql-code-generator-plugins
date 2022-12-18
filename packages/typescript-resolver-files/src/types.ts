@@ -1,5 +1,6 @@
 import type { GraphQLSchema } from 'graphql';
-import type { SourcesMap, RootObjectType } from './utils';
+import type { RootObjectType } from './utils';
+import type { SourcesMap } from './parseSources';
 
 interface BaseVirtualFile {
   __filetype: string;

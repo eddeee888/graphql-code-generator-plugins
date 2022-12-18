@@ -2,7 +2,6 @@ import * as path from 'path';
 import type { ImportLineMeta } from '../types';
 
 export * from './parseLocationForWhitelistedModule';
-export * from './parseSources';
 export * from './isNativeNamedType';
 export * from './isRootObjectType';
 

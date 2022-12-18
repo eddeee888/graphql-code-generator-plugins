@@ -1,10 +1,10 @@
 import { GraphQLSchema, isObjectType, isScalarType } from 'graphql';
 import { resolvers as scalarResolvers } from 'graphql-scalars';
+import type { SourcesMap } from '../parseSources';
 import {
   isNativeNamedType,
   isRootObjectType,
   parseLocationForWhitelistedModule,
-  SourcesMap,
 } from '../utils';
 
 interface GetPluginsConfigParams {
