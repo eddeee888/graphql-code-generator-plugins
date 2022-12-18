@@ -40,25 +40,32 @@ export const getPluginsConfig = ({
         return res;
       }
 
-      const scalarResolver = scalarResolvers[schemaType];
-      if (!scalarResolver) {
-        return res;
-      }
-
-      if (
-        scalarResolver.extensions.codegenScalarType &&
-        typeof scalarResolver.extensions.codegenScalarType === 'string'
-      ) {
-        res.defaultScalarTypesMap[schemaType] =
-          scalarResolver.extensions.codegenScalarType;
-      }
-
-      res.defaultScalarExternalResolvers[
-        schemaType
-      ] = `~graphql-scalars#${scalarResolver.name}Resolver`;
+      handleScalarType(schemaType, res);
 
       return res;
     },
     { defaultScalarTypesMap: {}, defaultScalarExternalResolvers: {} }
   );
+};
+
+const handleScalarType = (
+  schemaType: string,
+  result: GetPluginsConfigResult
+): void => {
+  const scalarResolver = scalarResolvers[schemaType];
+  if (!scalarResolver) {
+    return;
+  }
+
+  if (
+    scalarResolver.extensions.codegenScalarType &&
+    typeof scalarResolver.extensions.codegenScalarType === 'string'
+  ) {
+    result.defaultScalarTypesMap[schemaType] =
+      scalarResolver.extensions.codegenScalarType;
+  }
+
+  result.defaultScalarExternalResolvers[
+    schemaType
+  ] = `~graphql-scalars#${scalarResolver.name}Resolver`;
 };
