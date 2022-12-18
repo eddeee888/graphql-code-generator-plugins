@@ -3,7 +3,7 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from 'graphql';
-import { TopicMapper } from './../mappers/index';
+import { TopicMapper, UserMapper } from './../schemas/typeMappers';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -313,9 +313,11 @@ export type ResolversTypes = {
       result: Array<ResolversTypes['Topic']>;
     }
   >;
-  User: ResolverTypeWrapper<User>;
+  User: ResolverTypeWrapper<UserMapper>;
   UserPayload: ResolversTypes['StandardError'] | ResolversTypes['UserResult'];
-  UserResult: ResolverTypeWrapper<UserResult>;
+  UserResult: ResolverTypeWrapper<
+    Omit<UserResult, 'result'> & { result?: Maybe<ResolversTypes['User']> }
+  >;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
@@ -359,11 +361,13 @@ export type ResolversParentTypes = {
   TopicsCreatedByUserResult: Omit<TopicsCreatedByUserResult, 'result'> & {
     result: Array<ResolversParentTypes['Topic']>;
   };
-  User: User;
+  User: UserMapper;
   UserPayload:
     | ResolversParentTypes['StandardError']
     | ResolversParentTypes['UserResult'];
-  UserResult: UserResult;
+  UserResult: Omit<UserResult, 'result'> & {
+    result?: Maybe<ResolversParentTypes['User']>;
+  };
   Boolean: Scalars['Boolean'];
 };
 
