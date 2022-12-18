@@ -47,11 +47,7 @@ export const fixExistingResolvers = ({ result }: RunContext): void => {
               }
             }
           });
-
-        if (!hasExpectedIdentifier) {
-          return false;
-        }
-        return true;
+        return hasExpectedIdentifier;
       });
 
     if (!variableStatementWithExpectedIdentifier) {
