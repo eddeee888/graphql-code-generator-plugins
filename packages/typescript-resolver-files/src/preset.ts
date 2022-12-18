@@ -3,10 +3,10 @@ import * as addPlugin from '@graphql-codegen/add';
 import * as typeScriptPlugin from '@graphql-codegen/typescript';
 import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import type { Types } from '@graphql-codegen/plugin-helpers';
-import { parseSources } from './utils';
-import { RunContext } from './types';
-import { run } from './run';
+import { parseSources } from './parseSources';
 import { getPluginsConfig } from './getPluginsConfig';
+import { run } from './run';
+import { RunContext } from './types';
 
 type ParsedTypesPluginsConfig = Omit<
   typeScriptPlugin.TypeScriptPluginConfig,
@@ -46,8 +46,6 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
       );
     }
 
-    const sourcesMap = parseSources(sources);
-
     const {
       resolverTypesPath: relativeResolverTypesPathFromBaseOutputDir,
       relativeTargetDir,
@@ -58,6 +56,8 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
       externalResolvers,
       typesPluginsConfig,
     } = validatePresetConfig(rawPresetConfig);
+
+    const sourcesMap = parseSources(sources);
 
     // typescript and typescript-resolvers plugins config
     const { defaultScalarTypesMap, defaultScalarExternalResolvers } =
