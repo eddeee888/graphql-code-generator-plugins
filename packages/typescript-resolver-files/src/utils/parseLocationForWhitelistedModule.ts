@@ -1,7 +1,7 @@
 import type { Location } from 'graphql';
 import type { SourcesMap, ParsedSource } from './parseSources';
 
-interface ParseLocationForWhitelistedModule {
+export interface ParseLocationForWhitelistedModule {
   location: Location | undefined;
   sourcesMap: SourcesMap;
   whitelistedModules: string[];
