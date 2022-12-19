@@ -107,9 +107,17 @@ const addTypeMapperDetailsIfValid = (
     )
   );
 
+  const configImportPath = `${relativeImportPathFromResolverTypesToSourceFile}#${identifierName}`;
+
+  if (result[schemaType]) {
+    throw new Error(
+      `GraphQL type "${schemaType}" has duplicated "${identifierName}" mappers:\n  - ${configImportPath}\n  - ${result[schemaType].configImportPath}`
+    );
+  }
+
   result[schemaType] = {
     schemaType,
     typeMapperName: identifierName,
-    configImportPath: `${relativeImportPathFromResolverTypesToSourceFile}#${identifierName}`,
+    configImportPath,
   };
 };
