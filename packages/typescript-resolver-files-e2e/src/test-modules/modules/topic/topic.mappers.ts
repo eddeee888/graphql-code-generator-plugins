@@ -5,7 +5,3 @@ export type TopicMapper = {
   creatorUserId: string;
   createdAt: Date;
 };
-
-export interface UserMapper {
-  id: string;
-}

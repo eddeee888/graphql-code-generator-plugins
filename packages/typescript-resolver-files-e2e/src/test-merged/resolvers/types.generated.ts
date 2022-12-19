@@ -3,7 +3,8 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from 'graphql';
-import { TopicMapper, UserMapper } from './../schemas/typeMappers';
+import { TopicMapper } from './../schemas/topic.mappers';
+import { UserMapper } from './../schemas/user.graphqls.mappers';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
