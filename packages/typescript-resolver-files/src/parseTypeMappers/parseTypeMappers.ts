@@ -7,8 +7,8 @@ import { collectTypeMappersFromSourceFile } from './collectTypeMappersFromSource
 export interface ParseTypeMappersParams {
   sourcesMap: SourcesMap;
   resolverTypesPath: string;
-  typeMapperFilename: string;
-  typeMapperSuffix: string;
+  typeMappersFileExtension: string;
+  typeMappersSuffix: string;
 }
 
 export interface TypeMapperDetails {
@@ -22,14 +22,14 @@ export type TypeMappersMap = Record<string, TypeMapperDetails>;
 export const parseTypeMappers = ({
   sourcesMap,
   resolverTypesPath,
-  typeMapperFilename,
-  typeMapperSuffix,
+  typeMappersFileExtension,
+  typeMappersSuffix,
 }: ParseTypeMappersParams): TypeMappersMap => {
   const result = Object.entries(sourcesMap).reduce<TypeMappersMap>(
-    (res, [_, parsedSource]) => {
+    (res, [_, { sourcePath }]) => {
       const typeMapperFilePath = path.join(
-        parsedSource.moduleDir,
-        typeMapperFilename
+        sourcePath.dir,
+        `${sourcePath.name}${typeMappersFileExtension}`
       );
 
       if (!fs.existsSync(typeMapperFilePath)) {
@@ -41,7 +41,7 @@ export const parseTypeMappers = ({
         project.addSourceFilesAtPaths(typeMapperFilePath);
 
       collectTypeMappersFromSourceFile(
-        { typeMappersSourceFile, typeMapperSuffix, resolverTypesPath },
+        { typeMappersSourceFile, typeMappersSuffix, resolverTypesPath },
         res
       );
 

@@ -1,3 +1,4 @@
+import * as path from 'path';
 import {
   ParseLocationForWhitelistedModule,
   parseLocationForWhitelistedModule,
@@ -13,9 +14,10 @@ const createPartialLocation = (
 };
 
 const createParsedSource = (moduleName: string): ParsedSource => {
+  const location = `/path/to/${moduleName}/schema.graphqls`;
   return {
     moduleName,
-    moduleDir: `/path/to/${moduleName}`,
+    sourcePath: path.parse(location),
     source: { location: `/path/to/${moduleName}/schema.graphqls` },
   };
 };

@@ -6,11 +6,11 @@ import type { TypeMappersMap } from './parseTypeMappers';
 export const collectTypeMappersFromSourceFile = (
   {
     typeMappersSourceFile,
-    typeMapperSuffix,
+    typeMappersSuffix,
     resolverTypesPath,
   }: {
     typeMappersSourceFile: SourceFile;
-    typeMapperSuffix: string;
+    typeMappersSuffix: string;
     resolverTypesPath: string;
   },
   result: TypeMappersMap
@@ -24,7 +24,7 @@ export const collectTypeMappersFromSourceFile = (
     addTypeMapperDetailsIfValid(
       {
         identifierName: interfaceDeclaration.getName(),
-        typeMapperSuffix,
+        typeMappersSuffix,
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
       },
@@ -41,7 +41,7 @@ export const collectTypeMappersFromSourceFile = (
     addTypeMapperDetailsIfValid(
       {
         identifierName: typeAlias.getName(),
-        typeMapperSuffix,
+        typeMappersSuffix,
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
       },
@@ -64,7 +64,7 @@ export const collectTypeMappersFromSourceFile = (
       addTypeMapperDetailsIfValid(
         {
           identifierName: identifierName.trim(), // `getFullText()` always have an emptry space in front of the identifier so we need to trim it
-          typeMapperSuffix,
+          typeMappersSuffix,
           typeMappersFilePath: typeMappersSourceFile.getFilePath(),
           resolverTypesPath,
         },
@@ -77,22 +77,22 @@ export const collectTypeMappersFromSourceFile = (
 const addTypeMapperDetailsIfValid = (
   {
     identifierName,
-    typeMapperSuffix,
+    typeMappersSuffix,
     typeMappersFilePath,
     resolverTypesPath,
   }: {
     identifierName: string;
-    typeMapperSuffix: string;
+    typeMappersSuffix: string;
     typeMappersFilePath: string;
     resolverTypesPath: string;
   },
   result: TypeMappersMap
 ): void => {
-  if (!identifierName.endsWith(typeMapperSuffix)) {
+  if (!identifierName.endsWith(typeMappersSuffix)) {
     return;
   }
 
-  const [schemaType] = identifierName.split(typeMapperSuffix);
+  const [schemaType] = identifierName.split(typeMappersSuffix);
   if (!schemaType) {
     return;
   }

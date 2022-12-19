@@ -2,7 +2,7 @@ import { Project } from 'ts-morph';
 import { collectTypeMappersFromSourceFile } from './collectTypeMappersFromSourceFile';
 
 describe('collectTypeMappersFromSourceFile', () => {
-  it('mutates the result based on typeMapperSuffix for exports from other modules', () => {
+  it('mutates the result based on typeMappersSuffix for exports from other modules', () => {
     const project = new Project();
     project.createSourceFile(
       '/path/to/schemas/module1/typeMappers.ts',
@@ -29,7 +29,7 @@ describe('collectTypeMappersFromSourceFile', () => {
     collectTypeMappersFromSourceFile(
       {
         typeMappersSourceFile: project.getSourceFiles()[0],
-        typeMapperSuffix: 'TypeMapper',
+        typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
       },
       result
@@ -69,7 +69,7 @@ describe('collectTypeMappersFromSourceFile', () => {
     });
   });
 
-  it('mutates the result based on typeMapperSuffix for imports and rexports', () => {
+  it('mutates the result based on typeMappersSuffix for imports and rexports', () => {
     const project = new Project();
     project.createSourceFile(
       '/path/to/schemas/module1/typeMappers.ts',
@@ -109,7 +109,7 @@ describe('collectTypeMappersFromSourceFile', () => {
     collectTypeMappersFromSourceFile(
       {
         typeMappersSourceFile: project.getSourceFiles()[0],
-        typeMapperSuffix: 'TypeMapper',
+        typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
       },
       result
@@ -149,7 +149,7 @@ describe('collectTypeMappersFromSourceFile', () => {
     });
   });
 
-  it('mutates the result based on typeMapperSuffix for locally declared types/interfaces and exported', () => {
+  it('mutates the result based on typeMappersSuffix for locally declared types/interfaces and exported', () => {
     const project = new Project();
     project.createSourceFile(
       '/path/to/schemas/module1/typeMappers.ts',
@@ -197,7 +197,7 @@ describe('collectTypeMappersFromSourceFile', () => {
     collectTypeMappersFromSourceFile(
       {
         typeMappersSourceFile: project.getSourceFiles()[0],
-        typeMapperSuffix: 'TypeMapper',
+        typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
       },
       result
