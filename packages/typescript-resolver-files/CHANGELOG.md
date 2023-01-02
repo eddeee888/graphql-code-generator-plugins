@@ -1,5 +1,17 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.1.0
+
+### Minor Changes
+
+- 80986d8: Update config setting names and defaults to prioritise 'modules' mode over 'merged'
+- 6a918ed: Fix deps vs peerDeps in package.json
+- a81f7f3: Implement auto mappers
+
+### Patch Changes
+
+- 9646937: Fix Scalars in blacklisted modules not being ignored correctly
+
 ## 0.0.7
 
 ### Patch Changes
