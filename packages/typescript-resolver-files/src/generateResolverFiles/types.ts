@@ -27,8 +27,8 @@ export interface GenerateResolverFilesContext {
     sourcesMap: SourcesMap;
     baseOutputDir: string;
     resolverTypesPath: string;
-    relativeTargetDir: string;
-    mainFile: string;
+    resolverRelativeTargetDir: string;
+    resolverMainFile: string;
     mode: 'merged' | 'modules';
     whitelistedModules: string[];
     blacklistedModules: string[];

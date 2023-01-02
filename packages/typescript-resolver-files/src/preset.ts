@@ -21,10 +21,10 @@ type ParsedTypesPluginsConfig = Omit<
 
 interface ParsedPresetConfig {
   resolverTypesPath: string;
-  relativeTargetDir: string;
+  resolverRelativeTargetDir: string;
+  resolverMainFile: string;
   mappersFileExtension: string;
   mappersSuffix: string;
-  mainFile: string;
   mode: 'merged' | 'modules';
   whitelistedModules: string[];
   blacklistedModules: string[];
@@ -53,10 +53,10 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
 
     const {
       resolverTypesPath: relativeResolverTypesPathFromBaseOutputDir,
-      relativeTargetDir,
+      resolverRelativeTargetDir,
       mappersFileExtension: typeMappersFileExtension,
       mappersSuffix: typeMappersSuffix,
-      mainFile,
+      resolverMainFile,
       mode,
       whitelistedModules,
       blacklistedModules,
@@ -126,8 +126,8 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
         sourcesMap,
         baseOutputDir,
         resolverTypesPath,
-        relativeTargetDir,
-        mainFile,
+        resolverRelativeTargetDir,
+        resolverMainFile,
         mode,
         whitelistedModules,
         blacklistedModules,
@@ -155,12 +155,12 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
   },
 };
 
-export interface TypeScriptResolverFilesPresetConfig {
+interface TypeScriptResolverFilesPresetConfig {
   resolverTypesPath?: string;
-  relativeTargetDir?: string;
+  resolverRelativeTargetDir?: string;
+  resolverMainFile?: string;
   mappersFileExtension?: string;
   mappersSuffix?: string;
-  mainFile?: string;
   mode?: string;
   whitelistedModules?: string[];
   blacklistedModules?: string[];
@@ -169,11 +169,11 @@ export interface TypeScriptResolverFilesPresetConfig {
     typeScriptResolversPlugin.TypeScriptResolversPluginConfig;
 }
 const validatePresetConfig = ({
-  resolverTypesPath,
-  relativeTargetDir = '',
+  resolverTypesPath = './types.generated.ts',
+  resolverRelativeTargetDir = 'resolvers',
   mappersFileExtension = '.mappers.ts',
   mappersSuffix = 'Mapper',
-  mainFile = 'index.ts',
+  resolverMainFile = 'resolvers.generated.ts',
   mode = 'modules',
   whitelistedModules,
   blacklistedModules,
@@ -186,7 +186,7 @@ const validatePresetConfig = ({
     );
   }
 
-  if (path.extname(mainFile) === '') {
+  if (path.extname(resolverMainFile) === '') {
     throw new Error(
       `Validation Error - ${presetName} - presetConfig.mainFile must be a valid file name`
     );
@@ -232,9 +232,9 @@ const validatePresetConfig = ({
 
   return {
     resolverTypesPath,
-    relativeTargetDir,
-    mainFile,
-    mode: mode,
+    resolverRelativeTargetDir,
+    resolverMainFile,
+    mode,
     mappersFileExtension,
     mappersSuffix,
     whitelistedModules: whitelistedModules || [],

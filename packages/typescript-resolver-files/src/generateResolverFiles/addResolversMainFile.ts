@@ -7,11 +7,14 @@ import {
 } from '../utils';
 import type { GenerateResolverFilesContext } from './types';
 
-export const addResolversMainFile = ({
-  config: { baseOutputDir, resolverTypesPath, mainFile },
+export const addResolverMainFile = ({
+  config: { baseOutputDir, resolverTypesPath, resolverMainFile },
   result,
 }: GenerateResolverFilesContext): void => {
-  const filename = path.join(baseOutputDir, mainFile.split('/').join(path.sep));
+  const filename = path.join(
+    baseOutputDir,
+    resolverMainFile.split('/').join(path.sep)
+  );
   const outputDir = path.dirname(filename);
 
   const relativePathToResolverTypes = relativeModulePath(
