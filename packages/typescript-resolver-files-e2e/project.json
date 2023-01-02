@@ -36,12 +36,12 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "nx graphql-codegen typescript-resolver-files-e2e -c test-merged",
-          "nx graphql-codegen typescript-resolver-files-e2e -c test-modules",
-          "nx graphql-codegen typescript-resolver-files-e2e -c test-whitelisted",
-          "nx graphql-codegen typescript-resolver-files-e2e -c test-external-resolvers",
-          "nx graphql-codegen typescript-resolver-files-e2e -c test-config-overrides",
-          "nx graphql-codegen typescript-resolver-files-e2e -c test-mappers"
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-merged --verbose",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-modules --verbose",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-whitelisted --verbose",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-external-resolvers --verbose",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-config-overrides --verbose",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-mappers --verbose"
         ]
       },
       "configurations": {
