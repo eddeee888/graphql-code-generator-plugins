@@ -3,6 +3,8 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from 'graphql';
+import { TopicMapper } from './../schemas/topic.mappers';
+import { UserMapper } from './../schemas/user.graphqls.mappers';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -14,6 +16,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>;
 };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
@@ -279,29 +282,43 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   String: ResolverTypeWrapper<Scalars['String']>;
   StandardError: ResolverTypeWrapper<StandardError>;
-  Topic: ResolverTypeWrapper<Topic>;
+  Topic: ResolverTypeWrapper<TopicMapper>;
   TopicByIdPayload:
     | ResolversTypes['StandardError']
     | ResolversTypes['TopicByIdResult'];
-  TopicByIdResult: ResolverTypeWrapper<TopicByIdResult>;
+  TopicByIdResult: ResolverTypeWrapper<
+    Omit<TopicByIdResult, 'result'> & {
+      result?: Maybe<ResolversTypes['Topic']>;
+    }
+  >;
   TopicCreateInput: TopicCreateInput;
   TopicCreatePayload:
     | ResolversTypes['StandardError']
     | ResolversTypes['TopicCreateResult'];
-  TopicCreateResult: ResolverTypeWrapper<TopicCreateResult>;
+  TopicCreateResult: ResolverTypeWrapper<
+    Omit<TopicCreateResult, 'result'> & { result: ResolversTypes['Topic'] }
+  >;
   TopicEditInput: TopicEditInput;
   TopicEditPayload:
     | ResolversTypes['StandardError']
     | ResolversTypes['TopicEditResult'];
-  TopicEditResult: ResolverTypeWrapper<TopicEditResult>;
+  TopicEditResult: ResolverTypeWrapper<
+    Omit<TopicEditResult, 'result'> & { result: ResolversTypes['Topic'] }
+  >;
   TopicsCreatedByUserInput: TopicsCreatedByUserInput;
   TopicsCreatedByUserPayload:
     | ResolversTypes['StandardError']
     | ResolversTypes['TopicsCreatedByUserResult'];
-  TopicsCreatedByUserResult: ResolverTypeWrapper<TopicsCreatedByUserResult>;
-  User: ResolverTypeWrapper<User>;
+  TopicsCreatedByUserResult: ResolverTypeWrapper<
+    Omit<TopicsCreatedByUserResult, 'result'> & {
+      result: Array<ResolversTypes['Topic']>;
+    }
+  >;
+  User: ResolverTypeWrapper<UserMapper>;
   UserPayload: ResolversTypes['StandardError'] | ResolversTypes['UserResult'];
-  UserResult: ResolverTypeWrapper<UserResult>;
+  UserResult: ResolverTypeWrapper<
+    Omit<UserResult, 'result'> & { result?: Maybe<ResolversTypes['User']> }
+  >;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
@@ -317,31 +334,41 @@ export type ResolversParentTypes = {
   ID: Scalars['ID'];
   String: Scalars['String'];
   StandardError: StandardError;
-  Topic: Topic;
+  Topic: TopicMapper;
   TopicByIdPayload:
     | ResolversParentTypes['StandardError']
     | ResolversParentTypes['TopicByIdResult'];
-  TopicByIdResult: TopicByIdResult;
+  TopicByIdResult: Omit<TopicByIdResult, 'result'> & {
+    result?: Maybe<ResolversParentTypes['Topic']>;
+  };
   TopicCreateInput: TopicCreateInput;
   TopicCreatePayload:
     | ResolversParentTypes['StandardError']
     | ResolversParentTypes['TopicCreateResult'];
-  TopicCreateResult: TopicCreateResult;
+  TopicCreateResult: Omit<TopicCreateResult, 'result'> & {
+    result: ResolversParentTypes['Topic'];
+  };
   TopicEditInput: TopicEditInput;
   TopicEditPayload:
     | ResolversParentTypes['StandardError']
     | ResolversParentTypes['TopicEditResult'];
-  TopicEditResult: TopicEditResult;
+  TopicEditResult: Omit<TopicEditResult, 'result'> & {
+    result: ResolversParentTypes['Topic'];
+  };
   TopicsCreatedByUserInput: TopicsCreatedByUserInput;
   TopicsCreatedByUserPayload:
     | ResolversParentTypes['StandardError']
     | ResolversParentTypes['TopicsCreatedByUserResult'];
-  TopicsCreatedByUserResult: TopicsCreatedByUserResult;
-  User: User;
+  TopicsCreatedByUserResult: Omit<TopicsCreatedByUserResult, 'result'> & {
+    result: Array<ResolversParentTypes['Topic']>;
+  };
+  User: UserMapper;
   UserPayload:
     | ResolversParentTypes['StandardError']
     | ResolversParentTypes['UserResult'];
-  UserResult: UserResult;
+  UserResult: Omit<UserResult, 'result'> & {
+    result?: Maybe<ResolversParentTypes['User']>;
+  };
   Boolean: Scalars['Boolean'];
 };
 

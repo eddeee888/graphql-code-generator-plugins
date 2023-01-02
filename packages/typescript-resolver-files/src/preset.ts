@@ -6,6 +6,7 @@ import type { Types } from '@graphql-codegen/plugin-helpers';
 import { parseSources } from './parseSources';
 import { getPluginsConfig } from './getPluginsConfig';
 import { run, RunContext } from './run';
+import { parseTypeMappers } from './parseTypeMappers';
 
 type ParsedTypesPluginsConfig = Omit<
   typeScriptPlugin.TypeScriptPluginConfig,
@@ -18,6 +19,8 @@ type ParsedTypesPluginsConfig = Omit<
 interface ParsedPresetConfig {
   resolverTypesPath: string;
   relativeTargetDir: string;
+  mappersFileExtension: string;
+  mappersSuffix: string;
   mainFile: string;
   mode: 'merged' | 'modules';
   whitelistedModules: string[];
@@ -48,6 +51,8 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
     const {
       resolverTypesPath: relativeResolverTypesPathFromBaseOutputDir,
       relativeTargetDir,
+      mappersFileExtension: typeMappersFileExtension,
+      mappersSuffix: typeMappersSuffix,
       mainFile,
       mode,
       whitelistedModules,
@@ -56,22 +61,35 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
       typesPluginsConfig,
     } = validatePresetConfig(rawPresetConfig);
 
+    const resolverTypesPath = path.join(
+      baseOutputDir,
+      relativeResolverTypesPathFromBaseOutputDir
+    );
+
     const sourcesMap = parseSources(sources);
 
+    const typeMappersMap = parseTypeMappers({
+      sourcesMap,
+      resolverTypesPath,
+      typeMappersFileExtension,
+      typeMappersSuffix,
+    });
+
     // typescript and typescript-resolvers plugins config
-    const { defaultScalarTypesMap, defaultScalarExternalResolvers } =
-      getPluginsConfig({
-        schemaAst,
-        sourcesMap,
-        whitelistedModules,
-        blacklistedModules,
-      });
+    const {
+      defaultScalarTypesMap,
+      defaultScalarExternalResolvers,
+      defaultTypeMappers,
+    } = getPluginsConfig({
+      schemaAst,
+      sourcesMap,
+      typeMappersMap,
+      whitelistedModules,
+      blacklistedModules,
+    });
 
     const resolverTypesFile: Types.GenerateOptions = {
-      filename: path.join(
-        baseOutputDir,
-        relativeResolverTypesPathFromBaseOutputDir
-      ),
+      filename: resolverTypesPath,
       pluginMap: {
         typescript: typeScriptPlugin,
         'typescript-resolvers': typeScriptResolversPlugin,
@@ -84,6 +102,10 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
         scalars: {
           ...defaultScalarTypesMap,
           ...typesPluginsConfig.scalars,
+        },
+        mappers: {
+          ...defaultTypeMappers,
+          ...typesPluginsConfig.mappers,
         },
       },
       schema,
@@ -100,10 +122,7 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
         schema: schemaAst,
         sourcesMap,
         baseOutputDir,
-        resolverTypesPath: path.join(
-          baseOutputDir,
-          relativeResolverTypesPathFromBaseOutputDir
-        ),
+        resolverTypesPath,
         relativeTargetDir,
         mainFile,
         mode,
@@ -136,6 +155,8 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
 export interface TypeScriptResolverFilesPresetConfig {
   resolverTypesPath?: string;
   relativeTargetDir?: string;
+  mappersFileExtension?: string;
+  mappersSuffix?: string;
   mainFile?: string;
   mode?: string;
   whitelistedModules?: string[];
@@ -147,6 +168,8 @@ export interface TypeScriptResolverFilesPresetConfig {
 const validatePresetConfig = ({
   resolverTypesPath,
   relativeTargetDir = '',
+  mappersFileExtension = '.mappers.ts',
+  mappersSuffix = 'Mapper',
   mainFile = 'index.ts',
   mode = 'modules',
   whitelistedModules,
@@ -209,6 +232,8 @@ const validatePresetConfig = ({
     relativeTargetDir,
     mainFile,
     mode: mode,
+    mappersFileExtension,
+    mappersSuffix,
     whitelistedModules: whitelistedModules || [],
     blacklistedModules: blacklistedModules || [],
     externalResolvers,
