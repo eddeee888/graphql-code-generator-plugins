@@ -33,7 +33,7 @@
     "graphql": "16.6.0",
     "graphql-scalars": "1.20.1",
     "jest": "28.1.1",
-    "jest-environment-jsdom": "28.1.1",
+    "jest-environment-jsdom": "29.3.1",
     "nx": "15.2.0",
     "prettier": "^2.6.2",
     "rimraf": "3.0.2",
