@@ -171,9 +171,9 @@ interface TypeScriptResolverFilesPresetConfig {
 const validatePresetConfig = ({
   resolverTypesPath = './types.generated.ts',
   resolverRelativeTargetDir = 'resolvers',
+  resolverMainFile = 'resolvers.generated.ts',
   mappersFileExtension = '.mappers.ts',
   mappersSuffix = 'Mapper',
-  resolverMainFile = 'resolvers.generated.ts',
   mode = 'modules',
   whitelistedModules,
   blacklistedModules,
