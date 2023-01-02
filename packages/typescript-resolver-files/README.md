@@ -6,6 +6,7 @@ This relies on types generated from [typescript](https://the-guild.dev/graphql/c
 
 ```bash
 yarn add -D @eddeee888/gcg-typescript-resolver-files
+yarn add graphql-scalars
 ```
 
 ## Features
