@@ -1,6 +1,6 @@
 import { isObjectType } from 'graphql';
 import { isNativeNamedType, isRootObjectType } from '../utils';
-import { addResolverMainFile } from './addResolversMainFile';
+import { addResolverMainFile } from './addResolverMainFile';
 import { fixExistingResolvers } from './fixExistingResolvers';
 import { handleGraphQLRootObjectTypeField } from './handleGraphQLRootObjectTypeField';
 import { handleGraphQLObjectType } from './handleGraphQLObjectType';
