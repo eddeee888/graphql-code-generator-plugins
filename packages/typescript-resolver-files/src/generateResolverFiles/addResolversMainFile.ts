@@ -5,12 +5,12 @@ import {
   relativeModulePath,
   RootObjectType,
 } from '../utils';
-import type { RunContext } from './types';
+import type { GenerateResolverFilesContext } from './types';
 
 export const addResolversMainFile = ({
   config: { baseOutputDir, resolverTypesPath, mainFile },
   result,
-}: RunContext): void => {
+}: GenerateResolverFilesContext): void => {
   const filename = path.join(baseOutputDir, mainFile.split('/').join(path.sep));
   const outputDir = path.dirname(filename);
 

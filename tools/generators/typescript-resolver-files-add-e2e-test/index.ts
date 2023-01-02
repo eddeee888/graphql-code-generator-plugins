@@ -67,7 +67,7 @@ const updateProjectConfig = (tree: Tree, options: NormalizedSchema): void => {
   }
 
   commands.push(
-    `nx graphql-codegen typescript-resolver-files-e2e -c ${options.testFullName}`
+    `nx graphql-codegen typescript-resolver-files-e2e -c ${options.testFullName} --verbose`
   );
   graphQLCodegenConfig[options.testFullName] = {
     configFile: `packages/typescript-resolver-files-e2e/src/${options.testFullName}/codegen.yml`,

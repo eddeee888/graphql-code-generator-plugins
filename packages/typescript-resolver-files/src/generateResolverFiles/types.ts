@@ -21,7 +21,7 @@ export interface ResolverFile extends BaseVirtualFile {
   };
 }
 
-export interface RunContext {
+export interface GenerateResolverFilesContext {
   config: {
     schema: GraphQLSchema;
     sourcesMap: SourcesMap;
@@ -70,5 +70,5 @@ export interface GraphQLTypeHandlerParams {
 
 export type GraphQLTypeHandler = (
   params: GraphQLTypeHandlerParams,
-  ctx: RunContext
+  ctx: GenerateResolverFilesContext
 ) => void;

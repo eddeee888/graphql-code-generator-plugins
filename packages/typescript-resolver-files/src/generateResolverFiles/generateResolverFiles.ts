@@ -7,9 +7,11 @@ import { handleGraphQLObjectType } from './handleGraphQLObjectType';
 import { handleGraphQLUninionType } from './handleGraphQLUninionType';
 import { handleGraphQLScalarType } from './handleGraphQLScalarType';
 import { visitNamedType, VisitNamedTypeParams } from './visitNamedType';
-import type { RunContext } from './types';
+import type { GenerateResolverFilesContext } from './types';
 
-export const run = (ctx: RunContext): void => {
+export const generateResolverFiles = (
+  ctx: GenerateResolverFilesContext
+): void => {
   Object.entries(ctx.config.schema.getTypeMap()).forEach(
     ([schemaType, namedType]) => {
       if (isNativeNamedType(namedType)) {
