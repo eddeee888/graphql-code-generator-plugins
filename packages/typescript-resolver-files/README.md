@@ -18,12 +18,66 @@ yarn add -D @eddeee888/gcg-typescript-resolver-files
 
 ## Example
 
+### Setup
+
+```graphql
+# src/graphql/modules/base/schema.graphqls
+type Query
+```
+
+```graphql
+# src/graphql/modules/user/schema.graphqls
+extend type Query {
+  user(id: ID!): User
+}
+
+type User {
+  id: ID!
+  fullName: String!
+}
+
+type Address {
+  id: ID!
+  address: String!
+}
+```
+
+````ts
+// src/graphql/modules/user/schema.mappers.graphqls
+
+// Exporting the following Mapper interfaces and types is the equivalent of this codegen config:
+// ```yml
+// mappers:
+//   Address: './user/schema.mappers#AddressMapper'
+//   User: './user/schema.mappers#UserMapper'
+// ```
+
+export { Address as AddressMapper } from 'address-package';
+
+export interface UserMapper {
+  id: string;
+  firstName: string;
+  lastName: string;
+}
+````
+
 ```yml
+# codegen.yml
 schema: '**/*.graphqls'
 generates:
-  src/graphql/resolvers:
+  src/graphql/modules:
     preset: '@eddeee888/gcg-typescript-resolver-files'
 ```
+
+### Result
+
+Running codegen will generate the following files:
+
+- `src/graphql/modules/user/resolvers/Query/user.ts`
+- `src/graphql/modules/user/resolvers/User.ts`
+- `src/graphql/modules/user/resolvers/Address.ts`
+- `src/graphql/modules/resolvers.generated.ts`
+- `src/graphql/modules/types.generated.ts`
 
 ## Config
 
