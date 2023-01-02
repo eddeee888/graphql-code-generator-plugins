@@ -1,5 +1,5 @@
 import { normalizeRelativePath } from '../utils';
-import type { RunContext } from './types';
+import type { GenerateResolverFilesContext } from './types';
 
 interface AddExternalResolverImportParams {
   normalizedResolverName: string;
@@ -13,7 +13,7 @@ interface AddExternalResolverImportParams {
 
 export const addExternalResolverImport = (
   params: AddExternalResolverImportParams,
-  { result }: RunContext
+  { result }: GenerateResolverFilesContext
 ): void => {
   const { importIdentifier, identifierUsage, moduleImport } =
     parseImportSyntax(params);
@@ -28,7 +28,7 @@ export const addExternalResolverImport = (
         defaultImport: undefined,
       },
       identifierUsages: [],
-    } as RunContext['result']['externalImports'][number]);
+    } as GenerateResolverFilesContext['result']['externalImports'][number]);
 
   const externalImport = result.externalImports[moduleImport];
 

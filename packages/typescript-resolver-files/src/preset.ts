@@ -5,7 +5,10 @@ import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolver
 import type { Types } from '@graphql-codegen/plugin-helpers';
 import { parseSources } from './parseSources';
 import { getPluginsConfig } from './getPluginsConfig';
-import { run, RunContext } from './run';
+import {
+  generateResolverFiles,
+  GenerateResolverFilesContext,
+} from './generateResolverFiles';
 import { parseTypeMappers } from './parseTypeMappers';
 
 type ParsedTypesPluginsConfig = Omit<
@@ -112,12 +115,12 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
       documents: [],
     };
 
-    // typescript-resolver-types
-    const result: RunContext['result'] = {
+    // resolver files
+    const result: GenerateResolverFilesContext['result'] = {
       files: {},
       externalImports: {},
     };
-    run({
+    generateResolverFiles({
       config: {
         schema: schemaAst,
         sourcesMap,

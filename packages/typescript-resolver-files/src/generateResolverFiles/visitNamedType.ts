@@ -14,7 +14,7 @@ import {
 import {
   GraphQLTypeHandler,
   GraphQLTypeHandlerParams,
-  RunContext,
+  GenerateResolverFilesContext,
 } from './types';
 import { addExternalResolverImport } from './addExternalResolverImport';
 
@@ -39,7 +39,7 @@ export const visitNamedType = (
     location,
     visitor,
   }: VisitNamedTypeParams,
-  ctx: RunContext
+  ctx: GenerateResolverFilesContext
 ): void => {
   const normalizedResolverName = normalizeResolverName(
     resolverName,
@@ -103,7 +103,7 @@ const parseLocationForOutputDir = (
       baseOutputDir,
       relativeTargetDir,
     },
-  }: RunContext,
+  }: GenerateResolverFilesContext,
   location?: Location
 ): string | undefined => {
   // If mode is "merged", there's only one module:
@@ -145,7 +145,7 @@ const validateAndPrepareForGraphQLTypeHandler = (
     outputDir,
     belongsToRootObject,
   }: ValidateAndPrepareForGraphQLTypeParams,
-  { config, result }: RunContext
+  { config, result }: GenerateResolverFilesContext
 ): GraphQLTypeHandlerParams => {
   const fieldFilePath = path.join(outputDir, `${resolverName}.ts`);
   if (result.files[fieldFilePath]) {
