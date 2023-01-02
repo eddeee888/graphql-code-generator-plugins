@@ -101,7 +101,7 @@ const parseLocationForOutputDir = (
       whitelistedModules,
       blacklistedModules,
       baseOutputDir,
-      relativeTargetDir,
+      resolverRelativeTargetDir,
     },
   }: GenerateResolverFilesContext,
   location?: Location
@@ -110,7 +110,7 @@ const parseLocationForOutputDir = (
   //   - always generate a.k.a  it's always whitelisted
   //   - put them together at degsinated relativeTargetDir
   if (mode === 'merged') {
-    return path.join(baseOutputDir, relativeTargetDir, ...nestedDirs);
+    return path.join(baseOutputDir, resolverRelativeTargetDir, ...nestedDirs);
   }
 
   // 2. mode is "modules", each module is the folder containing the schema files
@@ -126,7 +126,7 @@ const parseLocationForOutputDir = (
     ? path.join(
         baseOutputDir,
         parsedSource.moduleName,
-        relativeTargetDir,
+        resolverRelativeTargetDir,
         ...nestedDirs
       )
     : undefined;

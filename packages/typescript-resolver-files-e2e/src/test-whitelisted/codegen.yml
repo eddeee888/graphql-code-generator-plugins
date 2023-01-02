@@ -10,9 +10,6 @@ generates:
   packages/typescript-resolver-files-e2e/src/test-whitelisted/modules:
     preset: ./dist/packages/typescript-resolver-files/src/index.js
     presetConfig:
-      resolverTypesPath: ./types.generated.ts
-      mainFile: resolvers.generated.ts
-      relativeTargetDir: resolvers
       whitelistedModules:
         - base
         - user

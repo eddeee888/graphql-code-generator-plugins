@@ -7,10 +7,10 @@ hooks:
   afterAllFileWrite:
     - prettier --write
 generates:
-  packages/typescript-resolver-files-e2e/src/test-merged/resolvers:
+  packages/typescript-resolver-files-e2e/src/test-merged/graphql/resolvers:
     preset: ./dist/packages/typescript-resolver-files/src/index.js
     presetConfig:
-      resolverTypesPath: ./types.generated.ts
       mode: merged
+      resolverMainFile: index.ts
       externalResolvers:
         DateTime: ~graphql-tags#DateTimeResolver

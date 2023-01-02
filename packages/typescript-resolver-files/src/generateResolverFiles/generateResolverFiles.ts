@@ -1,6 +1,6 @@
 import { isObjectType } from 'graphql';
 import { isNativeNamedType, isRootObjectType } from '../utils';
-import { addResolversMainFile } from './addResolversMainFile';
+import { addResolverMainFile } from './addResolverMainFile';
 import { fixExistingResolvers } from './fixExistingResolvers';
 import { handleGraphQLRootObjectTypeField } from './handleGraphQLRootObjectTypeField';
 import { handleGraphQLObjectType } from './handleGraphQLObjectType';
@@ -62,5 +62,5 @@ export const generateResolverFiles = (
   fixExistingResolvers(ctx);
 
   // Put all resolvers into a barrel file (or main file)
-  addResolversMainFile(ctx);
+  addResolverMainFile(ctx);
 };

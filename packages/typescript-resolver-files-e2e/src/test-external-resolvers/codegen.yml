@@ -10,9 +10,6 @@ generates:
   packages/typescript-resolver-files-e2e/src/test-external-resolvers/modules:
     preset: ./dist/packages/typescript-resolver-files/src/index.js
     presetConfig:
-      resolverTypesPath: ./types.generated.ts
-      mainFile: resolvers.generated.ts
-      relativeTargetDir: resolvers
       externalResolvers:
         DateTimeNamedImport: ~graphql-scalars#DateTimeNamedResolver
         DateTimeSameNamedImport: ~graphql-scalars#DateTimeSameNamedImportResolver

@@ -10,9 +10,9 @@ generates:
   packages/typescript-resolver-files-e2e/src/test-config-overrides/modules:
     preset: ./dist/packages/typescript-resolver-files/src/index.js
     presetConfig:
-      resolverTypesPath: ./types.generated.ts
-      mainFile: resolvers.generated.ts
-      relativeTargetDir: resolvers
+      resolverTypesPath: ./types.gen.ts
+      resolverRelativeTargetDir: rslvrs
+      resolverMainFile: resolvers.gen.ts
       externalResolvers:
         BigInt: base/CustomBigIntResolver#default as CustomBigIntResolver # graphql-scalars' default is `~graphql-scalars#BigIntResolver`
       typesPluginsConfig:
