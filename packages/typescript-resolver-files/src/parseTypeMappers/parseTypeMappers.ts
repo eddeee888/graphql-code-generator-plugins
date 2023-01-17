@@ -1,11 +1,11 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import { Project } from 'ts-morph';
-import type { SourcesMap } from '../parseSources';
+import type { ParseSourcesResult } from '../parseSources';
 import { collectTypeMappersFromSourceFile } from './collectTypeMappersFromSourceFile';
 
 export interface ParseTypeMappersParams {
-  sourcesMap: SourcesMap;
+  sourceMap: ParseSourcesResult['sourceMap'];
   resolverTypesPath: string;
   typeMappersFileExtension: string;
   typeMappersSuffix: string;
@@ -20,12 +20,12 @@ export interface TypeMapperDetails {
 export type TypeMappersMap = Record<string, TypeMapperDetails>;
 
 export const parseTypeMappers = ({
-  sourcesMap,
+  sourceMap,
   resolverTypesPath,
   typeMappersFileExtension,
   typeMappersSuffix,
 }: ParseTypeMappersParams): TypeMappersMap => {
-  const result = Object.entries(sourcesMap).reduce<TypeMappersMap>(
+  const result = Object.entries(sourceMap).reduce<TypeMappersMap>(
     (res, [_, { sourcePath }]) => {
       const typeMapperFilePath = path.join(
         sourcePath.dir,
