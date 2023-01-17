@@ -3,7 +3,7 @@ import {
   ParseLocationForWhitelistedModule,
   parseLocationForWhitelistedModule,
 } from './parseLocationForWhitelistedModule';
-import type { ParsedSource, SourcesMap } from '../parseSources';
+import type { ParsedSource, ParseSourcesResult } from '../parseSources';
 
 const createPartialLocation = (
   moduleName: string
@@ -22,12 +22,17 @@ const createParsedSource = (moduleName: string): ParsedSource => {
   };
 };
 
-const createSourcesMap = (moduleNames: string[]): SourcesMap => {
-  return moduleNames.reduce<SourcesMap>((res, moduleName) => {
-    const sourceLocation = `/path/to/${moduleName}/schema.graphqls`;
-    res[sourceLocation] = createParsedSource(moduleName);
-    return res;
-  }, {});
+const createSourcesMap = (
+  moduleNames: string[]
+): ParseSourcesResult['sourceMap'] => {
+  return moduleNames.reduce<ParseSourcesResult['sourceMap']>(
+    (res, moduleName) => {
+      const sourceLocation = `/path/to/${moduleName}/schema.graphqls`;
+      res[sourceLocation] = createParsedSource(moduleName);
+      return res;
+    },
+    {}
+  );
 };
 
 describe('parseLocationForWhitelistedModule', () => {
@@ -36,7 +41,7 @@ describe('parseLocationForWhitelistedModule', () => {
       description:
         'is whitelisted if whitelistedModules and blacklistedModules are empty arrays',
       location: createPartialLocation('module1'),
-      sourcesMap: createSourcesMap(['module1']),
+      sourceMap: createSourcesMap(['module1']),
       whitelistedModules: [],
       blacklistedModules: [],
       result: createParsedSource('module1'),
@@ -44,7 +49,7 @@ describe('parseLocationForWhitelistedModule', () => {
     {
       description: 'is whitelisted if exists in whitelistedModules',
       location: createPartialLocation('module2'),
-      sourcesMap: createSourcesMap(['module1', 'module2', 'module3']),
+      sourceMap: createSourcesMap(['module1', 'module2', 'module3']),
       whitelistedModules: ['module1', 'module2', 'module3'],
       blacklistedModules: [],
       result: createParsedSource('module2'),
@@ -52,7 +57,7 @@ describe('parseLocationForWhitelistedModule', () => {
     {
       description: 'is NOT whitelisted if not exists in whitelistedModules',
       location: createPartialLocation('module2'),
-      sourcesMap: createSourcesMap(['module1', 'module2', 'module3']),
+      sourceMap: createSourcesMap(['module1', 'module2', 'module3']),
       whitelistedModules: ['module1', 'module3'],
       blacklistedModules: [],
       result: undefined,
@@ -61,7 +66,7 @@ describe('parseLocationForWhitelistedModule', () => {
       description:
         'is whitelisted if exists in whitelistedModules but not blacklistedModules',
       location: createPartialLocation('module2'),
-      sourcesMap: createSourcesMap(['module1', 'module2', 'module3']),
+      sourceMap: createSourcesMap(['module1', 'module2', 'module3']),
       whitelistedModules: ['module1', 'module2', 'module3'],
       blacklistedModules: ['module1'],
       result: createParsedSource('module2'),
@@ -70,7 +75,7 @@ describe('parseLocationForWhitelistedModule', () => {
       description:
         'is whitelisted if whitelistedModules is empty but does not exist in blacklistedModules',
       location: createPartialLocation('module2'),
-      sourcesMap: createSourcesMap(['module1', 'module2', 'module3']),
+      sourceMap: createSourcesMap(['module1', 'module2', 'module3']),
       whitelistedModules: [],
       blacklistedModules: ['module1'],
       result: createParsedSource('module2'),
@@ -79,7 +84,7 @@ describe('parseLocationForWhitelistedModule', () => {
       description:
         'is NOT whitelisted if exists in both whitelistedModules and blacklistedModules',
       location: createPartialLocation('module1'),
-      sourcesMap: createSourcesMap(['module1', 'module2', 'module3']),
+      sourceMap: createSourcesMap(['module1', 'module2', 'module3']),
       whitelistedModules: ['module1', 'module2', 'module3'],
       blacklistedModules: ['module1'],
       result: undefined,
@@ -88,40 +93,34 @@ describe('parseLocationForWhitelistedModule', () => {
       description:
         'is NOT whitelisted if whitelistedModules is empty and exists in blacklistedModules',
       location: createPartialLocation('module3'),
-      sourcesMap: createSourcesMap(['module1', 'module2', 'module3']),
+      sourceMap: createSourcesMap(['module1', 'module2', 'module3']),
       whitelistedModules: [],
       blacklistedModules: ['module3'],
       result: undefined,
     },
   ])(
     '$description',
-    ({
-      location,
-      sourcesMap,
-      blacklistedModules,
-      whitelistedModules,
-      result,
-    }) =>
+    ({ location, sourceMap, blacklistedModules, whitelistedModules, result }) =>
       expect(
         parseLocationForWhitelistedModule({
           location,
-          sourcesMap,
+          sourceMap,
           blacklistedModules,
           whitelistedModules,
         } as unknown as ParseLocationForWhitelistedModule)
       ).toEqual(result)
   );
 
-  it('throws if location does not exist in sourcesMap', () => {
+  it('throws if location does not exist in sourceMap', () => {
     expect(() =>
       parseLocationForWhitelistedModule({
         location: createPartialLocation('module10'),
-        sourcesMap: createSourcesMap(['module1', 'module2']),
+        sourceMap: createSourcesMap(['module1', 'module2']),
         blacklistedModules: [],
         whitelistedModules: [],
       } as unknown as ParseLocationForWhitelistedModule)
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find /path/to/module10/schema.graphqls in sourcesMap"`
+      `"Unable to find /path/to/module10/schema.graphqls in sourceMap"`
     );
   });
 });

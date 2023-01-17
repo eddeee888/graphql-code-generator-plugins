@@ -21,7 +21,7 @@ export const parseLocationForWhitelistedModule = ({
   const sourceFilename = location.source.name;
   const sourceFile = sourceMap[sourceFilename];
   if (!sourceFile) {
-    throw new Error(`Unable to find ${sourceFilename} in sourcesMap`);
+    throw new Error(`Unable to find ${sourceFilename} in sourceMap`);
   }
 
   if (blacklistedModules.includes(sourceFile.moduleName)) {
