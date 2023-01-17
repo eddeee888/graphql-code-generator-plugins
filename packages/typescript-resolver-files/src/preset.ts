@@ -9,6 +9,7 @@ import {
   generateResolverFiles,
   GenerateResolverFilesContext,
 } from './generateResolverFiles';
+import { generateTypeDefsContent } from './generateTypeDefsContent';
 import { parseTypeMappers } from './parseTypeMappers';
 import { RawPresetConfig, validatePresetConfig } from './validatePresetConfig';
 
@@ -35,6 +36,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       mappersFileExtension: typeMappersFileExtension,
       mappersSuffix: typeMappersSuffix,
       resolverMainFile,
+      typeDefsFilePath,
       mode,
       whitelistedModules,
       blacklistedModules,
@@ -47,7 +49,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       relativeResolverTypesPathFromBaseOutputDir
     );
 
-    const { sourceMap } = parseSources(sources);
+    const { sourceMap, mergedSDL } = parseSources(sources);
 
     const typeMappersMap = parseTypeMappers({
       sourceMap,
@@ -55,6 +57,8 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       typeMappersFileExtension,
       typeMappersSuffix,
     });
+
+    const generatesSection: Types.GenerateOptions[] = [];
 
     // typescript and typescript-resolvers plugins config
     const {
@@ -92,6 +96,24 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       schema,
       documents: [],
     };
+    generatesSection.push(resolverTypesFile);
+
+    // typeDefs
+    if (typeDefsFilePath) {
+      const typeDefsFile: Types.GenerateOptions = {
+        filename: path.join(baseOutputDir, typeDefsFilePath),
+        pluginMap: { add: addPlugin },
+        plugins: [
+          {
+            add: { content: generateTypeDefsContent({ mergedSDL }) },
+          },
+        ],
+        config: {},
+        schema,
+        documents: [],
+      };
+      generatesSection.push(typeDefsFile);
+    }
 
     // resolver files
     const result: GenerateResolverFilesContext['result'] = {
@@ -116,19 +138,16 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       },
       result,
     });
+    const resolverFilesGenerateOptions: Types.GenerateOptions[] =
+      Object.entries(result.files).map(([filename, { content }]) => ({
+        filename,
+        pluginMap: { add: addPlugin },
+        plugins: [{ add: { content } }],
+        config: {},
+        schema,
+        documents: [],
+      }));
 
-    // Prepare `generatesSection`
-    const generatesSection: Types.GenerateOptions[] = Object.entries(
-      result.files
-    ).map(([filename, { content }]) => ({
-      filename,
-      pluginMap: { add: addPlugin },
-      plugins: [{ add: { content } }],
-      config: {},
-      schema,
-      documents: [],
-    }));
-    generatesSection.push(resolverTypesFile);
-    return generatesSection;
+    return [...resolverFilesGenerateOptions, ...generatesSection];
   },
 };
