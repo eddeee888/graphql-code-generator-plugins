@@ -1,16 +1,16 @@
 import type { Location } from 'graphql';
-import type { SourcesMap, ParsedSource } from '../parseSources';
+import type { ParseSourcesResult, ParsedSource } from '../parseSources';
 
 export interface ParseLocationForWhitelistedModule {
   location: Location | undefined;
-  sourcesMap: SourcesMap;
+  sourceMap: ParseSourcesResult['sourceMap'];
   whitelistedModules: string[];
   blacklistedModules: string[];
 }
 
 export const parseLocationForWhitelistedModule = ({
   location,
-  sourcesMap,
+  sourceMap,
   whitelistedModules,
   blacklistedModules,
 }: ParseLocationForWhitelistedModule): ParsedSource | undefined => {
@@ -19,9 +19,9 @@ export const parseLocationForWhitelistedModule = ({
   }
 
   const sourceFilename = location.source.name;
-  const sourceFile = sourcesMap[sourceFilename];
+  const sourceFile = sourceMap[sourceFilename];
   if (!sourceFile) {
-    throw new Error(`Unable to find ${sourceFilename} in sourcesMap`);
+    throw new Error(`Unable to find ${sourceFilename} in sourceMap`);
   }
 
   if (blacklistedModules.includes(sourceFile.moduleName)) {

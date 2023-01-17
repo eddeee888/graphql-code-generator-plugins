@@ -1,6 +1,6 @@
 import { GraphQLSchema, isObjectType, isScalarType } from 'graphql';
 import { resolvers as scalarResolvers } from 'graphql-scalars';
-import type { SourcesMap } from '../parseSources';
+import type { ParseSourcesResult } from '../parseSources';
 import type { TypeMappersMap } from '../parseTypeMappers';
 import {
   isNativeNamedType,
@@ -10,7 +10,7 @@ import {
 
 interface GetPluginsConfigParams {
   schemaAst: GraphQLSchema;
-  sourcesMap: SourcesMap;
+  sourceMap: ParseSourcesResult['sourceMap'];
   typeMappersMap: TypeMappersMap;
   whitelistedModules: string[];
   blacklistedModules: string[];
@@ -25,7 +25,7 @@ type GetPluginsConfigResult = Record<
 
 export const getPluginsConfig = ({
   schemaAst,
-  sourcesMap,
+  sourceMap,
   typeMappersMap,
   whitelistedModules,
   blacklistedModules,
@@ -38,7 +38,7 @@ export const getPluginsConfig = ({
 
       const parsedSource = parseLocationForWhitelistedModule({
         location: namedType.astNode?.loc,
-        sourcesMap,
+        sourceMap,
         whitelistedModules,
         blacklistedModules,
       });

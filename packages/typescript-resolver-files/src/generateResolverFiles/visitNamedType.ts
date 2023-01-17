@@ -97,7 +97,7 @@ const parseLocationForOutputDir = (
   {
     config: {
       mode,
-      sourcesMap,
+      sourceMap,
       whitelistedModules,
       blacklistedModules,
       baseOutputDir,
@@ -117,7 +117,7 @@ const parseLocationForOutputDir = (
   // This means one or multiple schema files can add up to one module
   const parsedSource = parseLocationForWhitelistedModule({
     location,
-    sourcesMap,
+    sourceMap,
     whitelistedModules,
     blacklistedModules,
   });

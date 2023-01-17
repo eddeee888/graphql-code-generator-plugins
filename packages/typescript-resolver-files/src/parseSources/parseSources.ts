@@ -6,27 +6,34 @@ export interface ParsedSource {
   sourcePath: path.ParsedPath;
   moduleName: string;
 }
-export type SourcesMap = Record<string, ParsedSource>;
 
-export function parseSources(sources: Source[]): SourcesMap {
-  const sourcesMap: SourcesMap = {};
+export interface ParseSourcesResult {
+  sourceMap: Record<string, ParsedSource>;
+  mergedSDL: string;
+}
 
-  sources.forEach((source) => {
-    if (!source.location) {
-      throw new Error('Missing source location');
-    }
+export function parseSources(sources: Source[]): ParseSourcesResult {
+  return sources.reduce<ParseSourcesResult>(
+    (result, source) => {
+      if (!source.location) {
+        throw new Error('Missing source location');
+      }
 
-    const sourcePath = path.parse(source.location);
-    const moduleDir = sourcePath.dir;
+      const sourcePath = path.parse(source.location);
+      const moduleDir = sourcePath.dir;
 
-    const [moduleName] = moduleDir.split(path.sep).slice(-1);
+      const [moduleName] = moduleDir.split(path.sep).slice(-1);
 
-    sourcesMap[source.location] = {
-      source,
-      sourcePath,
-      moduleName,
-    };
-  });
+      result.sourceMap[source.location] = {
+        source,
+        sourcePath,
+        moduleName,
+      };
 
-  return sourcesMap;
+      result.mergedSDL += `\n${source.rawSDL}`;
+
+      return result;
+    },
+    { sourceMap: {}, mergedSDL: '' }
+  );
 }

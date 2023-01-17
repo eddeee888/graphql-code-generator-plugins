@@ -69,10 +69,10 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
       relativeResolverTypesPathFromBaseOutputDir
     );
 
-    const sourcesMap = parseSources(sources);
+    const { sourceMap } = parseSources(sources);
 
     const typeMappersMap = parseTypeMappers({
-      sourcesMap,
+      sourceMap,
       resolverTypesPath,
       typeMappersFileExtension,
       typeMappersSuffix,
@@ -85,7 +85,7 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
       defaultTypeMappers,
     } = getPluginsConfig({
       schemaAst,
-      sourcesMap,
+      sourceMap,
       typeMappersMap,
       whitelistedModules,
       blacklistedModules,
@@ -123,7 +123,7 @@ export const preset: Types.OutputPreset<ParsedPresetConfig> = {
     generateResolverFiles({
       config: {
         schema: schemaAst,
-        sourcesMap,
+        sourceMap,
         baseOutputDir,
         resolverTypesPath,
         resolverRelativeTargetDir,

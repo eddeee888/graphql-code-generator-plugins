@@ -1,5 +1,5 @@
 import type { GraphQLSchema } from 'graphql';
-import type { SourcesMap } from '../parseSources';
+import type { ParseSourcesResult } from '../parseSources';
 import type { ImportLineMeta, RootObjectType } from '../utils';
 
 interface BaseVirtualFile {
@@ -24,7 +24,7 @@ export interface ResolverFile extends BaseVirtualFile {
 export interface GenerateResolverFilesContext {
   config: {
     schema: GraphQLSchema;
-    sourcesMap: SourcesMap;
+    sourceMap: ParseSourcesResult['sourceMap'];
     baseOutputDir: string;
     resolverTypesPath: string;
     resolverRelativeTargetDir: string;
