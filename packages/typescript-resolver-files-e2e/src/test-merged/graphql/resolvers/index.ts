@@ -1,26 +1,26 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.generated';
-import { topicCreate as Mutation_topicCreate } from './resolvers/Mutation/topicCreate';
-import { topicEdit as Mutation_topicEdit } from './resolvers/Mutation/topicEdit';
-import { PaginationResult } from './resolvers/PaginationResult';
-import { me as Query_me } from './resolvers/Query/me';
-import { topicById as Query_topicById } from './resolvers/Query/topicById';
-import { topicsCreatedByUser as Query_topicsCreatedByUser } from './resolvers/Query/topicsCreatedByUser';
-import { userByAccountName as Query_userByAccountName } from './resolvers/Query/userByAccountName';
-import { StandardError } from './resolvers/StandardError';
-import { Topic } from './resolvers/Topic';
-import { TopicByIdPayload } from './resolvers/TopicByIdPayload';
-import { TopicByIdResult } from './resolvers/TopicByIdResult';
-import { TopicCreatePayload } from './resolvers/TopicCreatePayload';
-import { TopicCreateResult } from './resolvers/TopicCreateResult';
-import { TopicEditPayload } from './resolvers/TopicEditPayload';
-import { TopicEditResult } from './resolvers/TopicEditResult';
-import { TopicsCreatedByUserPayload } from './resolvers/TopicsCreatedByUserPayload';
-import { TopicsCreatedByUserResult } from './resolvers/TopicsCreatedByUserResult';
-import { User } from './resolvers/User';
-import { UserPayload } from './resolvers/UserPayload';
-import { UserResult } from './resolvers/UserResult';
-import { DateTimeResolver } from 'graphql-tags';
+import { topicCreate as Mutation_topicCreate } from './Mutation/topicCreate';
+import { topicEdit as Mutation_topicEdit } from './Mutation/topicEdit';
+import { PaginationResult } from './PaginationResult';
+import { me as Query_me } from './Query/me';
+import { topicById as Query_topicById } from './Query/topicById';
+import { topicsCreatedByUser as Query_topicsCreatedByUser } from './Query/topicsCreatedByUser';
+import { userByAccountName as Query_userByAccountName } from './Query/userByAccountName';
+import { StandardError } from './StandardError';
+import { Topic } from './Topic';
+import { TopicByIdPayload } from './TopicByIdPayload';
+import { TopicByIdResult } from './TopicByIdResult';
+import { TopicCreatePayload } from './TopicCreatePayload';
+import { TopicCreateResult } from './TopicCreateResult';
+import { TopicEditPayload } from './TopicEditPayload';
+import { TopicEditResult } from './TopicEditResult';
+import { TopicsCreatedByUserPayload } from './TopicsCreatedByUserPayload';
+import { TopicsCreatedByUserResult } from './TopicsCreatedByUserResult';
+import { User } from './User';
+import { UserPayload } from './UserPayload';
+import { UserResult } from './UserResult';
+import { DateTimeResolver } from 'graphql-scalars';
 export const resolvers: Resolvers = {
   Query: {
     me: Query_me,
