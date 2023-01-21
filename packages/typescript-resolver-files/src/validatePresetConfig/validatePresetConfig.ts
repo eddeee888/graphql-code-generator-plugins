@@ -4,6 +4,13 @@ import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolver
 
 const presetName = '@eddeee888/gcg-typescript-resolver-files';
 
+const defaultResolverRelativeTargetDirMap: Record<
+  ParsedPresetConfig['mode'],
+  string
+> = {
+  modules: 'resolvers',
+  merged: '',
+};
 const defaultTypeDefsFilePath = './typeDefs.generated.ts';
 
 type ParsedTypesPluginsConfig = Omit<
@@ -45,7 +52,7 @@ export interface RawPresetConfig {
 
 export const validatePresetConfig = ({
   resolverTypesPath = './types.generated.ts',
-  resolverRelativeTargetDir = 'resolvers',
+  resolverRelativeTargetDir,
   resolverMainFile = 'resolvers.generated.ts',
   typeDefsFilePath = defaultTypeDefsFilePath,
   mappersFileExtension = '.mappers.ts',
@@ -56,21 +63,26 @@ export const validatePresetConfig = ({
   externalResolvers = {},
   typesPluginsConfig = {},
 }: RawPresetConfig): ParsedPresetConfig => {
+  if (mode !== 'merged' && mode !== 'modules') {
+    throw new Error(
+      `Validation Error - ${presetName} - presetConfig.mode must be "merged" or "modules" (default is "modules")`
+    );
+  }
+
   if (!resolverTypesPath) {
     throw new Error(
       `Validation Error - ${presetName} - presetConfig.resolverTypesPath is required`
     );
   }
 
+  const finalResolverRelativeTargetDir =
+    resolverRelativeTargetDir === undefined
+      ? defaultResolverRelativeTargetDirMap[mode]
+      : resolverRelativeTargetDir;
+
   if (path.extname(resolverMainFile) === '') {
     throw new Error(
       `Validation Error - ${presetName} - presetConfig.mainFile must be a valid file name`
-    );
-  }
-
-  if (mode !== 'merged' && mode !== 'modules') {
-    throw new Error(
-      `Validation Error - ${presetName} - presetConfig.mode must be "merged" or "modules" (default is "modules")`
     );
   }
 
@@ -113,7 +125,7 @@ export const validatePresetConfig = ({
 
   return {
     resolverTypesPath,
-    resolverRelativeTargetDir,
+    resolverRelativeTargetDir: finalResolverRelativeTargetDir,
     resolverMainFile,
     typeDefsFilePath: finalTypeDefsFilePath,
     mode,

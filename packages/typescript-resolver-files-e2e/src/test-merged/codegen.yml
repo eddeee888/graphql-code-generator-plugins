@@ -12,5 +12,3 @@ generates:
     presetConfig:
       mode: merged
       resolverMainFile: index.ts
-      externalResolvers:
-        DateTime: ~graphql-tags#DateTimeResolver
