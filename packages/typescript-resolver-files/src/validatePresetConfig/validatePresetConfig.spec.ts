@@ -17,7 +17,7 @@ const defaultExpected: ReturnType<typeof validatePresetConfig> = {
 };
 
 describe('validatePresetConfig - general', () => {
-  it('parses correct config by default', () => {
+  it('returns correct default config', () => {
     const parsed = validatePresetConfig({});
 
     expect(parsed).toEqual(defaultExpected);
@@ -177,6 +177,15 @@ describe('validatePresetConfig - mode: modules', () => {
 });
 
 describe('validatePresetConfig - mode: merged', () => {
+  it('returns correct default config for merged mode', () => {
+    const parsed = validatePresetConfig({ mode: 'merged' });
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      mode: 'merged',
+      resolverRelativeTargetDir: '',
+    });
+  });
+
   it('throws if config.whitelistedModules is provided', () => {
     expect(() =>
       validatePresetConfig({
