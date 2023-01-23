@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.1.2
+
+### Patch Changes
+
+- 0a07d09: Make graphql-scalars deps because it is used in implementation
+
 ## 0.1.1
 
 ### Patch Changes
