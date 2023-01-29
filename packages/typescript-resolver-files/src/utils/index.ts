@@ -5,10 +5,18 @@ export * from './isNativeNamedType';
 export * from './isRootObjectType';
 export * from './printImportLine';
 
+function slash(path:string) => string {
+  const isExtendedLengthPath: boolean = /^\\\\\?\\/.test(path);
+
+  if(isExtendedLengthPath) return;
+
+  return path.replace(/\\/g,'/');
+}
+
 // TODO: break the functions below this line into smaller files
 // -----------
 export const relativeModulePath = (from: string, to: string): string => {
-  const rawPath = path.relative(from, to);
+  const rawPath = slash(path.relative(from, to));
   return normalizeRelativePath(rawPath);
 };
 
