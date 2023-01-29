@@ -13,6 +13,8 @@ env:
 jobs:
   release-check:
     runs-on: ubuntu-22.04
+    permissions:
+      pull-requests: write
     outputs:
       triggered: ${{ steps.check.outputs.triggered }}
     steps:
@@ -49,11 +51,13 @@ jobs:
           issue_number: ${{ github.event.issue.number }}
           body: '❌ No permission to release snapshot'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ env.github-token }}
 
   release:
     runs-on: ubuntu-22.04
     needs: release-check
+    permissions:
+      pull-requests: write
     if: needs.release-check.outputs.triggered == 'true'
     steps:
       - name: Get Pull Request ref
@@ -65,7 +69,7 @@ jobs:
           repo: ${{ github.event.repository.name }}
           issue_number: ${{ github.event.issue.number }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ env.github-token }}
 
       - name: Check out repository
         uses: actions/checkout@v3
@@ -109,7 +113,7 @@ jobs:
           issue_number: ${{ github.event.issue.number }}
           body: '✅ Successfully published package/s with tag `${{ env.release-tag }}`!'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ env.github-token }}
 
       - name: Report failure
         if: failure()
@@ -121,4 +125,4 @@ jobs:
           issue_number: ${{ github.event.issue.number }}
           body: '❌ Failed to publish package/s with tag `${{ env.release-tag }}`'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ env.github-token }}
