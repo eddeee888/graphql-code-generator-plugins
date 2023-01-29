@@ -13,6 +13,7 @@ generates:
       resolverTypesPath: ./types.gen.ts
       resolverRelativeTargetDir: rslvrs
       resolverMainFile: resolvers.gen.ts
+      typeDefsFilePath: false
       externalResolvers:
         BigInt: base/CustomBigIntResolver#default as CustomBigIntResolver # graphql-scalars' default is `~graphql-scalars#BigIntResolver`
       typesPluginsConfig:
