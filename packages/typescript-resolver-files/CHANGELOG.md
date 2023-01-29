@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.2.0
+
+### Minor Changes
+
+- 0d3c9db: Generate typeDefs by default
+
 ## 0.1.2
 
 ### Patch Changes
