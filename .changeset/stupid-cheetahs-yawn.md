@@ -1,5 +1,5 @@
 ---
-'@eddeee888/gcg-typescript-resolver-files': patch
+'@eddeee888/gcg-typescript-resolver-files': minor
 ---
 
-Add out-of-the-box typeDefs support
+Generate typeDefs by default
