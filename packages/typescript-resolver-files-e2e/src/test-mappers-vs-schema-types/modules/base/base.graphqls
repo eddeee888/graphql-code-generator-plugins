@@ -1,0 +1,8 @@
+type Query
+type Mutation
+
+type Error {
+  message: String!
+}
+
+scalar DateTime

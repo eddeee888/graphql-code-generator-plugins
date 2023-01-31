@@ -4,6 +4,7 @@ export * from './parseLocationForWhitelistedModule';
 export * from './isNativeNamedType';
 export * from './isRootObjectType';
 export * from './printImportLine';
+export * from './getNodePropertyMap';
 
 // TODO: break the functions below this line into smaller files
 // -----------

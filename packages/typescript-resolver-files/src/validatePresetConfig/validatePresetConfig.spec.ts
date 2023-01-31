@@ -14,6 +14,7 @@ const defaultExpected: ReturnType<typeof validatePresetConfig> = {
   },
   whitelistedModules: [],
   blacklistedModules: [],
+  tsMorphProjectOptions: {},
 };
 
 describe('validatePresetConfig - general', () => {

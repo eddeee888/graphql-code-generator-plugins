@@ -1,4 +1,6 @@
 import type { GraphQLSchema } from 'graphql';
+import type { ProjectOptions } from 'ts-morph';
+import type { GraphQLObjectTypeResolversToGenerate } from '../getGraphQLObjectTypeResolversToGenerate';
 import type { ParseSourcesResult } from '../parseSources';
 import type { ImportLineMeta, RootObjectType } from '../utils';
 
@@ -26,6 +28,7 @@ export interface RootObjectTypeFieldResolverFile extends BaseVirtualFile {
     belongsToRootObject: RootObjectType;
     variableStatement: string;
     normalizedResolverName: string;
+    resolversToGenerate?: GraphQLObjectTypeResolversToGenerate[number];
   };
 }
 
@@ -34,6 +37,7 @@ export interface ObjectTypeFile extends BaseVirtualFile {
   meta: {
     variableStatement: string;
     normalizedResolverName: string;
+    resolversToGenerate?: GraphQLObjectTypeResolversToGenerate[number];
   };
 }
 
@@ -54,6 +58,8 @@ export interface GenerateResolverFilesContext {
     whitelistedModules: string[];
     blacklistedModules: string[];
     externalResolvers: Record<string, string>;
+    graphQLObjectTypeResolversToGenerate: GraphQLObjectTypeResolversToGenerate;
+    tsMorphProjectOptions: ProjectOptions;
   };
   result: {
     files: Record<string, StandardFile | ResolverFile>;

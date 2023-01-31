@@ -1,6 +1,8 @@
 import * as path from 'path';
+import * as fs from 'fs';
 import * as typeScriptPlugin from '@graphql-codegen/typescript';
 import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
+import type { ProjectOptions } from 'ts-morph';
 
 const presetName = '@eddeee888/gcg-typescript-resolver-files';
 
@@ -33,6 +35,7 @@ interface ParsedPresetConfig {
   blacklistedModules: string[];
   externalResolvers: Record<string, string>;
   typesPluginsConfig: ParsedTypesPluginsConfig;
+  tsMorphProjectOptions: ProjectOptions;
 }
 
 export interface RawPresetConfig {
@@ -48,6 +51,7 @@ export interface RawPresetConfig {
   externalResolvers?: Record<string, string>;
   typesPluginsConfig?: typeScriptPlugin.TypeScriptPluginConfig &
     typeScriptResolversPlugin.TypeScriptResolversPluginConfig;
+  tsConfigFilePath?: string;
 }
 
 export const validatePresetConfig = ({
@@ -62,6 +66,7 @@ export const validatePresetConfig = ({
   blacklistedModules,
   externalResolvers = {},
   typesPluginsConfig = {},
+  tsConfigFilePath = './tsconfig.json',
 }: RawPresetConfig): ParsedPresetConfig => {
   if (mode !== 'merged' && mode !== 'modules') {
     throw new Error(
@@ -123,6 +128,19 @@ export const validatePresetConfig = ({
     finalTypeDefsFilePath = defaultTypeDefsFilePath;
   }
 
+  const tsMorphProjectOptions: ProjectOptions = {};
+  if (tsConfigFilePath) {
+    const absoluteTsConfigFilePath = path.join(process.cwd(), tsConfigFilePath);
+
+    if (fs.existsSync(absoluteTsConfigFilePath)) {
+      tsMorphProjectOptions.tsConfigFilePath = absoluteTsConfigFilePath;
+    } else {
+      console.warn(
+        `[${presetName}] WARN: Unable to find TypeScript config at ${absoluteTsConfigFilePath}. Use presetConfig.tsConfigFilePath to set a custom value. Otherwise, type analysis may not work correctly.`
+      );
+    }
+  }
+
   return {
     resolverTypesPath,
     resolverRelativeTargetDir: finalResolverRelativeTargetDir,
@@ -135,6 +153,7 @@ export const validatePresetConfig = ({
     blacklistedModules: blacklistedModules || [],
     externalResolvers,
     typesPluginsConfig,
+    tsMorphProjectOptions,
   };
 };
 

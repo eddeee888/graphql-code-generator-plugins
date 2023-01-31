@@ -16,13 +16,19 @@ interface GetPluginsConfigParams {
   blacklistedModules: string[];
 }
 
-type GetPluginsConfigResult = Record<
-  | 'defaultScalarTypesMap'
-  | 'defaultScalarExternalResolvers'
-  | 'defaultTypeMappers',
-  Record<string, string>
->;
+type GetPluginsConfigResult = {
+  userDefinedSchemaTypeMap: Record<string, true>;
+  pluginsConfig: Record<
+    | 'defaultScalarTypesMap'
+    | 'defaultScalarExternalResolvers'
+    | 'defaultTypeMappers',
+    Record<string, string>
+  >;
+};
 
+/**
+ * TODO: rename to parseGraphQLSchema
+ */
 export const getPluginsConfig = ({
   schemaAst,
   sourceMap,
@@ -51,9 +57,12 @@ export const getPluginsConfig = ({
       }
 
       if (!isRootObjectType(schemaType) && isObjectType(namedType)) {
+        res.userDefinedSchemaTypeMap[schemaType] = true;
+
+        // Wire up `mappers` config
         const typeMapperDetails = typeMappersMap[schemaType];
         if (typeMapperDetails) {
-          res.defaultTypeMappers[typeMapperDetails.schemaType] =
+          res.pluginsConfig.defaultTypeMappers[typeMapperDetails.schemaType] =
             typeMapperDetails.configImportPath;
         }
       }
@@ -61,9 +70,12 @@ export const getPluginsConfig = ({
       return res;
     },
     {
-      defaultScalarTypesMap: {},
-      defaultScalarExternalResolvers: {},
-      defaultTypeMappers: {},
+      userDefinedSchemaTypeMap: {},
+      pluginsConfig: {
+        defaultScalarTypesMap: {},
+        defaultScalarExternalResolvers: {},
+        defaultTypeMappers: {},
+      },
     }
   );
 };
@@ -81,11 +93,11 @@ const handleScalarType = (
     scalarResolver.extensions.codegenScalarType &&
     typeof scalarResolver.extensions.codegenScalarType === 'string'
   ) {
-    result.defaultScalarTypesMap[schemaType] =
+    result.pluginsConfig.defaultScalarTypesMap[schemaType] =
       scalarResolver.extensions.codegenScalarType;
   }
 
-  result.defaultScalarExternalResolvers[
+  result.pluginsConfig.defaultScalarExternalResolvers[
     schemaType
   ] = `~graphql-scalars#${scalarResolver.name}Resolver`;
 };

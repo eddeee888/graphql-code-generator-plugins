@@ -6,15 +6,16 @@ import type { Types } from '@graphql-codegen/plugin-helpers';
 import { parseSources } from './parseSources';
 import { getPluginsConfig } from './getPluginsConfig';
 import {
+  type GenerateResolverFilesContext,
   generateResolverFiles,
-  GenerateResolverFilesContext,
 } from './generateResolverFiles';
 import { generateTypeDefsContent } from './generateTypeDefsContent';
+import { getGraphQLObjectTypeResolversToGenerate } from './getGraphQLObjectTypeResolversToGenerate';
 import { parseTypeMappers } from './parseTypeMappers';
 import { RawPresetConfig, validatePresetConfig } from './validatePresetConfig';
 
 export const preset: Types.OutputPreset<RawPresetConfig> = {
-  buildGeneratesSection: ({
+  buildGeneratesSection: async ({
     schema,
     schemaAst,
     presetConfig: rawPresetConfig,
@@ -42,6 +43,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       blacklistedModules,
       externalResolvers,
       typesPluginsConfig,
+      tsMorphProjectOptions,
     } = validatePresetConfig(rawPresetConfig);
 
     const resolverTypesPath = path.join(
@@ -56,15 +58,19 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       resolverTypesPath,
       typeMappersFileExtension,
       typeMappersSuffix,
+      tsMorphProjectOptions,
     });
 
     const generatesSection: Types.GenerateOptions[] = [];
 
     // typescript and typescript-resolvers plugins config
     const {
-      defaultScalarTypesMap,
-      defaultScalarExternalResolvers,
-      defaultTypeMappers,
+      userDefinedSchemaTypeMap,
+      pluginsConfig: {
+        defaultScalarTypesMap,
+        defaultScalarExternalResolvers,
+        defaultTypeMappers,
+      },
     } = getPluginsConfig({
       schemaAst,
       sourceMap,
@@ -73,6 +79,29 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       blacklistedModules,
     });
 
+    const resolverTypesConfig = {
+      enumsAsTypes: true,
+      nonOptionalTypename: true,
+      ...typesPluginsConfig,
+      scalars: {
+        ...defaultScalarTypesMap,
+        ...typesPluginsConfig.scalars,
+      },
+      mappers: {
+        ...defaultTypeMappers,
+        ...typesPluginsConfig.mappers,
+      },
+    };
+
+    const graphQLObjectTypeResolversToGenerate =
+      await getGraphQLObjectTypeResolversToGenerate({
+        schemaAst,
+        resolverTypesConfig,
+        userDefinedSchemaTypeMap,
+        typeMappersMap,
+        tsMorphProjectOptions,
+      });
+
     const resolverTypesFile: Types.GenerateOptions = {
       filename: resolverTypesPath,
       pluginMap: {
@@ -80,19 +109,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         'typescript-resolvers': typeScriptResolversPlugin,
       },
       plugins: [{ typescript: {} }, { ['typescript-resolvers']: {} }],
-      config: {
-        enumsAsTypes: true,
-        nonOptionalTypename: true,
-        ...typesPluginsConfig,
-        scalars: {
-          ...defaultScalarTypesMap,
-          ...typesPluginsConfig.scalars,
-        },
-        mappers: {
-          ...defaultTypeMappers,
-          ...typesPluginsConfig.mappers,
-        },
-      },
+      config: resolverTypesConfig,
       schema,
       documents: [],
     };
@@ -128,6 +145,8 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         resolverTypesPath,
         resolverRelativeTargetDir,
         resolverMainFile,
+        graphQLObjectTypeResolversToGenerate,
+        tsMorphProjectOptions,
         mode,
         whitelistedModules,
         blacklistedModules,

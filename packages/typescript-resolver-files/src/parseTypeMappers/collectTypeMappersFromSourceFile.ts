@@ -1,6 +1,6 @@
 import * as path from 'path';
-import type { SourceFile } from 'ts-morph';
-import { normalizeRelativePath } from '../utils';
+import type { SourceFile, Identifier } from 'ts-morph';
+import { normalizeRelativePath, getNodePropertyMap } from '../utils';
 import type { TypeMappersMap } from './parseTypeMappers';
 
 export const collectTypeMappersFromSourceFile = (
@@ -23,7 +23,7 @@ export const collectTypeMappersFromSourceFile = (
 
     addTypeMapperDetailsIfValid(
       {
-        identifierName: interfaceDeclaration.getName(),
+        identifierNode: interfaceDeclaration.getNameNode(),
         typeMappersSuffix,
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
@@ -40,7 +40,7 @@ export const collectTypeMappersFromSourceFile = (
 
     addTypeMapperDetailsIfValid(
       {
-        identifierName: typeAlias.getName(),
+        identifierNode: typeAlias.getNameNode(),
         typeMappersSuffix,
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
@@ -52,18 +52,18 @@ export const collectTypeMappersFromSourceFile = (
   // Look for named exports e.g.
   //   - export { something } from 'module';
   //   - export type { something } from 'module';
-  //   - export { something, somethingelse }'
+  //   - export { something, somethingelse as somethingelse2 }'
   typeMappersSourceFile.getExportDeclarations().forEach((exportDeclaration) => {
     exportDeclaration.getNamedExports().forEach((namedExport) => {
-      let identifierName = namedExport.getFullText();
+      let identifierNode = namedExport.getNameNode();
       const aliasNode = namedExport.getAliasNode();
       if (aliasNode) {
-        identifierName = aliasNode.getFullText();
+        identifierNode = aliasNode;
       }
 
       addTypeMapperDetailsIfValid(
         {
-          identifierName: identifierName.trim(), // `getFullText()` always have an emptry space in front of the identifier so we need to trim it
+          identifierNode,
           typeMappersSuffix,
           typeMappersFilePath: typeMappersSourceFile.getFilePath(),
           resolverTypesPath,
@@ -76,18 +76,19 @@ export const collectTypeMappersFromSourceFile = (
 
 const addTypeMapperDetailsIfValid = (
   {
-    identifierName,
+    identifierNode,
     typeMappersSuffix,
     typeMappersFilePath,
     resolverTypesPath,
   }: {
-    identifierName: string;
+    identifierNode: Identifier;
     typeMappersSuffix: string;
     typeMappersFilePath: string;
     resolverTypesPath: string;
   },
   result: TypeMappersMap
 ): void => {
+  const identifierName = identifierNode.getText();
   if (!identifierName.endsWith(typeMappersSuffix)) {
     return;
   }
@@ -115,9 +116,14 @@ const addTypeMapperDetailsIfValid = (
     );
   }
 
+  const declarationNode = identifierNode
+    .getDefinitions()[0]
+    .getDeclarationNode();
+
   result[schemaType] = {
     schemaType,
     typeMapperName: identifierName,
+    typeMapperPropertyMap: getNodePropertyMap(declarationNode),
     configImportPath,
   };
 };

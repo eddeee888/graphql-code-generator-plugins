@@ -1,0 +1,28 @@
+extend type Query {
+  account: Account!
+}
+
+extend type Subscription {
+  profileChanges: Profile!
+}
+
+type Account {
+  id: ID!
+  isSubscribed: Boolean!
+}
+
+type Country {
+  id: ID!
+  name: String!
+}
+
+type Profile {
+  id: ID!
+  user: User!
+}
+
+type ProfileMeta {
+  id: ID!
+  isCompleted: Boolean!
+  score: String!
+}

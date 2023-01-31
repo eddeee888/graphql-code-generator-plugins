@@ -1,7 +1,8 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import { Project } from 'ts-morph';
+import { type ProjectOptions, Project } from 'ts-morph';
 import type { ParseSourcesResult } from '../parseSources';
+import type { NodePropertyMap } from '../utils';
 import { collectTypeMappersFromSourceFile } from './collectTypeMappersFromSourceFile';
 
 export interface ParseTypeMappersParams {
@@ -9,11 +10,13 @@ export interface ParseTypeMappersParams {
   resolverTypesPath: string;
   typeMappersFileExtension: string;
   typeMappersSuffix: string;
+  tsMorphProjectOptions: ProjectOptions;
 }
 
 export interface TypeMapperDetails {
   schemaType: string;
   typeMapperName: string;
+  typeMapperPropertyMap: NodePropertyMap;
   configImportPath: string;
 }
 
@@ -24,7 +27,10 @@ export const parseTypeMappers = ({
   resolverTypesPath,
   typeMappersFileExtension,
   typeMappersSuffix,
+  tsMorphProjectOptions,
 }: ParseTypeMappersParams): TypeMappersMap => {
+  const project = new Project(tsMorphProjectOptions);
+
   const result = Object.entries(sourceMap).reduce<TypeMappersMap>(
     (res, [_, { sourcePath }]) => {
       const typeMapperFilePath = path.join(
@@ -36,7 +42,6 @@ export const parseTypeMappers = ({
         return res;
       }
 
-      const project = new Project();
       const [typeMappersSourceFile] =
         project.addSourceFilesAtPaths(typeMapperFilePath);
 
@@ -49,5 +54,6 @@ export const parseTypeMappers = ({
     },
     {}
   );
+
   return result;
 };

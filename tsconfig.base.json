@@ -20,6 +20,9 @@
       ],
       "@graphql-code-generator-plugins/typescript-resolver-files-e2e": [
         "packages/typescript-resolver-files/src/index.ts"
+      ],
+      "@graphql-code-generator-plugins/typescript-resolver-files-e2e-external/*": [
+        "packages/typescript-resolver-files-e2e/mock_node_modules/*"
       ]
     }
   },

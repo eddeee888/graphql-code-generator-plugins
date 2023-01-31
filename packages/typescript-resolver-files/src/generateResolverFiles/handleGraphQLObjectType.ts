@@ -3,9 +3,23 @@ import { printImportLine } from '../utils';
 
 export const handleGraphQLObjectType: GraphQLTypeHandler = (
   { fieldFilePath, resolverName, normalizedResolverName, resolversTypeMeta },
-  { result }
+  { result, config: { graphQLObjectTypeResolversToGenerate } }
 ) => {
-  const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { /* Implement ${resolverName} resolver logic here */ };`;
+  // Array of resolvers that need to be generated because of type mismatch between Schema type and Mapper type
+  const resolversToGenerate =
+    graphQLObjectTypeResolversToGenerate[resolverName];
+  const resolversStatments = resolversToGenerate
+    ? `${Object.values(resolversToGenerate)
+        .map(({ resolverName, reason }) => {
+          return `${resolverName}: () => { ${reason} },`;
+        })
+        .join('\n')}`
+    : '';
+
+  const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { 
+    /* Implement ${resolverName} resolver logic here */ 
+    ${resolversStatments}
+  };`;
 
   result.files[fieldFilePath] = {
     __filetype: 'objectType',
@@ -20,6 +34,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler = (
     meta: {
       normalizedResolverName,
       variableStatement,
+      resolversToGenerate,
     },
   };
 };
