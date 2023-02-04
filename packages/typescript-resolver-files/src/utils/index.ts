@@ -5,10 +5,10 @@ export * from './isNativeNamedType';
 export * from './isRootObjectType';
 export * from './printImportLine';
 
-function slash(path:string) => string {
+function slash(path:string): string {
   const isExtendedLengthPath: boolean = /^\\\\\?\\/.test(path);
 
-  if(isExtendedLengthPath) return;
+  if(isExtendedLengthPath) return path;
 
   return path.replace(/\\/g,'/');
 }
