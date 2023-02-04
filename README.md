@@ -21,24 +21,25 @@ List of [GraphQL Code Generator](https://www.the-guild.dev/graphql/codegen) plug
 
 ### Get started
 
-Make sure you are on the right Node version:
+Use the right Node version:
 
 ```bash
 nvm use
 ```
 
-Install packages
+Install packages:
 
 ```bash
 yarn install
 ```
 
-### Making changes
+### Contribution process
+
+1. [Create issue outlining the problem](https://github.com/eddeee888/graphql-code-generator-plugins/issues/new)
+2. Fork the repo and make changes
+3. Add unit tests and e2e tests
+4. Document new config option in the package's README if required
+5. Create changeset record for new package version with `yarn changeset` if required
+6. Create a PR
 
 Refer to README in each package for more info.
-
-If you make changes that require package version bumps, create a changeset record, follow the prompts and commit the changeset record:
-
-```bash
-yarn changeset
-```
