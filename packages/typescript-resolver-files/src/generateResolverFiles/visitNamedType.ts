@@ -112,7 +112,11 @@ const parseLocationForOutputDir = (
   //   - always generate a.k.a  it's always whitelisted
   //   - put them together at degsinated relativeTargetDir
   if (mode === 'merged') {
-    return path.join(baseOutputDir, resolverRelativeTargetDir, ...nestedDirs);
+    return path.posix.join(
+      baseOutputDir,
+      resolverRelativeTargetDir,
+      ...nestedDirs
+    );
   }
 
   // 2. mode is "modules", each module is the folder containing the schema files
@@ -125,7 +129,7 @@ const parseLocationForOutputDir = (
   });
 
   return parsedSource
-    ? path.join(
+    ? path.posix.join(
         baseOutputDir,
         parsedSource.moduleName,
         resolverRelativeTargetDir,
@@ -149,7 +153,7 @@ const validateAndPrepareForGraphQLTypeHandler = (
   }: ValidateAndPrepareForGraphQLTypeParams,
   { config, result }: GenerateResolverFilesContext
 ): GraphQLTypeHandlerParams<RootObjectType> | GraphQLTypeHandlerParams => {
-  const fieldFilePath = path.join(outputDir, `${resolverName}.ts`);
+  const fieldFilePath = path.posix.join(outputDir, `${resolverName}.ts`);
   if (result.files[fieldFilePath]) {
     throw new Error(
       `Unexpected duplication in field filename. Type: ${resolverName}, file: ${fieldFilePath}`

@@ -121,10 +121,10 @@ const addTypeMapperDetailsIfValid = (
   }
 
   const parsedRelativePathFromResolverTypesToSourceFile = path.parse(
-    path.relative(path.dirname(resolverTypesPath), typeMappersFilePath)
+    path.posix.relative(path.dirname(resolverTypesPath), typeMappersFilePath)
   );
   const relativeImportPathFromResolverTypesToSourceFile = normalizeRelativePath(
-    path.join(
+    path.posix.join(
       parsedRelativePathFromResolverTypesToSourceFile.dir,
       parsedRelativePathFromResolverTypesToSourceFile.name
     )

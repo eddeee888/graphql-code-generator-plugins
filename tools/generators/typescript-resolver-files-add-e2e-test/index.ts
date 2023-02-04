@@ -23,7 +23,7 @@ const normalizeOptions = (
   options: TypescriptResolverFilesAddE2ETestSchema
 ): NormalizedSchema => {
   const testFullName = `test-${options.testName}`;
-  const testDir = path.join('packages', projectName, 'src', testFullName);
+  const testDir = path.posix.join('packages', projectName, 'src', testFullName);
   if (fs.existsSync(testDir)) {
     throw new Error(
       `${testFullName} already exists. Try a different testName.`
@@ -43,7 +43,7 @@ const normalizeOptions = (
 const addFiles = (tree: Tree, options: NormalizedSchema) => {
   generateFiles(
     tree,
-    path.join(__dirname, 'files'),
+    path.posix.join(__dirname, 'files'),
     'packages/typescript-resolver-files-e2e/src',
     {
       ...options,
