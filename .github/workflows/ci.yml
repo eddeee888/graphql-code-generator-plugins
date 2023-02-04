@@ -47,7 +47,7 @@ jobs:
       matrix:
         os:
           - ubuntu-22.04
-          # - windows-latest
+          - windows-latest
         node-version: [16.x, 18.x]
     runs-on: ${{ matrix.os }}
     needs: precheck
@@ -80,7 +80,7 @@ jobs:
       matrix:
         os:
           - ubuntu-22.04
-          # - windows-latest
+          - windows-latest
         node-version: [16.x, 18.x]
     runs-on: ${{ matrix.os }}
     defaults:
