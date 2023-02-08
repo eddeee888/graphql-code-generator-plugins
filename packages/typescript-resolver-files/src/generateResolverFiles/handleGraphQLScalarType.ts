@@ -7,22 +7,21 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
   { fieldFilePath, resolverName, normalizedResolverName },
   { result }
 ) => {
-  const resolverVariableStatement = `export const ${resolverName}: ${graphQLScalarType} = { /* Implement ${resolverName} scalar logic here */ };`;
+  const variableStatement = `export const ${resolverName}: ${graphQLScalarType} = { /* Implement ${resolverName} scalar logic here */ };`;
 
   result.files[fieldFilePath] = {
-    __filetype: 'resolver',
+    __filetype: 'generalResolver',
     content: `
     ${printImportLine({
       isTypeImport: true,
       module: 'graphql',
       namedImports: [graphQLScalarType],
     })}
-    ${resolverVariableStatement}`,
+    ${variableStatement}`,
     mainImportIdentifier: resolverName,
     meta: {
-      belongsToRootObject: null,
       normalizedResolverName,
-      resolverVariableStatement,
+      variableStatement,
     },
   };
 };
