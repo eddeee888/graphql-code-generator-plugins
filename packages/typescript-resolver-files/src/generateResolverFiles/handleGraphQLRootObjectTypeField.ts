@@ -13,7 +13,7 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
   },
   { result }
 ) => {
-  const suggestion = `{ /* Implement ${normalizedResolverName} resolver logic here */ }`;
+  const suggestion = `/* Implement ${normalizedResolverName} resolver logic here */`;
 
   let variableStatement = `export const ${resolverName}: NonNullable<${resolversTypeMeta.typeString}> = async (_parent, _arg, _ctx) => { ${suggestion} };`;
   if (belongsToRootObject === 'Subscription') {
