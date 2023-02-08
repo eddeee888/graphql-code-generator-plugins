@@ -43,8 +43,12 @@ jobs:
           echo "::set-output name=typescript-resolver-files-e2e::$(./tools/ci/bin/check-affected.sh libs typescript-resolver-files-e2e origin/master)"
 
   typescript-resolver-files:
-    name:
-    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        os:
+          - ubuntu-22.04
+          # - windows-latest
+    runs-on: ${{ matrix.os }}
     needs: precheck
     if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' }}
     steps:
@@ -71,8 +75,15 @@ jobs:
         run: yarn nx build typescript-resolver-files
 
   typescript-resolver-files-e2e:
-    name:
-    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        os:
+          - ubuntu-22.04
+          # - windows-latest
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     needs: precheck
     if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' || needs.precheck.outputs.affected-typescript-resolver-files-e2e == 'true' }}
     steps:

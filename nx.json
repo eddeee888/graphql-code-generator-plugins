@@ -33,7 +33,10 @@
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/jest.config.[jt]s"
     ],
-    "sharedGlobals": ["{workspaceRoot}/package.json"]
+    "sharedGlobals": [
+      "{workspaceRoot}/package.json",
+      "{workspaceRoot}/.github/workflows/*.yml"
+    ]
   },
   "workspaceLayout": {
     "appsDir": "packages",
