@@ -114,7 +114,7 @@ const ensureObjectTypeResolversAreGenerated = (
     string,
     {
       resolverName: string;
-      reason: string;
+      resolverDeclaration: string;
       implemented?: true;
     }
   > = { ...resolversToGenerate };
@@ -138,13 +138,13 @@ const ensureObjectTypeResolversAreGenerated = (
     });
 
   Object.values(resolversData).forEach(
-    ({ resolverName, reason, implemented }) => {
+    ({ resolverName, resolverDeclaration, implemented }) => {
       if (!implemented) {
         variableStatement
           .getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)[0]
           .addPropertyAssignment({
             name: resolverName,
-            initializer: `() => { ${reason} },`,
+            initializer: resolverDeclaration,
           });
       }
     }

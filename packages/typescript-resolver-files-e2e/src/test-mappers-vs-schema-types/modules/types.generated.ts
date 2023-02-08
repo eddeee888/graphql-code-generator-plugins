@@ -164,6 +164,7 @@ export type User = {
   createdAt: Scalars['DateTime'];
   fullName: Scalars['String'];
   id: Scalars['ID'];
+  role: UserRole;
 };
 
 export type UserPayload = Error | UserResult;
@@ -172,6 +173,8 @@ export type UserResult = {
   __typename: 'UserResult';
   result?: Maybe<User>;
 };
+
+export type UserRole = 'ADMIN' | 'USER';
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
@@ -327,6 +330,7 @@ export type ResolversTypes = {
   UserResult: ResolverTypeWrapper<
     Omit<UserResult, 'result'> & { result?: Maybe<ResolversTypes['User']> }
   >;
+  UserRole: UserRole;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -591,6 +595,7 @@ export type UserResolvers<
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   fullName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  role?: Resolver<ResolversTypes['UserRole'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

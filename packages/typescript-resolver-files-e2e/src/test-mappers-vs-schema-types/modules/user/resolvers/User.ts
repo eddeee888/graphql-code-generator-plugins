@@ -16,4 +16,7 @@ export const User: UserResolvers = {
   accountGoogle() {
     /* User.accountGoogle resolver is required because User.accountGoogle exists but UserMapper.accountGoogle does not */
   },
+  role: () => {
+    /* User.role resolver is required because User.role's type is "union:import("/Users/eddeee888/Projects/eddeee888/graphql-code-generator-plugins/virtual_types.generated").UserRole" but UserMapper.role's type is "union:"ADMIN" | "USER"" */
+  },
 };

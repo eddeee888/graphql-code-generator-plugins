@@ -12,7 +12,7 @@ import { type NodePropertyMap, getNodePropertyMap } from '../utils';
 
 export type GraphQLObjectTypeResolversToGenerate = Record<
   string,
-  Record<string, { resolverName: string; reason: string }>
+  Record<string, { resolverName: string; resolverDeclaration: string }>
 >;
 
 export const getGraphQLObjectTypeResolversToGenerate = async ({
@@ -78,29 +78,28 @@ export const getGraphQLObjectTypeResolversToGenerate = async ({
               return;
             }
 
+            result[schemaType] = result[schemaType] || {};
+
             // If mapper does not have a field in schema type, report
             if (!typeMapperProperty) {
-              result[schemaType] = result[schemaType] || {};
               result[schemaType][schemaTypeProperty.name] = {
                 resolverName: schemaTypeProperty.name,
-                reason: `/* ${schemaTypePropertyIdentifier} resolver is required because ${schemaTypePropertyIdentifier} exists but ${typeMapperPropertyIdentifier} does not */`,
+                resolverDeclaration: `() => { /* ${schemaTypePropertyIdentifier} resolver is required because ${schemaTypePropertyIdentifier} exists but ${typeMapperPropertyIdentifier} does not */ }`,
               };
               return;
             }
 
-            // If property types do not match, report
-            if (
-              typeMapperProperty.kind !== schemaTypeProperty.kind ||
-              typeMapperProperty.text !== schemaTypeProperty.text
-            ) {
-              result[schemaType] = result[schemaType] || {};
+            // FIXME: there's currently no way to check if a type is assignable to another type
+            // https://github.com/dsherret/ts-morph/issues/357
+            // https://github.com/microsoft/TypeScript/issues/9879
 
-              result[schemaType][schemaTypeProperty.name] = {
-                resolverName: schemaTypeProperty.name,
-                reason: `/* ${schemaTypePropertyIdentifier} resolver is required because ${schemaTypePropertyIdentifier}'s type is "${schemaTypeProperty.kind}:${schemaTypeProperty.text}" but ${typeMapperPropertyIdentifier}'s type is "${typeMapperProperty.kind}:${typeMapperProperty.text}" */`,
-              };
-              return;
-            }
+            // Therefore, the workaround now is to generate all resolvers with matching names
+            // Note that this happens only for mappers
+
+            result[schemaType][schemaTypeProperty.name] = {
+              resolverName: schemaTypeProperty.name,
+              resolverDeclaration: `({ ${schemaTypeProperty.name} }) => ${schemaTypeProperty.name}`,
+            };
 
             return;
           }

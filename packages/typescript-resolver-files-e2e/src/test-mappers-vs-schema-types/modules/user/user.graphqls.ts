@@ -11,11 +11,17 @@ export const userTypeDefs = gql`
     fullName: String!
     accountGitHub: String
     accountGoogle: String
+    role: UserRole!
     createdAt: DateTime!
   }
 
   type UserResult {
     result: User
+  }
+
+  enum UserRole {
+    ADMIN
+    USER
   }
 
   union UserPayload = UserResult | Error

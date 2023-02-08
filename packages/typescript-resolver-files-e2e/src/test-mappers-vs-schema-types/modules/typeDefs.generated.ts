@@ -1263,8 +1263,32 @@ export const typeDefs = {
           kind: 'FieldDefinition',
           name: {
             kind: 'Name',
+            value: 'role',
+            loc: { start: 1549, end: 1553 },
+          },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: {
+                kind: 'Name',
+                value: 'UserRole',
+                loc: { start: 1555, end: 1563 },
+              },
+              loc: { start: 1555, end: 1563 },
+            },
+            loc: { start: 1555, end: 1564 },
+          },
+          directives: [],
+          loc: { start: 1549, end: 1564 },
+        },
+        {
+          kind: 'FieldDefinition',
+          name: {
+            kind: 'Name',
             value: 'createdAt',
-            loc: { start: 1549, end: 1558 },
+            loc: { start: 1567, end: 1576 },
           },
           arguments: [],
           type: {
@@ -1274,24 +1298,24 @@ export const typeDefs = {
               name: {
                 kind: 'Name',
                 value: 'DateTime',
-                loc: { start: 1560, end: 1568 },
+                loc: { start: 1578, end: 1586 },
               },
-              loc: { start: 1560, end: 1568 },
+              loc: { start: 1578, end: 1586 },
             },
-            loc: { start: 1560, end: 1569 },
+            loc: { start: 1578, end: 1587 },
           },
           directives: [],
-          loc: { start: 1549, end: 1569 },
+          loc: { start: 1567, end: 1587 },
         },
       ],
-      loc: { start: 1457, end: 1571 },
+      loc: { start: 1457, end: 1589 },
     },
     {
       kind: 'ObjectTypeDefinition',
       name: {
         kind: 'Name',
         value: 'UserResult',
-        loc: { start: 1578, end: 1588 },
+        loc: { start: 1596, end: 1606 },
       },
       interfaces: [],
       directives: [],
@@ -1301,7 +1325,7 @@ export const typeDefs = {
           name: {
             kind: 'Name',
             value: 'result',
-            loc: { start: 1593, end: 1599 },
+            loc: { start: 1611, end: 1617 },
           },
           arguments: [],
           type: {
@@ -1309,22 +1333,54 @@ export const typeDefs = {
             name: {
               kind: 'Name',
               value: 'User',
-              loc: { start: 1601, end: 1605 },
+              loc: { start: 1619, end: 1623 },
             },
-            loc: { start: 1601, end: 1605 },
+            loc: { start: 1619, end: 1623 },
           },
           directives: [],
-          loc: { start: 1593, end: 1605 },
+          loc: { start: 1611, end: 1623 },
         },
       ],
-      loc: { start: 1573, end: 1607 },
+      loc: { start: 1591, end: 1625 },
+    },
+    {
+      kind: 'EnumTypeDefinition',
+      name: {
+        kind: 'Name',
+        value: 'UserRole',
+        loc: { start: 1632, end: 1640 },
+      },
+      directives: [],
+      values: [
+        {
+          kind: 'EnumValueDefinition',
+          name: {
+            kind: 'Name',
+            value: 'ADMIN',
+            loc: { start: 1645, end: 1650 },
+          },
+          directives: [],
+          loc: { start: 1645, end: 1650 },
+        },
+        {
+          kind: 'EnumValueDefinition',
+          name: {
+            kind: 'Name',
+            value: 'USER',
+            loc: { start: 1653, end: 1657 },
+          },
+          directives: [],
+          loc: { start: 1653, end: 1657 },
+        },
+      ],
+      loc: { start: 1627, end: 1659 },
     },
     {
       kind: 'UnionTypeDefinition',
       name: {
         kind: 'Name',
         value: 'UserPayload',
-        loc: { start: 1615, end: 1626 },
+        loc: { start: 1667, end: 1678 },
       },
       directives: [],
       types: [
@@ -1333,22 +1389,22 @@ export const typeDefs = {
           name: {
             kind: 'Name',
             value: 'UserResult',
-            loc: { start: 1629, end: 1639 },
+            loc: { start: 1681, end: 1691 },
           },
-          loc: { start: 1629, end: 1639 },
+          loc: { start: 1681, end: 1691 },
         },
         {
           kind: 'NamedType',
           name: {
             kind: 'Name',
             value: 'Error',
-            loc: { start: 1642, end: 1647 },
+            loc: { start: 1694, end: 1699 },
           },
-          loc: { start: 1642, end: 1647 },
+          loc: { start: 1694, end: 1699 },
         },
       ],
-      loc: { start: 1609, end: 1647 },
+      loc: { start: 1661, end: 1699 },
     },
   ],
-  loc: { start: 0, end: 1647 },
+  loc: { start: 0, end: 1699 },
 } as unknown as DocumentNode;
