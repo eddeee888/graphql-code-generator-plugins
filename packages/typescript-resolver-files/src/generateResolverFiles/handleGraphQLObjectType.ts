@@ -10,8 +10,8 @@ export const handleGraphQLObjectType: GraphQLTypeHandler = (
     graphQLObjectTypeResolversToGenerate[resolverName];
   const resolversStatments = resolversToGenerate
     ? `${Object.values(resolversToGenerate)
-        .map(({ resolverName, reason }) => {
-          return `${resolverName}: () => { ${reason} },`;
+        .map(({ resolverName, resolverDeclaration }) => {
+          return `${resolverName}: ${resolverDeclaration},`;
         })
         .join('\n')}`
     : '';
