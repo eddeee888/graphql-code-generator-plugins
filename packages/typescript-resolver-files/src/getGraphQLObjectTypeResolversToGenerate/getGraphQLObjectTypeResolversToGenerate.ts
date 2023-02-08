@@ -89,16 +89,21 @@ export const getGraphQLObjectTypeResolversToGenerate = async ({
               return;
             }
 
-            // FIXME: there's currently no way to check if a type is assignable to another type
-            // https://github.com/dsherret/ts-morph/issues/357
-            // https://github.com/microsoft/TypeScript/issues/9879
-
-            // Therefore, the workaround now is to generate all resolvers with matching names
-            // Note that this happens only for mappers
-
+            /**
+             * FIXME: there's currently no way to check if a type is assignable to another type
+             * https://github.com/dsherret/ts-morph/issues/357
+             * https://github.com/microsoft/TypeScript/issues/9879
+             *
+             * Therefore, the workaround now is to generate all resolvers with matching names, then use TS diagnostics to see if there's error when trying to merge the two keys
+             *
+             * Note: this happens only when mappers are used
+             */
             result[schemaType][schemaTypeProperty.name] = {
               resolverName: schemaTypeProperty.name,
-              resolverDeclaration: `({ ${schemaTypeProperty.name} }) => ${schemaTypeProperty.name}`,
+              resolverDeclaration: `({ ${schemaTypeProperty.name} }) => {
+                /* ${schemaTypePropertyIdentifier} resolver is required because ${schemaTypePropertyIdentifier} and ${typeMapperPropertyIdentifier} are not compatible */
+                return ${schemaTypeProperty.name}
+              }`,
             };
 
             return;

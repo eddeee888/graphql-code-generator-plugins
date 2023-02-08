@@ -1,5 +1,5 @@
-import { existsSync } from 'fs';
 import {
+  type PropertyAssignment,
   type VariableStatement,
   Project,
   SourceFile,
@@ -19,7 +19,7 @@ export const fixExistingResolvers = ({
   const existingResolverFiles = Object.entries(result.files).reduce<
     Record<string, ResolverFile>
   >((res, [filePath, file]) => {
-    if (existsSync(filePath) && file.__filetype !== 'file') {
+    if (file.__filetype !== 'file') {
       res[filePath] = file;
     }
     return res;
@@ -27,8 +27,7 @@ export const fixExistingResolvers = ({
 
   const project = new Project(tsMorphProjectOptions);
   project.addSourceFilesAtPaths(Object.keys(existingResolverFiles));
-  const sourceFiles = project.getSourceFiles();
-  sourceFiles.forEach((sourceFile) => {
+  project.getSourceFiles().forEach((sourceFile) => {
     const normalizedRelativePath = path.relative(
       process.cwd(),
       sourceFile.getFilePath()
@@ -137,15 +136,44 @@ const ensureObjectTypeResolversAreGenerated = (
       }
     });
 
+  // TODO: Explain this approach
+  const addedPropertyAssignmentNodes: Record<
+    number,
+    { node: PropertyAssignment; __toBeRemoved: boolean }
+  > = [];
+
   Object.values(resolversData).forEach(
     ({ resolverName, resolverDeclaration, implemented }) => {
       if (!implemented) {
-        variableStatement
+        const addedNode = variableStatement
           .getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)[0]
           .addPropertyAssignment({
             name: resolverName,
             initializer: resolverDeclaration,
           });
+
+        addedPropertyAssignmentNodes[addedNode.getStartLineNumber()] = {
+          node: addedNode,
+          __toBeRemoved: true,
+        };
+      }
+    }
+  );
+
+  sourceFile.getPreEmitDiagnostics().forEach((d) => {
+    const lineNumberWithError = d.getLineNumber();
+    // If erroring on a recently added line, do not remove as user needs to implement it
+    if (
+      lineNumberWithError &&
+      addedPropertyAssignmentNodes[lineNumberWithError]
+    ) {
+      addedPropertyAssignmentNodes[lineNumberWithError].__toBeRemoved = false;
+    }
+  });
+  Object.values(addedPropertyAssignmentNodes).forEach(
+    ({ node, __toBeRemoved }) => {
+      if (__toBeRemoved) {
+        node.remove();
       }
     }
   );

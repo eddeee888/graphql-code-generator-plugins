@@ -5,20 +5,8 @@ export const handleGraphQLObjectType: GraphQLTypeHandler = (
   { fieldFilePath, resolverName, normalizedResolverName, resolversTypeMeta },
   { result, config: { graphQLObjectTypeResolversToGenerate } }
 ) => {
-  // Array of resolvers that need to be generated because of type mismatch between Schema type and Mapper type
-  const resolversToGenerate =
-    graphQLObjectTypeResolversToGenerate[resolverName];
-  const resolversStatments = resolversToGenerate
-    ? `${Object.values(resolversToGenerate)
-        .map(({ resolverName, resolverDeclaration }) => {
-          return `${resolverName}: ${resolverDeclaration},`;
-        })
-        .join('\n')}`
-    : '';
-
   const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { 
     /* Implement ${resolverName} resolver logic here */ 
-    ${resolversStatments}
   };`;
 
   result.files[fieldFilePath] = {
@@ -34,7 +22,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler = (
     meta: {
       normalizedResolverName,
       variableStatement,
-      resolversToGenerate,
+      resolversToGenerate: graphQLObjectTypeResolversToGenerate[resolverName], // Array of all resolvers that may need type checking
     },
   };
 };
