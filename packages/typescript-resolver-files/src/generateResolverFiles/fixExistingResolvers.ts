@@ -9,7 +9,7 @@ export const fixExistingResolvers = ({
   const existingResolverFiles = Object.entries(result.files).reduce<
     Record<string, ResolverFile>
   >((res, [filePath, file]) => {
-    if (existsSync(filePath) && file.__filetype === 'resolver') {
+    if (existsSync(filePath) && file.__filetype !== 'file') {
       res[filePath] = file;
     }
     return res;
@@ -57,7 +57,7 @@ export const fixExistingResolvers = ({
       sourceFile.addStatements(
         '/* WARNING: The following resolver was missing from this file. Make sure it is properly implemented or there could be runtime errors. */'
       );
-      sourceFile.addStatements(file.meta.resolverVariableStatement);
+      sourceFile.addStatements(file.meta.variableStatement);
     } else if (
       variableStatementWithExpectedIdentifier &&
       !isExpectedIdentifierExportedInVariableStatement

@@ -12,14 +12,35 @@ export interface StandardFile extends BaseVirtualFile {
   __filetype: 'file';
 }
 
-export interface ResolverFile extends BaseVirtualFile {
-  __filetype: 'resolver';
+export interface GeneralResolverFile extends BaseVirtualFile {
+  __filetype: 'generalResolver';
   meta: {
-    belongsToRootObject: RootObjectType | null;
-    resolverVariableStatement: string;
+    variableStatement: string;
     normalizedResolverName: string;
   };
 }
+
+export interface RootObjectTypeFieldResolverFile extends BaseVirtualFile {
+  __filetype: 'rootObjectTypeFieldResolver';
+  meta: {
+    belongsToRootObject: RootObjectType;
+    variableStatement: string;
+    normalizedResolverName: string;
+  };
+}
+
+export interface ObjectTypeFile extends BaseVirtualFile {
+  __filetype: 'objectType';
+  meta: {
+    variableStatement: string;
+    normalizedResolverName: string;
+  };
+}
+
+export type ResolverFile =
+  | GeneralResolverFile
+  | RootObjectTypeFieldResolverFile
+  | ObjectTypeFile;
 
 export interface GenerateResolverFilesContext {
   config: {
@@ -49,10 +70,10 @@ export interface GenerateResolverFilesContext {
   };
 }
 
-export interface GraphQLTypeHandlerParams {
+export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
   fieldFilePath: string;
   resolverName: string;
-  belongsToRootObject: RootObjectType | null;
+  belongsToRootObject: BelongsToRootObject;
   normalizedResolverName: string;
   resolversTypeMeta: {
     // typeNamedImport: name of the type to be imported from `module`.
@@ -68,7 +89,7 @@ export interface GraphQLTypeHandlerParams {
   };
 }
 
-export type GraphQLTypeHandler = (
-  params: GraphQLTypeHandlerParams,
+export type GraphQLTypeHandler<BelongsToRootObject = null> = (
+  params: GraphQLTypeHandlerParams<BelongsToRootObject>,
   ctx: GenerateResolverFilesContext
 ) => void;
