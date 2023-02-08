@@ -2,7 +2,7 @@ import { Project, Node } from 'ts-morph';
 import { getNodePropertyMap } from './getNodePropertyMap';
 
 describe('getNodePropertyMap', () => {
-  it('correctly resolves property map', () => {
+  it('correctly resolves property map of a typical types.generated.ts', () => {
     const project = new Project();
     const sourceFile = project.createSourceFile(
       '/path/to/types.generated.ts',
@@ -17,12 +17,12 @@ describe('getNodePropertyMap', () => {
         DateTime: Date | string;
       };
       export type User = {
-        // __typename: 'User';
-        // accountGitHub?: Maybe<Scalars['String']>;
-        // accountGoogle?: Maybe<Scalars['String']>;
-        // createdAt: Scalars['DateTime'];
-        // fullName: Scalars['String'];
-        // id: Scalars['ID'];
+        __typename: 'User';
+        accountGitHub?: Maybe<Scalars['String']>;
+        accountGoogle?: Maybe<Scalars['String']>;
+        createdAt: Scalars['DateTime'];
+        fullName: Scalars['String'];
+        id: Scalars['ID'];
         role: UserRole;
       };
       export type UserRole = 'ADMIN' | 'USER';`
@@ -32,6 +32,28 @@ describe('getNodePropertyMap', () => {
       (node) => Node.isTypeAliasDeclaration(node) && node.getName() === 'User'
     );
 
-    expect(getNodePropertyMap(userDeclarationNode)).toBe({});
+    expect(getNodePropertyMap(userDeclarationNode)).toEqual({
+      __typename: {
+        name: '__typename',
+      },
+      accountGitHub: {
+        name: 'accountGitHub',
+      },
+      accountGoogle: {
+        name: 'accountGoogle',
+      },
+      createdAt: {
+        name: 'createdAt',
+      },
+      fullName: {
+        name: 'fullName',
+      },
+      id: {
+        name: 'id',
+      },
+      role: {
+        name: 'role',
+      },
+    });
   });
 });

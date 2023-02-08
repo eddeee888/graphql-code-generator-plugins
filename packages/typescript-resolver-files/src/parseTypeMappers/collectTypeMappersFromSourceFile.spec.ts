@@ -95,16 +95,8 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMapperName: 'BillingTypeMapper',
         configImportPath: './module1/schema.mappers#BillingTypeMapper',
         typeMapperPropertyMap: {
-          address: {
-            kind: 'string',
-            name: 'address',
-            text: 'string',
-          },
-          id: {
-            kind: 'number',
-            name: 'id',
-            text: 'number',
-          },
+          address: { name: 'address' },
+          id: { name: 'id' },
         },
       },
       Payment: {
@@ -112,21 +104,9 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMapperName: 'PaymentTypeMapper',
         configImportPath: './module1/schema.mappers#PaymentTypeMapper',
         typeMapperPropertyMap: {
-          id: {
-            kind: 'string',
-            name: 'id',
-            text: 'string',
-          },
-          type: {
-            kind: 'union',
-            name: 'type',
-            text: '"creditcard" | "cash" | "bitcoin"',
-          },
-          typeCode: {
-            kind: 'literal',
-            name: 'typeCode',
-            text: '"payment"',
-          },
+          id: { name: 'id' },
+          type: { name: 'type' },
+          typeCode: { name: 'typeCode' },
         },
       },
       Address: {
@@ -134,11 +114,7 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMapperName: 'AddressTypeMapper',
         configImportPath: './module1/schema.mappers#AddressTypeMapper',
         typeMapperPropertyMap: {
-          id: {
-            kind: 'string',
-            name: 'id',
-            text: 'string',
-          },
+          id: { name: 'id' },
         },
       },
       Geo: {
@@ -146,11 +122,7 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMapperName: 'GeoTypeMapper',
         configImportPath: './module1/schema.mappers#GeoTypeMapper',
         typeMapperPropertyMap: {
-          id: {
-            kind: 'string',
-            name: 'id',
-            text: 'string',
-          },
+          id: { name: 'id' },
         },
       },
       Preference: {
@@ -158,11 +130,7 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMapperName: 'PreferenceTypeMapper',
         configImportPath: './module1/schema.mappers#PreferenceTypeMapper',
         typeMapperPropertyMap: {
-          id: {
-            kind: 'number',
-            name: 'id',
-            text: 'number',
-          },
+          id: { name: 'id' },
         },
       },
       Flag: {
@@ -170,11 +138,7 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMapperName: 'FlagTypeMapper',
         configImportPath: './module1/schema.mappers#FlagTypeMapper',
         typeMapperPropertyMap: {
-          id: {
-            kind: 'number',
-            name: 'id',
-            text: 'number',
-          },
+          id: { name: 'id' },
         },
       },
     });
@@ -283,11 +247,7 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMapperName: 'BillingTypeMapper',
         configImportPath: './module1/schema.mappers#BillingTypeMapper',
         typeMapperPropertyMap: {
-          __type: {
-            kind: 'literal',
-            name: '__type',
-            text: '1',
-          },
+          __type: { name: '__type' },
         },
       },
       Payment: {
@@ -295,11 +255,7 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMapperName: 'PaymentTypeMapper',
         configImportPath: './module1/schema.mappers#PaymentTypeMapper',
         typeMapperPropertyMap: {
-          __type: {
-            kind: 'literal',
-            name: '__type',
-            text: '2',
-          },
+          __type: { name: '__type' },
         },
       },
       Address: {
@@ -307,11 +263,7 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMapperName: 'AddressTypeMapper',
         configImportPath: './module1/schema.mappers#AddressTypeMapper',
         typeMapperPropertyMap: {
-          __type: {
-            kind: 'literal',
-            name: '__type',
-            text: '3',
-          },
+          __type: { name: '__type' },
         },
       },
       Geo: {
@@ -319,11 +271,7 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMapperName: 'GeoTypeMapper',
         configImportPath: './module1/schema.mappers#GeoTypeMapper',
         typeMapperPropertyMap: {
-          __type: {
-            kind: 'boolean',
-            name: '__type',
-            text: 'boolean',
-          },
+          __type: { name: '__type' },
         },
       },
       Preference: {
@@ -331,11 +279,7 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMapperName: 'PreferenceTypeMapper',
         configImportPath: './module1/schema.mappers#PreferenceTypeMapper',
         typeMapperPropertyMap: {
-          __type: {
-            kind: 'booleanLiteral',
-            name: '__type',
-            text: 'true',
-          },
+          __type: { name: '__type' },
         },
       },
       Flag: {
@@ -343,11 +287,7 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMapperName: 'FlagTypeMapper',
         configImportPath: './module1/schema.mappers#FlagTypeMapper',
         typeMapperPropertyMap: {
-          __type: {
-            kind: 'booleanLiteral',
-            name: '__type',
-            text: 'false',
-          },
+          __type: { name: '__type' },
         },
       },
     });
@@ -417,16 +357,8 @@ describe('collectTypeMappersFromSourceFile', () => {
         schemaType: 'Profile',
         typeMapperName: 'ProfileTypeMapper',
         typeMapperPropertyMap: {
-          id: {
-            kind: 'string',
-            name: 'id',
-            text: 'string',
-          },
-          account: {
-            kind: 'string',
-            name: 'account',
-            text: 'string',
-          },
+          id: { name: 'id' },
+          account: { name: 'account' },
         },
       },
       User: {
@@ -434,11 +366,7 @@ describe('collectTypeMappersFromSourceFile', () => {
         schemaType: 'User',
         typeMapperName: 'UserTypeMapper',
         typeMapperPropertyMap: {
-          id: {
-            kind: 'string',
-            name: 'id',
-            text: 'string',
-          },
+          id: { name: 'id' },
         },
       },
       Like: {
@@ -446,11 +374,7 @@ describe('collectTypeMappersFromSourceFile', () => {
         schemaType: 'Like',
         typeMapperName: 'LikeTypeMapper',
         typeMapperPropertyMap: {
-          id: {
-            kind: 'string',
-            name: 'id',
-            text: 'string',
-          },
+          id: { name: 'id' },
         },
       },
       Password: {
@@ -458,11 +382,7 @@ describe('collectTypeMappersFromSourceFile', () => {
         schemaType: 'Password',
         typeMapperName: 'PasswordTypeMapper',
         typeMapperPropertyMap: {
-          isValid: {
-            kind: 'boolean',
-            name: 'isValid',
-            text: 'boolean',
-          },
+          isValid: { name: 'isValid' },
         },
       },
     });
@@ -532,16 +452,8 @@ describe('collectTypeMappersFromSourceFile', () => {
       typeMapperName: 'BillingTypeMapper',
       configImportPath: './billing/schema.mappers#BillingTypeMapper',
       typeMapperPropertyMap: {
-        address: {
-          kind: 'string',
-          name: 'address',
-          text: 'string',
-        },
-        id: {
-          kind: 'number',
-          name: 'id',
-          text: 'number',
-        },
+        address: { name: 'address' },
+        id: { name: 'id' },
       },
     };
     const expectedPayment = {
@@ -549,21 +461,9 @@ describe('collectTypeMappersFromSourceFile', () => {
       typeMapperName: 'PaymentTypeMapper',
       configImportPath: './billing/schema.mappers#PaymentTypeMapper',
       typeMapperPropertyMap: {
-        id: {
-          kind: 'string',
-          name: 'id',
-          text: 'string',
-        },
-        type: {
-          kind: 'union',
-          name: 'type',
-          text: '"creditcard" | "cash" | "bitcoin"',
-        },
-        typeCode: {
-          kind: 'literal',
-          name: 'typeCode',
-          text: '"payment"',
-        },
+        id: { name: 'id' },
+        type: { name: 'type' },
+        typeCode: { name: 'typeCode' },
       },
     };
     const expectedAddress = {
@@ -571,11 +471,7 @@ describe('collectTypeMappersFromSourceFile', () => {
       typeMapperName: 'AddressTypeMapper',
       configImportPath: './address/schema.mappers#AddressTypeMapper',
       typeMapperPropertyMap: {
-        id: {
-          kind: 'string',
-          name: 'id',
-          text: 'string',
-        },
+        id: { name: 'id' },
       },
     };
     const expectedGeo = {
@@ -583,11 +479,7 @@ describe('collectTypeMappersFromSourceFile', () => {
       typeMapperName: 'GeoTypeMapper',
       configImportPath: './address/schema.mappers#GeoTypeMapper',
       typeMapperPropertyMap: {
-        id: {
-          kind: 'string',
-          name: 'id',
-          text: 'string',
-        },
+        id: { name: 'id' },
       },
     };
     const expectedPreference = {
@@ -595,11 +487,7 @@ describe('collectTypeMappersFromSourceFile', () => {
       typeMapperName: 'PreferenceTypeMapper',
       configImportPath: './preference/schema.mappers#PreferenceTypeMapper',
       typeMapperPropertyMap: {
-        id: {
-          kind: 'number',
-          name: 'id',
-          text: 'number',
-        },
+        id: { name: 'id' },
       },
     };
     const expectedFlag = {
@@ -607,11 +495,7 @@ describe('collectTypeMappersFromSourceFile', () => {
       typeMapperName: 'FlagTypeMapper',
       configImportPath: './preference/schema.mappers#FlagTypeMapper',
       typeMapperPropertyMap: {
-        id: {
-          kind: 'number',
-          name: 'id',
-          text: 'number',
-        },
+        id: { name: 'id' },
       },
     };
 
