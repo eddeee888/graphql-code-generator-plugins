@@ -7,10 +7,11 @@ export const User: UserResolvers = {
   accountGoogle: () => {
     /* User.accountGoogle resolver is required because User.accountGoogle exists but UserMapper.accountGoogle does not */
   },
-  createdAt: ({ createdAt }) => createdAt,
   fullName: () => {
     /* User.fullName resolver is required because User.fullName exists but UserMapper.fullName does not */
   },
-  id: ({ id }) => id,
-  role: ({ role }) => role,
+  id: ({ id }) => {
+    /* User.id resolver is required because User.id and UserMapper.id are not compatible */
+    return id;
+  },
 };
