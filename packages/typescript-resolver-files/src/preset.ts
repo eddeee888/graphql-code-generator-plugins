@@ -11,6 +11,7 @@ import {
 } from './generateResolverFiles';
 import { generateTypeDefsContent } from './generateTypeDefsContent';
 import { getGraphQLObjectTypeResolversToGenerate } from './getGraphQLObjectTypeResolversToGenerate';
+import { getVirtualTypesFile } from './getVirtualTypesFile';
 import { parseTypeMappers } from './parseTypeMappers';
 import { RawPresetConfig, validatePresetConfig } from './validatePresetConfig';
 
@@ -93,10 +94,15 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       },
     };
 
+    const virtualTypesFile = await getVirtualTypesFile({
+      schemaAst,
+      resolverTypesConfig,
+      resolverTypesPath,
+    });
+
     const graphQLObjectTypeResolversToGenerate =
-      await getGraphQLObjectTypeResolversToGenerate({
-        schemaAst,
-        resolverTypesConfig,
+      getGraphQLObjectTypeResolversToGenerate({
+        virtualTypesFile,
         userDefinedSchemaTypeMap,
         typeMappersMap,
         tsMorphProjectOptions,
@@ -147,6 +153,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         resolverMainFile,
         graphQLObjectTypeResolversToGenerate,
         tsMorphProjectOptions,
+        virtualTypesFile,
         mode,
         whitelistedModules,
         blacklistedModules,

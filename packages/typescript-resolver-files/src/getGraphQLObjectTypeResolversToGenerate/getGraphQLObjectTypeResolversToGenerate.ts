@@ -1,5 +1,3 @@
-import * as typeScriptPlugin from '@graphql-codegen/typescript';
-import type { GraphQLSchema } from 'graphql';
 import {
   type InterfaceDeclaration,
   type TypeAliasDeclaration,
@@ -7,6 +5,7 @@ import {
   Project,
   SyntaxKind,
 } from 'ts-morph';
+import { VirtualTypesFile } from '../getVirtualTypesFile';
 import type { TypeMappersMap } from '../parseTypeMappers';
 import { type NodePropertyMap, getNodePropertyMap } from '../utils';
 
@@ -15,34 +14,25 @@ export type GraphQLObjectTypeResolversToGenerate = Record<
   Record<string, { resolverName: string; resolverDeclaration: string }>
 >;
 
-export const getGraphQLObjectTypeResolversToGenerate = async ({
-  schemaAst,
-  resolverTypesConfig,
+export const getGraphQLObjectTypeResolversToGenerate = ({
+  virtualTypesFile,
   userDefinedSchemaTypeMap,
   typeMappersMap,
   tsMorphProjectOptions,
 }: {
-  schemaAst: GraphQLSchema;
-  resolverTypesConfig: Record<string, unknown>;
+  virtualTypesFile: VirtualTypesFile;
   typeMappersMap: TypeMappersMap;
   userDefinedSchemaTypeMap: Record<string, true>;
   tsMorphProjectOptions: ProjectOptions;
-}): Promise<GraphQLObjectTypeResolversToGenerate> => {
-  // 1. Create a virtual types.generated.ts to get the types
-  const typescriptResult = await typeScriptPlugin.plugin(
-    schemaAst,
-    [],
-    resolverTypesConfig
-  );
+}): GraphQLObjectTypeResolversToGenerate => {
   const project = new Project(tsMorphProjectOptions);
-  project.createSourceFile(
-    './virtual_types.generated.ts',
-    `${typescriptResult.prepend?.join('\n')}\n${typescriptResult.content}`
+  const virtualTypesSourceFile = project.createSourceFile(
+    virtualTypesFile.filePath,
+    virtualTypesFile.content
   );
 
   // 2. Get property map of all schema types
   const schemaTypePropertyMap: Record<string, NodePropertyMap> = {};
-  const virtualTypeFile = project.getSourceFiles()[0];
 
   const populateSchemaTypePropertyMap = (
     node: TypeAliasDeclaration | InterfaceDeclaration
@@ -53,11 +43,11 @@ export const getGraphQLObjectTypeResolversToGenerate = async ({
       schemaTypePropertyMap[identifierName] = getNodePropertyMap(node);
     }
   };
-  virtualTypeFile
+  virtualTypesSourceFile
     .getDescendantsOfKind(SyntaxKind.TypeAliasDeclaration)
     .forEach(populateSchemaTypePropertyMap);
 
-  virtualTypeFile
+  virtualTypesSourceFile
     .getDescendantsOfKind(SyntaxKind.InterfaceDeclaration)
     .forEach(populateSchemaTypePropertyMap);
 

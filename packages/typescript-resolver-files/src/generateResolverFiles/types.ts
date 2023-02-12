@@ -1,6 +1,7 @@
 import type { GraphQLSchema } from 'graphql';
 import type { ProjectOptions } from 'ts-morph';
 import type { GraphQLObjectTypeResolversToGenerate } from '../getGraphQLObjectTypeResolversToGenerate';
+import type { VirtualTypesFile } from '../getVirtualTypesFile';
 import type { ParseSourcesResult } from '../parseSources';
 import type { ImportLineMeta, RootObjectType } from '../utils';
 
@@ -60,6 +61,7 @@ export interface GenerateResolverFilesContext {
     externalResolvers: Record<string, string>;
     graphQLObjectTypeResolversToGenerate: GraphQLObjectTypeResolversToGenerate;
     tsMorphProjectOptions: ProjectOptions;
+    virtualTypesFile: VirtualTypesFile;
   };
   result: {
     files: Record<string, StandardFile | ResolverFile>;
