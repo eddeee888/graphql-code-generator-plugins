@@ -62,6 +62,7 @@ export interface GenerateResolverFilesContext {
     graphQLObjectTypeResolversToGenerate: GraphQLObjectTypeResolversToGenerate;
     tsMorphProjectOptions: ProjectOptions;
     virtualTypesFile: VirtualTypesFile;
+    fixObjectTypeResolvers: boolean;
   };
   result: {
     files: Record<string, StandardFile | ResolverFile>;

@@ -11,7 +11,7 @@ import { ensureObjectTypeResolversAreGenerated } from './ensureObjectTypeResolve
  * - Make sure object types have field resolvers if mapper type's field cannot be used as schema type's field
  */
 export const postProcessFiles = ({
-  config: { tsMorphProjectOptions, virtualTypesFile },
+  config: { tsMorphProjectOptions, virtualTypesFile, fixObjectTypeResolvers },
   result,
 }: GenerateResolverFilesContext): void => {
   const project = new Project(tsMorphProjectOptions);
@@ -61,7 +61,7 @@ export const postProcessFiles = ({
     // ...
 
     ensureExportedResolver(sourceFile, resolverFile);
-    if (resolverFile.__filetype === 'objectType') {
+    if (fixObjectTypeResolvers && resolverFile.__filetype === 'objectType') {
       ensureObjectTypeResolversAreGenerated(sourceFile, resolverFile);
     }
 

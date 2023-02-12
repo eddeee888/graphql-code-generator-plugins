@@ -45,6 +45,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       externalResolvers,
       typesPluginsConfig,
       tsMorphProjectOptions,
+      fixObjectTypeResolvers,
     } = validatePresetConfig(rawPresetConfig);
 
     const resolverTypesPath = path.join(
@@ -154,6 +155,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         graphQLObjectTypeResolversToGenerate,
         tsMorphProjectOptions,
         virtualTypesFile,
+        fixObjectTypeResolvers,
         mode,
         whitelistedModules,
         blacklistedModules,

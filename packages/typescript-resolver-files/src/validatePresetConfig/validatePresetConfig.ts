@@ -36,6 +36,7 @@ interface ParsedPresetConfig {
   externalResolvers: Record<string, string>;
   typesPluginsConfig: ParsedTypesPluginsConfig;
   tsMorphProjectOptions: ProjectOptions;
+  fixObjectTypeResolvers: boolean;
 }
 
 export interface RawPresetConfig {
@@ -52,6 +53,7 @@ export interface RawPresetConfig {
   typesPluginsConfig?: typeScriptPlugin.TypeScriptPluginConfig &
     typeScriptResolversPlugin.TypeScriptResolversPluginConfig;
   tsConfigFilePath?: string;
+  fixObjectTypeResolvers?: boolean;
 }
 
 export const validatePresetConfig = ({
@@ -67,6 +69,7 @@ export const validatePresetConfig = ({
   externalResolvers = {},
   typesPluginsConfig = {},
   tsConfigFilePath = './tsconfig.json',
+  fixObjectTypeResolvers = true,
 }: RawPresetConfig): ParsedPresetConfig => {
   if (mode !== 'merged' && mode !== 'modules') {
     throw new Error(
@@ -154,6 +157,7 @@ export const validatePresetConfig = ({
     externalResolvers,
     typesPluginsConfig,
     tsMorphProjectOptions,
+    fixObjectTypeResolvers,
   };
 };
 
