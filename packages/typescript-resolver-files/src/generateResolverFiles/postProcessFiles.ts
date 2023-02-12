@@ -1,4 +1,4 @@
-import { Project, SourceFile } from 'ts-morph';
+import { type SourceFile, Project } from 'ts-morph';
 import * as path from 'path';
 import type { ResolverFile, GenerateResolverFilesContext } from './types';
 import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier';
