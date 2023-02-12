@@ -18,7 +18,11 @@ export const postProcessFiles = ({
 
   // Create a virtual types.generated.ts file to correctly compare types
   // e.g. comparing schema types vs mapper types
-  project.createSourceFile(virtualTypesFile.filePath, virtualTypesFile.content);
+  project.createSourceFile(
+    virtualTypesFile.filePath,
+    virtualTypesFile.content,
+    { overwrite: true }
+  );
 
   const sourceFilesToProcess: {
     sourceFile: SourceFile;

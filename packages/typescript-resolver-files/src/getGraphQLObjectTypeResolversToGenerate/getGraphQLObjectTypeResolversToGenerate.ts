@@ -28,7 +28,8 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
   const project = new Project(tsMorphProjectOptions);
   const virtualTypesSourceFile = project.createSourceFile(
     virtualTypesFile.filePath,
-    virtualTypesFile.content
+    virtualTypesFile.content,
+    { overwrite: true }
   );
 
   // 2. Get property map of all schema types
