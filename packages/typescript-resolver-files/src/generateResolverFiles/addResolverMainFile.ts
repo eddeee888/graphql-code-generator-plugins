@@ -35,7 +35,10 @@ export const addResolverMainFile = ({
       }
 
       // Non Root Object fields that was generated
-      if (!file.meta.belongsToRootObject) {
+      if (
+        file.__filetype === 'objectType' ||
+        file.__filetype === 'generalResolver'
+      ) {
         res.importLines.push(
           printImportLine({
             isTypeImport: false,

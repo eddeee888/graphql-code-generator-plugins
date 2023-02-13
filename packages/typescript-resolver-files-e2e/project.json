@@ -9,7 +9,7 @@
       "options": {
         "commands": [
           "nx e2e-run typescript-resolver-files-e2e",
-          "packages/typescript-resolver-files-e2e/bin/assert-e2e.sh"
+          "bash packages/typescript-resolver-files-e2e/bin/assert-e2e.sh"
         ],
         "parallel": false
       },
@@ -17,7 +17,7 @@
         "clean-run": {
           "commands": [
             "nx e2e-run typescript-resolver-files-e2e -c clean-run",
-            "packages/typescript-resolver-files-e2e/bin/assert-e2e.sh"
+            "bash packages/typescript-resolver-files-e2e/bin/assert-e2e.sh"
           ],
           "parallel": false
         }
@@ -44,7 +44,8 @@
           "nx graphql-codegen typescript-resolver-files-e2e -c test-external-resolvers --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-config-overrides --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-mappers --verbose"
-        ]
+        ],
+        "parallel": false
       },
       "configurations": {
         "clean-run": {
@@ -54,7 +55,8 @@
           ],
           "parallel": false
         }
-      }
+      },
+      "dependsOn": ["^build"]
     },
     "graphql-codegen": {
       "executor": "@eddeee888/nx-graphql-code-generator:codegen",

@@ -1,7 +1,9 @@
-import { printImportLine } from '../utils';
+import { printImportLine, type RootObjectType } from '../utils';
 import type { GraphQLTypeHandler } from './types';
 
-export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler = (
+export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
+  RootObjectType
+> = (
   {
     fieldFilePath,
     resolverName,
@@ -11,21 +13,21 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler = (
   },
   { result }
 ) => {
-  const resolverVariableStatement = `export const ${resolverName}: NonNullable<${resolversTypeMeta.typeString}> = async (_parent, _arg, _ctx) => { /* Implement ${normalizedResolverName} resolver logic here */ };`;
+  const variableStatement = `export const ${resolverName}: NonNullable<${resolversTypeMeta.typeString}> = async (_parent, _arg, _ctx) => { /* Implement ${normalizedResolverName} resolver logic here */ };`;
 
   result.files[fieldFilePath] = {
-    __filetype: 'resolver',
+    __filetype: 'rootObjectTypeFieldResolver',
     content: `
         ${printImportLine({
           isTypeImport: true,
           module: resolversTypeMeta.module,
           namedImports: [resolversTypeMeta.typeNamedImport],
         })}
-        ${resolverVariableStatement}`,
+        ${variableStatement}`,
     mainImportIdentifier: resolverName,
     meta: {
       belongsToRootObject,
-      resolverVariableStatement,
+      variableStatement,
       normalizedResolverName,
     },
   };

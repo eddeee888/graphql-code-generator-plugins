@@ -23,7 +23,7 @@ export interface VisitNamedTypeParams {
   resolverName: string;
   belongsToRootObject: RootObjectType | null;
   visitor: {
-    RootObjectTypeField: GraphQLTypeHandler;
+    RootObjectTypeField: GraphQLTypeHandler<RootObjectType>;
     ObjectType: GraphQLTypeHandler;
     ScalarType: GraphQLTypeHandler;
     UnionType: GraphQLTypeHandler;
@@ -77,14 +77,16 @@ export const visitNamedType = (
     ctx
   );
 
-  if (isObjectType(namedType)) {
-    belongsToRootObject
-      ? visitor['RootObjectTypeField'](visitorHandlerParams, ctx)
-      : visitor['ObjectType'](visitorHandlerParams, ctx);
-  } else if (isUnionType(namedType)) {
-    visitor['UnionType'](visitorHandlerParams, ctx);
-  } else if (isScalarType(namedType)) {
-    visitor['ScalarType'](visitorHandlerParams, ctx);
+  if (visitorHandlerParams.belongsToRootObject) {
+    visitor['RootObjectTypeField'](visitorHandlerParams, ctx);
+  } else {
+    if (isObjectType(namedType)) {
+      visitor['ObjectType'](visitorHandlerParams, ctx);
+    } else if (isUnionType(namedType)) {
+      visitor['UnionType'](visitorHandlerParams, ctx);
+    } else if (isScalarType(namedType)) {
+      visitor['ScalarType'](visitorHandlerParams, ctx);
+    }
   }
 };
 
@@ -146,7 +148,7 @@ const validateAndPrepareForGraphQLTypeHandler = (
     belongsToRootObject,
   }: ValidateAndPrepareForGraphQLTypeParams,
   { config, result }: GenerateResolverFilesContext
-): GraphQLTypeHandlerParams => {
+): GraphQLTypeHandlerParams<RootObjectType> | GraphQLTypeHandlerParams => {
   const fieldFilePath = path.join(outputDir, `${resolverName}.ts`);
   if (result.files[fieldFilePath]) {
     throw new Error(

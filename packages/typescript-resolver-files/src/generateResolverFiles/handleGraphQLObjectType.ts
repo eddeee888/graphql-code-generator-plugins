@@ -5,22 +5,21 @@ export const handleGraphQLObjectType: GraphQLTypeHandler = (
   { fieldFilePath, resolverName, normalizedResolverName, resolversTypeMeta },
   { result }
 ) => {
-  const resolverVariableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { /* Implement ${resolverName} resolver logic here */ };`;
+  const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { /* Implement ${resolverName} resolver logic here */ };`;
 
   result.files[fieldFilePath] = {
-    __filetype: 'resolver',
+    __filetype: 'objectType',
     content: `
     ${printImportLine({
       isTypeImport: true,
       module: resolversTypeMeta.module,
       namedImports: [resolversTypeMeta.typeNamedImport],
     })}
-    ${resolverVariableStatement}`,
+    ${variableStatement}`,
     mainImportIdentifier: resolverName,
     meta: {
-      belongsToRootObject: null,
       normalizedResolverName,
-      resolverVariableStatement,
+      variableStatement,
     },
   };
 };
