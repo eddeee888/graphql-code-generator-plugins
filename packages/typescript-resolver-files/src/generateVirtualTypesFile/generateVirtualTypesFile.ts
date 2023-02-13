@@ -11,7 +11,7 @@ export interface VirtualTypesFile {
  * getVirtualTypesFile generates a virtual types.generated.ts file
  * This is used to statically detect and compare types in the parse and post-process steps
  */
-export const getVirtualTypesFile = async ({
+export const generateVirtualTypesFile = async ({
   schemaAst,
   resolverTypesPath,
   resolverTypesConfig,

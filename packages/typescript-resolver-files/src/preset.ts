@@ -11,7 +11,7 @@ import {
 } from './generateResolverFiles';
 import { generateTypeDefsContent } from './generateTypeDefsContent';
 import { getGraphQLObjectTypeResolversToGenerate } from './getGraphQLObjectTypeResolversToGenerate';
-import { getVirtualTypesFile } from './getVirtualTypesFile';
+import { generateVirtualTypesFile } from './generateVirtualTypesFile';
 import { parseTypeMappers } from './parseTypeMappers';
 import { RawPresetConfig, validatePresetConfig } from './validatePresetConfig';
 
@@ -95,7 +95,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       },
     };
 
-    const virtualTypesFile = await getVirtualTypesFile({
+    const virtualTypesFile = await generateVirtualTypesFile({
       schemaAst,
       resolverTypesConfig,
       resolverTypesPath,

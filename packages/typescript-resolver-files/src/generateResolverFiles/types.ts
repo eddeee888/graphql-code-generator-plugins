@@ -1,7 +1,7 @@
 import type { GraphQLSchema } from 'graphql';
 import type { ProjectOptions } from 'ts-morph';
 import type { GraphQLObjectTypeResolversToGenerate } from '../getGraphQLObjectTypeResolversToGenerate';
-import type { VirtualTypesFile } from '../getVirtualTypesFile';
+import type { VirtualTypesFile } from '../generateVirtualTypesFile';
 import type { ParseSourcesResult } from '../parseSources';
 import type { ImportLineMeta, RootObjectType } from '../utils';
 
@@ -29,7 +29,6 @@ export interface RootObjectTypeFieldResolverFile extends BaseVirtualFile {
     belongsToRootObject: RootObjectType;
     variableStatement: string;
     normalizedResolverName: string;
-    resolversToGenerate?: GraphQLObjectTypeResolversToGenerate[number];
   };
 }
 

@@ -5,7 +5,7 @@ import {
   Project,
   SyntaxKind,
 } from 'ts-morph';
-import { VirtualTypesFile } from '../getVirtualTypesFile';
+import { VirtualTypesFile } from '../generateVirtualTypesFile';
 import type { TypeMappersMap } from '../parseTypeMappers';
 import { type NodePropertyMap, getNodePropertyMap } from '../utils';
 
