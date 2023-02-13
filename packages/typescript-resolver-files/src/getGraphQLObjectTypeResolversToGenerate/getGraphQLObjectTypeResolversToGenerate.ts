@@ -1,11 +1,9 @@
 import {
   type InterfaceDeclaration,
   type TypeAliasDeclaration,
-  type ProjectOptions,
-  Project,
+  type SourceFile,
   SyntaxKind,
 } from 'ts-morph';
-import { VirtualTypesFile } from '../generateVirtualTypesFile';
 import type { TypeMappersMap } from '../parseTypeMappers';
 import { type NodePropertyMap, getNodePropertyMap } from '../utils';
 
@@ -15,24 +13,15 @@ export type GraphQLObjectTypeResolversToGenerate = Record<
 >;
 
 export const getGraphQLObjectTypeResolversToGenerate = ({
-  virtualTypesFile,
+  typesSourceFile,
   userDefinedSchemaTypeMap,
   typeMappersMap,
-  tsMorphProjectOptions,
 }: {
-  virtualTypesFile: VirtualTypesFile;
+  typesSourceFile: SourceFile;
   typeMappersMap: TypeMappersMap;
   userDefinedSchemaTypeMap: Record<string, true>;
-  tsMorphProjectOptions: ProjectOptions;
 }): GraphQLObjectTypeResolversToGenerate => {
-  const project = new Project(tsMorphProjectOptions);
-  const virtualTypesSourceFile = project.createSourceFile(
-    virtualTypesFile.filePath,
-    virtualTypesFile.content,
-    { overwrite: true }
-  );
-
-  // 2. Get property map of all schema types
+  // 1. Get property map of all schema types
   const schemaTypePropertyMap: Record<string, NodePropertyMap> = {};
 
   const populateSchemaTypePropertyMap = (
@@ -44,11 +33,11 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
       schemaTypePropertyMap[identifierName] = getNodePropertyMap(node);
     }
   };
-  virtualTypesSourceFile
+  typesSourceFile
     .getDescendantsOfKind(SyntaxKind.TypeAliasDeclaration)
     .forEach(populateSchemaTypePropertyMap);
 
-  virtualTypesSourceFile
+  typesSourceFile
     .getDescendantsOfKind(SyntaxKind.InterfaceDeclaration)
     .forEach(populateSchemaTypePropertyMap);
 

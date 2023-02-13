@@ -3,6 +3,7 @@ import * as addPlugin from '@graphql-codegen/add';
 import * as typeScriptPlugin from '@graphql-codegen/typescript';
 import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import type { Types } from '@graphql-codegen/plugin-helpers';
+import { Project } from 'ts-morph';
 import { parseSources } from './parseSources';
 import { getPluginsConfig } from './getPluginsConfig';
 import {
@@ -11,10 +12,9 @@ import {
 } from './generateResolverFiles';
 import { generateTypeDefsContent } from './generateTypeDefsContent';
 import { getGraphQLObjectTypeResolversToGenerate } from './getGraphQLObjectTypeResolversToGenerate';
-import { generateVirtualTypesFile } from './generateVirtualTypesFile';
+import { addVirtualTypesFileToTsMorphProject } from './addVirtualTypesFileToTsMorphProject';
 import { parseTypeMappers } from './parseTypeMappers';
 import { RawPresetConfig, validatePresetConfig } from './validatePresetConfig';
-
 export const preset: Types.OutputPreset<RawPresetConfig> = {
   buildGeneratesSection: async ({
     schema,
@@ -55,12 +55,14 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
 
     const { sourceMap, mergedSDL } = parseSources(sources);
 
+    const tsMorphProject = new Project(tsMorphProjectOptions);
+
     const typeMappersMap = parseTypeMappers({
       sourceMap,
       resolverTypesPath,
       typeMappersFileExtension,
       typeMappersSuffix,
-      tsMorphProjectOptions,
+      tsMorphProject,
     });
 
     const generatesSection: Types.GenerateOptions[] = [];
@@ -95,7 +97,8 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       },
     };
 
-    const virtualTypesFile = await generateVirtualTypesFile({
+    const typesSourceFile = await addVirtualTypesFileToTsMorphProject({
+      tsMorphProject,
       schemaAst,
       resolverTypesConfig,
       resolverTypesPath,
@@ -103,10 +106,9 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
 
     const graphQLObjectTypeResolversToGenerate =
       getGraphQLObjectTypeResolversToGenerate({
-        virtualTypesFile,
+        typesSourceFile,
         userDefinedSchemaTypeMap,
         typeMappersMap,
-        tsMorphProjectOptions,
       });
 
     const resolverTypesFile: Types.GenerateOptions = {
@@ -153,8 +155,10 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         resolverRelativeTargetDir,
         resolverMainFile,
         graphQLObjectTypeResolversToGenerate,
-        tsMorphProjectOptions,
-        virtualTypesFile,
+        tsMorph: {
+          project: tsMorphProject,
+          typesSourceFile,
+        },
         fixObjectTypeResolvers,
         mode,
         whitelistedModules,

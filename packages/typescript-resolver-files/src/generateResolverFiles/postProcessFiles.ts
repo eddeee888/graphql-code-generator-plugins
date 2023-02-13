@@ -1,4 +1,4 @@
-import { type SourceFile, Project } from 'ts-morph';
+import type { SourceFile } from 'ts-morph';
 import * as path from 'path';
 import type { ResolverFile, GenerateResolverFilesContext } from './types';
 import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier';
@@ -11,19 +11,12 @@ import { ensureObjectTypeResolversAreGenerated } from './ensureObjectTypeResolve
  * - Make sure object types have field resolvers if mapper type's field cannot be used as schema type's field
  */
 export const postProcessFiles = ({
-  config: { tsMorphProjectOptions, virtualTypesFile, fixObjectTypeResolvers },
+  config: {
+    tsMorph: { project },
+    fixObjectTypeResolvers,
+  },
   result,
 }: GenerateResolverFilesContext): void => {
-  const project = new Project(tsMorphProjectOptions);
-
-  // Create a virtual types.generated.ts file to correctly compare types
-  // e.g. comparing schema types vs mapper types
-  project.createSourceFile(
-    virtualTypesFile.filePath,
-    virtualTypesFile.content,
-    { overwrite: true }
-  );
-
   const sourceFilesToProcess: {
     sourceFile: SourceFile;
     resolverFile: ResolverFile;

@@ -131,7 +131,9 @@ export const validatePresetConfig = ({
     finalTypeDefsFilePath = defaultTypeDefsFilePath;
   }
 
-  const tsMorphProjectOptions: ProjectOptions = {};
+  const tsMorphProjectOptions: ProjectOptions = {
+    skipAddingFilesFromTsConfig: true, // avoid long startup time by NOT loading files included by tsconfig.json. We only use this virtually anyways so we don't need all the files
+  };
   if (tsConfigFilePath) {
     const absoluteTsConfigFilePath = path.join(process.cwd(), tsConfigFilePath);
 

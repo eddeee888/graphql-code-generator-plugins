@@ -14,7 +14,9 @@ const defaultExpected: ReturnType<typeof validatePresetConfig> = {
   },
   whitelistedModules: [],
   blacklistedModules: [],
-  tsMorphProjectOptions: {},
+  tsMorphProjectOptions: {
+    skipAddingFilesFromTsConfig: true,
+  },
   fixObjectTypeResolvers: true,
 };
 

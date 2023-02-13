@@ -1,17 +1,39 @@
 import * as typeScriptPlugin from '@graphql-codegen/typescript';
 import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import type { GraphQLSchema } from 'graphql';
+import { type SourceFile, Project } from 'ts-morph';
 
-export interface VirtualTypesFile {
-  filePath: string;
-  content: string;
-}
+export const addVirtualTypesFileToTsMorphProject = async ({
+  tsMorphProject,
+  schemaAst,
+  resolverTypesPath,
+  resolverTypesConfig,
+}: {
+  tsMorphProject: Project;
+  schemaAst: GraphQLSchema;
+  resolverTypesPath: string;
+  resolverTypesConfig: Record<string, unknown>;
+}): Promise<SourceFile> => {
+  const typesFile = await generateVirtualTypesFile({
+    schemaAst,
+    resolverTypesPath,
+    resolverTypesConfig,
+  });
+
+  const typesSourceFile = tsMorphProject.createSourceFile(
+    typesFile.filePath,
+    typesFile.content,
+    { overwrite: true }
+  );
+
+  return typesSourceFile;
+};
 
 /**
  * getVirtualTypesFile generates a virtual types.generated.ts file
  * This is used to statically detect and compare types in the parse and post-process steps
  */
-export const generateVirtualTypesFile = async ({
+const generateVirtualTypesFile = async ({
   schemaAst,
   resolverTypesPath,
   resolverTypesConfig,
@@ -19,7 +41,10 @@ export const generateVirtualTypesFile = async ({
   schemaAst: GraphQLSchema;
   resolverTypesPath: string;
   resolverTypesConfig: Record<string, unknown>;
-}): Promise<VirtualTypesFile> => {
+}): Promise<{
+  filePath: string;
+  content: string;
+}> => {
   const [typescriptResult, typescriptResolversResult] = await Promise.all([
     typeScriptPlugin.plugin(schemaAst, [], resolverTypesConfig),
     typeScriptResolversPlugin.plugin(schemaAst, [], resolverTypesConfig),
