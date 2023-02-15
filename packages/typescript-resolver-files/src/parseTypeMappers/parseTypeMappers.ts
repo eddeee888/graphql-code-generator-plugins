@@ -10,6 +10,7 @@ export interface ParseTypeMappersParams {
   typeMappersFileExtension: string;
   typeMappersSuffix: string;
   tsMorphProject: Project;
+  shouldCollectPropertyMap: boolean;
 }
 
 export interface TypeMapperDetails {
@@ -27,6 +28,7 @@ export const parseTypeMappers = ({
   typeMappersFileExtension,
   typeMappersSuffix,
   tsMorphProject,
+  shouldCollectPropertyMap,
 }: ParseTypeMappersParams): TypeMappersMap => {
   const result = Object.entries(sourceMap).reduce<TypeMappersMap>(
     (res, [_, { sourcePath }]) => {
@@ -43,7 +45,12 @@ export const parseTypeMappers = ({
       }
 
       collectTypeMappersFromSourceFile(
-        { typeMappersSourceFile, typeMappersSuffix, resolverTypesPath },
+        {
+          typeMappersSourceFile,
+          typeMappersSuffix,
+          resolverTypesPath,
+          shouldCollectPropertyMap,
+        },
         res
       );
 

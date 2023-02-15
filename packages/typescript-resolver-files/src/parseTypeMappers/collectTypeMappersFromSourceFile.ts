@@ -15,10 +15,12 @@ export const collectTypeMappersFromSourceFile = (
     typeMappersSourceFile,
     typeMappersSuffix,
     resolverTypesPath,
+    shouldCollectPropertyMap,
   }: {
     typeMappersSourceFile: SourceFile;
     typeMappersSuffix: string;
     resolverTypesPath: string;
+    shouldCollectPropertyMap: boolean;
   },
   result: TypeMappersMap
 ): void => {
@@ -35,6 +37,7 @@ export const collectTypeMappersFromSourceFile = (
         typeMappersSuffix,
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
+        shouldCollectPropertyMap,
       },
       result
     );
@@ -55,6 +58,7 @@ export const collectTypeMappersFromSourceFile = (
         typeMappersSuffix,
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
+        shouldCollectPropertyMap,
       },
       result
     );
@@ -80,6 +84,7 @@ export const collectTypeMappersFromSourceFile = (
           typeMappersSuffix,
           typeMappersFilePath: typeMappersSourceFile.getFilePath(),
           resolverTypesPath,
+          shouldCollectPropertyMap,
         },
         result
       );
@@ -94,12 +99,14 @@ const addTypeMapperDetailsIfValid = (
     typeMappersSuffix,
     typeMappersFilePath,
     resolverTypesPath,
+    shouldCollectPropertyMap,
   }: {
     declarationNode: InterfaceDeclaration | TypeAliasDeclaration | null;
     identifierNode: Identifier;
     typeMappersSuffix: string;
     typeMappersFilePath: string;
     resolverTypesPath: string;
+    shouldCollectPropertyMap: boolean;
   },
   result: TypeMappersMap
 ): void => {
@@ -131,15 +138,19 @@ const addTypeMapperDetailsIfValid = (
     );
   }
 
-  const originalDeclarationNode = getOriginalDeclarationNode(
-    declarationNode,
-    identifierNode
-  );
+  let typeMapperPropertyMap = {};
+  if (shouldCollectPropertyMap) {
+    const originalDeclarationNode = getOriginalDeclarationNode(
+      declarationNode,
+      identifierNode
+    );
+    typeMapperPropertyMap = getNodePropertyMap(originalDeclarationNode);
+  }
 
   result[schemaType] = {
     schemaType,
     typeMapperName: identifierName,
-    typeMapperPropertyMap: getNodePropertyMap(originalDeclarationNode),
+    typeMapperPropertyMap,
     configImportPath,
   };
 };

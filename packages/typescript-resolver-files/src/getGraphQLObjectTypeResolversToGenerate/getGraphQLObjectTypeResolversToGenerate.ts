@@ -21,6 +21,11 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
   typeMappersMap: TypeMappersMap;
   userDefinedSchemaTypeMap: Record<string, true>;
 }): GraphQLObjectTypeResolversToGenerate => {
+  const typeMappersEntries = Object.entries(typeMappersMap);
+  if (typeMappersEntries.length === 0) {
+    return {};
+  }
+
   // 1. Get property map of all schema types
   const schemaTypePropertyMap: Record<string, NodePropertyMap> = {};
 
@@ -43,7 +48,7 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
 
   // 3. Find resolvers to generate and add reason
   const result: GraphQLObjectTypeResolversToGenerate = {};
-  Object.entries(typeMappersMap).forEach(
+  typeMappersEntries.forEach(
     ([_, { schemaType, typeMapperName, typeMapperPropertyMap }]) => {
       const matchedSchemaTypePropertyMap = schemaTypePropertyMap[schemaType];
       if (matchedSchemaTypePropertyMap) {
