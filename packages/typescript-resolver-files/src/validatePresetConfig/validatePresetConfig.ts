@@ -3,8 +3,7 @@ import * as fs from 'fs';
 import * as typeScriptPlugin from '@graphql-codegen/typescript';
 import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import type { ProjectOptions } from 'ts-morph';
-
-const presetName = '@eddeee888/gcg-typescript-resolver-files';
+import { presetName } from '../preset';
 
 const defaultResolverRelativeTargetDirMap: Record<
   ParsedPresetConfig['mode'],
