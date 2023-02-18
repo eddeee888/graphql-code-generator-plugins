@@ -8,7 +8,7 @@ import {
 import type { GenerateResolverFilesContext } from './types';
 
 export const addResolverMainFile = ({
-  config: { baseOutputDir, resolverTypesPath, resolverMainFile },
+  config: { baseOutputDir, resolverTypesPath, resolverMainFile, typesPrefix },
   result,
 }: GenerateResolverFilesContext): void => {
   const filename = path.join(
@@ -131,7 +131,9 @@ export const addResolverMainFile = ({
   }, resolversDetails);
 
   const resolversIdentifier = 'resolvers';
-  const resolversTypeName = 'Resolvers'; // Generated type from typescript-resolvers plugin
+  const resolversTypeName = typesPrefix
+    ? `${typesPrefix}Resolvers`
+    : 'Resolvers'; // Generated type from typescript-resolvers plugin
 
   const queries =
     resolversDetails.queryFields.length > 0

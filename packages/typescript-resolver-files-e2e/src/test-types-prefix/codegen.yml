@@ -1,0 +1,14 @@
+# https://www.graphql-code-generator.com/docs/config-reference/codegen-config
+overwrite: true
+schema:
+  - packages/typescript-resolver-files-e2e/src/test-types-prefix/**/*.graphqls
+  - packages/typescript-resolver-files-e2e/src/test-types-prefix/**/*.graphqls.ts
+hooks:
+  afterAllFileWrite:
+    - prettier --write
+generates:
+  packages/typescript-resolver-files-e2e/src/test-types-prefix/modules:
+    preset: ./dist/packages/typescript-resolver-files/src/index.js
+    presetConfig:
+      typesPluginsConfig:
+        typesPrefix: I

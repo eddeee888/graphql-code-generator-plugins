@@ -135,6 +135,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           ...defaultScalarExternalResolvers,
           ...externalResolvers,
         },
+        typesPrefix: typesPluginsConfig.typesPrefix,
       },
       result,
     });
