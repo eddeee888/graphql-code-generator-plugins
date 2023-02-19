@@ -1,8 +1,0 @@
-{
-  "$schema": "./node_modules/nx/schemas/workspace-schema.json",
-  "version": 2,
-  "projects": {
-    "typescript-resolver-files": "packages/typescript-resolver-files",
-    "typescript-resolver-files-e2e": "packages/typescript-resolver-files-e2e"
-  }
-}
