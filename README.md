@@ -35,7 +35,7 @@ yarn install
 
 ### Contribution process
 
-1. [Create issue outlining the problem](https://github.com/eddeee888/graphql-code-generator-plugins/issues/new)
+1. [Create issue outlining the problem](https://github.com/eddeee888/graphql-code-generator-plugins/issues/new/choose)
 2. Fork the repo and make changes
 3. Add unit tests and e2e tests
 4. Document new config option in the package's README if required
