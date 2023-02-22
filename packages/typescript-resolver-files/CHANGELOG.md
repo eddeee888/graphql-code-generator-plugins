@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.2.1
+
+### Patch Changes
+
+- 75fc48b: Bump @graphql-codegen/\* deps
+
 ## 0.2.0
 
 ### Minor Changes
