@@ -54,6 +54,7 @@ export interface GenerateResolverFilesContext {
     whitelistedModules: string[];
     blacklistedModules: string[];
     externalResolvers: Record<string, string>;
+    typesPrefix?: string;
   };
   result: {
     files: Record<string, StandardFile | ResolverFile>;
