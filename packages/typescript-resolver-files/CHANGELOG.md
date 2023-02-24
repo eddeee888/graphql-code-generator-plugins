@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.3.0
+
+### Minor Changes
+
+- 686cafd: Implement type comparison between mapper type vs schema type to generate resolvers
+
 ## 0.2.1
 
 ### Patch Changes
