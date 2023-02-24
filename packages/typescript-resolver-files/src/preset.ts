@@ -2,23 +2,32 @@ import * as path from 'path';
 import * as addPlugin from '@graphql-codegen/add';
 import * as typeScriptPlugin from '@graphql-codegen/typescript';
 import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
-import type { Types } from '@graphql-codegen/plugin-helpers';
+import {
+  type Types,
+  createNoopProfiler,
+} from '@graphql-codegen/plugin-helpers';
+import { Project } from 'ts-morph';
 import { parseSources } from './parseSources';
 import { getPluginsConfig } from './getPluginsConfig';
 import {
+  type GenerateResolverFilesContext,
   generateResolverFiles,
-  GenerateResolverFilesContext,
 } from './generateResolverFiles';
 import { generateTypeDefsContent } from './generateTypeDefsContent';
+import { getGraphQLObjectTypeResolversToGenerate } from './getGraphQLObjectTypeResolversToGenerate';
+import { addVirtualTypesFileToTsMorphProject } from './addVirtualTypesFileToTsMorphProject';
 import { parseTypeMappers } from './parseTypeMappers';
 import { RawPresetConfig, validatePresetConfig } from './validatePresetConfig';
 
+export const presetName = '@eddeee888/gcg-typescript-resolver-files';
+
 export const preset: Types.OutputPreset<RawPresetConfig> = {
-  buildGeneratesSection: ({
+  buildGeneratesSection: async ({
     schema,
     schemaAst,
     presetConfig: rawPresetConfig,
     baseOutputDir,
+    profiler = createNoopProfiler(),
   }) => {
     if (!schemaAst) {
       throw new Error('Missing schemaAst');
@@ -42,6 +51,8 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       blacklistedModules,
       externalResolvers,
       typesPluginsConfig,
+      tsMorphProjectOptions,
+      fixObjectTypeResolvers,
     } = validatePresetConfig(rawPresetConfig);
 
     const resolverTypesPath = path.join(
@@ -51,20 +62,34 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
 
     const { sourceMap, mergedSDL } = parseSources(sources);
 
-    const typeMappersMap = parseTypeMappers({
-      sourceMap,
-      resolverTypesPath,
-      typeMappersFileExtension,
-      typeMappersSuffix,
-    });
+    const tsMorphProject = await profiler.run(
+      async () => new Project(tsMorphProjectOptions),
+      createProfilerRunName('Initialising ts-morph project')
+    );
+
+    const typeMappersMap = await profiler.run(
+      async () =>
+        parseTypeMappers({
+          sourceMap,
+          resolverTypesPath,
+          typeMappersFileExtension,
+          typeMappersSuffix,
+          tsMorphProject,
+          shouldCollectPropertyMap: fixObjectTypeResolvers !== 'disabled',
+        }),
+      createProfilerRunName('parseTypeMappers')
+    );
 
     const generatesSection: Types.GenerateOptions[] = [];
 
     // typescript and typescript-resolvers plugins config
     const {
-      defaultScalarTypesMap,
-      defaultScalarExternalResolvers,
-      defaultTypeMappers,
+      userDefinedSchemaTypeMap,
+      pluginsConfig: {
+        defaultScalarTypesMap,
+        defaultScalarExternalResolvers,
+        defaultTypeMappers,
+      },
     } = getPluginsConfig({
       schemaAst,
       sourceMap,
@@ -73,6 +98,43 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       blacklistedModules,
     });
 
+    const resolverTypesConfig = {
+      enumsAsTypes: true,
+      nonOptionalTypename: true,
+      ...typesPluginsConfig,
+      scalars: {
+        ...defaultScalarTypesMap,
+        ...typesPluginsConfig.scalars,
+      },
+      mappers: {
+        ...defaultTypeMappers,
+        ...typesPluginsConfig.mappers,
+      },
+    };
+
+    // typesSourceFile is the virtual `types.generated.ts`
+    // This is useful when we need to do static analysis as most types come from this file
+    // e.g. comparing mappers field type vs schema object field type
+    const typesSourceFile = await profiler.run(
+      () =>
+        addVirtualTypesFileToTsMorphProject({
+          tsMorphProject,
+          schemaAst,
+          resolverTypesConfig,
+          resolverTypesPath,
+        }),
+      createProfilerRunName('addVirtualTypesFileToTsMorphProject')
+    );
+
+    const graphQLObjectTypeResolversToGenerate = await profiler.run(
+      async () =>
+        getGraphQLObjectTypeResolversToGenerate({
+          typesSourceFile,
+          userDefinedSchemaTypeMap,
+          typeMappersMap,
+        }),
+      createProfilerRunName('graphQLObjectTypeResolversToGenerate')
+    );
     const resolverTypesFile: Types.GenerateOptions = {
       filename: resolverTypesPath,
       pluginMap: {
@@ -80,19 +142,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         'typescript-resolvers': typeScriptResolversPlugin,
       },
       plugins: [{ typescript: {} }, { ['typescript-resolvers']: {} }],
-      config: {
-        enumsAsTypes: true,
-        nonOptionalTypename: true,
-        ...typesPluginsConfig,
-        scalars: {
-          ...defaultScalarTypesMap,
-          ...typesPluginsConfig.scalars,
-        },
-        mappers: {
-          ...defaultTypeMappers,
-          ...typesPluginsConfig.mappers,
-        },
-      },
+      config: resolverTypesConfig,
       schema,
       documents: [],
     };
@@ -100,12 +150,16 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
 
     // typeDefs
     if (typeDefsFilePath) {
+      const typeDefsContent = await profiler.run(
+        async () => generateTypeDefsContent({ mergedSDL }),
+        createProfilerRunName('generateTypeDefsContent')
+      );
       const typeDefsFile: Types.GenerateOptions = {
         filename: path.join(baseOutputDir, typeDefsFilePath),
         pluginMap: { add: addPlugin },
         plugins: [
           {
-            add: { content: generateTypeDefsContent({ mergedSDL }) },
+            add: { content: typeDefsContent },
           },
         ],
         config: {},
@@ -120,24 +174,34 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       files: {},
       externalImports: {},
     };
-    generateResolverFiles({
-      config: {
-        schema: schemaAst,
-        sourceMap,
-        baseOutputDir,
-        resolverTypesPath,
-        resolverRelativeTargetDir,
-        resolverMainFile,
-        mode,
-        whitelistedModules,
-        blacklistedModules,
-        externalResolvers: {
-          ...defaultScalarExternalResolvers,
-          ...externalResolvers,
-        },
-      },
-      result,
-    });
+    await profiler.run(
+      async () =>
+        generateResolverFiles({
+          config: {
+            schema: schemaAst,
+            sourceMap,
+            baseOutputDir,
+            resolverTypesPath,
+            resolverRelativeTargetDir,
+            resolverMainFile,
+            graphQLObjectTypeResolversToGenerate,
+            tsMorph: {
+              project: tsMorphProject,
+              typesSourceFile,
+            },
+            fixObjectTypeResolvers,
+            mode,
+            whitelistedModules,
+            blacklistedModules,
+            externalResolvers: {
+              ...defaultScalarExternalResolvers,
+              ...externalResolvers,
+            },
+          },
+          result,
+        }),
+      createProfilerRunName('generateResolverFiles')
+    );
     const resolverFilesGenerateOptions: Types.GenerateOptions[] =
       Object.entries(result.files).map(([filename, { content }]) => ({
         filename,
@@ -151,3 +215,6 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     return [...resolverFilesGenerateOptions, ...generatesSection];
   },
 };
+
+const createProfilerRunName = (traceName: string): string =>
+  `[${presetName}]: ${traceName}`;

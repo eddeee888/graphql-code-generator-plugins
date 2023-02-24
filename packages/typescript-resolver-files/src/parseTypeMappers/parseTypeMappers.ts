@@ -1,7 +1,7 @@
 import * as path from 'path';
-import * as fs from 'fs';
 import { Project } from 'ts-morph';
 import type { ParseSourcesResult } from '../parseSources';
+import type { NodePropertyMap } from '../utils';
 import { collectTypeMappersFromSourceFile } from './collectTypeMappersFromSourceFile';
 
 export interface ParseTypeMappersParams {
@@ -9,11 +9,14 @@ export interface ParseTypeMappersParams {
   resolverTypesPath: string;
   typeMappersFileExtension: string;
   typeMappersSuffix: string;
+  tsMorphProject: Project;
+  shouldCollectPropertyMap: boolean;
 }
 
 export interface TypeMapperDetails {
   schemaType: string;
   typeMapperName: string;
+  typeMapperPropertyMap: NodePropertyMap;
   configImportPath: string;
 }
 
@@ -24,6 +27,8 @@ export const parseTypeMappers = ({
   resolverTypesPath,
   typeMappersFileExtension,
   typeMappersSuffix,
+  tsMorphProject,
+  shouldCollectPropertyMap,
 }: ParseTypeMappersParams): TypeMappersMap => {
   const result = Object.entries(sourceMap).reduce<TypeMappersMap>(
     (res, [_, { sourcePath }]) => {
@@ -32,16 +37,20 @@ export const parseTypeMappers = ({
         `${sourcePath.name}${typeMappersFileExtension}`
       );
 
-      if (!fs.existsSync(typeMapperFilePath)) {
+      const typeMappersSourceFile =
+        tsMorphProject.addSourceFileAtPathIfExists(typeMapperFilePath);
+
+      if (!typeMappersSourceFile) {
         return res;
       }
 
-      const project = new Project();
-      const [typeMappersSourceFile] =
-        project.addSourceFilesAtPaths(typeMapperFilePath);
-
       collectTypeMappersFromSourceFile(
-        { typeMappersSourceFile, typeMappersSuffix, resolverTypesPath },
+        {
+          typeMappersSourceFile,
+          typeMappersSuffix,
+          resolverTypesPath,
+          shouldCollectPropertyMap,
+        },
         res
       );
 

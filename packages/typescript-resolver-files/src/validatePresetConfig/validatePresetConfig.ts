@@ -1,8 +1,9 @@
 import * as path from 'path';
+import * as fs from 'fs';
 import * as typeScriptPlugin from '@graphql-codegen/typescript';
 import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
-
-const presetName = '@eddeee888/gcg-typescript-resolver-files';
+import type { ProjectOptions } from 'ts-morph';
+import { presetName } from '../preset';
 
 const defaultResolverRelativeTargetDirMap: Record<
   ParsedPresetConfig['mode'],
@@ -33,6 +34,8 @@ interface ParsedPresetConfig {
   blacklistedModules: string[];
   externalResolvers: Record<string, string>;
   typesPluginsConfig: ParsedTypesPluginsConfig;
+  tsMorphProjectOptions: ProjectOptions;
+  fixObjectTypeResolvers: 'smart' | 'disabled';
 }
 
 export interface RawPresetConfig {
@@ -48,6 +51,8 @@ export interface RawPresetConfig {
   externalResolvers?: Record<string, string>;
   typesPluginsConfig?: typeScriptPlugin.TypeScriptPluginConfig &
     typeScriptResolversPlugin.TypeScriptResolversPluginConfig;
+  tsConfigFilePath?: string;
+  fixObjectTypeResolvers?: string;
 }
 
 export const validatePresetConfig = ({
@@ -62,10 +67,21 @@ export const validatePresetConfig = ({
   blacklistedModules,
   externalResolvers = {},
   typesPluginsConfig = {},
+  tsConfigFilePath = './tsconfig.json',
+  fixObjectTypeResolvers = 'smart',
 }: RawPresetConfig): ParsedPresetConfig => {
   if (mode !== 'merged' && mode !== 'modules') {
     throw new Error(
       `Validation Error - ${presetName} - presetConfig.mode must be "merged" or "modules" (default is "modules")`
+    );
+  }
+
+  if (
+    fixObjectTypeResolvers !== 'smart' &&
+    fixObjectTypeResolvers !== 'disabled'
+  ) {
+    throw new Error(
+      `Validation Error - ${presetName} - presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")`
     );
   }
 
@@ -123,6 +139,21 @@ export const validatePresetConfig = ({
     finalTypeDefsFilePath = defaultTypeDefsFilePath;
   }
 
+  const tsMorphProjectOptions: ProjectOptions = {
+    skipAddingFilesFromTsConfig: true, // avoid long startup time by NOT loading files included by tsconfig.json. We only use this virtually anyways so we don't need all the files
+  };
+  if (tsConfigFilePath) {
+    const absoluteTsConfigFilePath = path.join(process.cwd(), tsConfigFilePath);
+
+    if (fs.existsSync(absoluteTsConfigFilePath)) {
+      tsMorphProjectOptions.tsConfigFilePath = absoluteTsConfigFilePath;
+    } else {
+      console.warn(
+        `[${presetName}] WARN: Unable to find TypeScript config at ${absoluteTsConfigFilePath}. Use presetConfig.tsConfigFilePath to set a custom value. Otherwise, type analysis may not work correctly.`
+      );
+    }
+  }
+
   return {
     resolverTypesPath,
     resolverRelativeTargetDir: finalResolverRelativeTargetDir,
@@ -135,6 +166,8 @@ export const validatePresetConfig = ({
     blacklistedModules: blacklistedModules || [],
     externalResolvers,
     typesPluginsConfig,
+    tsMorphProjectOptions,
+    fixObjectTypeResolvers,
   };
 };
 

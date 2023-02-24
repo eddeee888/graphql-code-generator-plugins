@@ -1,6 +1,13 @@
 import * as path from 'path';
-import type { SourceFile } from 'ts-morph';
-import { normalizeRelativePath } from '../utils';
+import {
+  type SourceFile,
+  type Identifier,
+  type TypeAliasDeclaration,
+  type InterfaceDeclaration,
+  Node,
+  SyntaxKind,
+} from 'ts-morph';
+import { normalizeRelativePath, getNodePropertyMap } from '../utils';
 import type { TypeMappersMap } from './parseTypeMappers';
 
 export const collectTypeMappersFromSourceFile = (
@@ -8,10 +15,12 @@ export const collectTypeMappersFromSourceFile = (
     typeMappersSourceFile,
     typeMappersSuffix,
     resolverTypesPath,
+    shouldCollectPropertyMap,
   }: {
     typeMappersSourceFile: SourceFile;
     typeMappersSuffix: string;
     resolverTypesPath: string;
+    shouldCollectPropertyMap: boolean;
   },
   result: TypeMappersMap
 ): void => {
@@ -23,10 +32,12 @@ export const collectTypeMappersFromSourceFile = (
 
     addTypeMapperDetailsIfValid(
       {
-        identifierName: interfaceDeclaration.getName(),
+        declarationNode: interfaceDeclaration,
+        identifierNode: interfaceDeclaration.getNameNode(),
         typeMappersSuffix,
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
+        shouldCollectPropertyMap,
       },
       result
     );
@@ -38,12 +49,16 @@ export const collectTypeMappersFromSourceFile = (
       return;
     }
 
+    const identifierNode = typeAlias.getNameNode();
+
     addTypeMapperDetailsIfValid(
       {
-        identifierName: typeAlias.getName(),
+        declarationNode: typeAlias,
+        identifierNode,
         typeMappersSuffix,
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
+        shouldCollectPropertyMap,
       },
       result
     );
@@ -52,21 +67,24 @@ export const collectTypeMappersFromSourceFile = (
   // Look for named exports e.g.
   //   - export { something } from 'module';
   //   - export type { something } from 'module';
-  //   - export { something, somethingelse }'
+  //   - export { something, somethingelse as somethingelse2 }'
+
   typeMappersSourceFile.getExportDeclarations().forEach((exportDeclaration) => {
     exportDeclaration.getNamedExports().forEach((namedExport) => {
-      let identifierName = namedExport.getFullText();
+      let identifierNode = namedExport.getNameNode();
       const aliasNode = namedExport.getAliasNode();
       if (aliasNode) {
-        identifierName = aliasNode.getFullText();
+        identifierNode = aliasNode;
       }
 
       addTypeMapperDetailsIfValid(
         {
-          identifierName: identifierName.trim(), // `getFullText()` always have an emptry space in front of the identifier so we need to trim it
+          declarationNode: null,
+          identifierNode,
           typeMappersSuffix,
           typeMappersFilePath: typeMappersSourceFile.getFilePath(),
           resolverTypesPath,
+          shouldCollectPropertyMap,
         },
         result
       );
@@ -76,18 +94,23 @@ export const collectTypeMappersFromSourceFile = (
 
 const addTypeMapperDetailsIfValid = (
   {
-    identifierName,
+    declarationNode,
+    identifierNode,
     typeMappersSuffix,
     typeMappersFilePath,
     resolverTypesPath,
+    shouldCollectPropertyMap,
   }: {
-    identifierName: string;
+    declarationNode: InterfaceDeclaration | TypeAliasDeclaration | null;
+    identifierNode: Identifier;
     typeMappersSuffix: string;
     typeMappersFilePath: string;
     resolverTypesPath: string;
+    shouldCollectPropertyMap: boolean;
   },
   result: TypeMappersMap
 ): void => {
+  const identifierName = identifierNode.getText();
   if (!identifierName.endsWith(typeMappersSuffix)) {
     return;
   }
@@ -115,9 +138,40 @@ const addTypeMapperDetailsIfValid = (
     );
   }
 
+  let typeMapperPropertyMap = {};
+  if (shouldCollectPropertyMap) {
+    const originalDeclarationNode = getOriginalDeclarationNode(
+      declarationNode,
+      identifierNode
+    );
+    typeMapperPropertyMap = getNodePropertyMap(originalDeclarationNode);
+  }
+
   result[schemaType] = {
     schemaType,
     typeMapperName: identifierName,
+    typeMapperPropertyMap,
     configImportPath,
   };
+};
+
+const getOriginalDeclarationNode = (
+  declarationNode: InterfaceDeclaration | TypeAliasDeclaration | null,
+  identifierNode: Identifier
+): Node => {
+  if (!declarationNode) {
+    return identifierNode.getDefinitionNodes()[0];
+  }
+
+  // InterfaceDeclaration
+  if (declarationNode.isKind(SyntaxKind.InterfaceDeclaration)) {
+    return declarationNode;
+  }
+
+  // TypeAliasDeclaration
+  const typeNode = declarationNode.getTypeNodeOrThrow();
+  const node = Node.isTypeReference(typeNode) // If type alias is a reference, go to definition using `getDefinitionNodes`
+    ? identifierNode.getDefinitionNodes()[0]
+    : declarationNode;
+  return node;
 };

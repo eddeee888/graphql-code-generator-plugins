@@ -3,9 +3,11 @@ import { printImportLine } from '../utils';
 
 export const handleGraphQLObjectType: GraphQLTypeHandler = (
   { fieldFilePath, resolverName, normalizedResolverName, resolversTypeMeta },
-  { result }
+  { result, config: { graphQLObjectTypeResolversToGenerate } }
 ) => {
-  const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { /* Implement ${resolverName} resolver logic here */ };`;
+  const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { 
+    /* Implement ${resolverName} resolver logic here */ 
+  };`;
 
   result.files[fieldFilePath] = {
     __filetype: 'objectType',
@@ -20,6 +22,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler = (
     meta: {
       normalizedResolverName,
       variableStatement,
+      resolversToGenerate: graphQLObjectTypeResolversToGenerate[resolverName], // Array of all resolvers that may need type checking
     },
   };
 };
