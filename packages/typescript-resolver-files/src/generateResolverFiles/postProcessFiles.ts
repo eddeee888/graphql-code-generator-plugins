@@ -58,7 +58,10 @@ export const postProcessFiles = ({
     // ...
 
     ensureExportedResolver(sourceFile, resolverFile);
-    if (fixObjectTypeResolvers && resolverFile.__filetype === 'objectType') {
+    if (
+      fixObjectTypeResolvers === 'smart' &&
+      resolverFile.__filetype === 'objectType'
+    ) {
       ensureObjectTypeResolversAreGenerated(sourceFile, resolverFile);
     }
 

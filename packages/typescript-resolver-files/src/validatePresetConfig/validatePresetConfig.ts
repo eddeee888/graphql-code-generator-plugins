@@ -35,7 +35,7 @@ interface ParsedPresetConfig {
   externalResolvers: Record<string, string>;
   typesPluginsConfig: ParsedTypesPluginsConfig;
   tsMorphProjectOptions: ProjectOptions;
-  fixObjectTypeResolvers: boolean;
+  fixObjectTypeResolvers: 'smart' | 'disabled';
 }
 
 export interface RawPresetConfig {
@@ -52,7 +52,7 @@ export interface RawPresetConfig {
   typesPluginsConfig?: typeScriptPlugin.TypeScriptPluginConfig &
     typeScriptResolversPlugin.TypeScriptResolversPluginConfig;
   tsConfigFilePath?: string;
-  fixObjectTypeResolvers?: boolean;
+  fixObjectTypeResolvers?: string;
 }
 
 export const validatePresetConfig = ({
@@ -68,11 +68,20 @@ export const validatePresetConfig = ({
   externalResolvers = {},
   typesPluginsConfig = {},
   tsConfigFilePath = './tsconfig.json',
-  fixObjectTypeResolvers = true,
+  fixObjectTypeResolvers = 'smart',
 }: RawPresetConfig): ParsedPresetConfig => {
   if (mode !== 'merged' && mode !== 'modules') {
     throw new Error(
       `Validation Error - ${presetName} - presetConfig.mode must be "merged" or "modules" (default is "modules")`
+    );
+  }
+
+  if (
+    fixObjectTypeResolvers !== 'smart' &&
+    fixObjectTypeResolvers !== 'disabled'
+  ) {
+    throw new Error(
+      `Validation Error - ${presetName} - presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")`
     );
   }
 

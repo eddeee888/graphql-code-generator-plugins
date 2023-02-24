@@ -62,7 +62,7 @@ export interface GenerateResolverFilesContext {
       typesSourceFile: SourceFile;
     };
     graphQLObjectTypeResolversToGenerate: GraphQLObjectTypeResolversToGenerate;
-    fixObjectTypeResolvers: boolean;
+    fixObjectTypeResolvers: 'smart' | 'disabled';
   };
   result: {
     files: Record<string, StandardFile | ResolverFile>;

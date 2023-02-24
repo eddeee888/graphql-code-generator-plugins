@@ -17,7 +17,7 @@ const defaultExpected: ReturnType<typeof validatePresetConfig> = {
   tsMorphProjectOptions: {
     skipAddingFilesFromTsConfig: true,
   },
-  fixObjectTypeResolvers: true,
+  fixObjectTypeResolvers: 'smart',
 };
 
 describe('validatePresetConfig - general', () => {
@@ -119,6 +119,32 @@ describe('validatePresetConfig - general', () => {
       ...defaultExpected,
       mappersSuffix: '_Map',
     });
+  });
+
+  it('returns result.fixObjectTypeResolvers = "smart" if set as "smart"', () => {
+    const parsed = validatePresetConfig({ fixObjectTypeResolvers: 'smart' });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      fixObjectTypeResolvers: 'smart',
+    });
+  });
+
+  it('returns result.fixObjectTypeResolvers = "disabled" if set as "disabled"', () => {
+    const parsed = validatePresetConfig({ fixObjectTypeResolvers: 'disabled' });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      fixObjectTypeResolvers: 'disabled',
+    });
+  });
+
+  it('throws if result.fixObjectTypeResolvers is not valid', () => {
+    expect(() =>
+      validatePresetConfig({ fixObjectTypeResolvers: 'not-valid-for-sure' })
+    ).toThrowError(
+      'Validation Error - @eddeee888/gcg-typescript-resolver-files - presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")'
+    );
   });
 
   it('throws if config.typesPluginsConfig.scalars is a non-empty string', () => {
