@@ -98,3 +98,22 @@ Running codegen will generate the following files:
 | `mappersSuffix`             | `string`                                                                                                                         | (Default: `Mapper`) Exported interfaces and types with this suffix from `mappersFile` in each module are put into the mappers object of [@graphql-codegen/typescript-resolvers](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-resolvers) .             |
 | `tsConfigFilePath`          | `string`                                                                                                                         | (Default: `./tsconfig.json`) Project's TypeScript config, relative from project root. This helps type analysis such as resolving custom module paths.                                                                                                                        |
 | `fixObjectTypeResolvers`    | `smart` or `disabled`                                                                                                            | (Default: `smart`) (Experimental) Statically compares object type's mapper types' field against schema types' fields, creating resolvers if required                                                                                                                         |
+
+### Example
+
+Custom preset config can be set using the `presetConfig` option:
+
+```yml
+# codegen.yml
+schema: '**/*.graphqls'
+generates:
+  src/graphql/modules:
+    preset: '@eddeee888/gcg-typescript-resolver-files'
+    presetConfig:
+      mode: 'modules'
+      resolverTypesPath: './types.gen.ts'
+      typeDefsFilePath: false
+      typesPluginsConfig: # Pass config you'd normally use for `typescript` and `typescript-resolvers` here
+        nonOptionalTypename: false
+        federation: true
+```
