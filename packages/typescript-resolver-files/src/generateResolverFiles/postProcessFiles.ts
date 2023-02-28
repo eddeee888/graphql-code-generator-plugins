@@ -49,7 +49,7 @@ export const postProcessFiles = ({
   });
 
   sourceFilesToProcess.forEach(({ sourceFile, resolverFile }) => {
-    const normalizedRelativePath = path.relative(
+    const normalizedRelativePath = path.posix.relative(
       process.cwd(),
       sourceFile.getFilePath()
     );
