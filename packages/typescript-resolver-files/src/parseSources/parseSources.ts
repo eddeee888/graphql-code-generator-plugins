@@ -22,7 +22,7 @@ export function parseSources(sources: Source[]): ParseSourcesResult {
       const sourcePath = path.parse(source.location);
       const moduleDir = sourcePath.dir;
 
-      const [moduleName] = moduleDir.split(path.sep).slice(-1);
+      const moduleName = path.basename(moduleDir);
 
       result.sourceMap[source.location] = {
         source,
