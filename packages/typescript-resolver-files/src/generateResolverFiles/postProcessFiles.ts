@@ -1,5 +1,6 @@
 import type { SourceFile } from 'ts-morph';
 import * as path from 'path';
+import { cwd } from '../utils';
 import type { ResolverFile, GenerateResolverFilesContext } from './types';
 import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier';
 import { ensureObjectTypeResolversAreGenerated } from './ensureObjectTypeResolversAreGenerated';
@@ -50,7 +51,7 @@ export const postProcessFiles = ({
 
   sourceFilesToProcess.forEach(({ sourceFile, resolverFile }) => {
     const normalizedRelativePath = path.posix.relative(
-      process.cwd(),
+      cwd(),
       sourceFile.getFilePath()
     );
 

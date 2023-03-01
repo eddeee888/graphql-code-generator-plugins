@@ -4,6 +4,7 @@ import * as typeScriptPlugin from '@graphql-codegen/typescript';
 import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import type { ProjectOptions } from 'ts-morph';
 import { presetName } from '../preset';
+import { cwd } from '../utils';
 
 const defaultResolverRelativeTargetDirMap: Record<
   ParsedPresetConfig['mode'],
@@ -143,7 +144,7 @@ export const validatePresetConfig = ({
     skipAddingFilesFromTsConfig: true, // avoid long startup time by NOT loading files included by tsconfig.json. We only use this virtually anyways so we don't need all the files
   };
   if (tsConfigFilePath) {
-    const absoluteTsConfigFilePath = path.join(process.cwd(), tsConfigFilePath);
+    const absoluteTsConfigFilePath = path.join(cwd(), tsConfigFilePath);
 
     if (fs.existsSync(absoluteTsConfigFilePath)) {
       tsMorphProjectOptions.tsConfigFilePath = absoluteTsConfigFilePath;

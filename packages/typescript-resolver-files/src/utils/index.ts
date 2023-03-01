@@ -1,5 +1,6 @@
 import * as path from 'path';
 
+export * from './cwd';
 export * from './parseLocationForWhitelistedModule';
 export * from './isNativeNamedType';
 export * from './isRootObjectType';
