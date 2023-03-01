@@ -120,9 +120,20 @@ const addTypeMapperDetailsIfValid = (
     return;
   }
 
-  const parsedRelativePathFromResolverTypesToSourceFile = path.parse(
-    path.posix.relative(path.dirname(resolverTypesPath), typeMappersFilePath)
-  );
+  /**
+   * We MUST use path.relative() instead of path.posix.relative() here
+   * Reason being `typeMappersFilePath` is a file system path e.g. C://Windows/Path/To/File or /Unix/path/to/file
+   * path.relative works correctly but returns inconsistent path seperator e.g. relative\\path\\windows or relative/path/unix
+   *
+   * Therefore, we need to split/join to normalise the path to posix path e.g relative/path/unix
+   */
+  const relativePath = path
+    .relative(path.dirname(resolverTypesPath), typeMappersFilePath)
+    .split(path.sep)
+    .join(path.posix.sep);
+
+  const parsedRelativePathFromResolverTypesToSourceFile =
+    path.parse(relativePath);
   const relativeImportPathFromResolverTypesToSourceFile = normalizeRelativePath(
     path.posix.join(
       parsedRelativePathFromResolverTypesToSourceFile.dir,
