@@ -55,6 +55,11 @@ export interface RawPresetConfig {
   fixObjectTypeResolvers?: string;
 }
 
+export interface TypedPresetConfig extends RawPresetConfig {
+  mode?: 'merged' | 'modules';
+  fixObjectTypeResolvers?: 'smart' | 'disabled';
+}
+
 export const validatePresetConfig = ({
   resolverTypesPath = './types.generated.ts',
   resolverRelativeTargetDir,
