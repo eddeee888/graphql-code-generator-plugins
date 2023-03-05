@@ -722,7 +722,7 @@ describe('collectTypeMappersFromSourceFile', () => {
         result
       )
     ).toThrowErrorMatchingInlineSnapshot(`
-      "GraphQL type \\"User\\" has duplicated \\"UserTypeMapper\\" mappers:
+      "GraphQL type "User" has duplicated "UserTypeMapper" mappers:
         - ./module2/schema.mappers#UserTypeMapper
         - ./module1/schema.mappers#UserTypeMapper"
     `);
