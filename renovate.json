@@ -9,7 +9,7 @@
     "eslint",
     "eslint-config-prettier",
     "jest",
-    "jest-environment-jsdom",
+    "jest-environment-node",
     "prettier",
     "ts-jest",
     "ts-node",
