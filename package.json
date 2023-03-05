@@ -25,7 +25,7 @@
     "@nrwl/node": "15.8.5",
     "@nrwl/workspace": "15.8.5",
     "@types/jest": "29.4.0",
-    "@types/node": "~18.7.1",
+    "@types/node": "~18.14.0",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
     "eslint": "~8.15.0",
