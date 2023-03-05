@@ -27,11 +27,12 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "rimraf packages/typescript-resolver-files-e2e/src/test-*/**/resolvers/",
-          "rimraf packages/typescript-resolver-files-e2e/src/test-*/**/rslvrs/",
-          "rimraf packages/typescript-resolver-files-e2e/src/**/*.generated.*",
-          "rimraf packages/typescript-resolver-files-e2e/src/**/*.gen.*"
-        ]
+          "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-*/**/resolvers/'",
+          "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-*/**/rslvrs/'",
+          "rimraf -g 'packages/typescript-resolver-files-e2e/src/**/*.generated.*'",
+          "rimraf -g 'packages/typescript-resolver-files-e2e/src/**/*.gen.*'"
+        ],
+        "parallel": false
       }
     },
     "e2e-run": {
