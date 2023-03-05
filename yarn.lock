@@ -1288,16 +1288,16 @@
     "@graphql-codegen/plugin-helpers" "^4.0.0"
     tslib "~2.4.0"
 
-"@graphql-codegen/cli@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/cli/-/cli-3.0.0.tgz#eb367adfe51349e4822518183fc7ea7c06aea11b"
-  integrity sha512-16nuFabHCfPQ/d+v52OvR1ueL8eiJvS/nRuvuEV8d9T1fkborHKRw4lhyKVebu9izFBs6G0CvVCLhgVzQwHSLw==
+"@graphql-codegen/cli@3.2.1":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/cli/-/cli-3.2.1.tgz#7cd14ba5fdab02fc8d60bf20060bb78de57a2fdf"
+  integrity sha512-AeXzOvhSgAyMC0TzIoc6/HIc2Fy2rCZJcs5pt1LDypn1k4gpGRzqZ5JOjYx+XIna2hLfB9NbAkcO5dcdHwFdJA==
   dependencies:
     "@babel/generator" "^7.18.13"
     "@babel/template" "^7.18.10"
     "@babel/types" "^7.18.13"
-    "@graphql-codegen/core" "^3.0.0"
-    "@graphql-codegen/plugin-helpers" "^4.0.0"
+    "@graphql-codegen/core" "^3.1.0"
+    "@graphql-codegen/plugin-helpers" "^4.1.0"
     "@graphql-tools/apollo-engine-loader" "^7.3.6"
     "@graphql-tools/code-file-loader" "^7.3.17"
     "@graphql-tools/git-loader" "^7.2.13"
@@ -1308,9 +1308,9 @@
     "@graphql-tools/prisma-loader" "^7.2.49"
     "@graphql-tools/url-loader" "^7.13.2"
     "@graphql-tools/utils" "^9.0.0"
-    "@whatwg-node/fetch" "^0.6.0"
+    "@parcel/watcher" "^2.1.0"
+    "@whatwg-node/fetch" "^0.8.0"
     chalk "^4.1.0"
-    chokidar "^3.5.2"
     cosmiconfig "^7.0.0"
     cosmiconfig-typescript-loader "^4.3.0"
     debounce "^1.2.0"
@@ -1321,6 +1321,7 @@
     json-to-pretty-yaml "^1.2.2"
     listr2 "^4.0.5"
     log-symbols "^4.0.0"
+    micromatch "^4.0.5"
     shell-quote "^1.7.3"
     string-env-interpolation "^1.0.1"
     ts-log "^2.2.3"
@@ -1329,15 +1330,15 @@
     yaml "^1.10.0"
     yargs "^17.0.0"
 
-"@graphql-codegen/core@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/core/-/core-3.0.0.tgz#ff6d643bb9d80c54ddd9ee5c68194888c971ae45"
-  integrity sha512-WUfAUTmUcgeHPR7F5ZQqaBqJLJb5+3Lvp6v9SrnupKOFed+Q3u8CvZL6sPTvDpqqW8Ucjy59DEZqumPLp99pdQ==
+"@graphql-codegen/core@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/core/-/core-3.1.0.tgz#ad859d52d509a4eb2ebe5aabba6543a628fb181b"
+  integrity sha512-DH1/yaR7oJE6/B+c6ZF2Tbdh7LixF1K8L+8BoSubjNyQ8pNwR4a70mvc1sv6H7qgp6y1bPQ9tKE+aazRRshysw==
   dependencies:
-    "@graphql-codegen/plugin-helpers" "^4.0.0"
+    "@graphql-codegen/plugin-helpers" "^4.1.0"
     "@graphql-tools/schema" "^9.0.0"
     "@graphql-tools/utils" "^9.1.1"
-    tslib "~2.4.0"
+    tslib "~2.5.0"
 
 "@graphql-codegen/plugin-helpers@4.0.0", "@graphql-codegen/plugin-helpers@^4.0.0":
   version "4.0.0"
@@ -1351,6 +1352,18 @@
     lodash "~4.17.0"
     tslib "~2.4.0"
 
+"@graphql-codegen/plugin-helpers@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-4.1.0.tgz#4b193c12d6bb458f1f2af48c200bc86617884f60"
+  integrity sha512-xvSHJb9OGb5CODIls0AI1rCenLz+FuiaNPCsfHMCNsLDjOZK2u0jAQ9zUBdc/Wb+21YXZujBCc0Vm1QX+Zz0nw==
+  dependencies:
+    "@graphql-tools/utils" "^9.0.0"
+    change-case-all "1.0.15"
+    common-tags "1.8.2"
+    import-from "4.0.0"
+    lodash "~4.17.0"
+    tslib "~2.5.0"
+
 "@graphql-codegen/schema-ast@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/schema-ast/-/schema-ast-3.0.0.tgz#3311a58184f885853d33d8272c527ff5bdf3023b"
@@ -1360,7 +1373,28 @@
     "@graphql-tools/utils" "^9.0.0"
     tslib "~2.4.0"
 
-"@graphql-codegen/typescript-resolvers@3.0.0", "@graphql-codegen/typescript-resolvers@^3.0.0":
+"@graphql-codegen/schema-ast@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/schema-ast/-/schema-ast-3.0.1.tgz#37b458bb57b95715a9eb4259341c856dae2a461d"
+  integrity sha512-rTKTi4XiW4QFZnrEqetpiYEWVsOFNoiR/v3rY9mFSttXFbIwNXPme32EspTiGWmEEdHY8UuTDtZN3vEcs/31zw==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^4.1.0"
+    "@graphql-tools/utils" "^9.0.0"
+    tslib "~2.5.0"
+
+"@graphql-codegen/typescript-resolvers@3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-resolvers/-/typescript-resolvers-3.1.0.tgz#29fb087b6328015b218c848c2b1a5d35e4f1d307"
+  integrity sha512-Wzkg/sQdAuOVGDJv+0a9fMOuUHKR5mu0pAuSO9OUSkVm45IWgHO8VDqqHHn7ujjemv1gJMYmkkGhbRHLqNzrVg==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^4.1.0"
+    "@graphql-codegen/typescript" "^3.0.1"
+    "@graphql-codegen/visitor-plugin-common" "3.0.1"
+    "@graphql-tools/utils" "^9.0.0"
+    auto-bind "~4.0.0"
+    tslib "~2.5.0"
+
+"@graphql-codegen/typescript-resolvers@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-resolvers/-/typescript-resolvers-3.0.0.tgz#69856b9eb003660b7c7551727a63764b8a6c89ee"
   integrity sha512-yfRNJF9ZUoiLSPhaBEpQ9E4ymExYzbsKgjU2qJ/0c8l0lViA+o4ALkJMTwb7yU/yTayQtQWgxL5cdDY2I12GpQ==
@@ -1383,6 +1417,17 @@
     auto-bind "~4.0.0"
     tslib "~2.4.0"
 
+"@graphql-codegen/typescript@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-3.0.1.tgz#e949a7d7e8325bea9cf938c30af2313043e91a09"
+  integrity sha512-HvozJg7eHqywmYvXa7+nmjw+v3+f8ilFv9VbRvmjhj/zBw3VKGT2n/85ZhVyuWjY2KrDLzl6BqeXttWsW5Wo4w==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^4.1.0"
+    "@graphql-codegen/schema-ast" "^3.0.1"
+    "@graphql-codegen/visitor-plugin-common" "3.0.1"
+    auto-bind "~4.0.0"
+    tslib "~2.5.0"
+
 "@graphql-codegen/visitor-plugin-common@3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-3.0.0.tgz#527185eb3b1b06739702084bc6263713e167a166"
@@ -1398,6 +1443,22 @@
     graphql-tag "^2.11.0"
     parse-filepath "^1.0.2"
     tslib "~2.4.0"
+
+"@graphql-codegen/visitor-plugin-common@3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-3.0.1.tgz#dbfc2ba55d8a1908e4bd7f751dbfe4241961f948"
+  integrity sha512-Qek+Ywy094Km7Vc1TzKBN9ICvtYwPdqZUliPO77urMSveP+2+G2O9Tjx546dW4A1O6rhEfexbenc2DqTAe7iLQ==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^4.1.0"
+    "@graphql-tools/optimize" "^1.3.0"
+    "@graphql-tools/relay-operation-optimizer" "^6.5.0"
+    "@graphql-tools/utils" "^9.0.0"
+    auto-bind "~4.0.0"
+    change-case-all "1.0.15"
+    dependency-graph "^0.11.0"
+    graphql-tag "^2.11.0"
+    parse-filepath "^1.0.2"
+    tslib "~2.5.0"
 
 "@graphql-tools/apollo-engine-loader@^7.3.6":
   version "7.3.26"
@@ -2398,6 +2459,16 @@
     node-addon-api "^3.2.1"
     node-gyp-build "^4.3.0"
 
+"@parcel/watcher@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@parcel/watcher/-/watcher-2.1.0.tgz#5f32969362db4893922c526a842d8af7a8538545"
+  integrity sha512-8s8yYjd19pDSsBpbkOHnT6Z2+UJSuLQx61pCFM0s5wSRvKCEMDjd/cHY3/GI1szHIWbpXpsJdg3V6ISGGx9xDw==
+  dependencies:
+    is-glob "^4.0.3"
+    micromatch "^4.0.5"
+    node-addon-api "^3.2.1"
+    node-gyp-build "^4.3.0"
+
 "@peculiar/asn1-schema@^2.1.6", "@peculiar/asn1-schema@^2.3.0":
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/@peculiar/asn1-schema/-/asn1-schema-2.3.3.tgz#21418e1f3819e0b353ceff0c2dad8ccb61acd777"
@@ -3014,17 +3085,6 @@
   resolved "https://registry.yarnpkg.com/@whatwg-node/events/-/events-0.0.2.tgz#7b7107268d2982fc7b7aff5ee6803c64018f84dd"
   integrity sha512-WKj/lI4QjnLuPrim0cfO7i+HsDSXHxNv1y0CrJhdntuO3hxWZmnXCwNDnwOvry11OjRin6cgWNF+j/9Pn8TN4w==
 
-"@whatwg-node/fetch@^0.6.0":
-  version "0.6.9"
-  resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.6.9.tgz#6cc694cc0378e27b8dfed427c5bf633eda6972b9"
-  integrity sha512-JfrBCJdMu9n9OARc0e/hPHcD98/8Nz1CKSdGYDg6VbObDkV/Ys30xe5i/wPOatYbxuvatj1kfWeHf7iNX3i17w==
-  dependencies:
-    "@peculiar/webcrypto" "^1.4.0"
-    "@whatwg-node/node-fetch" "^0.0.5"
-    busboy "^1.6.0"
-    urlpattern-polyfill "^6.0.2"
-    web-streams-polyfill "^3.2.1"
-
 "@whatwg-node/fetch@^0.8.0", "@whatwg-node/fetch@^0.8.1":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@whatwg-node/fetch/-/fetch-0.8.1.tgz#ee3c94746132f217e17f78f9e073bb342043d630"
@@ -3035,15 +3095,6 @@
     busboy "^1.6.0"
     urlpattern-polyfill "^6.0.2"
     web-streams-polyfill "^3.2.1"
-
-"@whatwg-node/node-fetch@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@whatwg-node/node-fetch/-/node-fetch-0.0.5.tgz#bebf18891088e5e2fc449dea8d1bc94af5ec38df"
-  integrity sha512-hbccmaSZaItdsRuBKBEEhLoO+5oXJPxiyd0kG2xXd0Dh3Rt+vZn4pADHxuSiSHLd9CM+S2z4+IxlEGbWUgiz9g==
-  dependencies:
-    "@whatwg-node/events" "^0.0.2"
-    busboy "^1.6.0"
-    tslib "^2.3.1"
 
 "@whatwg-node/node-fetch@^0.3.0":
   version "0.3.0"
@@ -3812,7 +3863,7 @@ chardet@^0.7.0:
   resolved "https://registry.yarnpkg.com/chardet/-/chardet-0.7.0.tgz#90094849f0937f2eedc2425d0d28a9e5f0cbad9e"
   integrity sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==
 
-"chokidar@>=3.0.0 <4.0.0", chokidar@^3.5.1, chokidar@^3.5.2, chokidar@^3.5.3:
+"chokidar@>=3.0.0 <4.0.0", chokidar@^3.5.1, chokidar@^3.5.3:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.3.tgz#1cf37c8707b932bd1af1ae22c0432e2acd1903bd"
   integrity sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==
@@ -7298,7 +7349,7 @@ methods@~1.1.2:
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
   integrity sha512-iclAHeNqNm68zFtnZ0e+1L2yUIdvzNoauKU4WBA3VvH/vPFieF7qfRlwUZU+DA9P9bPXIS90ulxoUoCH23sV2w==
 
-micromatch@^4.0.0, micromatch@^4.0.2, micromatch@^4.0.4:
+micromatch@^4.0.0, micromatch@^4.0.2, micromatch@^4.0.4, micromatch@^4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-4.0.5.tgz#bc8999a7cbbf77cdc89f132f6e467051b49090c6"
   integrity sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==
