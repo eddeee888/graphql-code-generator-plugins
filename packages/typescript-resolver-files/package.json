@@ -32,7 +32,7 @@
     "@graphql-codegen/typescript": "^3.0.0",
     "@graphql-codegen/typescript-resolvers": "^3.0.0",
     "graphql-scalars": "^1.20.1",
-    "ts-morph": "^16.0.0"
+    "ts-morph": "^17.0.0"
   },
   "publishConfig": {
     "directory": "../../dist/packages/typescript-resolver-files"
