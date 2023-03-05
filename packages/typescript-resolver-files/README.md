@@ -99,7 +99,9 @@ Running codegen will generate the following files:
 | `tsConfigFilePath`          | `string`                                                                                                                         | (Default: `./tsconfig.json`) Project's TypeScript config, relative from project root. This helps type analysis such as resolving custom module paths.                                                                                                                        |
 | `fixObjectTypeResolvers`    | `smart` or `disabled`                                                                                                            | (Default: `smart`) (Experimental) Statically compares object type's mapper types' field against schema types' fields, creating resolvers if required                                                                                                                         |
 
-### Example
+### Examples
+
+#### 1. Custom Config
 
 Custom preset config can be set using the `presetConfig` option:
 
@@ -116,4 +118,30 @@ generates:
       typesPluginsConfig: # Pass config you'd normally use for `typescript` and `typescript-resolvers` here
         nonOptionalTypename: false
         federation: true
+```
+
+#### 2. TypeScript Config
+
+If you use `codegen.ts`, you can use the exported `defineConfig` function to get better TypeScript support:
+
+```ts
+import type { CodegenConfig } from '@graphql-codegen/cli';
+import { defineConfig } from '@eddeee888/gcg-typescript-resolver-files';
+
+const config: CodegenConfig = {
+  schema: '**/schema.graphql',
+  generates: {
+    'src/schema': defineConfig({
+      mode: 'modules',
+      resolverTypesPath: './types.gen.ts',
+      typeDefsFilePath: false,
+      typesPluginsConfig: {
+        // Pass config you'd normally use for `typescript` and `typescript-resolvers` here
+        nonOptionalTypename: false,
+        federation: true,
+      },
+    }),
+  },
+};
+export default config;
 ```
