@@ -6,7 +6,7 @@ on:
       - master
 
 env:
-  node-version: '16.x'
+  node-version: '18.x'
 
 jobs:
   precheck:
@@ -48,6 +48,7 @@ jobs:
         os:
           - ubuntu-22.04
           # - windows-latest
+        node-version: [16.x, 18.x]
     runs-on: ${{ matrix.os }}
     needs: precheck
     if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' }}
@@ -55,10 +56,10 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.node-version }}
+          node-version: ${{ matrix.node-version }}
           cache: yarn
           cache-dependency-path: '**/yarn.lock'
 
@@ -80,6 +81,7 @@ jobs:
         os:
           - ubuntu-22.04
           # - windows-latest
+        node-version: [16.x, 18.x]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -92,10 +94,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Node.js
+      - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.node-version }}
+          node-version: ${{ matrix.node-version }}
           cache: yarn
           cache-dependency-path: '**/yarn.lock'
 
