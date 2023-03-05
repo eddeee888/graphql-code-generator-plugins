@@ -9,3 +9,5 @@ hooks:
 generates:
   packages/typescript-resolver-files-e2e/src/test-modules/modules:
     preset: ./dist/packages/typescript-resolver-files/src/index.js
+    presetConfig:
+      tsConfigFilePath: packages/typescript-resolver-files-e2e/tsconfig.json
