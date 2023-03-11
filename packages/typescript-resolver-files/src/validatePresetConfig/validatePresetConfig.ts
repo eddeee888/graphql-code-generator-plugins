@@ -78,7 +78,9 @@ export const validatePresetConfig = ({
 }: RawPresetConfig): ParsedPresetConfig => {
   if (mode !== 'merged' && mode !== 'modules') {
     throw new Error(
-      `Validation Error - ${presetName} - presetConfig.mode must be "merged" or "modules" (default is "modules")`
+      printValidationError(
+        'presetConfig.mode must be "merged" or "modules" (default is "modules")'
+      )
     );
   }
 
@@ -87,13 +89,15 @@ export const validatePresetConfig = ({
     fixObjectTypeResolvers !== 'disabled'
   ) {
     throw new Error(
-      `Validation Error - ${presetName} - presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")`
+      printValidationError(
+        'presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")'
+      )
     );
   }
 
   if (!resolverTypesPath) {
     throw new Error(
-      `Validation Error - ${presetName} - presetConfig.resolverTypesPath is required`
+      printValidationError('presetConfig.resolverTypesPath is required')
     );
   }
 
@@ -104,20 +108,24 @@ export const validatePresetConfig = ({
 
   if (path.extname(resolverMainFile) === '') {
     throw new Error(
-      `Validation Error - ${presetName} - presetConfig.mainFile must be a valid file name`
+      printValidationError('presetConfig.mainFile must be a valid file name')
     );
   }
 
   if (whitelistedModules) {
     if (!Array.isArray(whitelistedModules)) {
       throw new Error(
-        `Validation Error - ${presetName} - presetConfig.whitelistedModules must be an array if provided`
+        printValidationError(
+          'presetConfig.whitelistedModules must be an array if provided'
+        )
       );
     }
 
     if (mode !== 'modules') {
       throw new Error(
-        `Validation Error - ${presetName} - presetConfig.whitelistedModules can only be used with presetConfig.mode == "modules"`
+        printValidationError(
+          'presetConfig.whitelistedModules can only be used with presetConfig.mode == "modules"'
+        )
       );
     }
   }
@@ -125,13 +133,17 @@ export const validatePresetConfig = ({
   if (blacklistedModules) {
     if (!Array.isArray(blacklistedModules)) {
       throw new Error(
-        `Validation Error - ${presetName} - presetConfig.blacklistedModules must be an array if provided`
+        printValidationError(
+          'presetConfig.blacklistedModules must be an array if provided'
+        )
       );
     }
 
     if (mode !== 'modules') {
       throw new Error(
-        `Validation Error - ${presetName} - presetConfig.blacklistedModules can only be used with presetConfig.mode == "modules"`
+        printValidationError(
+          'presetConfig.blacklistedModules can only be used with presetConfig.mode == "modules"'
+        )
       );
     }
   }
@@ -187,4 +199,8 @@ const validateTypesPluginsConfig = (
     );
   }
   return true;
+};
+
+const printValidationError = (input: string): string => {
+  return `Validation Error - ${presetName} - ${input}`;
 };
