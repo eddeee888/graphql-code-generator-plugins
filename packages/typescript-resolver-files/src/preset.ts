@@ -13,7 +13,7 @@ import {
   type GenerateResolverFilesContext,
   generateResolverFiles,
 } from './generateResolverFiles';
-import { generateTypeDefsContent } from './generateTypeDefsContent';
+import { generateTypeDefsFiles } from './generateTypeDefsFiles';
 import { getGraphQLObjectTypeResolversToGenerate } from './getGraphQLObjectTypeResolversToGenerate';
 import { addVirtualTypesFileToTsMorphProject } from './addVirtualTypesFileToTsMorphProject';
 import { parseTypeMappers } from './parseTypeMappers';
@@ -46,6 +46,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       mappersSuffix: typeMappersSuffix,
       resolverMainFile,
       typeDefsFilePath,
+      typeDefsFileMode,
       mode,
       whitelistedModules,
       blacklistedModules,
@@ -150,23 +151,28 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
 
     // typeDefs
     if (typeDefsFilePath) {
-      const typeDefsContent = await profiler.run(
-        async () => generateTypeDefsContent({ mergedSDL }),
-        createProfilerRunName('generateTypeDefsContent')
-      );
-      const typeDefsFile: Types.GenerateOptions = {
-        filename: path.posix.join(baseOutputDir, typeDefsFilePath),
-        pluginMap: { add: addPlugin },
-        plugins: [
-          {
-            add: { content: typeDefsContent },
-          },
-        ],
-        config: {},
-        schema,
-        documents: [],
-      };
-      generatesSection.push(typeDefsFile);
+      const typeDefsFiles = await profiler.run(async () => {
+        return generateTypeDefsFiles({
+          baseOutputDir,
+          typeDefsFilePath,
+          typeDefsFileMode,
+          sourceMap,
+          whitelistedModules,
+          blacklistedModules,
+        });
+      }, createProfilerRunName('generateTypeDefsContent'));
+
+      Object.entries(typeDefsFiles).forEach(([filename, meta]) => {
+        const typeDefsFile: Types.GenerateOptions = {
+          filename: filename,
+          pluginMap: { add: addPlugin },
+          plugins: [{ add: { content: meta.content } }],
+          config: {},
+          schema,
+          documents: [],
+        };
+        generatesSection.push(typeDefsFile);
+      });
     }
 
     // resolver files
