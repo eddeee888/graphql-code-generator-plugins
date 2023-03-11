@@ -28,6 +28,7 @@ interface ParsedPresetConfig {
   resolverRelativeTargetDir: string;
   resolverMainFile: string;
   typeDefsFilePath: string | false;
+  typeDefsFileMode: 'merged' | 'modules';
   mappersFileExtension: string;
   mappersSuffix: string;
   mode: 'merged' | 'modules';
@@ -44,6 +45,7 @@ export interface RawPresetConfig {
   resolverRelativeTargetDir?: string;
   resolverMainFile?: string;
   typeDefsFilePath?: string | boolean;
+  typeDefsFileMode?: string;
   mappersFileExtension?: string;
   mappersSuffix?: string;
   mode?: string;
@@ -58,6 +60,7 @@ export interface RawPresetConfig {
 
 export interface TypedPresetConfig extends RawPresetConfig {
   mode?: 'merged' | 'modules';
+  typeDefsFileMode?: 'merged' | 'modules';
   fixObjectTypeResolvers?: 'smart' | 'disabled';
 }
 
@@ -66,6 +69,7 @@ export const validatePresetConfig = ({
   resolverRelativeTargetDir,
   resolverMainFile = 'resolvers.generated.ts',
   typeDefsFilePath = defaultTypeDefsFilePath,
+  typeDefsFileMode = 'merged',
   mappersFileExtension = '.mappers.ts',
   mappersSuffix = 'Mapper',
   mode = 'modules',
@@ -91,6 +95,14 @@ export const validatePresetConfig = ({
     throw new Error(
       printValidationError(
         'presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")'
+      )
+    );
+  }
+
+  if (typeDefsFileMode !== 'merged' && typeDefsFileMode !== 'modules') {
+    throw new Error(
+      printValidationError(
+        'presetConfig.typeDefsFileMode must be "merged" or "modules" (default is "merged")'
       )
     );
   }
@@ -177,6 +189,7 @@ export const validatePresetConfig = ({
     resolverRelativeTargetDir: finalResolverRelativeTargetDir,
     resolverMainFile,
     typeDefsFilePath: finalTypeDefsFilePath,
+    typeDefsFileMode,
     mode,
     mappersFileExtension,
     mappersSuffix,
