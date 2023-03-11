@@ -107,11 +107,21 @@ Relative path to target dir. For `config.mode=merged`, files will be generated i
 
 File that puts all generated resolvers together. Relative from `baseOutputDir`.
 
+### typeDefsFileMode
+
+`merged` or `modules` (Default: `merged`) (Only works with `config.mode=modules`)
+
+Whether to generate one typeDefs file (`merged`) or one file per module (`modules`).
+
 ### typeDefsFilePath
 
 `string` or `false` (Default: `./typeDefs.generated.ts`)
 
-Merged type defs from sources. Relative from `baseOutputDir`. If value is `false` or empty string, the file is not generated.
+Where to generate typeDefs files. If value is `false` or empty string, the file/s are not generated.
+
+If `typeDefsFileMode=merged`, this path is relative from `baseOutputDir`.
+
+If `typeDefsFileMode=modules`, this path is relative from each module directory.
 
 ### whitelistedModules
 
