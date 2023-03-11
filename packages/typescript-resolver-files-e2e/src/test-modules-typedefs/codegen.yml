@@ -1,0 +1,12 @@
+# https://www.graphql-code-generator.com/docs/config-reference/codegen-config
+schema:
+  - packages/typescript-resolver-files-e2e/src/test-modules-typedefs/**/*.graphqls
+  - packages/typescript-resolver-files-e2e/src/test-modules-typedefs/**/*.graphqls.ts
+hooks:
+  afterAllFileWrite:
+    - prettier --write
+generates:
+  packages/typescript-resolver-files-e2e/src/test-modules-typedefs/modules:
+    preset: ./dist/packages/typescript-resolver-files/src/index.js
+    presetConfig:
+      typeDefsFileMode: 'modules'
