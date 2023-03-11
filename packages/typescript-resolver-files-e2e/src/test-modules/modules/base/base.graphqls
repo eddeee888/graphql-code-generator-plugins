@@ -1,5 +1,6 @@
 type Query
 type Mutation
+type Subscription
 
 interface Error {
   # eslint-disable-next-line @graphql-eslint/no-typename-prefix
