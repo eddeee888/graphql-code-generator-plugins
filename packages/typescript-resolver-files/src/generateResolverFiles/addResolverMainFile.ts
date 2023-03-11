@@ -11,10 +11,7 @@ export const addResolverMainFile = ({
   config: { baseOutputDir, resolverTypesPath, resolverMainFile },
   result,
 }: GenerateResolverFilesContext): void => {
-  const filename = path.join(
-    baseOutputDir,
-    resolverMainFile.split('/').join(path.sep)
-  );
+  const filename = path.posix.join(baseOutputDir, resolverMainFile);
   const outputDir = path.dirname(filename);
 
   const relativePathToResolverTypes = relativeModulePath(

@@ -55,7 +55,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       fixObjectTypeResolvers,
     } = validatePresetConfig(rawPresetConfig);
 
-    const resolverTypesPath = path.join(
+    const resolverTypesPath = path.posix.join(
       baseOutputDir,
       relativeResolverTypesPathFromBaseOutputDir
     );
@@ -155,7 +155,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         createProfilerRunName('generateTypeDefsContent')
       );
       const typeDefsFile: Types.GenerateOptions = {
-        filename: path.join(baseOutputDir, typeDefsFilePath),
+        filename: path.posix.join(baseOutputDir, typeDefsFilePath),
         pluginMap: { add: addPlugin },
         plugins: [
           {

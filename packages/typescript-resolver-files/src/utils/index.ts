@@ -1,5 +1,6 @@
 import * as path from 'path';
 
+export * from './cwd';
 export * from './parseLocationForWhitelistedModule';
 export * from './isNativeNamedType';
 export * from './isRootObjectType';
@@ -9,7 +10,7 @@ export * from './getNodePropertyMap';
 // TODO: break the functions below this line into smaller files
 // -----------
 export const relativeModulePath = (from: string, to: string): string => {
-  const rawPath = path.relative(from, to);
+  const rawPath = path.posix.relative(from, to);
   return normalizeRelativePath(rawPath);
 };
 

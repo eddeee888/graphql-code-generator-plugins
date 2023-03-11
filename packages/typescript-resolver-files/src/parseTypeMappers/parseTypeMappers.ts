@@ -32,7 +32,7 @@ export const parseTypeMappers = ({
 }: ParseTypeMappersParams): TypeMappersMap => {
   const result = Object.entries(sourceMap).reduce<TypeMappersMap>(
     (res, [_, { sourcePath }]) => {
-      const typeMapperFilePath = path.join(
+      const typeMapperFilePath = path.posix.join(
         sourcePath.dir,
         `${sourcePath.name}${typeMappersFileExtension}`
       );
