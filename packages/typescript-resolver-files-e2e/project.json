@@ -46,7 +46,8 @@
           "nx graphql-codegen typescript-resolver-files-e2e -c test-config-overrides --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-mappers --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-mappers-vs-schema-types --verbose",
-          "nx graphql-codegen typescript-resolver-files-e2e -c test-config-ts --verbose"
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-config-ts --verbose",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-modules-typedefs --verbose"
         ],
         "parallel": false
       },
@@ -88,6 +89,9 @@
         },
         "test-config-ts": {
           "configFile": "packages/typescript-resolver-files-e2e/src/test-config-ts/codegen.ts"
+        },
+        "test-modules-typedefs": {
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-modules-typedefs/codegen.yml"
         }
       },
       "dependsOn": ["^build"]
