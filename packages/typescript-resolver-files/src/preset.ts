@@ -61,7 +61,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       relativeResolverTypesPathFromBaseOutputDir
     );
 
-    const { sourceMap, mergedSDL } = parseSources(sources);
+    const { sourceMap } = parseSources(sources);
 
     const tsMorphProject = await profiler.run(
       async () => new Project(tsMorphProjectOptions),
