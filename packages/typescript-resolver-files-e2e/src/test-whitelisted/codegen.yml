@@ -14,3 +14,13 @@ generates:
         - user
       blacklistedModules:
         - user
+
+  packages/typescript-resolver-files-e2e/src/test-whitelisted/modules-typedefsMode-mergedWhitelisted:
+    preset: ./dist/packages/typescript-resolver-files/src/index.js
+    presetConfig:
+      typeDefsFileMode: 'mergedWhitelisted'
+      whitelistedModules:
+        - base
+        - user
+      blacklistedModules:
+        - user
