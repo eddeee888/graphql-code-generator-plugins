@@ -30,18 +30,31 @@ export const generateTypeDefsFiles = ({
       blacklistedModules,
     });
 
-    if (isWhitelisted) {
-      // If mode is "modules", create a typeDefs in each module
-      // If mode is "merged", create a typeDefs file at baseOutputDir
-      const filePath =
-        typeDefsFileMode === 'modules'
-          ? path.posix.join(sourcePath.dir, typeDefsFilePath)
-          : path.posix.join(baseOutputDir, typeDefsFilePath);
+    if (typeDefsFileMode === 'merged') {
+      appendSDLToFile({
+        filesContent,
+        filePath: path.posix.join(baseOutputDir, typeDefsFilePath),
+        rawSDL: source.rawSDL,
+      });
+      return;
+    }
 
-      if (!filesContent[filePath]) {
-        filesContent[filePath] = '';
-      }
-      filesContent[filePath] += `${source.rawSDL}\n`;
+    if (isWhitelisted && typeDefsFileMode === 'mergedWhitelisted') {
+      appendSDLToFile({
+        filesContent,
+        filePath: path.posix.join(baseOutputDir, typeDefsFilePath),
+        rawSDL: source.rawSDL,
+      });
+      return;
+    }
+
+    if (isWhitelisted && typeDefsFileMode === 'modules') {
+      appendSDLToFile({
+        filesContent,
+        filePath: path.posix.join(sourcePath.dir, typeDefsFilePath),
+        rawSDL: source.rawSDL,
+      });
+      return;
     }
   });
 
@@ -55,4 +68,23 @@ export const generateTypeDefsFiles = ({
   });
 
   return result;
+};
+
+const appendSDLToFile = ({
+  rawSDL,
+  filePath,
+  filesContent,
+}: {
+  rawSDL: string | undefined;
+  filePath: string;
+  filesContent: Record<string, string>;
+}): void => {
+  if (!rawSDL) {
+    return;
+  }
+
+  if (!filesContent[filePath]) {
+    filesContent[filePath] = '';
+  }
+  filesContent[filePath] += `${rawSDL}\n`;
 };

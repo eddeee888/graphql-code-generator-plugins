@@ -125,7 +125,7 @@ If `config.mode=merged`, this config is always `merged`
 
 Where to generate typeDefs files. If value is `false` or empty string, the file/s are not generated.
 
-If `typeDefsFileMode=merged`, this path is relative from `baseOutputDir`.
+If `typeDefsFileMode=merged` or `typeDefsFileMode=mergedWhitelisted`, this path is relative from `baseOutputDir`.
 
 If `typeDefsFileMode=modules`, this path is relative from each module directory.
 
