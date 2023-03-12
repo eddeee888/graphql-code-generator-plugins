@@ -160,7 +160,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           whitelistedModules,
           blacklistedModules,
         });
-      }, createProfilerRunName('generateTypeDefsContent'));
+      }, createProfilerRunName('generateTypeDefsFiles'));
 
       Object.entries(typeDefsFiles).forEach(([filename, meta]) => {
         const typeDefsFile: Types.GenerateOptions = {

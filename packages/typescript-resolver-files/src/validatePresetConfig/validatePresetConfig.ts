@@ -229,6 +229,7 @@ const validateTypesPluginsConfig = (
   return true;
 };
 
+// TODO: change this format to match console.warn
 const printValidationError = (input: string): string => {
   return `Validation Error - ${presetName} - ${input}`;
 };
