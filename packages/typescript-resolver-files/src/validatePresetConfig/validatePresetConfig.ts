@@ -22,22 +22,25 @@ type ParsedTypesPluginsConfig = Omit<
   Omit<typeScriptResolversPlugin.TypeScriptResolversPluginConfig, 'scalars'> & {
     scalars: Record<string, string>;
   };
+type ConfigMode = 'merged' | 'modules';
+export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
+type FixObjectTypeResolvers = 'smart' | 'disabled';
 
 interface ParsedPresetConfig {
   resolverTypesPath: string;
   resolverRelativeTargetDir: string;
   resolverMainFile: string;
   typeDefsFilePath: string | false;
-  typeDefsFileMode: 'merged' | 'modules';
+  typeDefsFileMode: TypeDefsFileMode;
   mappersFileExtension: string;
   mappersSuffix: string;
-  mode: 'merged' | 'modules';
+  mode: ConfigMode;
   whitelistedModules: string[];
   blacklistedModules: string[];
   externalResolvers: Record<string, string>;
   typesPluginsConfig: ParsedTypesPluginsConfig;
   tsMorphProjectOptions: ProjectOptions;
-  fixObjectTypeResolvers: 'smart' | 'disabled';
+  fixObjectTypeResolvers: FixObjectTypeResolvers;
 }
 
 export interface RawPresetConfig {
@@ -59,9 +62,9 @@ export interface RawPresetConfig {
 }
 
 export interface TypedPresetConfig extends RawPresetConfig {
-  mode?: 'merged' | 'modules';
-  typeDefsFileMode?: 'merged' | 'modules';
-  fixObjectTypeResolvers?: 'smart' | 'disabled';
+  mode?: ConfigMode;
+  typeDefsFileMode?: TypeDefsFileMode;
+  fixObjectTypeResolvers?: FixObjectTypeResolvers;
 }
 
 export const validatePresetConfig = ({
@@ -69,7 +72,7 @@ export const validatePresetConfig = ({
   resolverRelativeTargetDir,
   resolverMainFile = 'resolvers.generated.ts',
   typeDefsFilePath = defaultTypeDefsFilePath,
-  typeDefsFileMode = 'merged',
+  typeDefsFileMode: inputTypeDefsFileMode = 'merged',
   mappersFileExtension = '.mappers.ts',
   mappersSuffix = 'Mapper',
   mode = 'modules',
@@ -99,7 +102,19 @@ export const validatePresetConfig = ({
     );
   }
 
-  if (typeDefsFileMode !== 'merged' && typeDefsFileMode !== 'modules') {
+  let typeDefsFileMode = inputTypeDefsFileMode;
+  if (mode === 'merged') {
+    // If mode is `merged`, `typeDefsFileMode` is also `merged` because there's no whitelisted or modules concepts
+    typeDefsFileMode = 'merged';
+    warn(
+      `presetConfig.typeDefsFileMode has automatically been set to "merged" because presetConfig.mode is "merged"`
+    );
+  }
+  if (
+    typeDefsFileMode !== 'merged' &&
+    typeDefsFileMode !== 'modules' &&
+    typeDefsFileMode !== 'mergedWhitelisted'
+  ) {
     throw new Error(
       printValidationError(
         'presetConfig.typeDefsFileMode must be "merged" or "modules" (default is "merged")'
@@ -178,8 +193,8 @@ export const validatePresetConfig = ({
     if (fs.existsSync(absoluteTsConfigFilePath)) {
       tsMorphProjectOptions.tsConfigFilePath = absoluteTsConfigFilePath;
     } else {
-      console.warn(
-        `[${presetName}] WARN: Unable to find TypeScript config at ${absoluteTsConfigFilePath}. Use presetConfig.tsConfigFilePath to set a custom value. Otherwise, type analysis may not work correctly.`
+      warn(
+        `Unable to find TypeScript config at ${absoluteTsConfigFilePath}. Use presetConfig.tsConfigFilePath to set a custom value. Otherwise, type analysis may not work correctly.`
       );
     }
   }
@@ -216,4 +231,8 @@ const validateTypesPluginsConfig = (
 
 const printValidationError = (input: string): string => {
   return `Validation Error - ${presetName} - ${input}`;
+};
+
+const warn = (input: string): void => {
+  console.warn(`[${presetName}] WARN: ${input}`);
 };

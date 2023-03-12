@@ -1,13 +1,14 @@
 import * as path from 'path';
 import { StandardFile } from '../generateResolverFiles';
 import type { ParseSourcesResult } from '../parseSources';
-import { isWhitelistedModule } from '../utils/isWhitelistedModule';
+import { isWhitelistedModule } from '../utils';
+import { TypeDefsFileMode } from '../validatePresetConfig';
 import { generateTypeDefsContent } from './generateTypeDefsContent';
 
 interface GenerateTypeDefsFilesParams {
   baseOutputDir: string;
   typeDefsFilePath: string;
-  typeDefsFileMode: 'merged' | 'modules';
+  typeDefsFileMode: TypeDefsFileMode;
   sourceMap: ParseSourcesResult['sourceMap'];
   whitelistedModules: string[];
   blacklistedModules: string[];

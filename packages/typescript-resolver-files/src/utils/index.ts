@@ -4,6 +4,7 @@ export * from './cwd';
 export * from './parseLocationForWhitelistedModule';
 export * from './isNativeNamedType';
 export * from './isRootObjectType';
+export * from './isWhitelistedModule';
 export * from './printImportLine';
 export * from './getNodePropertyMap';
 

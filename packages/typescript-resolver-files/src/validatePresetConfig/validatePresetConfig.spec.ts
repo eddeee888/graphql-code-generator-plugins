@@ -6,6 +6,7 @@ const defaultExpected: ReturnType<typeof validatePresetConfig> = {
   resolverRelativeTargetDir: 'resolvers',
   resolverTypesPath: './types.generated.ts',
   typeDefsFilePath: './typeDefs.generated.ts',
+  typeDefsFileMode: 'merged',
   mappersFileExtension: '.mappers.ts',
   mappersSuffix: 'Mapper',
   externalResolvers: {},
@@ -32,6 +33,32 @@ describe('validatePresetConfig - general', () => {
       validatePresetConfig({ mode: 'this_will_never_be' })
     ).toThrowError(
       'Validation Error - @eddeee888/gcg-typescript-resolver-files - presetConfig.mode must be "merged" or "modules" (default is "modules")'
+    );
+  });
+
+  it("returns result.typeDefsFileMode = 'modules' if config.typeDefsFileMode == modules", () => {
+    const parsed = validatePresetConfig({ typeDefsFileMode: 'modules' });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      typeDefsFileMode: 'modules',
+    });
+  });
+
+  it("returns result.typeDefsFileMode = 'mergedWhitelisted' if config.typeDefsFileMode == mergedWhitelisted", () => {
+    const parsed = validatePresetConfig({
+      typeDefsFileMode: 'mergedWhitelisted',
+    });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      typeDefsFileMode: 'mergedWhitelisted',
+    });
+  });
+
+  it('thows if result.typeDefsFileMode is not expected', () => {
+    expect(() => validatePresetConfig({ typeDefsFileMode: '' })).toThrowError(
+      'Validation Error - @eddeee888/gcg-typescript-resolver-files - presetConfig.typeDefsFileMode must be "merged" or "modules" (default is "merged")'
     );
   });
 

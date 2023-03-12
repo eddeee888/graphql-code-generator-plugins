@@ -109,9 +109,15 @@ File that puts all generated resolvers together. Relative from `baseOutputDir`.
 
 ### typeDefsFileMode
 
-`merged` or `modules` (Default: `merged`) (Only works with `config.mode=modules`)
+`merged` or `mergedWhitelisted` or `modules` (Default: `merged`)
 
-Whether to generate one typeDefs file (`merged`) or one file per module (`modules`).
+How to generate typeDefs file/s:
+
+- `merged`: one file
+- `mergedWhitelisted`: one file but only contains whitelisted modules
+- `modules`: one file per module.
+
+If `config.mode=merged`, this config is always `merged`
 
 ### typeDefsFilePath
 
