@@ -3,6 +3,7 @@ import { validatePresetConfig } from './validatePresetConfig';
 const defaultExpected: ReturnType<typeof validatePresetConfig> = {
   mode: 'modules',
   resolverMainFile: 'resolvers.generated.ts',
+  resolverMainFileMode: 'merged',
   resolverRelativeTargetDir: 'resolvers',
   resolverTypesPath: './types.generated.ts',
   typeDefsFilePath: './typeDefs.generated.ts',
@@ -43,6 +44,32 @@ describe('validatePresetConfig - general', () => {
       ...defaultExpected,
       typeDefsFileMode: 'modules',
     });
+  });
+
+  it("returns result.resolverMainFileMode = 'merged' if config.resolverMainFileMode == merged", () => {
+    const parsed = validatePresetConfig({ resolverMainFileMode: 'merged' });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      resolverMainFileMode: 'merged',
+    });
+  });
+
+  it("returns result.resolverMainFileMode = 'modules' if config.resolverMainFileMode == modules", () => {
+    const parsed = validatePresetConfig({ resolverMainFileMode: 'modules' });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      resolverMainFileMode: 'modules',
+    });
+  });
+
+  it('thows if result.resolverMainFileMode is not expected', () => {
+    expect(() =>
+      validatePresetConfig({ resolverMainFileMode: 'not_valid_value' })
+    ).toThrowError(
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.resolverMainFileMode must be "merged" or "modules" (default is "merged")'
+    );
   });
 
   it("returns result.typeDefsFileMode = 'mergedWhitelisted' if config.typeDefsFileMode == mergedWhitelisted", () => {
