@@ -187,9 +187,8 @@ export const validatePresetConfig = ({
     }
   }
 
-  if (!validateTypesPluginsConfig(typesPluginsConfig)) {
-    throw new Error('Invalid typescriptPluginConfig. Should not see this.');
-  }
+  const validatedTypesPluginsConfig =
+    validateTypesPluginsConfig(typesPluginsConfig);
 
   let finalTypeDefsFilePath = typeDefsFilePath;
   if (finalTypeDefsFilePath === true) {
@@ -225,7 +224,7 @@ export const validatePresetConfig = ({
     whitelistedModules: whitelistedModules || [],
     blacklistedModules: blacklistedModules || [],
     externalResolvers,
-    typesPluginsConfig,
+    typesPluginsConfig: validatedTypesPluginsConfig,
     tsMorphProjectOptions,
     fixObjectTypeResolvers,
   };
@@ -233,9 +232,10 @@ export const validatePresetConfig = ({
 
 const validateTypesPluginsConfig = (
   config: NonNullable<RawPresetConfig['typesPluginsConfig']>
-): config is ParsedPresetConfig['typesPluginsConfig'] => {
-  config.scalars = config.scalars || {};
-  if (typeof config.scalars === 'string') {
+): ParsedPresetConfig['typesPluginsConfig'] => {
+  const scalarsOption = config.scalars || {};
+
+  if (typeof scalarsOption === 'string') {
     throw new Error(
       printError(
         'presetConfig.typesPluginsConfig.scalars of type "string" is not supported',
@@ -243,7 +243,10 @@ const validateTypesPluginsConfig = (
       )
     );
   }
-  return true;
+  return {
+    ...config,
+    scalars: scalarsOption,
+  };
 };
 
 const printError = (input: string, type: 'Validation'): string => {
