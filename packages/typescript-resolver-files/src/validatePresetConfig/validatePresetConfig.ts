@@ -27,7 +27,7 @@ type ResolverMainFileMode = 'merged' | 'modules';
 export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
 type FixObjectTypeResolvers = 'smart' | 'disabled';
 
-interface ParsedPresetConfig {
+export interface ParsedPresetConfig {
   resolverTypesPath: string;
   resolverRelativeTargetDir: string;
   resolverMainFile: string;

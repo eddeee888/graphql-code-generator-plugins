@@ -3,6 +3,7 @@ import { type SourceFile, Project } from 'ts-morph';
 import type { GraphQLObjectTypeResolversToGenerate } from '../getGraphQLObjectTypeResolversToGenerate';
 import type { ParseSourcesResult } from '../parseSources';
 import type { ImportLineMeta, RootObjectType } from '../utils';
+import type { ParsedPresetConfig } from '../validatePresetConfig';
 
 interface BaseVirtualFile {
   __filetype: string;
@@ -19,6 +20,7 @@ export interface GeneralResolverFile extends BaseVirtualFile {
   meta: {
     variableStatement: string;
     normalizedResolverName: string;
+    moduleName: string | null;
   };
 }
 
@@ -28,6 +30,7 @@ export interface RootObjectTypeFieldResolverFile extends BaseVirtualFile {
     belongsToRootObject: RootObjectType;
     variableStatement: string;
     normalizedResolverName: string;
+    moduleName: string | null;
   };
 }
 
@@ -37,6 +40,7 @@ export interface ObjectTypeFile extends BaseVirtualFile {
     variableStatement: string;
     normalizedResolverName: string;
     resolversToGenerate?: GraphQLObjectTypeResolversToGenerate[number];
+    moduleName: string | null;
   };
 }
 
@@ -53,7 +57,8 @@ export interface GenerateResolverFilesContext {
     resolverTypesPath: string;
     resolverRelativeTargetDir: string;
     resolverMainFile: string;
-    mode: 'merged' | 'modules';
+    resolverMainFileMode: ParsedPresetConfig['resolverMainFileMode'];
+    mode: ParsedPresetConfig['mode'];
     whitelistedModules: string[];
     blacklistedModules: string[];
     externalResolvers: Record<string, string>;
@@ -62,7 +67,7 @@ export interface GenerateResolverFilesContext {
       typesSourceFile: SourceFile;
     };
     graphQLObjectTypeResolversToGenerate: GraphQLObjectTypeResolversToGenerate;
-    fixObjectTypeResolvers: 'smart' | 'disabled';
+    fixObjectTypeResolvers: ParsedPresetConfig['fixObjectTypeResolvers'];
   };
   result: {
     files: Record<string, StandardFile | ResolverFile>;
@@ -80,6 +85,7 @@ export interface GenerateResolverFilesContext {
 }
 
 export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
+  moduleName: string | null;
   fieldFilePath: string;
   resolverName: string;
   belongsToRootObject: BelongsToRootObject;
