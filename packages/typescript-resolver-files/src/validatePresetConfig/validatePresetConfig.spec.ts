@@ -58,7 +58,7 @@ describe('validatePresetConfig - general', () => {
 
   it('thows if result.typeDefsFileMode is not expected', () => {
     expect(() => validatePresetConfig({ typeDefsFileMode: '' })).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typeDefsFileMode must be "merged" or "modules" (default is "merged")'
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typeDefsFileMode must be "merged", "mergedWhitelisted" or "modules" (default is "merged")'
     );
   });
 
