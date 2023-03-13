@@ -1,5 +1,6 @@
 import type { Location } from 'graphql';
 import type { ParseSourcesResult, ParsedSource } from '../parseSources';
+import { isWhitelistedModule } from './isWhitelistedModule';
 
 export interface ParseLocationForWhitelistedModule {
   location: Location | undefined;
@@ -24,15 +25,11 @@ export const parseLocationForWhitelistedModule = ({
     throw new Error(`Unable to find ${sourceFilename} in sourceMap`);
   }
 
-  if (blacklistedModules.includes(sourceFile.moduleName)) {
-    return;
-  }
+  const isWhitelisted = isWhitelistedModule({
+    moduleName: sourceFile.moduleName,
+    whitelistedModules,
+    blacklistedModules,
+  });
 
-  const isInWhitelistedModule =
-    // whitelistedModules is empty a.k.a. all are whitelisted
-    whitelistedModules.length === 0
-      ? true
-      : whitelistedModules.includes(sourceFile.moduleName);
-
-  return isInWhitelistedModule ? sourceFile : undefined;
+  return isWhitelisted ? sourceFile : undefined;
 };

@@ -9,7 +9,6 @@ export interface ParsedSource {
 
 export interface ParseSourcesResult {
   sourceMap: Record<string, ParsedSource>;
-  mergedSDL: string;
 }
 
 export function parseSources(sources: Source[]): ParseSourcesResult {
@@ -30,10 +29,8 @@ export function parseSources(sources: Source[]): ParseSourcesResult {
         moduleName,
       };
 
-      result.mergedSDL += `\n${source.rawSDL}`;
-
       return result;
     },
-    { sourceMap: {}, mergedSDL: '' }
+    { sourceMap: {} }
   );
 }

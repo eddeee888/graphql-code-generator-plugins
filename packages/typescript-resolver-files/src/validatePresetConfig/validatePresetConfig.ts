@@ -22,21 +22,25 @@ type ParsedTypesPluginsConfig = Omit<
   Omit<typeScriptResolversPlugin.TypeScriptResolversPluginConfig, 'scalars'> & {
     scalars: Record<string, string>;
   };
+type ConfigMode = 'merged' | 'modules';
+export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
+type FixObjectTypeResolvers = 'smart' | 'disabled';
 
 interface ParsedPresetConfig {
   resolverTypesPath: string;
   resolverRelativeTargetDir: string;
   resolverMainFile: string;
   typeDefsFilePath: string | false;
+  typeDefsFileMode: TypeDefsFileMode;
   mappersFileExtension: string;
   mappersSuffix: string;
-  mode: 'merged' | 'modules';
+  mode: ConfigMode;
   whitelistedModules: string[];
   blacklistedModules: string[];
   externalResolvers: Record<string, string>;
   typesPluginsConfig: ParsedTypesPluginsConfig;
   tsMorphProjectOptions: ProjectOptions;
-  fixObjectTypeResolvers: 'smart' | 'disabled';
+  fixObjectTypeResolvers: FixObjectTypeResolvers;
 }
 
 export interface RawPresetConfig {
@@ -44,6 +48,7 @@ export interface RawPresetConfig {
   resolverRelativeTargetDir?: string;
   resolverMainFile?: string;
   typeDefsFilePath?: string | boolean;
+  typeDefsFileMode?: string;
   mappersFileExtension?: string;
   mappersSuffix?: string;
   mode?: string;
@@ -57,8 +62,9 @@ export interface RawPresetConfig {
 }
 
 export interface TypedPresetConfig extends RawPresetConfig {
-  mode?: 'merged' | 'modules';
-  fixObjectTypeResolvers?: 'smart' | 'disabled';
+  mode?: ConfigMode;
+  typeDefsFileMode?: TypeDefsFileMode;
+  fixObjectTypeResolvers?: FixObjectTypeResolvers;
 }
 
 export const validatePresetConfig = ({
@@ -66,6 +72,7 @@ export const validatePresetConfig = ({
   resolverRelativeTargetDir,
   resolverMainFile = 'resolvers.generated.ts',
   typeDefsFilePath = defaultTypeDefsFilePath,
+  typeDefsFileMode: inputTypeDefsFileMode = 'merged',
   mappersFileExtension = '.mappers.ts',
   mappersSuffix = 'Mapper',
   mode = 'modules',
@@ -78,7 +85,9 @@ export const validatePresetConfig = ({
 }: RawPresetConfig): ParsedPresetConfig => {
   if (mode !== 'merged' && mode !== 'modules') {
     throw new Error(
-      `Validation Error - ${presetName} - presetConfig.mode must be "merged" or "modules" (default is "modules")`
+      printValidationError(
+        'presetConfig.mode must be "merged" or "modules" (default is "modules")'
+      )
     );
   }
 
@@ -87,13 +96,35 @@ export const validatePresetConfig = ({
     fixObjectTypeResolvers !== 'disabled'
   ) {
     throw new Error(
-      `Validation Error - ${presetName} - presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")`
+      printValidationError(
+        'presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")'
+      )
+    );
+  }
+
+  let typeDefsFileMode = inputTypeDefsFileMode;
+  if (mode === 'merged') {
+    // If mode is `merged`, `typeDefsFileMode` is also `merged` because there's no whitelisted or modules concepts
+    typeDefsFileMode = 'merged';
+    warn(
+      `presetConfig.typeDefsFileMode has automatically been set to "merged" because presetConfig.mode is "merged"`
+    );
+  }
+  if (
+    typeDefsFileMode !== 'merged' &&
+    typeDefsFileMode !== 'modules' &&
+    typeDefsFileMode !== 'mergedWhitelisted'
+  ) {
+    throw new Error(
+      printValidationError(
+        'presetConfig.typeDefsFileMode must be "merged" or "modules" (default is "merged")'
+      )
     );
   }
 
   if (!resolverTypesPath) {
     throw new Error(
-      `Validation Error - ${presetName} - presetConfig.resolverTypesPath is required`
+      printValidationError('presetConfig.resolverTypesPath is required')
     );
   }
 
@@ -104,20 +135,24 @@ export const validatePresetConfig = ({
 
   if (path.extname(resolverMainFile) === '') {
     throw new Error(
-      `Validation Error - ${presetName} - presetConfig.mainFile must be a valid file name`
+      printValidationError('presetConfig.mainFile must be a valid file name')
     );
   }
 
   if (whitelistedModules) {
     if (!Array.isArray(whitelistedModules)) {
       throw new Error(
-        `Validation Error - ${presetName} - presetConfig.whitelistedModules must be an array if provided`
+        printValidationError(
+          'presetConfig.whitelistedModules must be an array if provided'
+        )
       );
     }
 
     if (mode !== 'modules') {
       throw new Error(
-        `Validation Error - ${presetName} - presetConfig.whitelistedModules can only be used with presetConfig.mode == "modules"`
+        printValidationError(
+          'presetConfig.whitelistedModules can only be used with presetConfig.mode == "modules"'
+        )
       );
     }
   }
@@ -125,13 +160,17 @@ export const validatePresetConfig = ({
   if (blacklistedModules) {
     if (!Array.isArray(blacklistedModules)) {
       throw new Error(
-        `Validation Error - ${presetName} - presetConfig.blacklistedModules must be an array if provided`
+        printValidationError(
+          'presetConfig.blacklistedModules must be an array if provided'
+        )
       );
     }
 
     if (mode !== 'modules') {
       throw new Error(
-        `Validation Error - ${presetName} - presetConfig.blacklistedModules can only be used with presetConfig.mode == "modules"`
+        printValidationError(
+          'presetConfig.blacklistedModules can only be used with presetConfig.mode == "modules"'
+        )
       );
     }
   }
@@ -154,8 +193,8 @@ export const validatePresetConfig = ({
     if (fs.existsSync(absoluteTsConfigFilePath)) {
       tsMorphProjectOptions.tsConfigFilePath = absoluteTsConfigFilePath;
     } else {
-      console.warn(
-        `[${presetName}] WARN: Unable to find TypeScript config at ${absoluteTsConfigFilePath}. Use presetConfig.tsConfigFilePath to set a custom value. Otherwise, type analysis may not work correctly.`
+      warn(
+        `Unable to find TypeScript config at ${absoluteTsConfigFilePath}. Use presetConfig.tsConfigFilePath to set a custom value. Otherwise, type analysis may not work correctly.`
       );
     }
   }
@@ -165,6 +204,7 @@ export const validatePresetConfig = ({
     resolverRelativeTargetDir: finalResolverRelativeTargetDir,
     resolverMainFile,
     typeDefsFilePath: finalTypeDefsFilePath,
+    typeDefsFileMode,
     mode,
     mappersFileExtension,
     mappersSuffix,
@@ -187,4 +227,13 @@ const validateTypesPluginsConfig = (
     );
   }
   return true;
+};
+
+// TODO: change this format to match console.warn
+const printValidationError = (input: string): string => {
+  return `Validation Error - ${presetName} - ${input}`;
+};
+
+const warn = (input: string): void => {
+  console.warn(`[${presetName}] WARN: ${input}`);
 };
