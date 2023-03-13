@@ -18,29 +18,29 @@ export interface StandardFile extends BaseVirtualFile {
 export interface GeneralResolverFile extends BaseVirtualFile {
   __filetype: 'generalResolver';
   meta: {
+    moduleName: string;
     variableStatement: string;
     normalizedResolverName: string;
-    moduleName: string | null;
   };
 }
 
 export interface RootObjectTypeFieldResolverFile extends BaseVirtualFile {
   __filetype: 'rootObjectTypeFieldResolver';
   meta: {
+    moduleName: string;
     belongsToRootObject: RootObjectType;
     variableStatement: string;
     normalizedResolverName: string;
-    moduleName: string | null;
   };
 }
 
 export interface ObjectTypeFile extends BaseVirtualFile {
   __filetype: 'objectType';
   meta: {
+    moduleName: string;
     variableStatement: string;
     normalizedResolverName: string;
     resolversToGenerate?: GraphQLObjectTypeResolversToGenerate[number];
-    moduleName: string | null;
   };
 }
 
@@ -74,6 +74,7 @@ export interface GenerateResolverFilesContext {
     externalImports: Record<
       string,
       {
+        moduleName: string;
         importLineMeta: ImportLineMeta;
         identifierUsages: {
           identifierName: string;
@@ -85,7 +86,7 @@ export interface GenerateResolverFilesContext {
 }
 
 export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
-  moduleName: string | null;
+  moduleName: string;
   fieldFilePath: string;
   resolverName: string;
   belongsToRootObject: BelongsToRootObject;

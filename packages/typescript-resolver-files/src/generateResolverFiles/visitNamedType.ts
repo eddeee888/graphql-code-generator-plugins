@@ -46,21 +46,6 @@ export const visitNamedType = (
     belongsToRootObject
   );
 
-  const externalResolverImportSyntax =
-    ctx.config.externalResolvers[normalizedResolverName];
-  if (externalResolverImportSyntax) {
-    // If has external resolver, use it
-    addExternalResolverImport(
-      {
-        normalizedResolverName,
-        configImportSyntax: externalResolverImportSyntax,
-      },
-      ctx
-    );
-
-    return;
-  }
-
   // Check to see if need to generate resolver files
   const parsedDetails = parseLocationForOutputDir(
     belongsToRootObject ? [belongsToRootObject] : [],
@@ -73,6 +58,22 @@ export const visitNamedType = (
   }
 
   const { moduleName, outputDir } = parsedDetails;
+
+  const externalResolverImportSyntax =
+    ctx.config.externalResolvers[normalizedResolverName];
+  if (externalResolverImportSyntax) {
+    // If has external resolver, use it
+    addExternalResolverImport(
+      {
+        moduleName,
+        normalizedResolverName,
+        configImportSyntax: externalResolverImportSyntax,
+      },
+      ctx
+    );
+
+    return;
+  }
 
   // Generate resolver files based on its type
   const visitorHandlerParams = validateAndPrepareForGraphQLTypeHandler(
@@ -116,10 +117,11 @@ const parseLocationForOutputDir = (
     },
   }: GenerateResolverFilesContext,
   location?: Location
-): { outputDir: string; moduleName: string | null } | undefined => {
+): { outputDir: string; moduleName: string } | undefined => {
   // If mode is "merged", there's only one module:
   //   - always generate a.k.a  it's always whitelisted
   //   - put them together at designated relativeTargetDir
+  //   - moduleName='' i.e. no module
   if (mode === 'merged') {
     return {
       outputDir: path.posix.join(
@@ -127,7 +129,7 @@ const parseLocationForOutputDir = (
         resolverRelativeTargetDir,
         ...nestedDirs
       ),
-      moduleName: null,
+      moduleName: '',
     };
   }
 
@@ -158,7 +160,7 @@ interface ValidateAndPrepareForGraphQLTypeParams {
   normalizedResolverName: string;
   outputDir: string;
   belongsToRootObject: RootObjectType | null;
-  moduleName: string | null;
+  moduleName: string;
 }
 const validateAndPrepareForGraphQLTypeHandler = (
   {
