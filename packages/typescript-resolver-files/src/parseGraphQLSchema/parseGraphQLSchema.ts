@@ -26,10 +26,7 @@ type GetPluginsConfigResult = {
   >;
 };
 
-/**
- * TODO: rename to parseGraphQLSchema
- */
-export const getPluginsConfig = ({
+export const parseGraphQLSchema = ({
   schemaAst,
   sourceMap,
   typeMappersMap,

@@ -85,8 +85,9 @@ export const validatePresetConfig = ({
 }: RawPresetConfig): ParsedPresetConfig => {
   if (mode !== 'merged' && mode !== 'modules') {
     throw new Error(
-      printValidationError(
-        'presetConfig.mode must be "merged" or "modules" (default is "modules")'
+      printError(
+        'presetConfig.mode must be "merged" or "modules" (default is "modules")',
+        'Validation'
       )
     );
   }
@@ -96,8 +97,9 @@ export const validatePresetConfig = ({
     fixObjectTypeResolvers !== 'disabled'
   ) {
     throw new Error(
-      printValidationError(
-        'presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")'
+      printError(
+        'presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")',
+        'Validation'
       )
     );
   }
@@ -106,8 +108,10 @@ export const validatePresetConfig = ({
   if (mode === 'merged') {
     // If mode is `merged`, `typeDefsFileMode` is also `merged` because there's no whitelisted or modules concepts
     typeDefsFileMode = 'merged';
-    warn(
-      `presetConfig.typeDefsFileMode has automatically been set to "merged" because presetConfig.mode is "merged"`
+    console.warn(
+      printWarning(
+        `presetConfig.typeDefsFileMode has automatically been set to "merged" because presetConfig.mode is "merged"`
+      )
     );
   }
   if (
@@ -116,15 +120,16 @@ export const validatePresetConfig = ({
     typeDefsFileMode !== 'mergedWhitelisted'
   ) {
     throw new Error(
-      printValidationError(
-        'presetConfig.typeDefsFileMode must be "merged" or "modules" (default is "merged")'
+      printError(
+        'presetConfig.typeDefsFileMode must be "merged" or "modules" (default is "merged")',
+        'Validation'
       )
     );
   }
 
   if (!resolverTypesPath) {
     throw new Error(
-      printValidationError('presetConfig.resolverTypesPath is required')
+      printError('presetConfig.resolverTypesPath is required', 'Validation')
     );
   }
 
@@ -135,23 +140,28 @@ export const validatePresetConfig = ({
 
   if (path.extname(resolverMainFile) === '') {
     throw new Error(
-      printValidationError('presetConfig.mainFile must be a valid file name')
+      printError(
+        'presetConfig.mainFile must be a valid file name',
+        'Validation'
+      )
     );
   }
 
   if (whitelistedModules) {
     if (!Array.isArray(whitelistedModules)) {
       throw new Error(
-        printValidationError(
-          'presetConfig.whitelistedModules must be an array if provided'
+        printError(
+          'presetConfig.whitelistedModules must be an array if provided',
+          'Validation'
         )
       );
     }
 
     if (mode !== 'modules') {
       throw new Error(
-        printValidationError(
-          'presetConfig.whitelistedModules can only be used with presetConfig.mode == "modules"'
+        printError(
+          'presetConfig.whitelistedModules can only be used with presetConfig.mode == "modules"',
+          'Validation'
         )
       );
     }
@@ -160,24 +170,25 @@ export const validatePresetConfig = ({
   if (blacklistedModules) {
     if (!Array.isArray(blacklistedModules)) {
       throw new Error(
-        printValidationError(
-          'presetConfig.blacklistedModules must be an array if provided'
+        printError(
+          'presetConfig.blacklistedModules must be an array if provided',
+          'Validation'
         )
       );
     }
 
     if (mode !== 'modules') {
       throw new Error(
-        printValidationError(
-          'presetConfig.blacklistedModules can only be used with presetConfig.mode == "modules"'
+        printError(
+          'presetConfig.blacklistedModules can only be used with presetConfig.mode == "modules"',
+          'Validation'
         )
       );
     }
   }
 
-  if (!validateTypesPluginsConfig(typesPluginsConfig)) {
-    throw new Error('Invalid typescriptPluginConfig. Should not see this.');
-  }
+  const validatedTypesPluginsConfig =
+    validateTypesPluginsConfig(typesPluginsConfig);
 
   let finalTypeDefsFilePath = typeDefsFilePath;
   if (finalTypeDefsFilePath === true) {
@@ -193,8 +204,10 @@ export const validatePresetConfig = ({
     if (fs.existsSync(absoluteTsConfigFilePath)) {
       tsMorphProjectOptions.tsConfigFilePath = absoluteTsConfigFilePath;
     } else {
-      warn(
-        `Unable to find TypeScript config at ${absoluteTsConfigFilePath}. Use presetConfig.tsConfigFilePath to set a custom value. Otherwise, type analysis may not work correctly.`
+      console.warn(
+        printWarning(
+          `Unable to find TypeScript config at ${absoluteTsConfigFilePath}. Use presetConfig.tsConfigFilePath to set a custom value. Otherwise, type analysis may not work correctly.`
+        )
       );
     }
   }
@@ -211,7 +224,7 @@ export const validatePresetConfig = ({
     whitelistedModules: whitelistedModules || [],
     blacklistedModules: blacklistedModules || [],
     externalResolvers,
-    typesPluginsConfig,
+    typesPluginsConfig: validatedTypesPluginsConfig,
     tsMorphProjectOptions,
     fixObjectTypeResolvers,
   };
@@ -219,21 +232,27 @@ export const validatePresetConfig = ({
 
 const validateTypesPluginsConfig = (
   config: NonNullable<RawPresetConfig['typesPluginsConfig']>
-): config is ParsedPresetConfig['typesPluginsConfig'] => {
-  config.scalars = config.scalars || {};
-  if (typeof config.scalars === 'string') {
+): ParsedPresetConfig['typesPluginsConfig'] => {
+  const scalarsOption = config.scalars || {};
+
+  if (typeof scalarsOption === 'string') {
     throw new Error(
-      `Validation Error - ${presetName} - presetConfig.typesPluginsConfig.scalars of type "string" is not supported`
+      printError(
+        'presetConfig.typesPluginsConfig.scalars of type "string" is not supported',
+        'Validation'
+      )
     );
   }
-  return true;
+  return {
+    ...config,
+    scalars: scalarsOption,
+  };
 };
 
-// TODO: change this format to match console.warn
-const printValidationError = (input: string): string => {
-  return `Validation Error - ${presetName} - ${input}`;
+const printError = (input: string, type: 'Validation'): string => {
+  return `[${presetName}] ERROR: ${type} - ${input}`;
 };
 
-const warn = (input: string): void => {
-  console.warn(`[${presetName}] WARN: ${input}`);
+const printWarning = (input: string): string => {
+  return `[${presetName}] WARN: ${input}`;
 };

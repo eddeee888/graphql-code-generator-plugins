@@ -32,7 +32,7 @@ describe('validatePresetConfig - general', () => {
     expect(() =>
       validatePresetConfig({ mode: 'this_will_never_be' })
     ).toThrowError(
-      'Validation Error - @eddeee888/gcg-typescript-resolver-files - presetConfig.mode must be "merged" or "modules" (default is "modules")'
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.mode must be "merged" or "modules" (default is "modules")'
     );
   });
 
@@ -58,7 +58,7 @@ describe('validatePresetConfig - general', () => {
 
   it('thows if result.typeDefsFileMode is not expected', () => {
     expect(() => validatePresetConfig({ typeDefsFileMode: '' })).toThrowError(
-      'Validation Error - @eddeee888/gcg-typescript-resolver-files - presetConfig.typeDefsFileMode must be "merged" or "modules" (default is "merged")'
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typeDefsFileMode must be "merged" or "modules" (default is "merged")'
     );
   });
 
@@ -99,7 +99,7 @@ describe('validatePresetConfig - general', () => {
   });
   it('throws if if config.resolverTypesPath is falsy', () => {
     expect(() => validatePresetConfig({ resolverTypesPath: '' })).toThrowError(
-      'Validation Error - @eddeee888/gcg-typescript-resolver-files - presetConfig.resolverTypesPath is required'
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.resolverTypesPath is required'
     );
   });
 
@@ -126,7 +126,7 @@ describe('validatePresetConfig - general', () => {
     expect(() =>
       validatePresetConfig({ resolverMainFile: 'aaa' })
     ).toThrowError(
-      'Validation Error - @eddeee888/gcg-typescript-resolver-files - presetConfig.mainFile must be a valid file name'
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.mainFile must be a valid file name'
     );
   });
 
@@ -170,7 +170,7 @@ describe('validatePresetConfig - general', () => {
     expect(() =>
       validatePresetConfig({ fixObjectTypeResolvers: 'not-valid-for-sure' })
     ).toThrowError(
-      'Validation Error - @eddeee888/gcg-typescript-resolver-files - presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")'
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")'
     );
   });
 
@@ -178,7 +178,7 @@ describe('validatePresetConfig - general', () => {
     expect(() =>
       validatePresetConfig({ typesPluginsConfig: { scalars: 'asdas' } })
     ).toThrowError(
-      'Validation Error - @eddeee888/gcg-typescript-resolver-files - presetConfig.typesPluginsConfig.scalars of type "string" is not supported'
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typesPluginsConfig.scalars of type "string" is not supported'
     );
   });
 });
@@ -204,7 +204,7 @@ describe('validatePresetConfig - mode: modules', () => {
     expect(() =>
       validatePresetConfig({ whitelistedModules: true } as never)
     ).toThrowError(
-      'Validation Error - @eddeee888/gcg-typescript-resolver-files - presetConfig.whitelistedModules must be an array if provided'
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.whitelistedModules must be an array if provided'
     );
   });
 
@@ -228,7 +228,7 @@ describe('validatePresetConfig - mode: modules', () => {
     expect(() =>
       validatePresetConfig({ blacklistedModules: true } as never)
     ).toThrowError(
-      'Validation Error - @eddeee888/gcg-typescript-resolver-files - presetConfig.blacklistedModules must be an array if provided'
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.blacklistedModules must be an array if provided'
     );
   });
 });
@@ -250,7 +250,7 @@ describe('validatePresetConfig - mode: merged', () => {
         whitelistedModules: ['moduleA'],
       })
     ).toThrowError(
-      'Validation Error - @eddeee888/gcg-typescript-resolver-files - presetConfig.whitelistedModules can only be used with presetConfig.mode == "modules"'
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.whitelistedModules can only be used with presetConfig.mode == "modules"'
     );
   });
   it('throws if config.blacklistedModules is provided', () => {
@@ -260,7 +260,7 @@ describe('validatePresetConfig - mode: merged', () => {
         blacklistedModules: ['moduleA'],
       })
     ).toThrowError(
-      'Validation Error - @eddeee888/gcg-typescript-resolver-files - presetConfig.blacklistedModules can only be used with presetConfig.mode == "modules"'
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.blacklistedModules can only be used with presetConfig.mode == "modules"'
     );
   });
 });

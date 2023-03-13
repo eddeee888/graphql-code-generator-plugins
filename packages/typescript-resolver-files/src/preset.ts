@@ -8,7 +8,7 @@ import {
 } from '@graphql-codegen/plugin-helpers';
 import { Project } from 'ts-morph';
 import { parseSources } from './parseSources';
-import { getPluginsConfig } from './getPluginsConfig';
+import { parseGraphQLSchema } from './parseGraphQLSchema';
 import {
   type GenerateResolverFilesContext,
   generateResolverFiles,
@@ -91,7 +91,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         defaultScalarExternalResolvers,
         defaultTypeMappers,
       },
-    } = getPluginsConfig({
+    } = parseGraphQLSchema({
       schemaAst,
       sourceMap,
       typeMappersMap,
