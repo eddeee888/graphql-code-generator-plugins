@@ -121,7 +121,7 @@ export const validatePresetConfig = ({
   ) {
     throw new Error(
       printError(
-        'presetConfig.typeDefsFileMode must be "merged" or "modules" (default is "merged")',
+        'presetConfig.typeDefsFileMode must be "merged", "mergedWhitelisted" or "modules" (default is "merged")',
         'Validation'
       )
     );
