@@ -133,6 +133,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
       content: '',
       mainImportIdentifier: 'User',
       meta: {
+        moduleName: 'user',
         normalizedResolverName: '',
         variableStatement: '',
         resolversToGenerate: {
