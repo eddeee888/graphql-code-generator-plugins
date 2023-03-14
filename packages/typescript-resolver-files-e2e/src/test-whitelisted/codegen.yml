@@ -15,7 +15,7 @@ generates:
       blacklistedModules:
         - user
 
-  packages/typescript-resolver-files-e2e/src/test-whitelisted/modules-typedefsMode-mergedWhitelisted:
+  packages/typescript-resolver-files-e2e/src/test-whitelisted/modules-typedefs-file-mode-mergedWhitelisted:
     preset: ./dist/packages/typescript-resolver-files/src/index.js
     presetConfig:
       typeDefsFileMode: 'mergedWhitelisted'
