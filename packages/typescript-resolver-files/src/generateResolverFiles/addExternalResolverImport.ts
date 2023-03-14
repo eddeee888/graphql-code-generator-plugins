@@ -2,6 +2,7 @@ import { normalizeRelativePath } from '../utils';
 import type { GenerateResolverFilesContext } from './types';
 
 interface AddExternalResolverImportParams {
+  moduleName: string;
   normalizedResolverName: string;
   /*
    * configImportSyntax has 2 forms
@@ -21,6 +22,7 @@ export const addExternalResolverImport = (
   result.externalImports[moduleImport] =
     result.externalImports[moduleImport] ||
     ({
+      moduleName: params.moduleName,
       importLineMeta: {
         isTypeImport: false,
         module: moduleImport,

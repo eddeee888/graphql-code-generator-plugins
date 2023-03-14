@@ -10,6 +10,7 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
     belongsToRootObject,
     normalizedResolverName,
     resolversTypeMeta,
+    moduleName,
   },
   { result }
 ) => {
@@ -33,6 +34,7 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
         ${variableStatement}`,
     mainImportIdentifier: resolverName,
     meta: {
+      moduleName,
       belongsToRootObject,
       variableStatement,
       normalizedResolverName,

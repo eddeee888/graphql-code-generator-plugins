@@ -23,6 +23,7 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
       content: '',
       mainImportIdentifier: 'User',
       meta: {
+        moduleName: 'user',
         variableStatement: '',
         normalizedResolverName: '',
       },
@@ -57,6 +58,7 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
       content: '',
       mainImportIdentifier: 'User',
       meta: {
+        moduleName: 'user',
         variableStatement: '',
         normalizedResolverName: '',
       },
@@ -87,6 +89,7 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
       content: '',
       mainImportIdentifier: 'User',
       meta: {
+        moduleName: 'user',
         variableStatement: '',
         normalizedResolverName: '',
       },

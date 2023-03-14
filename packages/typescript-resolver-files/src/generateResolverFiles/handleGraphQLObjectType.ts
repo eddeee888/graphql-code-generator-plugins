@@ -2,7 +2,13 @@ import type { GraphQLTypeHandler } from './types';
 import { printImportLine } from '../utils';
 
 export const handleGraphQLObjectType: GraphQLTypeHandler = (
-  { fieldFilePath, resolverName, normalizedResolverName, resolversTypeMeta },
+  {
+    fieldFilePath,
+    resolverName,
+    normalizedResolverName,
+    resolversTypeMeta,
+    moduleName,
+  },
   { result, config: { graphQLObjectTypeResolversToGenerate } }
 ) => {
   const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { 
@@ -20,6 +26,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler = (
     ${variableStatement}`,
     mainImportIdentifier: resolverName,
     meta: {
+      moduleName,
       normalizedResolverName,
       variableStatement,
       resolversToGenerate: graphQLObjectTypeResolversToGenerate[resolverName], // Array of all resolvers that may need type checking

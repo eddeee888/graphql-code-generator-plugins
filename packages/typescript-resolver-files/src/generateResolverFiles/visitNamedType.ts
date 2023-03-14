@@ -46,12 +46,26 @@ export const visitNamedType = (
     belongsToRootObject
   );
 
+  // Check to see if need to generate resolver files
+  const parsedDetails = parseLocationForOutputDir(
+    belongsToRootObject ? [belongsToRootObject] : [],
+    ctx,
+    location
+  );
+  if (!parsedDetails) {
+    // No `parsedDetails` means the location is NOT whitelisted, ignore.
+    return;
+  }
+
+  const { moduleName, outputDir } = parsedDetails;
+
   const externalResolverImportSyntax =
     ctx.config.externalResolvers[normalizedResolverName];
   if (externalResolverImportSyntax) {
     // If has external resolver, use it
     addExternalResolverImport(
       {
+        moduleName,
         normalizedResolverName,
         configImportSyntax: externalResolverImportSyntax,
       },
@@ -61,19 +75,15 @@ export const visitNamedType = (
     return;
   }
 
-  // Check to see if need to generate resolver files
-  const outputDir = parseLocationForOutputDir(
-    belongsToRootObject ? [belongsToRootObject] : [],
-    ctx,
-    location
-  );
-  if (!outputDir) {
-    return;
-  }
-
   // Generate resolver files based on its type
   const visitorHandlerParams = validateAndPrepareForGraphQLTypeHandler(
-    { resolverName, normalizedResolverName, outputDir, belongsToRootObject },
+    {
+      resolverName,
+      normalizedResolverName,
+      outputDir,
+      belongsToRootObject,
+      moduleName,
+    },
     ctx
   );
 
@@ -107,16 +117,20 @@ const parseLocationForOutputDir = (
     },
   }: GenerateResolverFilesContext,
   location?: Location
-): string | undefined => {
+): { outputDir: string; moduleName: string } | undefined => {
   // If mode is "merged", there's only one module:
   //   - always generate a.k.a  it's always whitelisted
-  //   - put them together at degsinated relativeTargetDir
+  //   - put them together at designated relativeTargetDir
+  //   - moduleName='' i.e. no module
   if (mode === 'merged') {
-    return path.posix.join(
-      baseOutputDir,
-      resolverRelativeTargetDir,
-      ...nestedDirs
-    );
+    return {
+      outputDir: path.posix.join(
+        baseOutputDir,
+        resolverRelativeTargetDir,
+        ...nestedDirs
+      ),
+      moduleName: '',
+    };
   }
 
   // 2. mode is "modules", each module is the folder containing the schema files
@@ -129,12 +143,15 @@ const parseLocationForOutputDir = (
   });
 
   return parsedSource
-    ? path.posix.join(
-        baseOutputDir,
-        parsedSource.moduleName,
-        resolverRelativeTargetDir,
-        ...nestedDirs
-      )
+    ? {
+        outputDir: path.posix.join(
+          baseOutputDir,
+          parsedSource.moduleName,
+          resolverRelativeTargetDir,
+          ...nestedDirs
+        ),
+        moduleName: parsedSource.moduleName,
+      }
     : undefined;
 };
 
@@ -143,6 +160,7 @@ interface ValidateAndPrepareForGraphQLTypeParams {
   normalizedResolverName: string;
   outputDir: string;
   belongsToRootObject: RootObjectType | null;
+  moduleName: string;
 }
 const validateAndPrepareForGraphQLTypeHandler = (
   {
@@ -150,6 +168,7 @@ const validateAndPrepareForGraphQLTypeHandler = (
     normalizedResolverName,
     outputDir,
     belongsToRootObject,
+    moduleName,
   }: ValidateAndPrepareForGraphQLTypeParams,
   { config, result }: GenerateResolverFilesContext
 ): GraphQLTypeHandlerParams<RootObjectType> | GraphQLTypeHandlerParams => {
@@ -184,6 +203,7 @@ const validateAndPrepareForGraphQLTypeHandler = (
     belongsToRootObject,
     normalizedResolverName,
     resolversTypeMeta,
+    moduleName,
   };
 };
 

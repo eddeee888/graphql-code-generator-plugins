@@ -23,13 +23,15 @@ type ParsedTypesPluginsConfig = Omit<
     scalars: Record<string, string>;
   };
 type ConfigMode = 'merged' | 'modules';
+type ResolverMainFileMode = 'merged' | 'modules';
 export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
 type FixObjectTypeResolvers = 'smart' | 'disabled';
 
-interface ParsedPresetConfig {
+export interface ParsedPresetConfig {
   resolverTypesPath: string;
   resolverRelativeTargetDir: string;
   resolverMainFile: string;
+  resolverMainFileMode: ResolverMainFileMode;
   typeDefsFilePath: string | false;
   typeDefsFileMode: TypeDefsFileMode;
   mappersFileExtension: string;
@@ -47,6 +49,7 @@ export interface RawPresetConfig {
   resolverTypesPath?: string;
   resolverRelativeTargetDir?: string;
   resolverMainFile?: string;
+  resolverMainFileMode?: string;
   typeDefsFilePath?: string | boolean;
   typeDefsFileMode?: string;
   mappersFileExtension?: string;
@@ -63,6 +66,7 @@ export interface RawPresetConfig {
 
 export interface TypedPresetConfig extends RawPresetConfig {
   mode?: ConfigMode;
+  resolverMainFileMode?: ResolverMainFileMode;
   typeDefsFileMode?: TypeDefsFileMode;
   fixObjectTypeResolvers?: FixObjectTypeResolvers;
 }
@@ -71,6 +75,7 @@ export const validatePresetConfig = ({
   resolverTypesPath = './types.generated.ts',
   resolverRelativeTargetDir,
   resolverMainFile = 'resolvers.generated.ts',
+  resolverMainFileMode = 'merged',
   typeDefsFilePath = defaultTypeDefsFilePath,
   typeDefsFileMode: inputTypeDefsFileMode = 'merged',
   mappersFileExtension = '.mappers.ts',
@@ -99,6 +104,15 @@ export const validatePresetConfig = ({
     throw new Error(
       printError(
         'presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")',
+        'Validation'
+      )
+    );
+  }
+
+  if (resolverMainFileMode !== 'merged' && resolverMainFileMode !== 'modules') {
+    throw new Error(
+      printError(
+        'presetConfig.resolverMainFileMode must be "merged" or "modules" (default is "merged")',
         'Validation'
       )
     );
@@ -216,6 +230,7 @@ export const validatePresetConfig = ({
     resolverTypesPath,
     resolverRelativeTargetDir: finalResolverRelativeTargetDir,
     resolverMainFile,
+    resolverMainFileMode,
     typeDefsFilePath: finalTypeDefsFilePath,
     typeDefsFileMode,
     mode,

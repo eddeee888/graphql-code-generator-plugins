@@ -3,6 +3,7 @@ import { type SourceFile, Project } from 'ts-morph';
 import type { GraphQLObjectTypeResolversToGenerate } from '../getGraphQLObjectTypeResolversToGenerate';
 import type { ParseSourcesResult } from '../parseSources';
 import type { ImportLineMeta, RootObjectType } from '../utils';
+import type { ParsedPresetConfig } from '../validatePresetConfig';
 
 interface BaseVirtualFile {
   __filetype: string;
@@ -17,6 +18,7 @@ export interface StandardFile extends BaseVirtualFile {
 export interface GeneralResolverFile extends BaseVirtualFile {
   __filetype: 'generalResolver';
   meta: {
+    moduleName: string;
     variableStatement: string;
     normalizedResolverName: string;
   };
@@ -25,6 +27,7 @@ export interface GeneralResolverFile extends BaseVirtualFile {
 export interface RootObjectTypeFieldResolverFile extends BaseVirtualFile {
   __filetype: 'rootObjectTypeFieldResolver';
   meta: {
+    moduleName: string;
     belongsToRootObject: RootObjectType;
     variableStatement: string;
     normalizedResolverName: string;
@@ -34,6 +37,7 @@ export interface RootObjectTypeFieldResolverFile extends BaseVirtualFile {
 export interface ObjectTypeFile extends BaseVirtualFile {
   __filetype: 'objectType';
   meta: {
+    moduleName: string;
     variableStatement: string;
     normalizedResolverName: string;
     resolversToGenerate?: GraphQLObjectTypeResolversToGenerate[number];
@@ -53,7 +57,8 @@ export interface GenerateResolverFilesContext {
     resolverTypesPath: string;
     resolverRelativeTargetDir: string;
     resolverMainFile: string;
-    mode: 'merged' | 'modules';
+    resolverMainFileMode: ParsedPresetConfig['resolverMainFileMode'];
+    mode: ParsedPresetConfig['mode'];
     whitelistedModules: string[];
     blacklistedModules: string[];
     externalResolvers: Record<string, string>;
@@ -62,13 +67,14 @@ export interface GenerateResolverFilesContext {
       typesSourceFile: SourceFile;
     };
     graphQLObjectTypeResolversToGenerate: GraphQLObjectTypeResolversToGenerate;
-    fixObjectTypeResolvers: 'smart' | 'disabled';
+    fixObjectTypeResolvers: ParsedPresetConfig['fixObjectTypeResolvers'];
   };
   result: {
     files: Record<string, StandardFile | ResolverFile>;
     externalImports: Record<
       string,
       {
+        moduleName: string;
         importLineMeta: ImportLineMeta;
         identifierUsages: {
           identifierName: string;
@@ -80,6 +86,7 @@ export interface GenerateResolverFilesContext {
 }
 
 export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
+  moduleName: string;
   fieldFilePath: string;
   resolverName: string;
   belongsToRootObject: BelongsToRootObject;
