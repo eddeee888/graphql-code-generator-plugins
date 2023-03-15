@@ -59,7 +59,7 @@ const collectTypeNodeProperties = (
       });
   } else if (Node.isIntersectionTypeNode(typeNode)) {
     typeNode.getTypeNodes().forEach((typeNode) => {
-      collectTypeNodeProperties(typeNode, result);
+      collectTypeNodeProperties(typeNode, result); // May contain duplicated properties from different typeNodes. Will be deduped in getNodePropertyMap.
     });
   }
 };
