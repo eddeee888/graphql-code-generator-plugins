@@ -35,4 +35,14 @@ describe('defineConfig()', () => {
       },
     });
   });
+
+  it('returns updated watchPattern if custom presetConfig.mappersFileExtension is used', () => {
+    const { presetConfig, watchPattern } = defineConfig({
+      mappersFileExtension: '.model.ts',
+    });
+    expect(presetConfig).toEqual({
+      mappersFileExtension: '.model.ts',
+    });
+    expect(watchPattern).toEqual(['**/*.model.ts']);
+  });
 });

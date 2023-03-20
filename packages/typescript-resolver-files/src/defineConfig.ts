@@ -18,7 +18,7 @@ export const defineConfig = (
   const mappersFileExtension =
     presetConfig.mappersFileExtension || '.mappers.ts';
 
-  const watchPattern: string | string[] = [];
+  const watchPattern: string[] = [];
   const mapperWatchPattern = path.posix.join(
     baseOutputDir,
     '**',
