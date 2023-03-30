@@ -2,4 +2,4 @@
 '@eddeee888/gcg-typescript-resolver-files': patch
 ---
 
-Bump ts-morph to v17
+Bump ts-morph to v18
