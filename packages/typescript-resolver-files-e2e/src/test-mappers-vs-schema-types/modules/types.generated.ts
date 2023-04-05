@@ -281,6 +281,58 @@ export type DirectiveResolverFn<
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+/** Mapping of union types */
+export type ResolversUnionTypes = {
+  TopicByIdPayload:
+    | Error
+    | (Omit<TopicByIdResult, 'result'> & {
+        result?: Maybe<ResolversTypes['Topic']>;
+      });
+  TopicCreatePayload:
+    | Error
+    | (Omit<TopicCreateResult, 'result'> & { result: ResolversTypes['Topic'] });
+  TopicEditPayload:
+    | Error
+    | (Omit<TopicEditResult, 'result'> & { result: ResolversTypes['Topic'] });
+  TopicsCreatedByUserPayload:
+    | Error
+    | (Omit<TopicsCreatedByUserResult, 'result'> & {
+        result: Array<ResolversTypes['Topic']>;
+      });
+  UserPayload:
+    | Error
+    | (Omit<UserResult, 'result'> & { result?: Maybe<ResolversTypes['User']> });
+};
+
+/** Mapping of union parent types */
+export type ResolversUnionParentTypes = {
+  TopicByIdPayload:
+    | Error
+    | (Omit<TopicByIdResult, 'result'> & {
+        result?: Maybe<ResolversParentTypes['Topic']>;
+      });
+  TopicCreatePayload:
+    | Error
+    | (Omit<TopicCreateResult, 'result'> & {
+        result: ResolversParentTypes['Topic'];
+      });
+  TopicEditPayload:
+    | Error
+    | (Omit<TopicEditResult, 'result'> & {
+        result: ResolversParentTypes['Topic'];
+      });
+  TopicsCreatedByUserPayload:
+    | Error
+    | (Omit<TopicsCreatedByUserResult, 'result'> & {
+        result: Array<ResolversParentTypes['Topic']>;
+      });
+  UserPayload:
+    | Error
+    | (Omit<UserResult, 'result'> & {
+        result?: Maybe<ResolversParentTypes['User']>;
+      });
+};
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Account: ResolverTypeWrapper<AccountMapper>;
@@ -298,35 +350,39 @@ export type ResolversTypes = {
   Topic: ResolverTypeWrapper<
     Omit<Topic, 'creator'> & { creator: ResolversTypes['User'] }
   >;
-  TopicByIdPayload: ResolversTypes['Error'] | ResolversTypes['TopicByIdResult'];
+  TopicByIdPayload: ResolverTypeWrapper<
+    ResolversUnionTypes['TopicByIdPayload']
+  >;
   TopicByIdResult: ResolverTypeWrapper<
     Omit<TopicByIdResult, 'result'> & {
       result?: Maybe<ResolversTypes['Topic']>;
     }
   >;
   TopicCreateInput: TopicCreateInput;
-  TopicCreatePayload:
-    | ResolversTypes['Error']
-    | ResolversTypes['TopicCreateResult'];
+  TopicCreatePayload: ResolverTypeWrapper<
+    ResolversUnionTypes['TopicCreatePayload']
+  >;
   TopicCreateResult: ResolverTypeWrapper<
     Omit<TopicCreateResult, 'result'> & { result: ResolversTypes['Topic'] }
   >;
   TopicEditInput: TopicEditInput;
-  TopicEditPayload: ResolversTypes['Error'] | ResolversTypes['TopicEditResult'];
+  TopicEditPayload: ResolverTypeWrapper<
+    ResolversUnionTypes['TopicEditPayload']
+  >;
   TopicEditResult: ResolverTypeWrapper<
     Omit<TopicEditResult, 'result'> & { result: ResolversTypes['Topic'] }
   >;
   TopicsCreatedByUserInput: TopicsCreatedByUserInput;
-  TopicsCreatedByUserPayload:
-    | ResolversTypes['Error']
-    | ResolversTypes['TopicsCreatedByUserResult'];
+  TopicsCreatedByUserPayload: ResolverTypeWrapper<
+    ResolversUnionTypes['TopicsCreatedByUserPayload']
+  >;
   TopicsCreatedByUserResult: ResolverTypeWrapper<
     Omit<TopicsCreatedByUserResult, 'result'> & {
       result: Array<ResolversTypes['Topic']>;
     }
   >;
   User: ResolverTypeWrapper<UserMapper>;
-  UserPayload: ResolversTypes['Error'] | ResolversTypes['UserResult'];
+  UserPayload: ResolverTypeWrapper<ResolversUnionTypes['UserPayload']>;
   UserResult: ResolverTypeWrapper<
     Omit<UserResult, 'result'> & { result?: Maybe<ResolversTypes['User']> }
   >;
@@ -348,37 +404,27 @@ export type ResolversParentTypes = {
   Query: {};
   Subscription: {};
   Topic: Omit<Topic, 'creator'> & { creator: ResolversParentTypes['User'] };
-  TopicByIdPayload:
-    | ResolversParentTypes['Error']
-    | ResolversParentTypes['TopicByIdResult'];
+  TopicByIdPayload: ResolversUnionParentTypes['TopicByIdPayload'];
   TopicByIdResult: Omit<TopicByIdResult, 'result'> & {
     result?: Maybe<ResolversParentTypes['Topic']>;
   };
   TopicCreateInput: TopicCreateInput;
-  TopicCreatePayload:
-    | ResolversParentTypes['Error']
-    | ResolversParentTypes['TopicCreateResult'];
+  TopicCreatePayload: ResolversUnionParentTypes['TopicCreatePayload'];
   TopicCreateResult: Omit<TopicCreateResult, 'result'> & {
     result: ResolversParentTypes['Topic'];
   };
   TopicEditInput: TopicEditInput;
-  TopicEditPayload:
-    | ResolversParentTypes['Error']
-    | ResolversParentTypes['TopicEditResult'];
+  TopicEditPayload: ResolversUnionParentTypes['TopicEditPayload'];
   TopicEditResult: Omit<TopicEditResult, 'result'> & {
     result: ResolversParentTypes['Topic'];
   };
   TopicsCreatedByUserInput: TopicsCreatedByUserInput;
-  TopicsCreatedByUserPayload:
-    | ResolversParentTypes['Error']
-    | ResolversParentTypes['TopicsCreatedByUserResult'];
+  TopicsCreatedByUserPayload: ResolversUnionParentTypes['TopicsCreatedByUserPayload'];
   TopicsCreatedByUserResult: Omit<TopicsCreatedByUserResult, 'result'> & {
     result: Array<ResolversParentTypes['Topic']>;
   };
   User: UserMapper;
-  UserPayload:
-    | ResolversParentTypes['Error']
-    | ResolversParentTypes['UserResult'];
+  UserPayload: ResolversUnionParentTypes['UserPayload'];
   UserResult: Omit<UserResult, 'result'> & {
     result?: Maybe<ResolversParentTypes['User']>;
   };
