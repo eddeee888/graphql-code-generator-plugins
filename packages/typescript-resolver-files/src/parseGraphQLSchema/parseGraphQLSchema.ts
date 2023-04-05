@@ -1,8 +1,13 @@
-import { GraphQLSchema, isObjectType, isScalarType } from 'graphql';
-import { resolvers as scalarResolvers } from 'graphql-scalars';
+import {
+  GraphQLSchema,
+  isObjectType,
+  isScalarType,
+  GraphQLScalarType,
+} from 'graphql';
 import type { ParseSourcesResult } from '../parseSources';
 import type { TypeMappersMap } from '../parseTypeMappers';
 import {
+  fmt,
   isNativeNamedType,
   isRootObjectType,
   parseLocationForWhitelistedModule,
@@ -26,13 +31,17 @@ type GetPluginsConfigResult = {
   >;
 };
 
-export const parseGraphQLSchema = ({
+const scalarsModuleName = 'graphql-scalars';
+
+export const parseGraphQLSchema = async ({
   schemaAst,
   sourceMap,
   typeMappersMap,
   whitelistedModules,
   blacklistedModules,
-}: GetPluginsConfigParams): GetPluginsConfigResult => {
+}: GetPluginsConfigParams): Promise<GetPluginsConfigResult> => {
+  const scalarResolvers = await getScalarResolverMap(schemaAst);
+
   return Object.entries(schemaAst.getTypeMap()).reduce<GetPluginsConfigResult>(
     (res, [schemaType, namedType]) => {
       if (isNativeNamedType(namedType)) {
@@ -50,7 +59,7 @@ export const parseGraphQLSchema = ({
       }
 
       if (isScalarType(namedType)) {
-        handleScalarType(schemaType, res);
+        handleScalarType(scalarResolvers, schemaType, res);
       }
 
       if (!isRootObjectType(schemaType) && isObjectType(namedType)) {
@@ -77,7 +86,42 @@ export const parseGraphQLSchema = ({
   );
 };
 
+const getScalarResolverMap = async (
+  schemaAst: GraphQLSchema
+): Promise<Record<string, GraphQLScalarType<unknown, unknown>>> => {
+  const firstScalarFound = Object.entries(schemaAst.getTypeMap()).find(
+    ([_, namedType]) => !isNativeNamedType(namedType) && isScalarType(namedType)
+  );
+
+  if (!firstScalarFound) {
+    return {};
+  }
+
+  let module:
+    | { resolvers: Record<string, GraphQLScalarType<unknown, unknown>> }
+    | undefined;
+  try {
+    module = await import(scalarsModuleName);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    if (e.code === 'MODULE_NOT_FOUND') {
+      console.warn(
+        fmt.warn(
+          `Unable to import \`${scalarsModuleName}\`. Install \`${scalarsModuleName}\` or you have to implement Scalar resolvers by yourself.`
+        )
+      );
+    }
+  }
+
+  if (!module || !module.resolvers) {
+    return {};
+  }
+
+  return module.resolvers;
+};
+
 const handleScalarType = (
+  scalarResolvers: Record<string, GraphQLScalarType<unknown, unknown>>,
   schemaType: string,
   result: GetPluginsConfigResult
 ): void => {
@@ -96,5 +140,5 @@ const handleScalarType = (
 
   result.pluginsConfig.defaultScalarExternalResolvers[
     schemaType
-  ] = `~graphql-scalars#${scalarResolver.name}Resolver`;
+  ] = `~${scalarsModuleName}#${scalarResolver.name}Resolver`;
 };

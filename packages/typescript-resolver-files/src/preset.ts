@@ -92,7 +92,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         defaultScalarExternalResolvers,
         defaultTypeMappers,
       },
-    } = parseGraphQLSchema({
+    } = await parseGraphQLSchema({
       schemaAst,
       sourceMap,
       typeMappersMap,
