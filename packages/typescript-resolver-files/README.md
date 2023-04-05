@@ -2,7 +2,7 @@
 
 This [GraphQL Code Generator](https://www.the-guild.dev/graphql/codegen) plugin creates resolvers given GraphQL schema.
 
-This relies on types generated from [typescript](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript) and [@graphql-codegen/typescript-resolvers](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-resolvers) plugins.
+This relies on types generated from [@graphql-codegen/typescript](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript) and [@graphql-codegen/typescript-resolvers](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-resolvers) plugins.
 
 ```bash
 yarn add -D @graphql-codegen/cli @eddeee888/gcg-typescript-resolver-files
@@ -21,13 +21,15 @@ yarn add graphql-scalars
 
 ### Setup
 
+#### Files
+
 ```graphql
-# src/graphql/modules/base/schema.graphqls
+# src/schema/base/schema.graphql
 type Query
 ```
 
 ```graphql
-# src/graphql/modules/user/schema.graphqls
+# src/schema/user/schema.graphql
 extend type Query {
   user(id: ID!): User
 }
@@ -44,7 +46,7 @@ type Address {
 ```
 
 ````ts
-// src/graphql/modules/user/schema.mappers.graphqls
+// src/schema/user/schema.mappers.ts
 
 // Exporting the following Mapper interfaces and types is the equivalent of this codegen config:
 // ```yml
@@ -62,24 +64,41 @@ export interface UserMapper {
 }
 ````
 
+#### Codegen Config
+
+```ts
+// codegen.ts
+import { defineConfig } from '@eddeee888/gcg-typescript-resolver-files';
+const config: CodegenConfig = {
+  schema: '**/schema.graphql',
+  generates: {
+    'src/schema': defineConfig(),
+  },
+};
+export default config;
+```
+
+OR
+
 ```yml
 # codegen.yml
-schema: '**/*.graphqls'
+schema: '**/*.graphql'
 generates:
-  src/graphql/modules:
+  src/schema:
     preset: '@eddeee888/gcg-typescript-resolver-files'
+    watchPattern: '**/*.mappers.ts'
 ```
 
 ### Result
 
 Running codegen will generate the following files:
 
-- `src/graphql/modules/user/resolvers/Query/user.ts`
-- `src/graphql/modules/user/resolvers/User.ts`
-- `src/graphql/modules/user/resolvers/Address.ts`
-- `src/graphql/modules/resolvers.generated.ts`
-- `src/graphql/modules/typeDefs.generated.ts`
-- `src/graphql/modules/types.generated.ts`
+- `src/schema/user/resolvers/Query/user.ts`
+- `src/schema/user/resolvers/User.ts`
+- `src/schema/user/resolvers/Address.ts`
+- `src/schema/resolvers.generated.ts`
+- `src/schema/typeDefs.generated.ts`
+- `src/schema/types.generated.ts`
 
 ## Config Options
 
@@ -200,9 +219,9 @@ Custom preset config can be set using the `presetConfig` option:
 
 ```yml
 # codegen.yml
-schema: '**/*.graphqls'
+schema: '**/*.graphql'
 generates:
-  src/graphql/modules:
+  src/schema:
     preset: '@eddeee888/gcg-typescript-resolver-files'
     presetConfig:
       mode: 'modules'
