@@ -285,6 +285,24 @@ export type DirectiveResolverFn<
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+/** Mapping of union types */
+export type ResolversUnionTypes = {
+  TopicByIdPayload: StandardError | TopicByIdResult;
+  TopicCreatePayload: StandardError | TopicCreateResult;
+  TopicEditPayload: StandardError | TopicEditResult;
+  TopicsCreatedByUserPayload: StandardError | TopicsCreatedByUserResult;
+  UserPayload: StandardError | UserResult;
+};
+
+/** Mapping of union parent types */
+export type ResolversUnionParentTypes = {
+  TopicByIdPayload: StandardError | TopicByIdResult;
+  TopicCreatePayload: StandardError | TopicCreateResult;
+  TopicEditPayload: StandardError | TopicEditResult;
+  TopicsCreatedByUserPayload: StandardError | TopicsCreatedByUserResult;
+  UserPayload: StandardError | UserResult;
+};
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   AbsoluteDefault: ResolverTypeWrapper<Scalars['AbsoluteDefault']>;
@@ -315,27 +333,27 @@ export type ResolversTypes = {
   StandardError: ResolverTypeWrapper<StandardError>;
   Subscription: ResolverTypeWrapper<{}>;
   Topic: ResolverTypeWrapper<Topic>;
-  TopicByIdPayload:
-    | ResolversTypes['StandardError']
-    | ResolversTypes['TopicByIdResult'];
+  TopicByIdPayload: ResolverTypeWrapper<
+    ResolversUnionTypes['TopicByIdPayload']
+  >;
   TopicByIdResult: ResolverTypeWrapper<TopicByIdResult>;
   TopicCreateInput: TopicCreateInput;
-  TopicCreatePayload:
-    | ResolversTypes['StandardError']
-    | ResolversTypes['TopicCreateResult'];
+  TopicCreatePayload: ResolverTypeWrapper<
+    ResolversUnionTypes['TopicCreatePayload']
+  >;
   TopicCreateResult: ResolverTypeWrapper<TopicCreateResult>;
   TopicEditInput: TopicEditInput;
-  TopicEditPayload:
-    | ResolversTypes['StandardError']
-    | ResolversTypes['TopicEditResult'];
+  TopicEditPayload: ResolverTypeWrapper<
+    ResolversUnionTypes['TopicEditPayload']
+  >;
   TopicEditResult: ResolverTypeWrapper<TopicEditResult>;
   TopicsCreatedByUserInput: TopicsCreatedByUserInput;
-  TopicsCreatedByUserPayload:
-    | ResolversTypes['StandardError']
-    | ResolversTypes['TopicsCreatedByUserResult'];
+  TopicsCreatedByUserPayload: ResolverTypeWrapper<
+    ResolversUnionTypes['TopicsCreatedByUserPayload']
+  >;
   TopicsCreatedByUserResult: ResolverTypeWrapper<TopicsCreatedByUserResult>;
   User: ResolverTypeWrapper<User>;
-  UserPayload: ResolversTypes['StandardError'] | ResolversTypes['UserResult'];
+  UserPayload: ResolverTypeWrapper<ResolversUnionTypes['UserPayload']>;
   UserResult: ResolverTypeWrapper<UserResult>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
@@ -363,29 +381,19 @@ export type ResolversParentTypes = {
   StandardError: StandardError;
   Subscription: {};
   Topic: Topic;
-  TopicByIdPayload:
-    | ResolversParentTypes['StandardError']
-    | ResolversParentTypes['TopicByIdResult'];
+  TopicByIdPayload: ResolversUnionParentTypes['TopicByIdPayload'];
   TopicByIdResult: TopicByIdResult;
   TopicCreateInput: TopicCreateInput;
-  TopicCreatePayload:
-    | ResolversParentTypes['StandardError']
-    | ResolversParentTypes['TopicCreateResult'];
+  TopicCreatePayload: ResolversUnionParentTypes['TopicCreatePayload'];
   TopicCreateResult: TopicCreateResult;
   TopicEditInput: TopicEditInput;
-  TopicEditPayload:
-    | ResolversParentTypes['StandardError']
-    | ResolversParentTypes['TopicEditResult'];
+  TopicEditPayload: ResolversUnionParentTypes['TopicEditPayload'];
   TopicEditResult: TopicEditResult;
   TopicsCreatedByUserInput: TopicsCreatedByUserInput;
-  TopicsCreatedByUserPayload:
-    | ResolversParentTypes['StandardError']
-    | ResolversParentTypes['TopicsCreatedByUserResult'];
+  TopicsCreatedByUserPayload: ResolversUnionParentTypes['TopicsCreatedByUserPayload'];
   TopicsCreatedByUserResult: TopicsCreatedByUserResult;
   User: User;
-  UserPayload:
-    | ResolversParentTypes['StandardError']
-    | ResolversParentTypes['UserResult'];
+  UserPayload: ResolversUnionParentTypes['UserPayload'];
   UserResult: UserResult;
   Boolean: Scalars['Boolean'];
 };
