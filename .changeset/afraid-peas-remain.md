@@ -35,13 +35,13 @@ export default config;
 │   ├── schema/
 │   │   ├── base/
 │   │   │   ├── schema.graphql
-│   │   │   ├── resolvers.generated.ts # generated in each module by `resolverMainFileMode=modules`
+│   │   │   ├── resolvers.generated.ts # contains resolvers of types in `src/schema/base/schema.graphql`
 │   │   ├── user/
 │   │   │   ├── schema.graphql
-│   │   │   ├── resolvers.generated.ts # generated in each module by `resolverMainFileMode=modules`
+│   │   │   ├── resolvers.generated.ts # contains resolvers of types in `src/schema/user/schema.graphql`
 │   │   ├── book/
 │   │   │   ├── schema.graphql
-│   │   │   ├── resolvers.generated.ts # generated in each module by `resolverMainFileMode=modules`
+│   │   │   ├── resolvers.generated.ts # contains resolvers of types in `src/schema/book/schema.graphql`
 ```
 
 If you are using `graphql-modules`, you can use the resolvers map like this:
