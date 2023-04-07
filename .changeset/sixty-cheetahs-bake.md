@@ -36,13 +36,13 @@ export default config;
 │   ├── schema/
 │   │   ├── base/
 │   │   │   ├── schema.graphql
-│   │   │   ├── typeDefs.generated.ts # generated in each module by `resolverMainFileMode=modules`
+│   │   │   ├── typeDefs.generated.ts # contains typeDefs of `src/schema/base/schema.graphql`
 │   │   ├── user/
 │   │   │   ├── schema.graphql
-│   │   │   ├── typeDefs.generated.ts # generated in each module by `resolverMainFileMode=modules`
+│   │   │   ├── typeDefs.generated.ts # contains typeDefs of `src/schema/user/schema.graphql`
 │   │   ├── book/
 │   │   │   ├── schema.graphql
-│   │   │   ├── typeDefs.generated.ts # generated in each module by `resolverMainFileMode=modules`
+│   │   │   ├── typeDefs.generated.ts # contains typeDefs of `src/schema/book/schema.graphql`
 ```
 
 If you are using `graphql-modules`, you can use the resolvers map like this:
