@@ -1,5 +1,154 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.4.0
+
+### Minor Changes
+
+- 037afdc: Add resolverMainFileMode. `merged` or `modules` (Default: `merged`)
+
+  How to generate file/s that put resolvers map together:
+
+  - `merged`: one file
+  - `modules`: one file per module. This can be used with module-based libraries like [graphql-modules](https://the-guild.dev/graphql/modules)
+
+  Example codegen config:
+
+  ```ts
+  // codegen.ts
+  import type { CodegenConfig } from '@graphql-codegen/cli';
+  import { defineConfig } from '@eddeee888/gcg-typescript-resolver-files';
+
+  const config: CodegenConfig = {
+    schema: '**/*.graphql',
+    generates: {
+      'src/schema': defineConfig({
+        resolverMainFileMode: 'modules',
+      }),
+    },
+  };
+
+  export default config;
+  ```
+
+  `resolverMainFileMode=modules` generates one `resolvers.generated.ts` file in each module:
+
+  ```text
+  ├── src/
+  │   ├── schema/
+  │   │   ├── base/
+  │   │   │   ├── schema.graphql
+  │   │   │   ├── resolvers.generated.ts # contains resolvers of types in `src/schema/base/schema.graphql`
+  │   │   ├── user/
+  │   │   │   ├── schema.graphql
+  │   │   │   ├── resolvers.generated.ts # contains resolvers of types in `src/schema/user/schema.graphql`
+  │   │   ├── book/
+  │   │   │   ├── schema.graphql
+  │   │   │   ├── resolvers.generated.ts # contains resolvers of types in `src/schema/book/schema.graphql`
+  ```
+
+  If you are using `graphql-modules`, you can use the resolvers map like this:
+
+  ```ts
+  // src/schema/user/index.ts
+  import { createModule } from 'graphql-modules';
+  import { resolvers } from './resolvers.generated.ts';
+
+  export const userModule = createModule({
+    id: 'user-module',
+    dirname: __dirname,
+    typeDefs: [
+      /* Your typeDefs*/
+    ],
+    resolvers,
+  });
+  ```
+
+- df06e3b: Add typeDefsFileMode. `merged` or `mergedWhitelisted` or `modules` (Default: `merged`)
+
+  How to generate typeDefs file/s:
+
+  - `merged`: one file
+  - `mergedWhitelisted`: one file but only contains whitelisted modules. This is useful if your blacklisted modules handle their own type defs
+  - `modules`: one file per module. This can be used with module-based libraries like [graphql-modules](https://the-guild.dev/graphql/modules)
+
+  Example codegen config:
+
+  ```ts
+  // codegen.ts
+  import type { CodegenConfig } from '@graphql-codegen/cli';
+  import { defineConfig } from '@eddeee888/gcg-typescript-resolver-files';
+
+  const config: CodegenConfig = {
+    schema: '**/*.graphql',
+    generates: {
+      'src/schema': defineConfig({
+        typeDefsFileMode: 'modules',
+      }),
+    },
+  };
+
+  export default config;
+  ```
+
+  `typeDefsFileMode=modules` generates one `typeDefs.generated.ts` file in each module:
+
+  ```text
+  ├── src/
+  │   ├── schema/
+  │   │   ├── base/
+  │   │   │   ├── schema.graphql
+  │   │   │   ├── typeDefs.generated.ts # contains typeDefs of `src/schema/base/schema.graphql`
+  │   │   ├── user/
+  │   │   │   ├── schema.graphql
+  │   │   │   ├── typeDefs.generated.ts # contains typeDefs of `src/schema/user/schema.graphql`
+  │   │   ├── book/
+  │   │   │   ├── schema.graphql
+  │   │   │   ├── typeDefs.generated.ts # contains typeDefs of `src/schema/book/schema.graphql`
+  ```
+
+  If you are using `graphql-modules`, you can use the resolvers map like this:
+
+  ```ts
+  // src/schema/user/index.ts
+  import { createModule } from 'graphql-modules';
+  import { typeDefs } from './typeDefs.generated.ts';
+
+  export const userModule = createModule({
+    id: 'user-module',
+    dirname: __dirname,
+    typeDefs: [typeDefs],
+    resolvers: {
+      /* Your resolver map */
+    },
+  });
+  ```
+
+- 086802e: Add `defineConfig`. This sets up `preset`, `presetConfig` and `watchPattern`.
+
+  Example:
+
+  ```ts
+  import type { CodegenConfig } from '@graphql-codegen/cli';
+  import { defineConfig } from '@eddeee888/typescript-resolver-files';
+
+  const config: CodegenConfig = {
+    schema: 'src/schema/**/*.graphql',
+    generates: {
+      'src/schema': defineConfig(),
+    },
+  };
+
+  export default config;
+  ```
+
+### Patch Changes
+
+- fe0ca5d: Bump ts-morph to v18
+- d5aac16: Handle intersection typeNode usually seen in GQL Interface types e.g. `type TypeA = TypeB & { something: string } & { somethingelse: string }`
+- 6324453: Fix Subscription default generation template
+- b70ee7f: Use path.posix to fix Windows errors
+- 5302e38: Add example for custom preset config in README
+
 ## 0.3.0
 
 ### Minor Changes
