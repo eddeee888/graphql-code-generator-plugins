@@ -26,9 +26,7 @@ yarn add graphql-scalars
 ```graphql
 # src/schema/base/schema.graphql
 type Query
-```
 
-```graphql
 # src/schema/user/schema.graphql
 extend type Query {
   user(id: ID!): User
@@ -68,13 +66,16 @@ export interface UserMapper {
 
 ```ts
 // codegen.ts
+import type { CodegenConfig } from '@graphql-codegen/cli';
 import { defineConfig } from '@eddeee888/gcg-typescript-resolver-files';
+
 const config: CodegenConfig = {
   schema: '**/schema.graphql',
   generates: {
     'src/schema': defineConfig(),
   },
 };
+
 export default config;
 ```
 
