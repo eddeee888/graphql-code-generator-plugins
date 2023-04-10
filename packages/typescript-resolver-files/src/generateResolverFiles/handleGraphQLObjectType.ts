@@ -9,7 +9,10 @@ export const handleGraphQLObjectType: GraphQLTypeHandler = (
     resolversTypeMeta,
     moduleName,
   },
-  { result, config: { graphQLObjectTypeResolversToGenerate } }
+  {
+    result,
+    config: { graphQLObjectTypeResolversToGenerate, emitLegacyCommonJSImports },
+  }
 ) => {
   const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { 
     /* Implement ${resolverName} resolver logic here */ 
@@ -22,6 +25,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler = (
       isTypeImport: true,
       module: resolversTypeMeta.module,
       namedImports: [resolversTypeMeta.typeNamedImport],
+      emitLegacyCommonJSImports,
     })}
     ${variableStatement}`,
     mainImportIdentifier: resolverName,

@@ -10,6 +10,7 @@ interface AddExternalResolverImportParams {
    * 2. absolute import: ~<absolutePath>#{default as AliasIdentifier|named_import (as AliasIdentifier)}
    */
   configImportSyntax: string;
+  emitLegacyCommonJSImports: boolean;
 }
 
 export const addExternalResolverImport = (
@@ -28,6 +29,7 @@ export const addExternalResolverImport = (
         module: moduleImport,
         namedImports: [],
         defaultImport: undefined,
+        emitLegacyCommonJSImports: params.emitLegacyCommonJSImports,
       },
       identifierUsages: [],
     } as GenerateResolverFilesContext['result']['externalImports'][number]);

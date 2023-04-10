@@ -212,6 +212,12 @@ Project's TypeScript config, relative from project root. This helps type analysi
 
 Statically compares object type's mapper types' field against schema types' fields, creating resolvers if required
 
+### emitLegacyCommonJSImports
+
+`bool` (Default: `true`)
+
+Determins whether imports emitted should use CommonJS syntax or ESM syntax (with `.js` file endings)
+
 ## Config Examples
 
 #### 1. Custom Config

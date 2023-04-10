@@ -31,6 +31,7 @@ export const addResolverMainFile = ({
     resolverTypesPath,
     resolverMainFile,
     resolverMainFileMode,
+    emitLegacyCommonJSImports,
   },
   result,
 }: GenerateResolverFilesContext): void => {
@@ -65,6 +66,7 @@ export const addResolverMainFile = ({
           isTypeImport: false,
           module: relativeModulePath(outputDir, filepath),
           namedImports: [file.mainImportIdentifier],
+          emitLegacyCommonJSImports,
         })
       );
       res[resolverMainFilename].objectTypes.push({
@@ -88,6 +90,7 @@ export const addResolverMainFile = ({
         isTypeImport: false,
         module: relativeModulePath(outputDir, filepath),
         namedImports: [fieldMapping],
+        emitLegacyCommonJSImports,
       })
     );
 
@@ -120,6 +123,7 @@ export const addResolverMainFile = ({
         module,
         namedImports: meta.importLineMeta.namedImports,
         defaultImport: meta.importLineMeta.defaultImport,
+        emitLegacyCommonJSImports,
       })
     );
 
@@ -194,6 +198,7 @@ export const addResolverMainFile = ({
       isTypeImport: true,
       module: relativePathToResolverTypes,
       namedImports: [resolversTypeName],
+      emitLegacyCommonJSImports,
     })}
     ${resolverMainFile.importLines.map((line) => line).join('\n')}
     export const ${resolversIdentifier}: ${resolversTypeName} = {

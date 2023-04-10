@@ -42,6 +42,7 @@ export interface ParsedPresetConfig {
   typesPluginsConfig: ParsedTypesPluginsConfig;
   tsMorphProjectOptions: ProjectOptions;
   fixObjectTypeResolvers: FixObjectTypeResolvers;
+  emitLegacyCommonJSImports: boolean;
 }
 
 export interface RawPresetConfig {
@@ -61,6 +62,7 @@ export interface RawPresetConfig {
     typeScriptResolversPlugin.TypeScriptResolversPluginConfig;
   tsConfigFilePath?: string;
   fixObjectTypeResolvers?: string;
+  emitLegacyCommonJSImports?: boolean;
 }
 
 export interface TypedPresetConfig extends RawPresetConfig {
@@ -86,6 +88,7 @@ export const validatePresetConfig = ({
   typesPluginsConfig = {},
   tsConfigFilePath = './tsconfig.json',
   fixObjectTypeResolvers = 'smart',
+  emitLegacyCommonJSImports = true,
 }: RawPresetConfig): ParsedPresetConfig => {
   if (mode !== 'merged' && mode !== 'modules') {
     throw new Error(
@@ -238,6 +241,7 @@ export const validatePresetConfig = ({
     typesPluginsConfig: validatedTypesPluginsConfig,
     tsMorphProjectOptions,
     fixObjectTypeResolvers,
+    emitLegacyCommonJSImports,
   };
 };
 
