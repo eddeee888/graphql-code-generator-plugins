@@ -6,7 +6,7 @@ interface Error {
   error: ErrorType!
 }
 
-type StandardError implements Error {
+type PayloadError implements Error {
   error: ErrorType!
 }
 
