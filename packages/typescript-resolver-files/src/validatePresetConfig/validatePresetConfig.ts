@@ -3,8 +3,7 @@ import * as fs from 'fs';
 import * as typeScriptPlugin from '@graphql-codegen/typescript';
 import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import type { ProjectOptions } from 'ts-morph';
-import { presetName } from '../preset';
-import { cwd } from '../utils';
+import { cwd, fmt } from '../utils';
 
 const defaultResolverRelativeTargetDirMap: Record<
   ParsedPresetConfig['mode'],
@@ -90,7 +89,7 @@ export const validatePresetConfig = ({
 }: RawPresetConfig): ParsedPresetConfig => {
   if (mode !== 'merged' && mode !== 'modules') {
     throw new Error(
-      printError(
+      fmt.error(
         'presetConfig.mode must be "merged" or "modules" (default is "modules")',
         'Validation'
       )
@@ -102,7 +101,7 @@ export const validatePresetConfig = ({
     fixObjectTypeResolvers !== 'disabled'
   ) {
     throw new Error(
-      printError(
+      fmt.error(
         'presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")',
         'Validation'
       )
@@ -111,7 +110,7 @@ export const validatePresetConfig = ({
 
   if (resolverMainFileMode !== 'merged' && resolverMainFileMode !== 'modules') {
     throw new Error(
-      printError(
+      fmt.error(
         'presetConfig.resolverMainFileMode must be "merged" or "modules" (default is "merged")',
         'Validation'
       )
@@ -123,7 +122,7 @@ export const validatePresetConfig = ({
     // If mode is `merged`, `typeDefsFileMode` is also `merged` because there's no whitelisted or modules concepts
     typeDefsFileMode = 'merged';
     console.warn(
-      printWarning(
+      fmt.warn(
         `presetConfig.typeDefsFileMode has automatically been set to "merged" because presetConfig.mode is "merged"`
       )
     );
@@ -134,7 +133,7 @@ export const validatePresetConfig = ({
     typeDefsFileMode !== 'mergedWhitelisted'
   ) {
     throw new Error(
-      printError(
+      fmt.error(
         'presetConfig.typeDefsFileMode must be "merged", "mergedWhitelisted" or "modules" (default is "merged")',
         'Validation'
       )
@@ -143,7 +142,7 @@ export const validatePresetConfig = ({
 
   if (!resolverTypesPath) {
     throw new Error(
-      printError('presetConfig.resolverTypesPath is required', 'Validation')
+      fmt.error('presetConfig.resolverTypesPath is required', 'Validation')
     );
   }
 
@@ -154,17 +153,14 @@ export const validatePresetConfig = ({
 
   if (path.extname(resolverMainFile) === '') {
     throw new Error(
-      printError(
-        'presetConfig.mainFile must be a valid file name',
-        'Validation'
-      )
+      fmt.error('presetConfig.mainFile must be a valid file name', 'Validation')
     );
   }
 
   if (whitelistedModules) {
     if (!Array.isArray(whitelistedModules)) {
       throw new Error(
-        printError(
+        fmt.error(
           'presetConfig.whitelistedModules must be an array if provided',
           'Validation'
         )
@@ -173,7 +169,7 @@ export const validatePresetConfig = ({
 
     if (mode !== 'modules') {
       throw new Error(
-        printError(
+        fmt.error(
           'presetConfig.whitelistedModules can only be used with presetConfig.mode == "modules"',
           'Validation'
         )
@@ -184,7 +180,7 @@ export const validatePresetConfig = ({
   if (blacklistedModules) {
     if (!Array.isArray(blacklistedModules)) {
       throw new Error(
-        printError(
+        fmt.error(
           'presetConfig.blacklistedModules must be an array if provided',
           'Validation'
         )
@@ -193,7 +189,7 @@ export const validatePresetConfig = ({
 
     if (mode !== 'modules') {
       throw new Error(
-        printError(
+        fmt.error(
           'presetConfig.blacklistedModules can only be used with presetConfig.mode == "modules"',
           'Validation'
         )
@@ -219,7 +215,7 @@ export const validatePresetConfig = ({
       tsMorphProjectOptions.tsConfigFilePath = absoluteTsConfigFilePath;
     } else {
       console.warn(
-        printWarning(
+        fmt.warn(
           `Unable to find TypeScript config at ${absoluteTsConfigFilePath}. Use presetConfig.tsConfigFilePath to set a custom value. Otherwise, type analysis may not work correctly.`
         )
       );
@@ -252,7 +248,7 @@ const validateTypesPluginsConfig = (
 
   if (typeof scalarsOption === 'string') {
     throw new Error(
-      printError(
+      fmt.error(
         'presetConfig.typesPluginsConfig.scalars of type "string" is not supported',
         'Validation'
       )
@@ -262,12 +258,4 @@ const validateTypesPluginsConfig = (
     ...config,
     scalars: scalarsOption,
   };
-};
-
-const printError = (input: string, type: 'Validation'): string => {
-  return `[${presetName}] ERROR: ${type} - ${input}`;
-};
-
-const printWarning = (input: string): string => {
-  return `[${presetName}] WARN: ${input}`;
 };
