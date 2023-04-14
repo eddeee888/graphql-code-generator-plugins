@@ -1,4 +1,5 @@
 export * from './cwd';
+export * from './fmt';
 export * from './parseLocationForWhitelistedModule';
 export * from './isNativeNamedType';
 export * from './isRootObjectType';
