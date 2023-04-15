@@ -218,6 +218,16 @@ describe('validatePresetConfig - general', () => {
       scalarsModule: false,
     });
   });
+  it('returns custom result.scalarsModule = false if config.scalarsModule == false', () => {
+    const parsed = validatePresetConfig({
+      scalarsModule: '@someother/graphql-scalars',
+    });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      scalarsModule: '@someother/graphql-scalars',
+    });
+  });
 });
 
 describe('validatePresetConfig - mode: modules', () => {
