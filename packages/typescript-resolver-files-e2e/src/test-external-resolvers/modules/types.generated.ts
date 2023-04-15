@@ -19,20 +19,20 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
 };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
+  ID: string | number;
   String: string;
   Boolean: boolean;
   Int: number;
   Float: number;
-  AbsoluteDefault: any;
+  AbsoluteDefault: bigint;
   BigIntNamedWithAlias: any;
   BigIntSameNamedWithAlias: any;
   DateTime: Date | string;
   DateTimeNamedImport: any;
   DateTimeSameNamedImport: any;
   RelativeDefault: any;
-  RelativeNamedImport: any;
-  RelativeNamedImportWithAlias: any;
+  RelativeNamedImport: number;
+  RelativeNamedImportWithAlias: string;
 };
 
 export type Error = {
