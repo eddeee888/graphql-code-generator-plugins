@@ -10,10 +10,10 @@ const defaultExpected: ReturnType<typeof validatePresetConfig> = {
   typeDefsFileMode: 'merged',
   mappersFileExtension: '.mappers.ts',
   mappersSuffix: 'Mapper',
+  scalarsModule: 'graphql-scalars',
+  scalarsOverrides: {},
   externalResolvers: {},
-  typesPluginsConfig: {
-    scalars: {},
-  },
+  typesPluginsConfig: {},
   whitelistedModules: [],
   blacklistedModules: [],
   tsMorphProjectOptions: {
@@ -65,7 +65,7 @@ describe('validatePresetConfig - general', () => {
     });
   });
 
-  it('thows if result.resolverMainFileMode is not expected', () => {
+  it('throws if result.resolverMainFileMode is not expected', () => {
     expect(() =>
       validatePresetConfig({ resolverMainFileMode: 'not_valid_value' })
     ).toThrowError(
@@ -84,7 +84,7 @@ describe('validatePresetConfig - general', () => {
     });
   });
 
-  it('thows if result.typeDefsFileMode is not expected', () => {
+  it('throws if result.typeDefsFileMode is not expected', () => {
     expect(() => validatePresetConfig({ typeDefsFileMode: '' })).toThrowError(
       '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typeDefsFileMode must be "merged", "mergedWhitelisted" or "modules" (default is "merged")'
     );
@@ -211,12 +211,58 @@ describe('validatePresetConfig - general', () => {
     );
   });
 
-  it('throws if config.typesPluginsConfig.scalars is a non-empty string', () => {
+  it('throws if config.typesPluginsConfig.scalars is used', () => {
     expect(() =>
       validatePresetConfig({ typesPluginsConfig: { scalars: 'asdas' } })
     ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typesPluginsConfig.scalars of type "string" is not supported'
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typesPluginsConfig.scalars is not supported. Use presetConfig.scalarsOverrides instead.'
     );
+  });
+
+  it('returns result.scalarsModule = false if config.scalarsModule == false', () => {
+    const parsed = validatePresetConfig({ scalarsModule: false });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      scalarsModule: false,
+    });
+  });
+  it('returns custom result.scalarsModule = false if config.scalarsModule == false', () => {
+    const parsed = validatePresetConfig({
+      scalarsModule: '@someother/graphql-scalars',
+    });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      scalarsModule: '@someother/graphql-scalars',
+    });
+  });
+
+  it('returns correct result if config.externalResolvers and config.scalarsOverrides are used together', () => {
+    const parsed = validatePresetConfig({
+      externalResolvers: {
+        DateTime: 'module#DateTimeResolver',
+      },
+      scalarsOverrides: {
+        Currency: {
+          resolver: 'module#CurrencyResolver',
+          type: 'unknown',
+        },
+      },
+    });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      externalResolvers: {
+        DateTime: 'module#DateTimeResolver',
+      },
+      scalarsOverrides: {
+        Currency: {
+          resolver: 'module#CurrencyResolver',
+          type: 'unknown',
+        },
+      },
+    });
   });
 });
 

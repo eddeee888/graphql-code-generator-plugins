@@ -36,3 +36,4 @@ enum Currency {
 scalar DateTime
 scalar BigInt
 scalar SomeOtherScalars
+scalar WithInputOutput

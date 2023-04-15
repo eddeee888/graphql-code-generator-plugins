@@ -95,6 +95,13 @@
             "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-modules-resolver-main-file-mode/**/*.generated.*'"
           ],
           "parallel": false
+        },
+        "test-scalars-module": {
+          "commands": [
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-scalars-module/**/resolvers/'",
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-scalars-module/**/*.generated.*'"
+          ],
+          "parallel": false
         }
       }
     },
@@ -113,6 +120,7 @@
           "nx graphql-codegen typescript-resolver-files-e2e -c test-modules-typedefs-file-mode --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-modules-resolver-main-file-mode --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-esm-import --verbose",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-scalars-module --verbose"
         ],
         "parallel": false
       },
@@ -164,6 +172,9 @@
         "test-esm-import": {
           "configFile": "packages/typescript-resolver-files-e2e/src/test-esm-import/codegen.ts"
         },
+        "test-scalars-module": {
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-scalars-module/codegen.ts"
+        }
       },
       "dependsOn": ["^build"]
     },

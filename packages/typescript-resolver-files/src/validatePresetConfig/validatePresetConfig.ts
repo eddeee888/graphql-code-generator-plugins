@@ -13,18 +13,19 @@ const defaultResolverRelativeTargetDirMap: Record<
   merged: '',
 };
 const defaultTypeDefsFilePath = './typeDefs.generated.ts';
+const defaultScalarsModule = 'graphql-scalars';
 
 type ParsedTypesPluginsConfig = Omit<
-  typeScriptPlugin.TypeScriptPluginConfig,
+  typeScriptPlugin.TypeScriptPluginConfig &
+    typeScriptResolversPlugin.TypeScriptResolversPluginConfig,
   'scalars'
-> &
-  Omit<typeScriptResolversPlugin.TypeScriptResolversPluginConfig, 'scalars'> & {
-    scalars: Record<string, string>;
-  };
+>;
 type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
 export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
 type FixObjectTypeResolvers = 'smart' | 'disabled';
+
+export type ScalarsOverridesType = string | { input: string; output: string };
 
 export interface ParsedPresetConfig {
   resolverTypesPath: string;
@@ -35,6 +36,11 @@ export interface ParsedPresetConfig {
   typeDefsFileMode: TypeDefsFileMode;
   mappersFileExtension: string;
   mappersSuffix: string;
+  scalarsModule: string | false;
+  scalarsOverrides: Record<
+    string,
+    { resolver?: string; type?: ScalarsOverridesType }
+  >;
   mode: ConfigMode;
   whitelistedModules: string[];
   blacklistedModules: string[];
@@ -54,6 +60,11 @@ export interface RawPresetConfig {
   typeDefsFileMode?: string;
   mappersFileExtension?: string;
   mappersSuffix?: string;
+  scalarsModule?: string | boolean;
+  scalarsOverrides?: Record<
+    string,
+    { resolver?: string; type?: ScalarsOverridesType }
+  >;
   mode?: string;
   whitelistedModules?: string[];
   blacklistedModules?: string[];
@@ -81,6 +92,8 @@ export const validatePresetConfig = ({
   typeDefsFileMode: inputTypeDefsFileMode = 'merged',
   mappersFileExtension = '.mappers.ts',
   mappersSuffix = 'Mapper',
+  scalarsModule = 'graphql-scalars',
+  scalarsOverrides = {},
   mode = 'modules',
   whitelistedModules,
   blacklistedModules,
@@ -219,6 +232,11 @@ export const validatePresetConfig = ({
     finalTypeDefsFilePath = defaultTypeDefsFilePath;
   }
 
+  let finalScalarsModule = scalarsModule;
+  if (finalScalarsModule === true) {
+    finalScalarsModule = defaultScalarsModule;
+  }
+
   const tsMorphProjectOptions: ProjectOptions = {
     skipAddingFilesFromTsConfig: true, // avoid long startup time by NOT loading files included by tsconfig.json. We only use this virtually anyways so we don't need all the files
   };
@@ -246,6 +264,8 @@ export const validatePresetConfig = ({
     mode,
     mappersFileExtension,
     mappersSuffix,
+    scalarsModule: finalScalarsModule,
+    scalarsOverrides,
     whitelistedModules: whitelistedModules || [],
     blacklistedModules: blacklistedModules || [],
     externalResolvers,
@@ -259,18 +279,16 @@ export const validatePresetConfig = ({
 const validateTypesPluginsConfig = (
   config: NonNullable<RawPresetConfig['typesPluginsConfig']>
 ): ParsedPresetConfig['typesPluginsConfig'] => {
-  const scalarsOption = config.scalars || {};
-
-  if (typeof scalarsOption === 'string') {
+  const { scalars, ...rest } = config;
+  if (scalars) {
     throw new Error(
       fmt.error(
-        'presetConfig.typesPluginsConfig.scalars of type "string" is not supported',
+        'presetConfig.typesPluginsConfig.scalars is not supported. Use presetConfig.scalarsOverrides instead.',
         'Validation'
       )
     );
   }
   return {
-    ...config,
-    scalars: scalarsOption,
+    ...rest,
   };
 };
