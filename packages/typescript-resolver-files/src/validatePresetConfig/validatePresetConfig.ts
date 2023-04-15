@@ -200,6 +200,14 @@ export const validatePresetConfig = ({
     }
   }
 
+  if (emitLegacyCommonJSImports === false && typesPluginsConfig.emitLegacyCommonJSImports !== null) {
+    console.warn(
+      fmt.warn(
+        `emitLegacyCommonJSImports is set to false and typesPluginsConfig's emitLegacyCommonJSImports is set as well - usually this is unwanted behaviour. The root config's emitLegacyCommonJSImports sets typesPluinsConfig's emitLegacyCommonJSImports as well.`
+      )
+    )
+  }
+
   const validatedTypesPluginsConfig =
     validateTypesPluginsConfig(typesPluginsConfig);
 

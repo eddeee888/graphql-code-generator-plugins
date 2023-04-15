@@ -68,7 +68,6 @@ export const visitNamedType = (
         moduleName,
         normalizedResolverName,
         configImportSyntax: externalResolverImportSyntax,
-        emitLegacyCommonJSImports: ctx.config.emitLegacyCommonJSImports,
       },
       ctx
     );

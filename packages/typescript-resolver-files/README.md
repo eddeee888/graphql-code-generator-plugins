@@ -216,7 +216,7 @@ Statically compares object type's mapper types' field against schema types' fiel
 
 `bool` (Default: `true`)
 
-Determins whether imports emitted should use CommonJS syntax or ESM syntax (with `.js` file endings)
+Determines whether imports emitted should use CommonJS syntax or ESM syntax (with `.js` file endings)
 
 ## Config Examples
 
