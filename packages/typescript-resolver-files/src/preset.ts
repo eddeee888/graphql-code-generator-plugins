@@ -48,6 +48,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       resolverMainFileMode,
       typeDefsFilePath,
       typeDefsFileMode,
+      scalarsModule,
       mode,
       whitelistedModules,
       blacklistedModules,
@@ -95,6 +96,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     } = await parseGraphQLSchema({
       schemaAst,
       sourceMap,
+      scalarsModule,
       typeMappersMap,
       whitelistedModules,
       blacklistedModules,

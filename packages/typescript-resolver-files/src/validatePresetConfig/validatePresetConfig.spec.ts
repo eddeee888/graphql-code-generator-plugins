@@ -10,6 +10,7 @@ const defaultExpected: ReturnType<typeof validatePresetConfig> = {
   typeDefsFileMode: 'merged',
   mappersFileExtension: '.mappers.ts',
   mappersSuffix: 'Mapper',
+  scalarsModule: 'graphql-scalars',
   externalResolvers: {},
   typesPluginsConfig: {
     scalars: {},
@@ -64,7 +65,7 @@ describe('validatePresetConfig - general', () => {
     });
   });
 
-  it('thows if result.resolverMainFileMode is not expected', () => {
+  it('throws if result.resolverMainFileMode is not expected', () => {
     expect(() =>
       validatePresetConfig({ resolverMainFileMode: 'not_valid_value' })
     ).toThrowError(
@@ -83,7 +84,7 @@ describe('validatePresetConfig - general', () => {
     });
   });
 
-  it('thows if result.typeDefsFileMode is not expected', () => {
+  it('throws if result.typeDefsFileMode is not expected', () => {
     expect(() => validatePresetConfig({ typeDefsFileMode: '' })).toThrowError(
       '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typeDefsFileMode must be "merged", "mergedWhitelisted" or "modules" (default is "merged")'
     );
@@ -207,6 +208,15 @@ describe('validatePresetConfig - general', () => {
     ).toThrowError(
       '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typesPluginsConfig.scalars of type "string" is not supported'
     );
+  });
+
+  it('returns result.scalarsModule = false if config.scalarsModule == false', () => {
+    const parsed = validatePresetConfig({ scalarsModule: false });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      scalarsModule: false,
+    });
   });
 });
 
