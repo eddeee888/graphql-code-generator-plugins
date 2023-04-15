@@ -29,3 +29,4 @@ type PaginationResult {
 }
 
 scalar DateTime
+scalar SomeRandomScalar
