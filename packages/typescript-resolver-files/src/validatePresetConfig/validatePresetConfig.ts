@@ -13,6 +13,7 @@ const defaultResolverRelativeTargetDirMap: Record<
   merged: '',
 };
 const defaultTypeDefsFilePath = './typeDefs.generated.ts';
+const defaultScalarsModule = 'graphql-scalars';
 
 type ParsedTypesPluginsConfig = Omit<
   typeScriptPlugin.TypeScriptPluginConfig,
@@ -35,6 +36,7 @@ export interface ParsedPresetConfig {
   typeDefsFileMode: TypeDefsFileMode;
   mappersFileExtension: string;
   mappersSuffix: string;
+  scalarsModule: string | false;
   mode: ConfigMode;
   whitelistedModules: string[];
   blacklistedModules: string[];
@@ -53,6 +55,7 @@ export interface RawPresetConfig {
   typeDefsFileMode?: string;
   mappersFileExtension?: string;
   mappersSuffix?: string;
+  scalarsModule?: string | boolean;
   mode?: string;
   whitelistedModules?: string[];
   blacklistedModules?: string[];
@@ -79,6 +82,7 @@ export const validatePresetConfig = ({
   typeDefsFileMode: inputTypeDefsFileMode = 'merged',
   mappersFileExtension = '.mappers.ts',
   mappersSuffix = 'Mapper',
+  scalarsModule = 'graphql-scalars',
   mode = 'modules',
   whitelistedModules,
   blacklistedModules,
@@ -205,6 +209,11 @@ export const validatePresetConfig = ({
     finalTypeDefsFilePath = defaultTypeDefsFilePath;
   }
 
+  let finalScalarsModule = scalarsModule;
+  if (finalScalarsModule === true) {
+    finalScalarsModule = defaultScalarsModule;
+  }
+
   const tsMorphProjectOptions: ProjectOptions = {
     skipAddingFilesFromTsConfig: true, // avoid long startup time by NOT loading files included by tsconfig.json. We only use this virtually anyways so we don't need all the files
   };
@@ -232,6 +241,7 @@ export const validatePresetConfig = ({
     mode,
     mappersFileExtension,
     mappersSuffix,
+    scalarsModule: finalScalarsModule,
     whitelistedModules: whitelistedModules || [],
     blacklistedModules: blacklistedModules || [],
     externalResolvers,

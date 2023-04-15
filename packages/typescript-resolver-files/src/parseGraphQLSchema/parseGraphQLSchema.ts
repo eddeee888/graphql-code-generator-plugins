@@ -1,8 +1,13 @@
-import { GraphQLSchema, isObjectType, isScalarType } from 'graphql';
-import { resolvers as scalarResolvers } from 'graphql-scalars';
+import {
+  GraphQLSchema,
+  isObjectType,
+  isScalarType,
+  GraphQLScalarType,
+} from 'graphql';
 import type { ParseSourcesResult } from '../parseSources';
 import type { TypeMappersMap } from '../parseTypeMappers';
 import {
+  fmt,
   isNativeNamedType,
   isRootObjectType,
   parseLocationForWhitelistedModule,
@@ -12,6 +17,7 @@ interface GetPluginsConfigParams {
   schemaAst: GraphQLSchema;
   sourceMap: ParseSourcesResult['sourceMap'];
   typeMappersMap: TypeMappersMap;
+  scalarsModule: string | false;
   whitelistedModules: string[];
   blacklistedModules: string[];
 }
@@ -26,13 +32,18 @@ type GetPluginsConfigResult = {
   >;
 };
 
-export const parseGraphQLSchema = ({
+export const parseGraphQLSchema = async ({
   schemaAst,
   sourceMap,
   typeMappersMap,
+  scalarsModule,
   whitelistedModules,
   blacklistedModules,
-}: GetPluginsConfigParams): GetPluginsConfigResult => {
+}: GetPluginsConfigParams): Promise<GetPluginsConfigResult> => {
+  const scalarResolverMap = scalarsModule
+    ? await getScalarResolverMapFromModule(scalarsModule)
+    : {};
+
   return Object.entries(schemaAst.getTypeMap()).reduce<GetPluginsConfigResult>(
     (res, [schemaType, namedType]) => {
       if (isNativeNamedType(namedType)) {
@@ -49,8 +60,13 @@ export const parseGraphQLSchema = ({
         return res;
       }
 
-      if (isScalarType(namedType)) {
-        handleScalarType(schemaType, res);
+      if (isScalarType(namedType) && scalarsModule) {
+        handleScalarType({
+          scalarResolverMap,
+          schemaType,
+          scalarsModule,
+          result: res,
+        });
       }
 
       if (!isRootObjectType(schemaType) && isObjectType(namedType)) {
@@ -77,11 +93,47 @@ export const parseGraphQLSchema = ({
   );
 };
 
-const handleScalarType = (
-  schemaType: string,
-  result: GetPluginsConfigResult
-): void => {
-  const scalarResolver = scalarResolvers[schemaType];
+const getScalarResolverMapFromModule = async (
+  scalarsModule: string
+): Promise<Record<string, GraphQLScalarType<unknown, unknown>>> => {
+  let module:
+    | { resolvers: Record<string, GraphQLScalarType<unknown, unknown>> }
+    | undefined;
+  try {
+    module = await import(scalarsModule);
+  } catch (err) {
+    if (
+      err instanceof Error &&
+      'code' in err &&
+      err.code === 'MODULE_NOT_FOUND'
+    ) {
+      console.warn(
+        fmt.warn(
+          `Unable to import \`${scalarsModule}\`. Install \`${scalarsModule}\` or you have to implement Scalar resolvers by yourself.`
+        )
+      );
+    }
+  }
+
+  if (!module || !module.resolvers) {
+    return {};
+  }
+
+  return module.resolvers;
+};
+
+const handleScalarType = ({
+  scalarResolverMap,
+  schemaType,
+  result,
+  scalarsModule,
+}: {
+  scalarResolverMap: Record<string, GraphQLScalarType<unknown, unknown>>;
+  schemaType: string;
+  result: GetPluginsConfigResult;
+  scalarsModule: string;
+}): void => {
+  const scalarResolver = scalarResolverMap[schemaType];
   if (!scalarResolver) {
     return;
   }
@@ -96,5 +148,5 @@ const handleScalarType = (
 
   result.pluginsConfig.defaultScalarExternalResolvers[
     schemaType
-  ] = `~graphql-scalars#${scalarResolver.name}Resolver`;
+  ] = `~${scalarsModule}#${scalarResolver.name}Resolver`;
 };
