@@ -36,7 +36,7 @@
     "jest-environment-node": "^29.4.3",
     "nx": "15.9.1",
     "prettier": "^2.6.2",
-    "rimraf": "4.4.0",
+    "rimraf": "5.0.0",
     "ts-jest": "29.0.5",
     "ts-morph": "18.0.0",
     "ts-node": "10.9.1",
