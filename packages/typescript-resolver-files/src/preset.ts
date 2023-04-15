@@ -18,6 +18,7 @@ import { getGraphQLObjectTypeResolversToGenerate } from './getGraphQLObjectTypeR
 import { addVirtualTypesFileToTsMorphProject } from './addVirtualTypesFileToTsMorphProject';
 import { parseTypeMappers } from './parseTypeMappers';
 import { RawPresetConfig, validatePresetConfig } from './validatePresetConfig';
+import { validateAndMergeParsedConfigs } from './validateAndMergeParsedConfigs';
 
 export const presetName = '@eddeee888/gcg-typescript-resolver-files';
 
@@ -48,6 +49,8 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       resolverMainFileMode,
       typeDefsFilePath,
       typeDefsFileMode,
+      scalarsModule,
+      scalarsOverrides,
       mode,
       whitelistedModules,
       blacklistedModules,
@@ -84,32 +87,35 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
 
     const generatesSection: Types.GenerateOptions[] = [];
 
-    const {
-      userDefinedSchemaTypeMap,
-      pluginsConfig: {
-        defaultScalarTypesMap,
-        defaultScalarExternalResolvers,
-        defaultTypeMappers,
-      },
-    } = parseGraphQLSchema({
+    const parsedGraphQLSchemaMeta = await parseGraphQLSchema({
       schemaAst,
       sourceMap,
+      scalarsModule,
+      scalarsOverrides,
       typeMappersMap,
       whitelistedModules,
       blacklistedModules,
     });
 
+    const mergedConfig = validateAndMergeParsedConfigs({
+      externalResolvers,
+      parsedGraphQLSchemaMeta,
+    });
+
     // typescript and typescript-resolvers plugins config
     const resolverTypesConfig = {
       enumsAsTypes: true,
-      nonOptionalTypename: true,
+      optionalResolveType: true,
+      resolversNonOptionalTypename: {
+        unionMember: true,
+        interfaceImplementingType: true,
+      },
       ...typesPluginsConfig,
       scalars: {
-        ...defaultScalarTypesMap,
-        ...typesPluginsConfig.scalars,
+        ...mergedConfig.scalarTypes,
       },
       mappers: {
-        ...defaultTypeMappers,
+        ...mergedConfig.typeMappers,
         ...typesPluginsConfig.mappers,
       },
     };
@@ -132,7 +138,8 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       async () =>
         getGraphQLObjectTypeResolversToGenerate({
           typesSourceFile,
-          userDefinedSchemaObjectTypeMap: userDefinedSchemaTypeMap.object,
+          userDefinedSchemaObjectTypeMap:
+            mergedConfig.userDefinedSchemaTypeMap.object,
           typeMappersMap,
         }),
       createProfilerRunName('graphQLObjectTypeResolversToGenerate')
@@ -202,8 +209,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
             whitelistedModules,
             blacklistedModules,
             externalResolvers: {
-              ...defaultScalarExternalResolvers,
-              ...externalResolvers,
+              ...mergedConfig.externalResolvers,
             },
           },
           result,

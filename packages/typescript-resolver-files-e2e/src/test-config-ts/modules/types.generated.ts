@@ -15,30 +15,30 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
 };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string; output: string | number };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
 };
 
 export type Cat = {
-  __typename: 'Cat';
-  age: Scalars['Int'];
-  fullName: Scalars['String'];
-  id: Scalars['ID'];
+  __typename?: 'Cat';
+  age: Scalars['Int']['output'];
+  fullName: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
   isChipped: CatChipped;
 };
 
 export type CatChipped = 'NO' | 'YES';
 
 export type Query = {
-  __typename: 'Query';
+  __typename?: 'Query';
   cat?: Maybe<Cat>;
 };
 
 export type QueryCatArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -149,22 +149,22 @@ export type DirectiveResolverFn<
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Cat: ResolverTypeWrapper<Cat>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   CatChipped: CatChipped;
   Query: ResolverTypeWrapper<{}>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Cat: Cat;
-  Int: Scalars['Int'];
-  String: Scalars['String'];
-  ID: Scalars['ID'];
+  Int: Scalars['Int']['output'];
+  String: Scalars['String']['output'];
+  ID: Scalars['ID']['output'];
   Query: {};
-  Boolean: Scalars['Boolean'];
+  Boolean: Scalars['Boolean']['output'];
 };
 
 export type CatResolvers<
