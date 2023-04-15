@@ -200,6 +200,58 @@ The files with this extension provides mappers interfaces and types for the sche
 
 Exported interfaces and types with this suffix from `mappersFile` in each module are put into the mappers object of [@graphql-codegen/typescript-resolvers](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-resolvers).
 
+### scalarsModule
+
+`string` or `false` (Default: `graphql-scalars`)
+
+Where Scalar implementation and codegen types come from. Use `false` to implement your own Scalars.
+
+If using an module that is not `graphql-scalars`, the module must export resolver implementation and codegen type the same way `graphql-scalars` does e.g.
+
+```ts
+{
+  resolvers: {
+    DateTime: DateTimeResolver,
+  },
+  DateTimeResolver: {
+    // ... resolver implementation
+    extensions: {
+      codegenScalarType: 'Date | string',
+    },
+  }
+}
+```
+
+### scalarsOverrides
+
+`Record<string, { resolver?: string; type?: string }>` (Default: `{}`)
+
+Overrides scalars' resolver implementation, type or both.
+
+Example:
+
+```ts
+// codegen.ts
+{
+  generates: {
+    'src/schema': defineConfig({
+      scalarsOverrides: {
+        DateTime: {
+          resolver: './localDateTimeResolver#Resolver',
+        }
+        Currency: {
+          type: 'unknown'
+        },
+        BigInt: {
+          resolver: '@other/scalars#BigIntResolver',
+          type: 'bigint'
+        }
+      }
+    })
+  }
+}
+```
+
 ### tsConfigFilePath
 
 `string` (Default: `./tsconfig.json`)

@@ -13,10 +13,10 @@ generates:
       resolverRelativeTargetDir: rslvrs
       resolverMainFile: resolvers.gen.ts
       typeDefsFilePath: false
-      externalResolvers:
-        BigInt: base/CustomBigIntResolver#default as CustomBigIntResolver # graphql-scalars' default is `~graphql-scalars#BigIntResolver`
+      scalarsOverrides:
+        BigInt:
+          resolver: base/CustomBigIntResolver#default as CustomBigIntResolver # graphql-scalars' default is `~graphql-scalars#BigIntResolver`
+          type: number # graphql-scalars' default is `bigint`
       typesPluginsConfig:
         enumsAsTypes: false
-        scalars:
-          BigInt: number # graphql-scalars' default is `bigint`
         contextType: ./customTypes#ResolverContext
