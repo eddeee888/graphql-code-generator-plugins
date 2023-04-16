@@ -254,21 +254,6 @@ describe('validatePresetConfig - general', () => {
       },
     });
   });
-
-  it('throws if the same schema type is found in both config.externalResolvers and config.scalarsOverrides', () => {
-    expect(() =>
-      validatePresetConfig({
-        externalResolvers: { DateTime: 'module#DateTimeResolver' },
-        scalarsOverrides: {
-          DateTime: {
-            resolver: 'module#DateTimeResolver',
-          },
-        },
-      })
-    ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - Duplicated schema type "DateTime" found in presetConfig.externalResolvers and presetConfig.scalarsOverrides. presetConfig.scalarsOverrides is the preferred way of overriding scalar implementation and type. Remove "DateTime" from presetConfig.externalResolvers.'
-    );
-  });
 });
 
 describe('validatePresetConfig - mode: modules', () => {

@@ -202,17 +202,6 @@ export const validatePresetConfig = ({
     }
   }
 
-  Object.keys(externalResolvers).forEach((schemaType) => {
-    if (scalarsOverrides[schemaType]) {
-      throw new Error(
-        fmt.error(
-          `Duplicated schema type "${schemaType}" found in presetConfig.externalResolvers and presetConfig.scalarsOverrides. presetConfig.scalarsOverrides is the preferred way of overriding scalar implementation and type. Remove "${schemaType}" from presetConfig.externalResolvers.`,
-          'Validation'
-        )
-      );
-    }
-  });
-
   const validatedTypesPluginsConfig =
     validateTypesPluginsConfig(typesPluginsConfig);
 
