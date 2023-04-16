@@ -14,12 +14,12 @@ export type GraphQLObjectTypeResolversToGenerate = Record<
 
 export const getGraphQLObjectTypeResolversToGenerate = ({
   typesSourceFile,
-  userDefinedSchemaTypeMap,
+  userDefinedSchemaObjectTypeMap,
   typeMappersMap,
 }: {
   typesSourceFile: SourceFile;
   typeMappersMap: TypeMappersMap;
-  userDefinedSchemaTypeMap: Record<string, true>;
+  userDefinedSchemaObjectTypeMap: Record<string, true>;
 }): GraphQLObjectTypeResolversToGenerate => {
   const typeMappersEntries = Object.entries(typeMappersMap);
   if (typeMappersEntries.length === 0) {
@@ -34,7 +34,7 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
   ): void => {
     const identifier = node.getNameNode();
     const identifierName = identifier.getText();
-    if (userDefinedSchemaTypeMap[identifierName]) {
+    if (userDefinedSchemaObjectTypeMap[identifierName]) {
       schemaTypePropertyMap[identifierName] = getNodePropertyMap(node);
     }
   };

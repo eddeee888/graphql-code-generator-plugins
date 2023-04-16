@@ -2,29 +2,33 @@ import { GraphQLSchema, isObjectType, isScalarType } from 'graphql';
 import { resolvers as scalarResolvers } from 'graphql-scalars';
 import type { ParseSourcesResult } from '../parseSources';
 import type { TypeMappersMap } from '../parseTypeMappers';
+import type { ParsedPresetConfig } from '../validatePresetConfig';
 import {
   isNativeNamedType,
   isRootObjectType,
   parseLocationForWhitelistedModule,
 } from '../utils';
 
-interface GetPluginsConfigParams {
+interface ParseGraphQLSchemaParams {
   schemaAst: GraphQLSchema;
   sourceMap: ParseSourcesResult['sourceMap'];
   typeMappersMap: TypeMappersMap;
-  whitelistedModules: string[];
-  blacklistedModules: string[];
+  whitelistedModules: ParsedPresetConfig['whitelistedModules'];
+  blacklistedModules: ParsedPresetConfig['blacklistedModules'];
 }
 
-type GetPluginsConfigResult = {
-  userDefinedSchemaTypeMap: Record<string, true>;
+export interface ParsedGraphQLSchemaMeta {
+  userDefinedSchemaTypeMap: {
+    object: Record<string, true>;
+    scalar: Record<string, true>;
+  };
   pluginsConfig: Record<
     | 'defaultScalarTypesMap'
     | 'defaultScalarExternalResolvers'
     | 'defaultTypeMappers',
     Record<string, string>
   >;
-};
+}
 
 export const parseGraphQLSchema = ({
   schemaAst,
@@ -32,8 +36,8 @@ export const parseGraphQLSchema = ({
   typeMappersMap,
   whitelistedModules,
   blacklistedModules,
-}: GetPluginsConfigParams): GetPluginsConfigResult => {
-  return Object.entries(schemaAst.getTypeMap()).reduce<GetPluginsConfigResult>(
+}: ParseGraphQLSchemaParams): ParsedGraphQLSchemaMeta => {
+  return Object.entries(schemaAst.getTypeMap()).reduce<ParsedGraphQLSchemaMeta>(
     (res, [schemaType, namedType]) => {
       if (isNativeNamedType(namedType)) {
         return res;
@@ -50,11 +54,12 @@ export const parseGraphQLSchema = ({
       }
 
       if (isScalarType(namedType)) {
+        res.userDefinedSchemaTypeMap.scalar[schemaType] = true;
         handleScalarType(schemaType, res);
       }
 
       if (!isRootObjectType(schemaType) && isObjectType(namedType)) {
-        res.userDefinedSchemaTypeMap[schemaType] = true;
+        res.userDefinedSchemaTypeMap.object[schemaType] = true;
 
         // Wire up `mappers` config
         const typeMapperDetails = typeMappersMap[schemaType];
@@ -67,7 +72,10 @@ export const parseGraphQLSchema = ({
       return res;
     },
     {
-      userDefinedSchemaTypeMap: {},
+      userDefinedSchemaTypeMap: {
+        object: {},
+        scalar: {},
+      },
       pluginsConfig: {
         defaultScalarTypesMap: {},
         defaultScalarExternalResolvers: {},
@@ -79,7 +87,7 @@ export const parseGraphQLSchema = ({
 
 const handleScalarType = (
   schemaType: string,
-  result: GetPluginsConfigResult
+  result: ParsedGraphQLSchemaMeta
 ): void => {
   const scalarResolver = scalarResolvers[schemaType];
   if (!scalarResolver) {

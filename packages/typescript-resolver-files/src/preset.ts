@@ -84,7 +84,6 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
 
     const generatesSection: Types.GenerateOptions[] = [];
 
-    // typescript and typescript-resolvers plugins config
     const {
       userDefinedSchemaTypeMap,
       pluginsConfig: {
@@ -100,6 +99,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       blacklistedModules,
     });
 
+    // typescript and typescript-resolvers plugins config
     const resolverTypesConfig = {
       enumsAsTypes: true,
       nonOptionalTypename: true,
@@ -132,7 +132,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       async () =>
         getGraphQLObjectTypeResolversToGenerate({
           typesSourceFile,
-          userDefinedSchemaTypeMap,
+          userDefinedSchemaObjectTypeMap: userDefinedSchemaTypeMap.object,
           typeMappersMap,
         }),
       createProfilerRunName('graphQLObjectTypeResolversToGenerate')
