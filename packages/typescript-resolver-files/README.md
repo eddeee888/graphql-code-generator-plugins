@@ -222,6 +222,36 @@ If using an module that is not `graphql-scalars`, the module must export resolve
 }
 ```
 
+### scalarsOverrides
+
+`Record<string, { resolver?: string; type?: string }>` (Default: `{}`)
+
+Overrides of scalars that are found in `scalarsModule`. Can be used to override just the resolver, or type, or both.
+
+Example:
+
+```ts
+// codegen.ts
+{
+  generates: {
+    'src/schema': defineConfig({
+      scalarsOverrides: {
+        DateTime: {
+          resolver: './localDateTimeResolver#Resolver',
+        }
+        Currency: {
+          type: 'unknown'
+        },
+        BigInt: {
+          resolver: '@other/scalars#BigIntResolver',
+          type: 'bigint'
+        }
+      }
+    })
+  }
+}
+```
+
 ### tsConfigFilePath
 
 `string` (Default: `./tsconfig.json`)

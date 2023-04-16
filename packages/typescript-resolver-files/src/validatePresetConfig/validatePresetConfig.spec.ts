@@ -11,10 +11,9 @@ const defaultExpected: ReturnType<typeof validatePresetConfig> = {
   mappersFileExtension: '.mappers.ts',
   mappersSuffix: 'Mapper',
   scalarsModule: 'graphql-scalars',
+  scalarsOverrides: {},
   externalResolvers: {},
-  typesPluginsConfig: {
-    scalars: {},
-  },
+  typesPluginsConfig: {},
   whitelistedModules: [],
   blacklistedModules: [],
   tsMorphProjectOptions: {
@@ -202,11 +201,11 @@ describe('validatePresetConfig - general', () => {
     );
   });
 
-  it('throws if config.typesPluginsConfig.scalars is a non-empty string', () => {
+  it('throws if config.typesPluginsConfig.scalars is used', () => {
     expect(() =>
       validatePresetConfig({ typesPluginsConfig: { scalars: 'asdas' } })
     ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typesPluginsConfig.scalars of type "string" is not supported'
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typesPluginsConfig.scalars is not supported. Use presetConfig.scalarsOverrides instead.'
     );
   });
 
@@ -227,6 +226,48 @@ describe('validatePresetConfig - general', () => {
       ...defaultExpected,
       scalarsModule: '@someother/graphql-scalars',
     });
+  });
+
+  it('returns correct result if config.externalResolvers and config.scalarsOverrides are used together', () => {
+    const parsed = validatePresetConfig({
+      externalResolvers: {
+        DateTime: 'module#DateTimeResolver',
+      },
+      scalarsOverrides: {
+        Currency: {
+          resolver: 'module#CurrencyResolver',
+          type: 'unknown',
+        },
+      },
+    });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      externalResolvers: {
+        DateTime: 'module#DateTimeResolver',
+      },
+      scalarsOverrides: {
+        Currency: {
+          resolver: 'module#CurrencyResolver',
+          type: 'unknown',
+        },
+      },
+    });
+  });
+
+  it('throws if the same schema type is found in both config.externalResolvers and config.scalarsOverrides', () => {
+    expect(() =>
+      validatePresetConfig({
+        externalResolvers: { DateTime: 'module#DateTimeResolver' },
+        scalarsOverrides: {
+          DateTime: {
+            resolver: 'module#DateTimeResolver',
+          },
+        },
+      })
+    ).toThrowError(
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - Duplicated schema type "DateTime" found in presetConfig.externalResolvers and presetConfig.scalarsOverrides. presetConfig.scalarsOverrides is the preferred way of overriding scalar implementation and type. Remove "DateTime" from presetConfig.externalResolvers.'
+    );
   });
 });
 

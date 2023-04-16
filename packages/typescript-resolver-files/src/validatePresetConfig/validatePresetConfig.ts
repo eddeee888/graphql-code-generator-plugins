@@ -16,12 +16,10 @@ const defaultTypeDefsFilePath = './typeDefs.generated.ts';
 const defaultScalarsModule = 'graphql-scalars';
 
 type ParsedTypesPluginsConfig = Omit<
-  typeScriptPlugin.TypeScriptPluginConfig,
+  typeScriptPlugin.TypeScriptPluginConfig &
+    typeScriptResolversPlugin.TypeScriptResolversPluginConfig,
   'scalars'
-> &
-  Omit<typeScriptResolversPlugin.TypeScriptResolversPluginConfig, 'scalars'> & {
-    scalars: Record<string, string>;
-  };
+>;
 type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
 export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
@@ -37,6 +35,7 @@ export interface ParsedPresetConfig {
   mappersFileExtension: string;
   mappersSuffix: string;
   scalarsModule: string | false;
+  scalarsOverrides: Record<string, { resolver?: string; type?: string }>;
   mode: ConfigMode;
   whitelistedModules: string[];
   blacklistedModules: string[];
@@ -56,6 +55,7 @@ export interface RawPresetConfig {
   mappersFileExtension?: string;
   mappersSuffix?: string;
   scalarsModule?: string | boolean;
+  scalarsOverrides?: Record<string, { resolver?: string; type?: string }>;
   mode?: string;
   whitelistedModules?: string[];
   blacklistedModules?: string[];
@@ -83,6 +83,7 @@ export const validatePresetConfig = ({
   mappersFileExtension = '.mappers.ts',
   mappersSuffix = 'Mapper',
   scalarsModule = 'graphql-scalars',
+  scalarsOverrides = {},
   mode = 'modules',
   whitelistedModules,
   blacklistedModules,
@@ -201,6 +202,17 @@ export const validatePresetConfig = ({
     }
   }
 
+  Object.keys(externalResolvers).forEach((schemaType) => {
+    if (scalarsOverrides[schemaType]) {
+      throw new Error(
+        fmt.error(
+          `Duplicated schema type "${schemaType}" found in presetConfig.externalResolvers and presetConfig.scalarsOverrides. presetConfig.scalarsOverrides is the preferred way of overriding scalar implementation and type. Remove "${schemaType}" from presetConfig.externalResolvers.`,
+          'Validation'
+        )
+      );
+    }
+  });
+
   const validatedTypesPluginsConfig =
     validateTypesPluginsConfig(typesPluginsConfig);
 
@@ -242,6 +254,7 @@ export const validatePresetConfig = ({
     mappersFileExtension,
     mappersSuffix,
     scalarsModule: finalScalarsModule,
+    scalarsOverrides,
     whitelistedModules: whitelistedModules || [],
     blacklistedModules: blacklistedModules || [],
     externalResolvers,
@@ -254,18 +267,16 @@ export const validatePresetConfig = ({
 const validateTypesPluginsConfig = (
   config: NonNullable<RawPresetConfig['typesPluginsConfig']>
 ): ParsedPresetConfig['typesPluginsConfig'] => {
-  const scalarsOption = config.scalars || {};
-
-  if (typeof scalarsOption === 'string') {
+  const { scalars, ...rest } = config;
+  if (scalars) {
     throw new Error(
       fmt.error(
-        'presetConfig.typesPluginsConfig.scalars of type "string" is not supported',
+        'presetConfig.typesPluginsConfig.scalars is not supported. Use presetConfig.scalarsOverrides instead.',
         'Validation'
       )
     );
   }
   return {
-    ...config,
-    scalars: scalarsOption,
+    ...rest,
   };
 };

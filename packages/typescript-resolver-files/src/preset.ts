@@ -49,6 +49,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       typeDefsFilePath,
       typeDefsFileMode,
       scalarsModule,
+      scalarsOverrides,
       mode,
       whitelistedModules,
       blacklistedModules,
@@ -97,6 +98,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       schemaAst,
       sourceMap,
       scalarsModule,
+      scalarsOverrides,
       typeMappersMap,
       whitelistedModules,
       blacklistedModules,
@@ -108,7 +110,6 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       ...typesPluginsConfig,
       scalars: {
         ...defaultScalarTypesMap,
-        ...typesPluginsConfig.scalars,
       },
       mappers: {
         ...defaultTypeMappers,
