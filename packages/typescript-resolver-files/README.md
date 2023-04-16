@@ -226,7 +226,7 @@ If using an module that is not `graphql-scalars`, the module must export resolve
 
 `Record<string, { resolver?: string; type?: string }>` (Default: `{}`)
 
-Overrides of scalars that are found in `scalarsModule`. Can be used to override just the resolver, or type, or both.
+Overrides scalars' resolver implementation, type or both.
 
 Example:
 
