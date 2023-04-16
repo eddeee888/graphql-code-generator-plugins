@@ -9,14 +9,26 @@ generates:
   packages/typescript-resolver-files-e2e/src/test-external-resolvers/modules:
     preset: ./dist/packages/typescript-resolver-files/src/index.js
     presetConfig:
+      scalarsOverrides:
+        DateTimeNamedImport:
+          resolver: ~graphql-scalars#DateTimeNamedResolver
+        DateTimeSameNamedImport:
+          resolver: ~graphql-scalars#DateTimeSameNamedImportResolver
+        BigIntNamedWithAlias:
+          resolver: ~graphql-scalars#BigIntResolver as BigIntNamedWithAliasResolver
+        BigIntSameNamedWithAlias:
+          resolver: ~graphql-scalars#BigIntResolver as BigIntSameNamedWithAliasResolver
+        AbsoluteDefault:
+          resolver: ~graphql-scalars#default as AbsoluteDefaultResolver
+          type: bigint
+        RelativeDefault:
+          resolver: scalars/DefaultScalar.ts#default as RelativeDefaultResolver
+        RelativeNamedImport:
+          resolver: scalars/Scalars.ts#NamedImportResolver
+          type: number
+        RelativeNamedImportWithAlias:
+          resolver: scalars/Scalars.ts#NamedImportResolver as NamedImportWithAliasResolver
+          type: string
       externalResolvers:
-        DateTimeNamedImport: ~graphql-scalars#DateTimeNamedResolver
-        DateTimeSameNamedImport: ~graphql-scalars#DateTimeSameNamedImportResolver
-        BigIntNamedWithAlias: ~graphql-scalars#BigIntResolver as BigIntNamedWithAliasResolver
-        BigIntSameNamedWithAlias: ~graphql-scalars#BigIntResolver as BigIntSameNamedWithAliasResolver
-        AbsoluteDefault: ~graphql-scalars#default as AbsoluteDefaultResolver
-        RelativeDefault: scalars/DefaultScalar.ts#default as RelativeDefaultResolver
-        RelativeNamedImport: scalars/Scalars.ts#NamedImportResolver
-        RelativeNamedImportWithAlias: scalars/Scalars.ts#NamedImportResolver as NamedImportWithAliasResolver
         Query.me: '~@org/meResolver#default as meResolver'
         User: 'otherResolvers#User as UserResolver'

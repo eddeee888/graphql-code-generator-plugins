@@ -24,15 +24,15 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  AbsoluteDefault: any;
+  AbsoluteDefault: bigint;
   BigIntNamedWithAlias: any;
   BigIntSameNamedWithAlias: any;
   DateTime: Date | string;
   DateTimeNamedImport: any;
   DateTimeSameNamedImport: any;
   RelativeDefault: any;
-  RelativeNamedImport: any;
-  RelativeNamedImportWithAlias: any;
+  RelativeNamedImport: number;
+  RelativeNamedImportWithAlias: string;
 };
 
 export type Error = {
