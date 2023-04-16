@@ -23,7 +23,7 @@ const createDefaultFileDetails = (): FileDetails => ({
 });
 
 /**
- * TODO: rename addResolverMainFiles
+ * TODO: rename addResolverMainFile -> addResolverMainFiles
  */
 export const addResolverMainFile = ({
   config: {
