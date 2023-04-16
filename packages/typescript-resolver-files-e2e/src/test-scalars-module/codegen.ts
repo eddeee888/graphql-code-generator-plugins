@@ -12,6 +12,18 @@ const config: CodegenConfig = {
   generates: {
     'packages/typescript-resolver-files-e2e/src/test-scalars-module/schema':
       defineConfig({ scalarsModule: false }),
+    'packages/typescript-resolver-files-e2e/src/test-scalars-module/schema-overrides':
+      defineConfig({
+        scalarsModule: false,
+        scalarsOverrides: {
+          DateTime: {
+            resolver: 'base/scalars/CustomDateTime#DateTime',
+          },
+          SomeRandomScalar: {
+            type: 'bigint',
+          },
+        },
+      }),
   },
 };
 
