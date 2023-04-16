@@ -68,15 +68,13 @@ export const parseGraphQLSchema = async ({
 
       if (isScalarType(namedType)) {
         res.userDefinedSchemaTypeMap.scalar[schemaType] = true;
-        if (scalarsModule) {
-          handleScalarType({
-            scalarResolverMap,
-            schemaType,
-            scalarsModule,
-            scalarsOverrides,
-            result: res,
-          });
-        }
+        handleScalarType({
+          scalarResolverMap,
+          schemaType,
+          scalarsModule,
+          scalarsOverrides,
+          result: res,
+        });
       }
 
       if (!isRootObjectType(schemaType) && isObjectType(namedType)) {
@@ -145,7 +143,7 @@ const handleScalarType = ({
   scalarResolverMap: Record<string, GraphQLScalarType<unknown, unknown>>;
   schemaType: string;
   result: ParsedGraphQLSchemaMeta;
-  scalarsModule: string;
+  scalarsModule: string | false;
   scalarsOverrides: ParsedPresetConfig['scalarsOverrides'];
 }): void => {
   const scalarResolver = scalarResolverMap[schemaType];
