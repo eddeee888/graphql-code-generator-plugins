@@ -53,24 +53,40 @@ const addFiles = (tree: Tree, options: NormalizedSchema) => {
 };
 
 const updateProjectConfig = (tree: Tree, options: NormalizedSchema): void => {
-  const commands: string[] =
+  const e2eRunCommands: string[] =
     options.projectConfig.targets?.['e2e-run']?.options?.['commands'];
-  if (!commands) {
-    throw new Error('Unable to find e2e-run commands in project.json.');
+  if (!e2eRunCommands) {
+    throw new Error('Unable to find `e2e-run` commands in project.json.');
   }
+
   const graphQLCodegenConfig =
     options.projectConfig.targets?.['graphql-codegen']?.configurations;
   if (!graphQLCodegenConfig) {
     throw new Error(
-      'Unable to find graphql-codegen configurations in project.json.'
+      'Unable to find `graphql-codegen` configurations in project.json.'
     );
   }
 
-  commands.push(
+  const e2eCleanupConfig =
+    options.projectConfig.targets?.['e2e-cleanup']?.configurations;
+  if (!e2eCleanupConfig) {
+    throw new Error(
+      'Unable to find `e2e-cleanup` configurations in project.json.'
+    );
+  }
+
+  e2eRunCommands.push(
     `nx graphql-codegen typescript-resolver-files-e2e -c ${options.testFullName} --verbose`
   );
   graphQLCodegenConfig[options.testFullName] = {
     configFile: `packages/typescript-resolver-files-e2e/src/${options.testFullName}/codegen.ts`,
+  };
+  e2eCleanupConfig[options.testFullName] = {
+    commands: [
+      `rimraf -g 'packages/typescript-resolver-files-e2e/src/${options.testFullName}/**/resolvers/'`,
+      `rimraf -g 'packages/typescript-resolver-files-e2e/src/${options.testFullName}/**/*.generated.*'`,
+    ],
+    parallel: false,
   };
 
   updateProjectConfiguration(tree, options.projectName, options.projectConfig);
