@@ -106,4 +106,4 @@ jobs:
         run: yarn install --prefer-offline
 
       - name: e2e
-        run: yarn nx e2e typescript-resolver-files-e2e -c clean-run
+        run: yarn nx e2e typescript-resolver-files-e2e

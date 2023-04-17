@@ -8,31 +8,94 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "nx e2e-run typescript-resolver-files-e2e",
+          "nx e2e-run typescript-resolver-files-e2e -c clean-run",
           "bash packages/typescript-resolver-files-e2e/bin/assert-e2e.sh"
         ],
         "parallel": false
-      },
-      "configurations": {
-        "clean-run": {
-          "commands": [
-            "nx e2e-run typescript-resolver-files-e2e -c clean-run",
-            "bash packages/typescript-resolver-files-e2e/bin/assert-e2e.sh"
-          ],
-          "parallel": false
-        }
       }
     },
     "e2e-cleanup": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-*/**/resolvers/'",
-          "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-*/**/rslvrs/'",
+          "rimraf -g 'packages/typescript-resolver-files-e2e/src/**/resolvers/'",
+          "rimraf -g 'packages/typescript-resolver-files-e2e/src/**/rslvrs/'",
           "rimraf -g 'packages/typescript-resolver-files-e2e/src/**/*.generated.*'",
           "rimraf -g 'packages/typescript-resolver-files-e2e/src/**/*.gen.*'"
         ],
         "parallel": false
+      },
+      "configurations": {
+        "test-merged": {
+          "commands": [
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-merged/**/resolvers/'",
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-merged/**/*.generated.*'"
+          ],
+          "parallel": false
+        },
+        "test-modules": {
+          "commands": [
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-modules/**/resolvers/'",
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-modules/**/*.generated.*'"
+          ],
+          "parallel": false
+        },
+        "test-whitelisted": {
+          "commands": [
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-whitelisted/**/resolvers/'",
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-whitelisted/**/*.generated.*'"
+          ],
+          "parallel": false
+        },
+        "test-external-resolvers": {
+          "commands": [
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-external-resolvers/**/resolvers/'",
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-external-resolvers/**/*.generated.*'"
+          ],
+          "parallel": false
+        },
+        "test-config-overrides": {
+          "commands": [
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-config-overrides/**/rslvrs/'",
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-config-overrides/**/*.gen.*'"
+          ],
+          "parallel": false
+        },
+        "test-mappers": {
+          "commands": [
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-mappers/**/resolvers/'",
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-mappers/**/*.generated.*'"
+          ],
+          "parallel": false
+        },
+        "test-mappers-vs-schema-types": {
+          "commands": [
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-mappers-vs-schema-types/**/resolvers/'",
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-mappers-vs-schema-types/**/*.generated.*'"
+          ],
+          "parallel": false
+        },
+        "test-config-ts": {
+          "commands": [
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-config-ts/**/resolvers/'",
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-config-ts/**/*.generated.*'"
+          ],
+          "parallel": false
+        },
+        "test-modules-typedefs-file-mode": {
+          "commands": [
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-modules-typedefs-file-mode/**/resolvers/'",
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-modules-typedefs-file-mode/**/*.generated.*'"
+          ],
+          "parallel": false
+        },
+        "test-modules-resolver-main-file-mode": {
+          "commands": [
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-modules-resolver-main-file-mode/**/resolvers/'",
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-modules-resolver-main-file-mode/**/*.generated.*'"
+          ],
+          "parallel": false
+        }
       }
     },
     "e2e-run": {
