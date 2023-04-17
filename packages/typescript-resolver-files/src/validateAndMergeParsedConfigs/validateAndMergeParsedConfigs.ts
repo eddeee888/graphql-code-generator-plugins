@@ -2,6 +2,10 @@ import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
 import type { ParsedPresetConfig } from '../validatePresetConfig';
 import { fmt } from '../utils';
 
+const nativeScalarTypes = {
+  ID: 'string | number',
+};
+
 interface MergedConfig {
   userDefinedSchemaTypeMap: ParsedGraphQLSchemaMeta['userDefinedSchemaTypeMap'];
   externalResolvers: ParsedPresetConfig['externalResolvers'];
@@ -45,7 +49,10 @@ export const validateAndMergeParsedConfigs = ({
       ...defaultScalarExternalResolvers,
       ...externalResolvers,
     },
-    scalarTypes: defaultScalarTypesMap,
+    scalarTypes: {
+      ...defaultScalarTypesMap,
+      ...nativeScalarTypes,
+    },
     typeMappers: defaultTypeMappers,
   };
 };
