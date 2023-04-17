@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { StandardFile } from '../generateResolverFiles';
 import type { ParseSourcesResult } from '../parseSources';
-import { isWhitelistedModule } from '../utils';
+import { cwd, isWhitelistedModule } from '../utils';
 import { TypeDefsFileMode } from '../validatePresetConfig';
 import { generateTypeDefsContent } from './generateTypeDefsContent';
 
@@ -49,9 +49,13 @@ export const generateTypeDefsFiles = ({
     }
 
     if (isWhitelisted && typeDefsFileMode === 'modules') {
+      // sourcePath.dir is absolute which does not work well to use as filenames for Windows
+      // example of cases where it does not work:
+      //   - when `prettier` is run in afterAllFileWrite hooks with absolute Windows path
+      const relativeSourcePathDir = path.posix.relative(cwd(), sourcePath.dir);
       appendSDLToFile({
         filesContent,
-        filePath: path.posix.join(sourcePath.dir, typeDefsFilePath),
+        filePath: path.posix.join(relativeSourcePathDir, typeDefsFilePath),
         rawSDL: source.rawSDL,
       });
       return;

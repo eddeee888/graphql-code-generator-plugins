@@ -11,6 +11,11 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "mock_node_modules/*": [
+        "packages/typescript-resolver-files-e2e/mock_node_modules/*"
+      ]
+    }
   }
 }

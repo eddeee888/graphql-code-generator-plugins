@@ -1438,10 +1438,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@eddeee888/nx-graphql-code-generator@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@eddeee888/nx-graphql-code-generator/-/nx-graphql-code-generator-0.1.0.tgz#61d30f6ea9fa24140f3adf5c7f8b90ec014505a0"
-  integrity sha512-PX4yBWcj6pDlPhs+3O3Fa1nqcpKRQH03/qyB/t4nrn4OL10Ommk5Y8u/1cXmJoWHrxGoaBAWZ0SMT5NkTms39A==
+"@eddeee888/nx-graphql-code-generator@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@eddeee888/nx-graphql-code-generator/-/nx-graphql-code-generator-0.1.1.tgz#50473fc7175d4c4efff4e37b0da8763c0109d03b"
+  integrity sha512-k2VrCJSce0MxzYyfe4Y1zS17KsjnaYG3dOrUkAaSd37jCWSMMSxYKMFoGFe3d2AFZDgUSdkqhB0MSa2BEzK5QQ==
 
 "@eslint/eslintrc@^1.2.3":
   version "1.4.1"

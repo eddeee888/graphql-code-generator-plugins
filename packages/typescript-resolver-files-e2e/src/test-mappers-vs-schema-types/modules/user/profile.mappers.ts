@@ -7,9 +7,9 @@ export {
 } from './profileTypes';
 
 // import from fake node_modules
-export { CountryMapper } from '@graphql-code-generator-plugins/typescript-resolver-files-e2e-external/type-at-root';
+export { CountryMapper } from 'mock_node_modules/type-at-root';
 
 // import from node_modules and re-named
-import { Account } from '@graphql-code-generator-plugins/typescript-resolver-files-e2e-external/type-at-root';
+import { Account } from 'mock_node_modules/type-at-root';
 type AccountMapper = Account;
 export { AccountMapper };
