@@ -2,4 +2,4 @@
 '@eddeee888/gcg-typescript-resolver-files': patch
 ---
 
-Change default scalar ID type from string string -> string | number
+Change native ID scalar's type from string -> string | number
