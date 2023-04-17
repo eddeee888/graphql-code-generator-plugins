@@ -9,7 +9,7 @@ Run `nx lint typescript-resolver-files` to execute the lint via [ESLint](https:/
 ## Testing
 
 ```shell
-nx e2e typescript-resolver-files-e2e # Cleans all the generated files, generates files for each test, then assert.
+nx e2e typescript-resolver-files-e2e # Cleans up all generated files, generates files for each test, then assert.
 
 nx e2e-run typescript-resolver-files-e2e -c clean-run # Cleans up all generated files, generates files for each test.
 
