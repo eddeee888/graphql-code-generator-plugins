@@ -45,7 +45,7 @@ nx graphql-codegen typescript-resolver-files-e2e -c <test-name> --verbose
 nx e2e-run typescript-resolver-files-e2e -c clean-run
 
 # Run tests and assert. This is run in CI/CD.
-nx e2e typescript-resolver-files-e2e -c clean-run
+nx e2e typescript-resolver-files-e2e
 ```
 
 ## TODOs
