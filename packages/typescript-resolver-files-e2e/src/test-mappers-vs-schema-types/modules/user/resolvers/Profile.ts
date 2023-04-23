@@ -4,4 +4,8 @@ export const Profile: ProfileResolvers = {
   user: () => {
     /* Profile.user resolver is required because Profile.user exists but ProfileMapper.user does not */
   },
+  id: ({ id }) => {
+    /* Profile.id resolver is required because Profile.id and ProfileMapper.id are not compatible */
+    return id;
+  },
 };

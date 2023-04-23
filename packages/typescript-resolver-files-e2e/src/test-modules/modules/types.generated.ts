@@ -22,7 +22,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
 };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string | number;
+  ID: string;
   String: string;
   Boolean: boolean;
   Int: number;

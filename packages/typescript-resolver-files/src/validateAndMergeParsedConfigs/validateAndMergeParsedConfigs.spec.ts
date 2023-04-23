@@ -36,7 +36,6 @@ describe('validateAndMergeParsedConfigs', () => {
       },
       scalarTypes: {
         DateTime: 'string',
-        ID: 'string | number',
       },
       typeMappers: {
         User: './user/schema.mappers#UserMapper',
