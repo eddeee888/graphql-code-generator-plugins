@@ -10,4 +10,8 @@ export const User: UserResolvers = {
   fullName: () => {
     /* User.fullName resolver is required because User.fullName exists but UserMapper.fullName does not */
   },
+  id: ({ id }) => {
+    /* User.id resolver is required because User.id and UserMapper.id are not compatible */
+    return id;
+  },
 };

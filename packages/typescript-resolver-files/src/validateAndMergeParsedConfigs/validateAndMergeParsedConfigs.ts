@@ -2,9 +2,20 @@ import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
 import type { ParsedPresetConfig } from '../validatePresetConfig';
 import { fmt } from '../utils';
 
-const nativeScalarTypes = {
-  ID: 'string | number',
-};
+// TODO: This is a long-standing issue in GraphQL Codegen: https://github.com/dotansimha/graphql-code-generator/issues/2588
+// We cannot simply set scalar types for ID like this...
+// Summary:
+//   - client inputs ID: string, in resolvers' arg: string
+//   - client inputs ID: number, in resolvers' arg: string
+//
+//   - resolvers returns ID: string | number
+//     - Note: unless using mappers, then must follow mappers' type
+//
+//   - GraphQL engine handles ID: string | number
+//   - client receives ID: string
+// const nativeScalarTypes = {
+//   ID: 'string | number',
+// };
 
 interface MergedConfig {
   userDefinedSchemaTypeMap: ParsedGraphQLSchemaMeta['userDefinedSchemaTypeMap'];
@@ -50,7 +61,7 @@ export const validateAndMergeParsedConfigs = ({
       ...externalResolvers,
     },
     scalarTypes: {
-      ...nativeScalarTypes,
+      // ...nativeScalarTypes,
       ...defaultScalarTypesMap,
     },
     typeMappers: defaultTypeMappers,
