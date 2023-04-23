@@ -50,8 +50,8 @@ export const validateAndMergeParsedConfigs = ({
       ...externalResolvers,
     },
     scalarTypes: {
-      ...defaultScalarTypesMap,
       ...nativeScalarTypes,
+      ...defaultScalarTypesMap,
     },
     typeMappers: defaultTypeMappers,
   };

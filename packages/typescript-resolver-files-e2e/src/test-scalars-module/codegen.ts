@@ -19,6 +19,12 @@ const config: CodegenConfig = {
           DateTime: {
             resolver: 'base/scalars/CustomDateTime#DateTime',
           },
+          ID: {
+            type: 'number',
+          },
+          Boolean: {
+            type: 'true | false',
+          },
           SomeRandomScalar: {
             type: 'bigint',
           },

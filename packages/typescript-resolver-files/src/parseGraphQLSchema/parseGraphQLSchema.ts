@@ -3,6 +3,7 @@ import {
   isObjectType,
   isScalarType,
   GraphQLScalarType,
+  isSpecifiedScalarType,
 } from 'graphql';
 import type { ParseSourcesResult } from '../parseSources';
 import type { TypeMappersMap } from '../parseTypeMappers';
@@ -53,6 +54,9 @@ export const parseGraphQLSchema = async ({
   return Object.entries(schemaAst.getTypeMap()).reduce<ParsedGraphQLSchemaMeta>(
     (res, [schemaType, namedType]) => {
       if (isNativeNamedType(namedType)) {
+        if (isSpecifiedScalarType(namedType)) {
+          handleNativeScalarType({ schemaType, result: res, scalarsOverrides });
+        }
         return res;
       }
 
@@ -172,4 +176,21 @@ const getScalarResolverMapFromModule = async (
   }
 
   return module.resolvers;
+};
+
+const handleNativeScalarType = ({
+  schemaType,
+  result,
+  scalarsOverrides,
+}: {
+  schemaType: string;
+  result: ParsedGraphQLSchemaMeta;
+  scalarsOverrides: ParsedPresetConfig['scalarsOverrides'];
+}): void => {
+  const override = scalarsOverrides[schemaType];
+  // Note: only override the type i.e. same functionality as `typescript` plugin's scalars
+  // I've never seen someone overriding native scalar's implementation so it's probably not a thing.
+  if (override && override.type) {
+    result.pluginsConfig.defaultScalarTypesMap[schemaType] = override.type;
+  }
 };
