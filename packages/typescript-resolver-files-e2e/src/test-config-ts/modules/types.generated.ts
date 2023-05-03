@@ -23,7 +23,7 @@ export type Scalars = {
 };
 
 export type Cat = {
-  __typename: 'Cat';
+  __typename?: 'Cat';
   age: Scalars['Int'];
   fullName: Scalars['String'];
   id: Scalars['ID'];
@@ -33,7 +33,7 @@ export type Cat = {
 export type CatChipped = 'NO' | 'YES';
 
 export type Query = {
-  __typename: 'Query';
+  __typename?: 'Query';
   cat?: Maybe<Cat>;
 };
 
