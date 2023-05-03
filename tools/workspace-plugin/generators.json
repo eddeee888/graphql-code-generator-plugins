@@ -1,0 +1,9 @@
+{
+  "generators": {
+    "typescript-resolver-files-add-e2e-test": {
+      "implementation": "./src/generators/typescript-resolver-files-add-e2e-test",
+      "schema": "./src/generators/typescript-resolver-files-add-e2e-test/schema.json",
+      "description": "Generator typescript-resolver-files-add-e2e-test"
+    }
+  }
+}
