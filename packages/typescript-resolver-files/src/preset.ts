@@ -105,7 +105,10 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     // typescript and typescript-resolvers plugins config
     const resolverTypesConfig = {
       enumsAsTypes: true,
-      nonOptionalTypename: true,
+      resolversNonOptionalTypename: {
+        unionMember: true,
+        interfaceImplementingType: true,
+      },
       ...typesPluginsConfig,
       scalars: {
         ...mergedConfig.scalarTypes,
