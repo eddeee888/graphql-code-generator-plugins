@@ -385,7 +385,7 @@ export type ErrorResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Error'] = ResolversParentTypes['Error']
 > = {
-  __resolveType: TypeResolveFn<'StandardError', ParentType, ContextType>;
+  __resolveType?: TypeResolveFn<'StandardError', ParentType, ContextType>;
   error?: Resolver<ResolversTypes['ErrorType'], ParentType, ContextType>;
 };
 
@@ -487,7 +487,7 @@ export type TopicByIdPayloadResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['TopicByIdPayload'] = ResolversParentTypes['TopicByIdPayload']
 > = {
-  __resolveType: TypeResolveFn<
+  __resolveType?: TypeResolveFn<
     'StandardError' | 'TopicByIdResult',
     ParentType,
     ContextType
@@ -506,7 +506,7 @@ export type TopicCreatePayloadResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['TopicCreatePayload'] = ResolversParentTypes['TopicCreatePayload']
 > = {
-  __resolveType: TypeResolveFn<
+  __resolveType?: TypeResolveFn<
     'StandardError' | 'TopicCreateResult',
     ParentType,
     ContextType
@@ -525,7 +525,7 @@ export type TopicEditPayloadResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['TopicEditPayload'] = ResolversParentTypes['TopicEditPayload']
 > = {
-  __resolveType: TypeResolveFn<
+  __resolveType?: TypeResolveFn<
     'StandardError' | 'TopicEditResult',
     ParentType,
     ContextType
@@ -544,7 +544,7 @@ export type TopicsCreatedByUserPayloadResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['TopicsCreatedByUserPayload'] = ResolversParentTypes['TopicsCreatedByUserPayload']
 > = {
-  __resolveType: TypeResolveFn<
+  __resolveType?: TypeResolveFn<
     'StandardError' | 'TopicsCreatedByUserResult',
     ParentType,
     ContextType
@@ -594,7 +594,7 @@ export type UserPayloadResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['UserPayload'] = ResolversParentTypes['UserPayload']
 > = {
-  __resolveType: TypeResolveFn<
+  __resolveType?: TypeResolveFn<
     'StandardError' | 'UserResult',
     ParentType,
     ContextType
