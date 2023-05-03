@@ -17,6 +17,9 @@
     "paths": {
       "@eddeee888/gcg-typescript-resolver-files": [
         "packages/typescript-resolver-files/src/index.ts"
+      ],
+      "@graphql-code-generator-plugins/workspace-plugin": [
+        "tools/workspace-plugin/src/index.ts"
       ]
     }
   },

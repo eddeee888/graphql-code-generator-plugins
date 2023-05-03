@@ -40,8 +40,8 @@ jobs:
       - name: Check affected projects
         id: affected
         run: |
-          echo "::set-output name=typescript-resolver-files::$(./tools/ci/bin/check-affected.sh libs typescript-resolver-files origin/master)"
-          echo "::set-output name=typescript-resolver-files-e2e::$(./tools/ci/bin/check-affected.sh libs typescript-resolver-files-e2e origin/master)"
+          echo "::set-output name=typescript-resolver-files::$(./tools/ci/bin/check-affected.sh lib typescript-resolver-files origin/master)"
+          echo "::set-output name=typescript-resolver-files-e2e::$(./tools/ci/bin/check-affected.sh lib typescript-resolver-files-e2e origin/master)"
 
   typescript-resolver-files:
     strategy:
