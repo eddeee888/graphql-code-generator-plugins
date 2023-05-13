@@ -531,7 +531,7 @@ export type TopicByIdPayloadResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['TopicByIdPayload'] = ResolversParentTypes['TopicByIdPayload']
 > = {
-  __resolveType: TypeResolveFn<
+  __resolveType?: TypeResolveFn<
     'Error' | 'TopicByIdResult',
     ParentType,
     ContextType
@@ -550,7 +550,7 @@ export type TopicCreatePayloadResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['TopicCreatePayload'] = ResolversParentTypes['TopicCreatePayload']
 > = {
-  __resolveType: TypeResolveFn<
+  __resolveType?: TypeResolveFn<
     'Error' | 'TopicCreateResult',
     ParentType,
     ContextType
@@ -569,7 +569,7 @@ export type TopicEditPayloadResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['TopicEditPayload'] = ResolversParentTypes['TopicEditPayload']
 > = {
-  __resolveType: TypeResolveFn<
+  __resolveType?: TypeResolveFn<
     'Error' | 'TopicEditResult',
     ParentType,
     ContextType
@@ -588,7 +588,7 @@ export type TopicsCreatedByUserPayloadResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['TopicsCreatedByUserPayload'] = ResolversParentTypes['TopicsCreatedByUserPayload']
 > = {
-  __resolveType: TypeResolveFn<
+  __resolveType?: TypeResolveFn<
     'Error' | 'TopicsCreatedByUserResult',
     ParentType,
     ContextType
@@ -628,7 +628,11 @@ export type UserPayloadResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['UserPayload'] = ResolversParentTypes['UserPayload']
 > = {
-  __resolveType: TypeResolveFn<'Error' | 'UserResult', ParentType, ContextType>;
+  __resolveType?: TypeResolveFn<
+    'Error' | 'UserResult',
+    ParentType,
+    ContextType
+  >;
 };
 
 export type UserResultResolvers<
