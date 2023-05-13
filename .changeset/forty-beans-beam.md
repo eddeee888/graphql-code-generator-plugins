@@ -4,7 +4,7 @@
 
 Add scalarsOverrides config option
 
-`Record<string, { resolver?: string; type?: string }>` (Default: `{}`)
+`Record<string, { resolver?: string; type?: string | { input: string; output: string } }>` (Default: `{}`)
 
 Overrides scalars' resolver implementation, type or both.
 

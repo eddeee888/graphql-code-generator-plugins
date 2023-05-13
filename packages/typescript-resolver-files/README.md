@@ -224,7 +224,7 @@ If using an module that is not `graphql-scalars`, the module must export resolve
 
 ### scalarsOverrides
 
-`Record<string, { resolver?: string; type?: string }>` (Default: `{}`)
+`Record<string, { resolver?: string; type?: string | { input: string; output: string } }>` (Default: `{}`)
 
 Overrides scalars' resolver implementation, type or both.
 
@@ -244,7 +244,10 @@ Example:
         },
         BigInt: {
           resolver: '@other/scalars#BigIntResolver',
-          type: 'bigint'
+          type: {
+            input: 'bigint',
+            output: 'number | string'
+          }
         }
       }
     })
