@@ -1608,23 +1608,7 @@
     auto-bind "~4.0.0"
     tslib "~2.5.0"
 
-"@graphql-codegen/visitor-plugin-common@3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-3.1.0.tgz#93172d64440b103edfe8b63ea3ac8842a5277a54"
-  integrity sha512-S4BO/xP38eoEDULwbem5QeV7yWA8DpbcSGkvwrnMfVQW08nL6uHliCSV8hiuAi7Mhx7snVir4Iumk8uIDRVu6Q==
-  dependencies:
-    "@graphql-codegen/plugin-helpers" "^4.2.0"
-    "@graphql-tools/optimize" "^1.3.0"
-    "@graphql-tools/relay-operation-optimizer" "^6.5.0"
-    "@graphql-tools/utils" "^9.0.0"
-    auto-bind "~4.0.0"
-    change-case-all "1.0.15"
-    dependency-graph "^0.11.0"
-    graphql-tag "^2.11.0"
-    parse-filepath "^1.0.2"
-    tslib "~2.5.0"
-
-"@graphql-codegen/visitor-plugin-common@3.2.0-alpha-20230513064348-5e1a7aec9":
+"@graphql-codegen/visitor-plugin-common@3.1.0", "@graphql-codegen/visitor-plugin-common@3.2.0-alpha-20230513064348-5e1a7aec9":
   version "3.2.0-alpha-20230513064348-5e1a7aec9"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-3.2.0-alpha-20230513064348-5e1a7aec9.tgz#d19ea0cd5832d7a102d31a089b69e63e40b35d10"
   integrity sha512-JrjsBcLADpkmiGpMNaBvOrDDrK909gj+ywQfp2ibak2qCB0s7MaudPA+rs0/O4wfkqgr15G1wilIrzXhVrxswQ==

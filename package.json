@@ -51,5 +51,8 @@
   },
   "workspaces": [
     "packages/**"
-  ]
+  ],
+  "resolutions": {
+    "@graphql-codegen/visitor-plugin-common": "3.2.0-alpha-20230513064348-5e1a7aec9"
+  }
 }
