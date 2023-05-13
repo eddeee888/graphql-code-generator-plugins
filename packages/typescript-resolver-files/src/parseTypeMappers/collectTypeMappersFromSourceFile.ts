@@ -16,11 +16,13 @@ export const collectTypeMappersFromSourceFile = (
     typeMappersSuffix,
     resolverTypesPath,
     shouldCollectPropertyMap,
+    emitLegacyCommonJSImports
   }: {
     typeMappersSourceFile: SourceFile;
     typeMappersSuffix: string;
     resolverTypesPath: string;
     shouldCollectPropertyMap: boolean;
+    emitLegacyCommonJSImports:boolean;
   },
   result: TypeMappersMap
 ): void => {
@@ -38,6 +40,7 @@ export const collectTypeMappersFromSourceFile = (
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
         shouldCollectPropertyMap,
+        emitLegacyCommonJSImports
       },
       result
     );
@@ -59,6 +62,7 @@ export const collectTypeMappersFromSourceFile = (
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
         shouldCollectPropertyMap,
+        emitLegacyCommonJSImports
       },
       result
     );
@@ -85,6 +89,7 @@ export const collectTypeMappersFromSourceFile = (
           typeMappersFilePath: typeMappersSourceFile.getFilePath(),
           resolverTypesPath,
           shouldCollectPropertyMap,
+          emitLegacyCommonJSImports
         },
         result
       );
@@ -100,6 +105,7 @@ const addTypeMapperDetailsIfValid = (
     typeMappersFilePath,
     resolverTypesPath,
     shouldCollectPropertyMap,
+    emitLegacyCommonJSImports,
   }: {
     declarationNode: InterfaceDeclaration | TypeAliasDeclaration | null;
     identifierNode: Identifier;
@@ -107,6 +113,7 @@ const addTypeMapperDetailsIfValid = (
     typeMappersFilePath: string;
     resolverTypesPath: string;
     shouldCollectPropertyMap: boolean;
+    emitLegacyCommonJSImports: boolean;
   },
   result: TypeMappersMap
 ): void => {
@@ -141,7 +148,8 @@ const addTypeMapperDetailsIfValid = (
     )
   );
 
-  const configImportPath = `${relativeImportPathFromResolverTypesToSourceFile}#${identifierName}`;
+  const fileExtension = emitLegacyCommonJSImports ? '' : '.js';
+  const configImportPath = `${relativeImportPathFromResolverTypesToSourceFile}${fileExtension}#${identifierName}`;
 
   if (result[schemaType]) {
     throw new Error(

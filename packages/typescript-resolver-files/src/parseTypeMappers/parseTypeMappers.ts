@@ -11,6 +11,7 @@ export interface ParseTypeMappersParams {
   typeMappersSuffix: string;
   tsMorphProject: Project;
   shouldCollectPropertyMap: boolean;
+  emitLegacyCommonJSImports: boolean;
 }
 
 export interface TypeMapperDetails {
@@ -29,6 +30,7 @@ export const parseTypeMappers = ({
   typeMappersSuffix,
   tsMorphProject,
   shouldCollectPropertyMap,
+  emitLegacyCommonJSImports
 }: ParseTypeMappersParams): TypeMappersMap => {
   const result = Object.entries(sourceMap).reduce<TypeMappersMap>(
     (res, [_, { sourcePath }]) => {
@@ -50,6 +52,7 @@ export const parseTypeMappers = ({
           typeMappersSuffix,
           resolverTypesPath,
           shouldCollectPropertyMap,
+          emitLegacyCommonJSImports
         },
         res
       );
