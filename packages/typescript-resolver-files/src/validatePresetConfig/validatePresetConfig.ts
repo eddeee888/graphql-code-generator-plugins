@@ -60,7 +60,10 @@ export interface RawPresetConfig {
   mappersFileExtension?: string;
   mappersSuffix?: string;
   scalarsModule?: string | boolean;
-  scalarsOverrides?: Record<string, { resolver?: string; type?: string }>;
+  scalarsOverrides?: Record<
+    string,
+    { resolver?: string; type?: ScalarsOverridesType }
+  >;
   mode?: string;
   whitelistedModules?: string[];
   blacklistedModules?: string[];
