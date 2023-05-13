@@ -19,20 +19,20 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
 };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  AbsoluteDefault: bigint;
-  BigIntNamedWithAlias: any;
-  BigIntSameNamedWithAlias: any;
-  DateTime: Date | string;
-  DateTimeNamedImport: any;
-  DateTimeSameNamedImport: any;
-  RelativeDefault: any;
-  RelativeNamedImport: number;
-  RelativeNamedImportWithAlias: string;
+  ID: { input: string; output: string | number };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  AbsoluteDefault: { input: bigint; output: bigint };
+  BigIntNamedWithAlias: { input: any; output: any };
+  BigIntSameNamedWithAlias: { input: any; output: any };
+  DateTime: { input: Date | string; output: Date | string };
+  DateTimeNamedImport: { input: any; output: any };
+  DateTimeSameNamedImport: { input: any; output: any };
+  RelativeDefault: { input: any; output: any };
+  RelativeNamedImport: { input: number; output: number };
+  RelativeNamedImportWithAlias: { input: string; output: string };
 };
 
 export type Error = {
@@ -60,20 +60,20 @@ export type MutationTopicEditArgs = {
 };
 
 export type PaginationInput = {
-  page?: InputMaybe<Scalars['Int']>;
-  recordsPerPage?: InputMaybe<Scalars['Int']>;
+  page?: InputMaybe<Scalars['Int']['output']>;
+  recordsPerPage?: InputMaybe<Scalars['Int']['output']>;
 };
 
 export type PaginationResult = {
   __typename?: 'PaginationResult';
-  currentPage: Scalars['Int'];
-  recordsPerPage: Scalars['Int'];
-  totalPageCount: Scalars['Int'];
+  currentPage: Scalars['Int']['output'];
+  recordsPerPage: Scalars['Int']['output'];
+  totalPageCount: Scalars['Int']['output'];
 };
 
 export type Profile = {
   __typename?: 'Profile';
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
   user: User;
 };
 
@@ -86,7 +86,7 @@ export type Query = {
 };
 
 export type QueryTopicByIdArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 export type QueryTopicsCreatedByUserArgs = {
@@ -94,7 +94,7 @@ export type QueryTopicsCreatedByUserArgs = {
 };
 
 export type QueryUserByAccountNameArgs = {
-  accountName: Scalars['String'];
+  accountName: Scalars['String']['input'];
 };
 
 export type StandardError = Error & {
@@ -109,11 +109,11 @@ export type Subscription = {
 
 export type Topic = {
   __typename?: 'Topic';
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
   creator: User;
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  url?: Maybe<Scalars['String']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 export type TopicByIdPayload = StandardError | TopicByIdResult;
@@ -124,8 +124,8 @@ export type TopicByIdResult = {
 };
 
 export type TopicCreateInput = {
-  name: Scalars['String'];
-  url?: InputMaybe<Scalars['String']>;
+  name: Scalars['String']['output'];
+  url?: InputMaybe<Scalars['String']['output']>;
 };
 
 export type TopicCreatePayload = StandardError | TopicCreateResult;
@@ -136,9 +136,9 @@ export type TopicCreateResult = {
 };
 
 export type TopicEditInput = {
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  url?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  url?: InputMaybe<Scalars['String']['output']>;
 };
 
 export type TopicEditPayload = StandardError | TopicEditResult;
@@ -149,7 +149,7 @@ export type TopicEditResult = {
 };
 
 export type TopicsCreatedByUserInput = {
-  userId: Scalars['ID'];
+  userId: Scalars['ID']['output'];
 };
 
 export type TopicsCreatedByUserPayload =
@@ -163,14 +163,14 @@ export type TopicsCreatedByUserResult = {
 
 export type User = {
   __typename?: 'User';
-  accountGitHub?: Maybe<Scalars['String']>;
-  accountLinkedIn?: Maybe<Scalars['String']>;
-  accountName: Scalars['String'];
-  accountTwitter?: Maybe<Scalars['String']>;
-  accountWebsite?: Maybe<Scalars['String']>;
-  avatar?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
+  accountGitHub?: Maybe<Scalars['String']['output']>;
+  accountLinkedIn?: Maybe<Scalars['String']['output']>;
+  accountName: Scalars['String']['output'];
+  accountTwitter?: Maybe<Scalars['String']['output']>;
+  accountWebsite?: Maybe<Scalars['String']['output']>;
+  avatar?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  name?: Maybe<Scalars['String']['output']>;
 };
 
 export type UserPayload = StandardError | UserResult;
@@ -311,30 +311,36 @@ export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  AbsoluteDefault: ResolverTypeWrapper<Scalars['AbsoluteDefault']>;
-  BigIntNamedWithAlias: ResolverTypeWrapper<Scalars['BigIntNamedWithAlias']>;
-  BigIntSameNamedWithAlias: ResolverTypeWrapper<
-    Scalars['BigIntSameNamedWithAlias']
+  AbsoluteDefault: ResolverTypeWrapper<Scalars['AbsoluteDefault']['output']>;
+  BigIntNamedWithAlias: ResolverTypeWrapper<
+    Scalars['BigIntNamedWithAlias']['output']
   >;
-  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
-  DateTimeNamedImport: ResolverTypeWrapper<Scalars['DateTimeNamedImport']>;
+  BigIntSameNamedWithAlias: ResolverTypeWrapper<
+    Scalars['BigIntSameNamedWithAlias']['output']
+  >;
+  DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  DateTimeNamedImport: ResolverTypeWrapper<
+    Scalars['DateTimeNamedImport']['output']
+  >;
   DateTimeSameNamedImport: ResolverTypeWrapper<
-    Scalars['DateTimeSameNamedImport']
+    Scalars['DateTimeSameNamedImport']['output']
   >;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Error']>;
   ErrorType: ErrorType;
   Mutation: ResolverTypeWrapper<{}>;
   PaginationInput: PaginationInput;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PaginationResult: ResolverTypeWrapper<PaginationResult>;
   Profile: ResolverTypeWrapper<Profile>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Query: ResolverTypeWrapper<{}>;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  RelativeDefault: ResolverTypeWrapper<Scalars['RelativeDefault']>;
-  RelativeNamedImport: ResolverTypeWrapper<Scalars['RelativeNamedImport']>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
+  RelativeDefault: ResolverTypeWrapper<Scalars['RelativeDefault']['output']>;
+  RelativeNamedImport: ResolverTypeWrapper<
+    Scalars['RelativeNamedImport']['output']
+  >;
   RelativeNamedImportWithAlias: ResolverTypeWrapper<
-    Scalars['RelativeNamedImportWithAlias']
+    Scalars['RelativeNamedImportWithAlias']['output']
   >;
   StandardError: ResolverTypeWrapper<StandardError>;
   Subscription: ResolverTypeWrapper<{}>;
@@ -363,29 +369,29 @@ export type ResolversTypes = {
     ResolversUnionTypes<ResolversTypes>['UserPayload']
   >;
   UserResult: ResolverTypeWrapper<UserResult>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  AbsoluteDefault: Scalars['AbsoluteDefault'];
-  BigIntNamedWithAlias: Scalars['BigIntNamedWithAlias'];
-  BigIntSameNamedWithAlias: Scalars['BigIntSameNamedWithAlias'];
-  DateTime: Scalars['DateTime'];
-  DateTimeNamedImport: Scalars['DateTimeNamedImport'];
-  DateTimeSameNamedImport: Scalars['DateTimeSameNamedImport'];
+  AbsoluteDefault: Scalars['AbsoluteDefault']['output'];
+  BigIntNamedWithAlias: Scalars['BigIntNamedWithAlias']['output'];
+  BigIntSameNamedWithAlias: Scalars['BigIntSameNamedWithAlias']['output'];
+  DateTime: Scalars['DateTime']['output'];
+  DateTimeNamedImport: Scalars['DateTimeNamedImport']['output'];
+  DateTimeSameNamedImport: Scalars['DateTimeSameNamedImport']['output'];
   Error: ResolversInterfaceTypes<ResolversParentTypes>['Error'];
   Mutation: {};
   PaginationInput: PaginationInput;
-  Int: Scalars['Int'];
+  Int: Scalars['Int']['output'];
   PaginationResult: PaginationResult;
   Profile: Profile;
-  ID: Scalars['ID'];
+  ID: Scalars['ID']['output'];
   Query: {};
-  String: Scalars['String'];
-  RelativeDefault: Scalars['RelativeDefault'];
-  RelativeNamedImport: Scalars['RelativeNamedImport'];
-  RelativeNamedImportWithAlias: Scalars['RelativeNamedImportWithAlias'];
+  String: Scalars['String']['output'];
+  RelativeDefault: Scalars['RelativeDefault']['output'];
+  RelativeNamedImport: Scalars['RelativeNamedImport']['output'];
+  RelativeNamedImportWithAlias: Scalars['RelativeNamedImportWithAlias']['output'];
   StandardError: StandardError;
   Subscription: {};
   Topic: Topic;
@@ -403,7 +409,7 @@ export type ResolversParentTypes = {
   User: User;
   UserPayload: ResolversUnionTypes<ResolversParentTypes>['UserPayload'];
   UserResult: UserResult;
-  Boolean: Scalars['Boolean'];
+  Boolean: Scalars['Boolean']['output'];
 };
 
 export interface AbsoluteDefaultScalarConfig

@@ -27,29 +27,29 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
 };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  DateTime: Date | string;
+  ID: { input: string; output: string | number };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  DateTime: { input: Date | string; output: Date | string };
 };
 
 export type Account = {
   __typename?: 'Account';
-  id: Scalars['ID'];
-  isSubscribed: Scalars['Boolean'];
+  id: Scalars['ID']['output'];
+  isSubscribed: Scalars['Boolean']['output'];
 };
 
 export type Country = {
   __typename?: 'Country';
-  id: Scalars['ID'];
-  name: Scalars['String'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type Error = {
   __typename?: 'Error';
-  message: Scalars['String'];
+  message: Scalars['String']['output'];
 };
 
 export type Mutation = {
@@ -68,15 +68,15 @@ export type MutationTopicEditArgs = {
 
 export type Profile = {
   __typename?: 'Profile';
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
   user: User;
 };
 
 export type ProfileMeta = {
   __typename?: 'ProfileMeta';
-  id: Scalars['ID'];
-  isCompleted: Scalars['Boolean'];
-  score: Scalars['String'];
+  id: Scalars['ID']['output'];
+  isCompleted: Scalars['Boolean']['output'];
+  score: Scalars['String']['output'];
 };
 
 export type Query = {
@@ -89,7 +89,7 @@ export type Query = {
 };
 
 export type QueryTopicByIdArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 export type QueryTopicsCreatedByUserArgs = {
@@ -97,7 +97,7 @@ export type QueryTopicsCreatedByUserArgs = {
 };
 
 export type QueryUserByAccountNameArgs = {
-  accountName: Scalars['String'];
+  accountName: Scalars['String']['input'];
 };
 
 export type Subscription = {
@@ -107,11 +107,11 @@ export type Subscription = {
 
 export type Topic = {
   __typename?: 'Topic';
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
   creator: User;
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  url?: Maybe<Scalars['String']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 export type TopicByIdPayload = Error | TopicByIdResult;
@@ -122,8 +122,8 @@ export type TopicByIdResult = {
 };
 
 export type TopicCreateInput = {
-  name: Scalars['String'];
-  url?: InputMaybe<Scalars['String']>;
+  name: Scalars['String']['output'];
+  url?: InputMaybe<Scalars['String']['output']>;
 };
 
 export type TopicCreatePayload = Error | TopicCreateResult;
@@ -134,9 +134,9 @@ export type TopicCreateResult = {
 };
 
 export type TopicEditInput = {
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  url?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  url?: InputMaybe<Scalars['String']['output']>;
 };
 
 export type TopicEditPayload = Error | TopicEditResult;
@@ -147,7 +147,7 @@ export type TopicEditResult = {
 };
 
 export type TopicsCreatedByUserInput = {
-  userId: Scalars['ID'];
+  userId: Scalars['ID']['output'];
 };
 
 export type TopicsCreatedByUserPayload = Error | TopicsCreatedByUserResult;
@@ -159,11 +159,11 @@ export type TopicsCreatedByUserResult = {
 
 export type User = {
   __typename?: 'User';
-  accountGitHub?: Maybe<Scalars['String']>;
-  accountGoogle?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
-  fullName: Scalars['String'];
-  id: Scalars['ID'];
+  accountGitHub?: Maybe<Scalars['String']['output']>;
+  accountGoogle?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  fullName: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
   role: UserRole;
 };
 
@@ -313,11 +313,11 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Account: ResolverTypeWrapper<AccountMapper>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Country: ResolverTypeWrapper<CountryMapper>;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
+  DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Error: ResolverTypeWrapper<Error>;
   Mutation: ResolverTypeWrapper<{}>;
   Profile: ResolverTypeWrapper<ProfileMapper>;
@@ -371,11 +371,11 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Account: AccountMapper;
-  ID: Scalars['ID'];
-  Boolean: Scalars['Boolean'];
+  ID: Scalars['ID']['output'];
+  Boolean: Scalars['Boolean']['output'];
   Country: CountryMapper;
-  String: Scalars['String'];
-  DateTime: Scalars['DateTime'];
+  String: Scalars['String']['output'];
+  DateTime: Scalars['DateTime']['output'];
   Error: Error;
   Mutation: {};
   Profile: ProfileMapper;
