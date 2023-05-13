@@ -28,6 +28,7 @@ export type Scalars = {
   BigInt: { input: number; output: number };
   DateTime: { input: Date | string; output: Date | string };
   SomeOtherScalars: { input: any; output: any };
+  WithInputOutput: { input: Date; output: string };
 };
 
 export enum Currency {
@@ -353,6 +354,7 @@ export type ResolversTypes = {
     ResolversUnionTypes<ResolversTypes>['UserPayload']
   >;
   UserResult: ResolverTypeWrapper<UserResult>;
+  WithInputOutput: ResolverTypeWrapper<Scalars['WithInputOutput']['output']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
@@ -387,6 +389,7 @@ export type ResolversParentTypes = {
   User: User;
   UserPayload: ResolversUnionTypes<ResolversParentTypes>['UserPayload'];
   UserResult: UserResult;
+  WithInputOutput: Scalars['WithInputOutput']['output'];
   Boolean: Scalars['Boolean']['output'];
 };
 
@@ -633,6 +636,11 @@ export type UserResultResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export interface WithInputOutputScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['WithInputOutput'], any> {
+  name: 'WithInputOutput';
+}
+
 export type Resolvers<ContextType = ResolverContext> = {
   BigInt?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
@@ -656,4 +664,5 @@ export type Resolvers<ContextType = ResolverContext> = {
   User?: UserResolvers<ContextType>;
   UserPayload?: UserPayloadResolvers<ContextType>;
   UserResult?: UserResultResolvers<ContextType>;
+  WithInputOutput?: GraphQLScalarType;
 };

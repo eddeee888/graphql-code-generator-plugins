@@ -23,6 +23,7 @@ import { TopicsCreatedByUserResult } from './topic/rslvrs/TopicsCreatedByUserRes
 import { User } from './user/rslvrs/User';
 import { UserPayload } from './user/rslvrs/UserPayload';
 import { UserResult } from './user/rslvrs/UserResult';
+import { WithInputOutput } from './base/rslvrs/WithInputOutput';
 import CustomBigIntResolver from './base/CustomBigIntResolver';
 import { DateTimeResolver } from 'graphql-scalars';
 export const resolvers: Resolvers = {
@@ -53,6 +54,7 @@ export const resolvers: Resolvers = {
   User: User,
   UserPayload: UserPayload,
   UserResult: UserResult,
+  WithInputOutput: WithInputOutput,
   BigInt: CustomBigIntResolver,
   DateTime: DateTimeResolver,
 };
