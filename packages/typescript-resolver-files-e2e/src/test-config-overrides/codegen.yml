@@ -17,6 +17,10 @@ generates:
         BigInt:
           resolver: base/CustomBigIntResolver#default as CustomBigIntResolver # graphql-scalars' default is `~graphql-scalars#BigIntResolver`
           type: number # graphql-scalars' default is `bigint`
+        WithInputOutput:
+          type:
+            input: Date
+            output: string
       typesPluginsConfig:
         enumsAsTypes: false
         contextType: ./customTypes#ResolverContext

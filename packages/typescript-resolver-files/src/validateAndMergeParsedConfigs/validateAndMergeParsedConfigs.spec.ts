@@ -35,6 +35,7 @@ describe('validateAndMergeParsedConfigs', () => {
         DateTime: '~graphql-scalars#DateTimeResolver',
       },
       scalarTypes: {
+        ID: { input: 'string', output: 'string | number' },
         DateTime: 'string',
       },
       typeMappers: {

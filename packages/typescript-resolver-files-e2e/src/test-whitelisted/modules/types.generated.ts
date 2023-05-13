@@ -19,13 +19,13 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
 };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  Date: any;
-  DateTime: Date | string;
+  ID: { input: string; output: string | number };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  Date: { input: any; output: any };
+  DateTime: { input: Date | string; output: Date | string };
 };
 
 export type Error = {
@@ -53,15 +53,15 @@ export type MutationTopicEditArgs = {
 };
 
 export type PaginationInput = {
-  page?: InputMaybe<Scalars['Int']>;
-  recordsPerPage?: InputMaybe<Scalars['Int']>;
+  page?: InputMaybe<Scalars['Int']['output']>;
+  recordsPerPage?: InputMaybe<Scalars['Int']['output']>;
 };
 
 export type PaginationResult = {
   __typename?: 'PaginationResult';
-  currentPage: Scalars['Int'];
-  recordsPerPage: Scalars['Int'];
-  totalPageCount: Scalars['Int'];
+  currentPage: Scalars['Int']['output'];
+  recordsPerPage: Scalars['Int']['output'];
+  totalPageCount: Scalars['Int']['output'];
 };
 
 export type Query = {
@@ -73,7 +73,7 @@ export type Query = {
 };
 
 export type QueryTopicByIdArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 export type QueryTopicsCreatedByUserArgs = {
@@ -81,7 +81,7 @@ export type QueryTopicsCreatedByUserArgs = {
 };
 
 export type QueryUserByAccountNameArgs = {
-  accountName: Scalars['String'];
+  accountName: Scalars['String']['input'];
 };
 
 export type StandardError = Error & {
@@ -91,11 +91,11 @@ export type StandardError = Error & {
 
 export type Topic = {
   __typename?: 'Topic';
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
   creator: User;
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  url?: Maybe<Scalars['String']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 export type TopicByIdPayload = StandardError | TopicByIdResult;
@@ -106,8 +106,8 @@ export type TopicByIdResult = {
 };
 
 export type TopicCreateInput = {
-  name: Scalars['String'];
-  url?: InputMaybe<Scalars['String']>;
+  name: Scalars['String']['output'];
+  url?: InputMaybe<Scalars['String']['output']>;
 };
 
 export type TopicCreatePayload = StandardError | TopicCreateResult;
@@ -118,9 +118,9 @@ export type TopicCreateResult = {
 };
 
 export type TopicEditInput = {
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  url?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  url?: InputMaybe<Scalars['String']['output']>;
 };
 
 export type TopicEditPayload = StandardError | TopicEditResult;
@@ -131,7 +131,7 @@ export type TopicEditResult = {
 };
 
 export type TopicsCreatedByUserInput = {
-  userId: Scalars['ID'];
+  userId: Scalars['ID']['output'];
 };
 
 export type TopicsCreatedByUserPayload =
@@ -145,14 +145,14 @@ export type TopicsCreatedByUserResult = {
 
 export type User = {
   __typename?: 'User';
-  accountGitHub?: Maybe<Scalars['String']>;
-  accountLinkedIn?: Maybe<Scalars['String']>;
-  accountName: Scalars['String'];
-  accountTwitter?: Maybe<Scalars['String']>;
-  accountWebsite?: Maybe<Scalars['String']>;
-  avatar?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
+  accountGitHub?: Maybe<Scalars['String']['output']>;
+  accountLinkedIn?: Maybe<Scalars['String']['output']>;
+  accountName: Scalars['String']['output'];
+  accountTwitter?: Maybe<Scalars['String']['output']>;
+  accountWebsite?: Maybe<Scalars['String']['output']>;
+  avatar?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  name?: Maybe<Scalars['String']['output']>;
 };
 
 export type UserPayload = StandardError | UserResult;
@@ -293,17 +293,17 @@ export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Date: ResolverTypeWrapper<Scalars['Date']>;
-  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
+  Date: ResolverTypeWrapper<Scalars['Date']['output']>;
+  DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Error']>;
   ErrorType: ErrorType;
   Mutation: ResolverTypeWrapper<{}>;
   PaginationInput: PaginationInput;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PaginationResult: ResolverTypeWrapper<PaginationResult>;
   Query: ResolverTypeWrapper<{}>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  String: ResolverTypeWrapper<Scalars['String']>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
   StandardError: ResolverTypeWrapper<StandardError>;
   Topic: ResolverTypeWrapper<Topic>;
   TopicByIdPayload: ResolverTypeWrapper<
@@ -330,21 +330,21 @@ export type ResolversTypes = {
     ResolversUnionTypes<ResolversTypes>['UserPayload']
   >;
   UserResult: ResolverTypeWrapper<UserResult>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Date: Scalars['Date'];
-  DateTime: Scalars['DateTime'];
+  Date: Scalars['Date']['output'];
+  DateTime: Scalars['DateTime']['output'];
   Error: ResolversInterfaceTypes<ResolversParentTypes>['Error'];
   Mutation: {};
   PaginationInput: PaginationInput;
-  Int: Scalars['Int'];
+  Int: Scalars['Int']['output'];
   PaginationResult: PaginationResult;
   Query: {};
-  ID: Scalars['ID'];
-  String: Scalars['String'];
+  ID: Scalars['ID']['output'];
+  String: Scalars['String']['output'];
   StandardError: StandardError;
   Topic: Topic;
   TopicByIdPayload: ResolversUnionTypes<ResolversParentTypes>['TopicByIdPayload'];
@@ -361,7 +361,7 @@ export type ResolversParentTypes = {
   User: User;
   UserPayload: ResolversUnionTypes<ResolversParentTypes>['UserPayload'];
   UserResult: UserResult;
-  Boolean: Scalars['Boolean'];
+  Boolean: Scalars['Boolean']['output'];
 };
 
 export interface DateScalarConfig

@@ -25,6 +25,8 @@ type ResolverMainFileMode = 'merged' | 'modules';
 export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
 type FixObjectTypeResolvers = 'smart' | 'disabled';
 
+export type ScalarsOverridesType = string | { input: string; output: string };
+
 export interface ParsedPresetConfig {
   resolverTypesPath: string;
   resolverRelativeTargetDir: string;
@@ -35,7 +37,10 @@ export interface ParsedPresetConfig {
   mappersFileExtension: string;
   mappersSuffix: string;
   scalarsModule: string | false;
-  scalarsOverrides: Record<string, { resolver?: string; type?: string }>;
+  scalarsOverrides: Record<
+    string,
+    { resolver?: string; type?: ScalarsOverridesType }
+  >;
   mode: ConfigMode;
   whitelistedModules: string[];
   blacklistedModules: string[];

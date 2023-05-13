@@ -30,7 +30,7 @@
     "@graphql-codegen/add": "^4.0.0",
     "@graphql-codegen/plugin-helpers": "^4.2.0",
     "@graphql-codegen/typescript": "^3.0.3",
-    "@graphql-codegen/typescript-resolvers": "3.3.0-rc-20230502082733-28edac076",
+    "@graphql-codegen/typescript-resolvers": "3.3.0-alpha-20230513064348-5e1a7aec9",
     "ts-morph": "^18.0.0"
   },
   "publishConfig": {

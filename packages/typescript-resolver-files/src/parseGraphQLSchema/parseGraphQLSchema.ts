@@ -7,7 +7,10 @@ import {
 } from 'graphql';
 import type { ParseSourcesResult } from '../parseSources';
 import type { TypeMappersMap } from '../parseTypeMappers';
-import type { ParsedPresetConfig } from '../validatePresetConfig';
+import type {
+  ParsedPresetConfig,
+  ScalarsOverridesType,
+} from '../validatePresetConfig';
 import {
   fmt,
   isNativeNamedType,
@@ -30,12 +33,11 @@ export interface ParsedGraphQLSchemaMeta {
     object: Record<string, true>;
     scalar: Record<string, true>;
   };
-  pluginsConfig: Record<
-    | 'defaultScalarTypesMap'
-    | 'defaultScalarExternalResolvers'
-    | 'defaultTypeMappers',
-    Record<string, string>
-  >;
+  pluginsConfig: {
+    defaultScalarTypesMap: Record<string, ScalarsOverridesType>;
+    defaultScalarExternalResolvers: Record<string, string>;
+    defaultTypeMappers: Record<string, string>;
+  };
 }
 
 export const parseGraphQLSchema = async ({
