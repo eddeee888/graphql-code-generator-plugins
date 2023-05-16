@@ -16,13 +16,13 @@ export const collectTypeMappersFromSourceFile = (
     typeMappersSuffix,
     resolverTypesPath,
     shouldCollectPropertyMap,
-    emitLegacyCommonJSImports
+    emitLegacyCommonJSImports,
   }: {
     typeMappersSourceFile: SourceFile;
     typeMappersSuffix: string;
     resolverTypesPath: string;
     shouldCollectPropertyMap: boolean;
-    emitLegacyCommonJSImports:boolean;
+    emitLegacyCommonJSImports: boolean;
   },
   result: TypeMappersMap
 ): void => {
@@ -40,7 +40,7 @@ export const collectTypeMappersFromSourceFile = (
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
         shouldCollectPropertyMap,
-        emitLegacyCommonJSImports
+        emitLegacyCommonJSImports,
       },
       result
     );
@@ -62,7 +62,7 @@ export const collectTypeMappersFromSourceFile = (
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
         shouldCollectPropertyMap,
-        emitLegacyCommonJSImports
+        emitLegacyCommonJSImports,
       },
       result
     );
@@ -89,7 +89,7 @@ export const collectTypeMappersFromSourceFile = (
           typeMappersFilePath: typeMappersSourceFile.getFilePath(),
           resolverTypesPath,
           shouldCollectPropertyMap,
-          emitLegacyCommonJSImports
+          emitLegacyCommonJSImports,
         },
         result
       );
