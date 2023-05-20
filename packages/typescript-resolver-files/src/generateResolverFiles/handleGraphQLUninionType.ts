@@ -9,7 +9,7 @@ export const handleGraphQLUninionType: GraphQLTypeHandler = (
     resolversTypeMeta,
     moduleName,
   },
-  { result }
+  { result, config: { emitLegacyCommonJSImports } }
 ) => {
   const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { __resolveType: (parent) => parent.__typename };`;
 
@@ -20,6 +20,7 @@ export const handleGraphQLUninionType: GraphQLTypeHandler = (
       isTypeImport: true,
       module: resolversTypeMeta.module,
       namedImports: [resolversTypeMeta.typeNamedImport],
+      emitLegacyCommonJSImports,
     })}
     ${variableStatement}`,
     mainImportIdentifier: resolverName,

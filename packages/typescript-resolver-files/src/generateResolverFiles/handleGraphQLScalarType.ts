@@ -5,7 +5,7 @@ const graphQLScalarType = 'GraphQLScalarType';
 
 export const handleGraphQLScalarType: GraphQLTypeHandler = (
   { fieldFilePath, resolverName, normalizedResolverName, moduleName },
-  { result }
+  { result, config: { emitLegacyCommonJSImports } }
 ) => {
   const variableStatement = `export const ${resolverName}: ${graphQLScalarType} = { /* Implement ${resolverName} scalar logic here */ };`;
 
@@ -16,6 +16,7 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
       isTypeImport: true,
       module: 'graphql',
       namedImports: [graphQLScalarType],
+      emitLegacyCommonJSImports,
     })}
     ${variableStatement}`,
     mainImportIdentifier: resolverName,

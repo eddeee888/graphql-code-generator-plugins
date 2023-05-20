@@ -20,6 +20,7 @@ const defaultExpected: ReturnType<typeof validatePresetConfig> = {
     skipAddingFilesFromTsConfig: true,
   },
   fixObjectTypeResolvers: 'smart',
+  emitLegacyCommonJSImports: true,
 };
 
 describe('validatePresetConfig - general', () => {
@@ -190,6 +191,15 @@ describe('validatePresetConfig - general', () => {
     expect(parsed).toEqual({
       ...defaultExpected,
       fixObjectTypeResolvers: 'disabled',
+    });
+  });
+
+  it('returns result.emitLegacyCommonJSImports = false if set to false', () => {
+    const parsed = validatePresetConfig({ emitLegacyCommonJSImports: false });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      emitLegacyCommonJSImports: false,
     });
   });
 

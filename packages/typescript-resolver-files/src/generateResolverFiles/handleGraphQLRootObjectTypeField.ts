@@ -12,7 +12,7 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
     resolversTypeMeta,
     moduleName,
   },
-  { result }
+  { result, config: { emitLegacyCommonJSImports } }
 ) => {
   const suggestion = `/* Implement ${normalizedResolverName} resolver logic here */`;
 
@@ -30,6 +30,7 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
           isTypeImport: true,
           module: resolversTypeMeta.module,
           namedImports: [resolversTypeMeta.typeNamedImport],
+          emitLegacyCommonJSImports,
         })}
         ${variableStatement}`,
     mainImportIdentifier: resolverName,

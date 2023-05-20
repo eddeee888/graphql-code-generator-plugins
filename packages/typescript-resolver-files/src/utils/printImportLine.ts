@@ -3,6 +3,7 @@ export interface ImportLineMeta {
   module: string;
   namedImports: (string | { propertyName: string; identifierName: string })[];
   defaultImport?: string;
+  emitLegacyCommonJSImports: boolean;
 }
 
 export function printImportLine({
@@ -10,6 +11,7 @@ export function printImportLine({
   module,
   namedImports,
   defaultImport,
+  emitLegacyCommonJSImports,
 }: ImportLineMeta): string {
   const typeImportKeyword = isTypeImport ? 'type' : '';
   const hasDefaultImport = Boolean(defaultImport);
@@ -17,10 +19,14 @@ export function printImportLine({
   const namedImportsString = hasNamedImports
     ? `{ ${namedImports.map(printNamedImportSpecifier).join(',')} }`
     : '';
+  const isFile = module.startsWith('.');
+  const fileExt = emitLegacyCommonJSImports || !isFile ? '' : '.js';
 
   return `import ${typeImportKeyword} ${defaultImport || ''} ${
     hasDefaultImport && hasNamedImports ? ',' : ''
-  } ${namedImportsString} from '${normalizeModuleExtensionForImport(module)}';`;
+  } ${namedImportsString} from '${normalizeModuleExtensionForImport(
+    module
+  )}${fileExt}';`;
 }
 
 const normalizeModuleExtensionForImport = (module: string): string => {

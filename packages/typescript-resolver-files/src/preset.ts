@@ -55,6 +55,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       typesPluginsConfig,
       tsMorphProjectOptions,
       fixObjectTypeResolvers,
+      emitLegacyCommonJSImports,
     } = validatePresetConfig(rawPresetConfig);
 
     const resolverTypesPath = path.posix.join(
@@ -78,6 +79,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           typeMappersSuffix,
           tsMorphProject,
           shouldCollectPropertyMap: fixObjectTypeResolvers !== 'disabled',
+          emitLegacyCommonJSImports,
         }),
       createProfilerRunName('parseTypeMappers')
     );
@@ -103,6 +105,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     const resolverTypesConfig = {
       enumsAsTypes: true,
       nonOptionalTypename: true,
+      emitLegacyCommonJSImports,
       ...typesPluginsConfig,
       scalars: {
         ...defaultScalarTypesMap,
@@ -205,6 +208,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
               ...defaultScalarExternalResolvers,
               ...externalResolvers,
             },
+            emitLegacyCommonJSImports,
           },
           result,
         }),

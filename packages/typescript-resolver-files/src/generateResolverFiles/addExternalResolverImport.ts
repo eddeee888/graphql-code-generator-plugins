@@ -14,7 +14,10 @@ interface AddExternalResolverImportParams {
 
 export const addExternalResolverImport = (
   params: AddExternalResolverImportParams,
-  { result }: GenerateResolverFilesContext
+  {
+    result,
+    config: { emitLegacyCommonJSImports },
+  }: GenerateResolverFilesContext
 ): void => {
   const { importIdentifier, identifierUsage, moduleImport } =
     parseImportSyntax(params);
@@ -28,6 +31,7 @@ export const addExternalResolverImport = (
         module: moduleImport,
         namedImports: [],
         defaultImport: undefined,
+        emitLegacyCommonJSImports: emitLegacyCommonJSImports,
       },
       identifierUsages: [],
     } as GenerateResolverFilesContext['result']['externalImports'][number]);
