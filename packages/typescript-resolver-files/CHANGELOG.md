@@ -1,5 +1,12 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.4.1
+
+### Patch Changes
+
+- af10b65: Add emitLegacyCommonJSImports config option to support esm-style imports in generated output
+- 72c0dc1: Fix typeDefsFileMode=modules not working well with codegen hooks (e.g. afterAllFileWrite) for Windows
+
 ## 0.4.0
 
 ### Minor Changes
