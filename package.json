@@ -17,7 +17,7 @@
     "@graphql-codegen/cli": "3.3.0",
     "@graphql-codegen/plugin-helpers": "4.2.0",
     "@graphql-codegen/typescript": "3.0.3",
-    "@graphql-codegen/typescript-resolvers": "3.2.0",
+    "@graphql-codegen/typescript-resolvers": "3.3.0-alpha-20230513064348-5e1a7aec9",
     "@nx/devkit": "16.2.1",
     "@nx/eslint-plugin": "16.2.1",
     "@nx/jest": "16.2.1",
@@ -51,5 +51,8 @@
   },
   "workspaces": [
     "packages/**"
-  ]
+  ],
+  "resolutions": {
+    "@graphql-codegen/visitor-plugin-common": "3.2.0-alpha-20230513064348-5e1a7aec9"
+  }
 }

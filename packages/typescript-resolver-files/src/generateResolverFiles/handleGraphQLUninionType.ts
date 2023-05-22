@@ -11,7 +11,7 @@ export const handleGraphQLUninionType: GraphQLTypeHandler = (
   },
   { result, config: { emitLegacyCommonJSImports } }
 ) => {
-  const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { __resolveType: (parent) => parent.__typename };`;
+  const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { /* Implement ${resolverName} union logic here */ };`;
 
   result.files[fieldFilePath] = {
     __filetype: 'generalResolver',
