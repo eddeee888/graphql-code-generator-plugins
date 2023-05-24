@@ -1,5 +1,73 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.5.0
+
+### Minor Changes
+
+- f7831c1: Use resolversNonOptionalTypename instead of nonOptionalTypename
+
+  This makes using abstract types simpler because we do not return \_\_typename for all types, only for union members and interface implementing types.
+
+- f7831c1: Add scalarsOverrides config option
+
+  `Record<string, { resolver?: string; type?: string | { input: string; output: string } }>` (Default: `{}`)
+
+  Overrides scalars' resolver implementation, type or both.
+
+  Example:
+
+  ```ts
+  // codegen.ts
+  {
+    generates: {
+      'src/schema': defineConfig({
+        scalarsOverrides: {
+          DateTime: {
+            resolver: './localDateTimeResolver#Resolver',
+          }
+          Currency: {
+            type: 'unknown'
+          },
+          BigInt: {
+            resolver: '@other/scalars#BigIntResolver',
+            type: 'bigint'
+          }
+        }
+      })
+    }
+  }
+  ```
+
+  BREAKING CHANGE: `typesPluginsConfig.scalars` can no longer be used. Please use `scalarOverrides` instead.
+
+- f7831c1: Use optionalResolveType=true because resolversNonOptionalTypename works
+- f7831c1: Add scalarsModule config option
+
+  `string` or `false` (Default: `graphql-scalars`)
+
+  Where Scalar implementation and codegen types come from. Use `false` to implement your own Scalars.
+
+  If using an module that is not `graphql-scalars`, the module must export resolver implementation and codegen type the same way `graphql-scalars` does e.g.
+
+  ```ts
+  {
+    resolvers: {
+      DateTime: DateTimeResolver,
+    },
+    DateTimeResolver: {
+      // ... resolver implementation
+      extensions: {
+        codegenScalarType: 'Date | string',
+      },
+    }
+  }
+  ```
+
+### Patch Changes
+
+- f7831c1: Allows overriding native scalar types' type (Equivalent of typescript plugin's scalars option)
+- f7831c1: Correctly implement ID Scalar's input/output type: input is string and output is string | number
+
 ## 0.4.1
 
 ### Patch Changes
