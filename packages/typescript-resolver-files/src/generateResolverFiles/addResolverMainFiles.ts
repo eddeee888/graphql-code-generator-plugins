@@ -62,6 +62,7 @@ export const addResolverMainFiles = ({
         printImportLine({
           isTypeImport: false,
           module: relativeModulePath(outputDir, filepath),
+          moduleType: 'file',
           namedImports: [file.mainImportIdentifier],
           emitLegacyCommonJSImports,
         })
@@ -86,6 +87,7 @@ export const addResolverMainFiles = ({
       printImportLine({
         isTypeImport: false,
         module: relativeModulePath(outputDir, filepath),
+        moduleType: 'file',
         namedImports: [fieldMapping],
         emitLegacyCommonJSImports,
       })
@@ -118,6 +120,7 @@ export const addResolverMainFiles = ({
       printImportLine({
         isTypeImport: false,
         module,
+        moduleType: 'file',
         namedImports: meta.importLineMeta.namedImports,
         defaultImport: meta.importLineMeta.defaultImport,
         emitLegacyCommonJSImports,
@@ -194,6 +197,7 @@ export const addResolverMainFiles = ({
     ${printImportLine({
       isTypeImport: true,
       module: relativePathToResolverTypes,
+      moduleType: 'file',
       namedImports: [resolversTypeName],
       emitLegacyCommonJSImports,
     })}

@@ -193,11 +193,13 @@ const validateAndPrepareForGraphQLTypeHandler = (
       ? {
           typeNamedImport: `${belongsToRootObject}Resolvers`,
           module: resolversTypeMetaModule,
+          moduleType: 'file',
           typeString: `${belongsToRootObject}Resolvers['${resolverName}']`,
         }
       : {
           typeNamedImport: `${resolverName}Resolvers`,
           module: resolversTypeMetaModule,
+          moduleType: 'file',
           typeString: `${resolverName}Resolvers`,
         };
 

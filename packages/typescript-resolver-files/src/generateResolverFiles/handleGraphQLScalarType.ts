@@ -15,6 +15,7 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
     ${printImportLine({
       isTypeImport: true,
       module: 'graphql',
+      moduleType: 'module',
       namedImports: [graphQLScalarType],
       emitLegacyCommonJSImports,
     })}

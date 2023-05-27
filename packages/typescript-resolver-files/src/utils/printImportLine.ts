@@ -1,6 +1,7 @@
 export interface ImportLineMeta {
   isTypeImport: boolean;
   module: string;
+  moduleType: 'file' | 'module';
   namedImports: (string | { propertyName: string; identifierName: string })[];
   defaultImport?: string;
   emitLegacyCommonJSImports: boolean;
@@ -9,6 +10,7 @@ export interface ImportLineMeta {
 export function printImportLine({
   isTypeImport,
   module,
+  moduleType,
   namedImports,
   defaultImport,
   emitLegacyCommonJSImports,
@@ -19,7 +21,7 @@ export function printImportLine({
   const namedImportsString = hasNamedImports
     ? `{ ${namedImports.map(printNamedImportSpecifier).join(',')} }`
     : '';
-  const isFile = module.startsWith('.');
+  const isFile = moduleType === 'file';
   const fileExt = emitLegacyCommonJSImports || !isFile ? '' : '.js';
 
   return `import ${typeImportKeyword} ${defaultImport || ''} ${

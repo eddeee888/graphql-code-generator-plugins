@@ -99,6 +99,7 @@ export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
     typeNamedImport: `${string}Resolvers`;
     // path to typescript-resolvers file
     module: string;
+    moduleType: 'file' | 'module';
     // typeString: valid type specified for a field or object type
     typeString:
       | `${string}Resolvers`
