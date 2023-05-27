@@ -203,6 +203,18 @@ describe('validatePresetConfig - general', () => {
     });
   });
 
+  it('throws if config.typesPluginsConfig.emitLegacyCommonJSImports is used', () => {
+    expect(() =>
+      validatePresetConfig({
+        typesPluginsConfig: {
+          emitLegacyCommonJSImports: false,
+        },
+      })
+    ).toThrowError(
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typesPluginsConfig.emitLegacyCommonJSImports is not supported. Use presetConfig.emitLegacyCommonJSImports instead.'
+    );
+  });
+
   it('throws if result.fixObjectTypeResolvers is not valid', () => {
     expect(() =>
       validatePresetConfig({ fixObjectTypeResolvers: 'not-valid-for-sure' })
