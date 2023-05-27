@@ -28,7 +28,7 @@ nx test typescript-resolver-files
 Create new e2e test setup (with own `codegen.yml` and schema files) from template:
 
 ```bash
-nx workspace-generator typescript-resolver-files-add-e2e-test <test-name-in-kebab-case>
+nx g @graphql-code-generator-plugins/workspace-plugin:typescript-resolver-files-add-e2e-test <test-name-in-kebab-case>
 ```
 
 #### Run E2E Test/s
@@ -47,7 +47,3 @@ nx e2e-run typescript-resolver-files-e2e -c clean-run
 # Run tests and assert. This is run in CI/CD.
 nx e2e typescript-resolver-files-e2e
 ```
-
-## TODOs
-
-- [ ] Add Interface handler
