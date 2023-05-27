@@ -1,5 +1,6 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.gen';
+import { Error } from './base/rslvrs/Error';
 import { topicCreate as Mutation_topicCreate } from './topic/rslvrs/Mutation/topicCreate';
 import { topicEdit as Mutation_topicEdit } from './topic/rslvrs/Mutation/topicEdit';
 import { PaginationResult } from './base/rslvrs/PaginationResult';
@@ -38,6 +39,7 @@ export const resolvers: Resolvers = {
     topicEdit: Mutation_topicEdit,
   },
   Subscription: { profileChanges: Subscription_profileChanges },
+  Error: Error,
   PaginationResult: PaginationResult,
   Profile: Profile,
   SomeOtherScalars: SomeOtherScalars,

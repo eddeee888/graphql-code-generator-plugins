@@ -1,5 +1,6 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.generated';
+import { Error } from './Error';
 import { topicCreate as Mutation_topicCreate } from './Mutation/topicCreate';
 import { topicEdit as Mutation_topicEdit } from './Mutation/topicEdit';
 import { PaginationResult } from './PaginationResult';
@@ -33,6 +34,7 @@ export const resolvers: Resolvers = {
     topicEdit: Mutation_topicEdit,
   },
 
+  Error: Error,
   PaginationResult: PaginationResult,
   StandardError: StandardError,
   Topic: Topic,

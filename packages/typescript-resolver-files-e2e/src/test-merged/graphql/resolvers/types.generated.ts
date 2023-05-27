@@ -16,6 +16,15 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>;
 };
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T
+> = { [_ in K]?: never };
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
+    };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
@@ -55,8 +64,8 @@ export type MutationTopicEditArgs = {
 };
 
 export type PaginationInput = {
-  page?: InputMaybe<Scalars['Int']['output']>;
-  recordsPerPage?: InputMaybe<Scalars['Int']['output']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  recordsPerPage?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type PaginationResult = {
@@ -108,8 +117,8 @@ export type TopicByIdResult = {
 };
 
 export type TopicCreateInput = {
-  name: Scalars['String']['output'];
-  url?: InputMaybe<Scalars['String']['output']>;
+  name: Scalars['String']['input'];
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TopicCreatePayload = StandardError | TopicCreateResult;
@@ -120,9 +129,9 @@ export type TopicCreateResult = {
 };
 
 export type TopicEditInput = {
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
-  url?: InputMaybe<Scalars['String']['output']>;
+  id: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TopicEditPayload = StandardError | TopicEditResult;
@@ -133,7 +142,7 @@ export type TopicEditResult = {
 };
 
 export type TopicsCreatedByUserInput = {
-  userId: Scalars['ID']['output'];
+  userId: Scalars['ID']['input'];
 };
 
 export type TopicsCreatedByUserPayload =
