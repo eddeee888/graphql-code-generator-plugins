@@ -1,10 +1,10 @@
 import { isObjectType } from 'graphql';
 import { isNativeNamedType, isRootObjectType } from '../utils';
-import { addResolverMainFile } from './addResolverMainFile';
+import { addResolverMainFiles } from './addResolverMainFiles';
 import { postProcessFiles } from './postProcessFiles';
 import { handleGraphQLRootObjectTypeField } from './handleGraphQLRootObjectTypeField';
 import { handleGraphQLObjectType } from './handleGraphQLObjectType';
-import { handleGraphQLUninionType } from './handleGraphQLUninionType';
+import { handleGraphQLUnionType } from './handleGraphQLUnionType';
 import { handleGraphQLScalarType } from './handleGraphQLScalarType';
 import { visitNamedType, VisitNamedTypeParams } from './visitNamedType';
 import type { GenerateResolverFilesContext } from './types';
@@ -24,7 +24,7 @@ export const generateResolverFiles = (
       const visitor: VisitNamedTypeParams['visitor'] = {
         RootObjectTypeField: handleGraphQLRootObjectTypeField,
         ObjectType: handleGraphQLObjectType,
-        UnionType: handleGraphQLUninionType,
+        UnionType: handleGraphQLUnionType,
         ScalarType: handleGraphQLScalarType,
       };
 
@@ -61,6 +61,6 @@ export const generateResolverFiles = (
   // Post process generated files (could be existing files or files to be generated)
   postProcessFiles(ctx);
 
-  // Put all resolvers into a barrel file (or main file)
-  addResolverMainFile(ctx);
+  // Put all resolvers into barrel file/s (or main file/s)
+  addResolverMainFiles(ctx);
 };

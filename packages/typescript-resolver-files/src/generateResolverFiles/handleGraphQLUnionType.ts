@@ -1,7 +1,7 @@
 import { printImportLine } from '../utils';
 import type { GraphQLTypeHandler } from './types';
 
-export const handleGraphQLUninionType: GraphQLTypeHandler = (
+export const handleGraphQLUnionType: GraphQLTypeHandler = (
   {
     fieldFilePath,
     resolverName,
