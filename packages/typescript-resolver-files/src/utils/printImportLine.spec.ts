@@ -76,6 +76,17 @@ describe('printImportLine', () => {
     expect(result).toBe("import    { Thing } from '@org/module';");
   });
 
+  it('prints extension as declared', () => {
+    const result = printImportLine({
+      module: 'absolute/path/to/file.js',
+      moduleType: 'preserve',
+      isTypeImport: false,
+      namedImports: ['Thing'],
+      emitLegacyCommonJSImports: true,
+    });
+    expect(result).toBe("import    { Thing } from 'absolute/path/to/file.js';");
+  });
+
   it('prints type import correctly', () => {
     const result = printImportLine({
       module: './path/to/file',
