@@ -64,8 +64,8 @@ export type MutationTopicEditArgs = {
 };
 
 export type PaginationInput = {
-  page?: InputMaybe<Scalars['Int']['input']>;
-  recordsPerPage?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['output']>;
+  recordsPerPage?: InputMaybe<Scalars['Int']['output']>;
 };
 
 export type PaginationResult = {
