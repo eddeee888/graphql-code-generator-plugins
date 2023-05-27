@@ -31,4 +31,6 @@ generates:
           type: string
       externalResolvers:
         Query.me: '~@org/meResolver#default as meResolver'
+        Profile: '~modules/otherResolvers.js#Profile as ProfileResolver'
         User: 'otherResolvers#User as UserResolver'
+        UserPayload: 'otherResolvers.js#UserPayload as UserPayloadResolver'
