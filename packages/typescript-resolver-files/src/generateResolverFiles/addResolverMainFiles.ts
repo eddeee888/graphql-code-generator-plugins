@@ -22,10 +22,7 @@ const createDefaultFileDetails = (): FileDetails => ({
   objectTypes: [],
 });
 
-/**
- * TODO: rename addResolverMainFile -> addResolverMainFiles
- */
-export const addResolverMainFile = ({
+export const addResolverMainFiles = ({
   config: {
     baseOutputDir,
     resolverTypesPath,
