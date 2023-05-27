@@ -29,6 +29,7 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
         ${printImportLine({
           isTypeImport: true,
           module: resolversTypeMeta.module,
+          moduleType: resolversTypeMeta.moduleType,
           namedImports: [resolversTypeMeta.typeNamedImport],
           emitLegacyCommonJSImports,
         })}

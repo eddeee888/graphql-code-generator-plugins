@@ -19,6 +19,7 @@ export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
     ${printImportLine({
       isTypeImport: true,
       module: resolversTypeMeta.module,
+      moduleType: resolversTypeMeta.moduleType,
       namedImports: [resolversTypeMeta.typeNamedImport],
       emitLegacyCommonJSImports,
     })}

@@ -18,7 +18,7 @@ const defaultScalarsModule = 'graphql-scalars';
 type ParsedTypesPluginsConfig = Omit<
   typeScriptPlugin.TypeScriptPluginConfig &
     typeScriptResolversPlugin.TypeScriptResolversPluginConfig,
-  'scalars'
+  'scalars' | 'emitLegacyCommonJSImports'
 >;
 type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
@@ -213,17 +213,6 @@ export const validatePresetConfig = ({
     }
   }
 
-  if (
-    emitLegacyCommonJSImports === false &&
-    typesPluginsConfig.emitLegacyCommonJSImports !== null
-  ) {
-    console.warn(
-      fmt.warn(
-        `emitLegacyCommonJSImports is set to false and typesPluginsConfig's emitLegacyCommonJSImports is set as well - usually this is unwanted behaviour. The root config's emitLegacyCommonJSImports sets typesPluinsConfig's emitLegacyCommonJSImports as well.`
-      )
-    );
-  }
-
   const validatedTypesPluginsConfig =
     validateTypesPluginsConfig(typesPluginsConfig);
 
@@ -279,8 +268,7 @@ export const validatePresetConfig = ({
 const validateTypesPluginsConfig = (
   config: NonNullable<RawPresetConfig['typesPluginsConfig']>
 ): ParsedPresetConfig['typesPluginsConfig'] => {
-  const { scalars, ...rest } = config;
-  if (scalars) {
+  if ('scalars' in config) {
     throw new Error(
       fmt.error(
         'presetConfig.typesPluginsConfig.scalars is not supported. Use presetConfig.scalarsOverrides instead.',
@@ -288,7 +276,17 @@ const validateTypesPluginsConfig = (
       )
     );
   }
-  return {
-    ...rest,
-  };
+
+  if ('emitLegacyCommonJSImports' in config) {
+    throw new Error(
+      fmt.error(
+        'presetConfig.typesPluginsConfig.emitLegacyCommonJSImports is not supported. Use presetConfig.emitLegacyCommonJSImports instead.',
+        'Validation'
+      )
+    );
+  }
+
+  const { scalars: _, emitLegacyCommonJSImports: __, ...rest } = config;
+
+  return rest;
 };
