@@ -1,7 +1,15 @@
 export interface ImportLineMeta {
   isTypeImport: boolean;
   module: string;
-  moduleType: 'file' | 'module';
+  /**
+   * moduleType
+   *
+   * @description Determines how the module should be treated when imported taking into consideration CJS vs ESM
+   * - file: import is a file. For ESM, .js extension is added. For CJS, no extension is added.
+   * - module: import is a module from `node_modules` or aliased e.g. `graphql-scalars` or `@org/your-module`. No extension is added.
+   * - preserve: preserve what the config declares. This is only used when taking user's config or preset-controlled config e.g. `externalExternals` because the import could be either file or module
+   */
+  moduleType: 'file' | 'module' | 'preserve';
   namedImports: (string | { propertyName: string; identifierName: string })[];
   defaultImport?: string;
   emitLegacyCommonJSImports: boolean;
@@ -21,8 +29,12 @@ export function printImportLine({
   const namedImportsString = hasNamedImports
     ? `{ ${namedImports.map(printNamedImportSpecifier).join(',')} }`
     : '';
-  const isFile = moduleType === 'file';
-  const fileExt = emitLegacyCommonJSImports || !isFile ? '' : '.js';
+
+  let fileExt = '';
+  if (moduleType !== 'preserve') {
+    const isFile = moduleType === 'file';
+    fileExt = emitLegacyCommonJSImports || !isFile ? '' : '.js';
+  }
 
   return `import ${typeImportKeyword} ${defaultImport || ''} ${
     hasDefaultImport && hasNamedImports ? ',' : ''

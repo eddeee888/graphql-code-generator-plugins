@@ -98,8 +98,8 @@ export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
     // Otherwise, it's the object type e.g. User, Profile, etc.
     typeNamedImport: `${string}Resolvers`;
     // path to typescript-resolvers file
-    module: string;
-    moduleType: 'file' | 'module';
+    module: ImportLineMeta['module'];
+    moduleType: ImportLineMeta['moduleType'];
     // typeString: valid type specified for a field or object type
     typeString:
       | `${string}Resolvers`
