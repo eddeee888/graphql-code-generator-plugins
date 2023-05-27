@@ -120,7 +120,7 @@ export const addResolverMainFiles = ({
       printImportLine({
         isTypeImport: false,
         module,
-        moduleType: 'file',
+        moduleType: 'preserve',
         namedImports: meta.importLineMeta.namedImports,
         defaultImport: meta.importLineMeta.defaultImport,
         emitLegacyCommonJSImports,

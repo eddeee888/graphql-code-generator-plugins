@@ -29,7 +29,7 @@ export const addExternalResolverImport = (
       importLineMeta: {
         isTypeImport: false,
         module: moduleImport,
-        moduleType: 'file',
+        moduleType: 'preserve',
         namedImports: [],
         defaultImport: undefined,
         emitLegacyCommonJSImports,
