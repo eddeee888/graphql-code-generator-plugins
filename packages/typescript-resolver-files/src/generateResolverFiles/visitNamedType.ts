@@ -1,6 +1,7 @@
 import * as path from 'path';
 import {
   GraphQLNamedType,
+  isInterfaceType,
   isObjectType,
   isScalarType,
   isUnionType,
@@ -27,6 +28,7 @@ export interface VisitNamedTypeParams {
     ObjectType: GraphQLTypeHandler;
     ScalarType: GraphQLTypeHandler;
     UnionType: GraphQLTypeHandler;
+    InterfaceType: GraphQLTypeHandler;
   };
   location?: Location;
 }
@@ -96,6 +98,8 @@ export const visitNamedType = (
       visitor['UnionType'](visitorHandlerParams, ctx);
     } else if (isScalarType(namedType)) {
       visitor['ScalarType'](visitorHandlerParams, ctx);
+    } else if (isInterfaceType(namedType)) {
+      visitor['InterfaceType'](visitorHandlerParams, ctx);
     }
   }
 };

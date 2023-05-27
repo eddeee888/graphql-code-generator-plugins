@@ -1,6 +1,7 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.generated';
 import { DateTime } from './base/resolvers/DateTime';
+import { Error } from './base/resolvers/Error';
 import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/topicCreate';
 import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
 import { PaginationResult } from './base/resolvers/PaginationResult';
@@ -37,6 +38,7 @@ export const resolvers: Resolvers = {
   },
   Subscription: { profileChanges: Subscription_profileChanges },
   DateTime: DateTime,
+  Error: Error,
   PaginationResult: PaginationResult,
   PayloadError: PayloadError,
   Profile: Profile,
