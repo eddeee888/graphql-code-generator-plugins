@@ -688,6 +688,83 @@ describe('collectTypeMappersFromSourceFile', () => {
     });
   });
 
+  it('mutates the result with .js extensions in configImportPath for mapper files when emitLegacyCommonJSImports=false', () => {
+    const project = new Project({
+      compilerOptions: {
+        paths: {
+          '@external/module1': ['/path/to/external/modules1/index.ts'],
+          '@external/module2': ['/path/to/external/modules2/index.ts'],
+        },
+      },
+    });
+    project.createSourceFile(
+      `/path/to/external/modules1/index.ts`,
+      `
+      export interface Billing {
+        id: number;
+        address: string;
+      }
+      `
+    );
+    project.createSourceFile(
+      `/path/to/external/modules2/index.ts`,
+      `
+      export type Address = {
+        id: string;
+      }
+      `
+    );
+    project.createSourceFile(
+      '/path/to/schemas/module1/localModule1.ts',
+      `
+      export type Preference = {
+        id: number;
+      }
+      `
+    );
+    const mapperFile = project.createSourceFile(
+      '/path/to/schemas/module1/schema.mappers.ts',
+      `
+      export type { Billing as BillingMapper } from '@external/module1';
+      export { Address as AddressMapper } from '@external/module2';
+      export { Preference as PreferenceMapper } from './localModule1';`
+    );
+
+    const result = {};
+
+    collectTypeMappersFromSourceFile(
+      {
+        typeMappersSourceFile: mapperFile,
+        typeMappersSuffix: 'Mapper',
+        resolverTypesPath: '/path/to/schemas/types.generated.ts',
+        shouldCollectPropertyMap: false,
+        emitLegacyCommonJSImports: false,
+      },
+      result
+    );
+
+    expect(result).toEqual({
+      Billing: {
+        schemaType: 'Billing',
+        typeMapperName: 'BillingMapper',
+        configImportPath: './module1/schema.mappers.js#BillingMapper',
+        typeMapperPropertyMap: {},
+      },
+      Address: {
+        schemaType: 'Address',
+        typeMapperName: 'AddressMapper',
+        configImportPath: './module1/schema.mappers.js#AddressMapper',
+        typeMapperPropertyMap: {},
+      },
+      Preference: {
+        schemaType: 'Preference',
+        typeMapperName: 'PreferenceMapper',
+        configImportPath: './module1/schema.mappers.js#PreferenceMapper',
+        typeMapperPropertyMap: {},
+      },
+    });
+  });
+
   it('throws error if there are duplicated mappers', () => {
     const project = new Project();
     project.createSourceFile(

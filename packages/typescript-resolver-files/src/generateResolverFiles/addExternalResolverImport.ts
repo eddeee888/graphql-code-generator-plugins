@@ -29,9 +29,10 @@ export const addExternalResolverImport = (
       importLineMeta: {
         isTypeImport: false,
         module: moduleImport,
+        moduleType: 'file',
         namedImports: [],
         defaultImport: undefined,
-        emitLegacyCommonJSImports: emitLegacyCommonJSImports,
+        emitLegacyCommonJSImports,
       },
       identifierUsages: [],
     } as GenerateResolverFilesContext['result']['externalImports'][number]);
