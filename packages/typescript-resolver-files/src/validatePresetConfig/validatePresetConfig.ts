@@ -81,6 +81,7 @@ export interface TypedPresetConfig extends RawPresetConfig {
   resolverMainFileMode?: ResolverMainFileMode;
   typeDefsFileMode?: TypeDefsFileMode;
   fixObjectTypeResolvers?: FixObjectTypeResolvers;
+  typesPluginsConfig?: ParsedTypesPluginsConfig;
 }
 
 export const validatePresetConfig = ({
