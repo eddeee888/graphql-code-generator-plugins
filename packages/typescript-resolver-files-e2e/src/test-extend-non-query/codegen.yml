@@ -1,0 +1,12 @@
+# https://www.graphql-code-generator.com/docs/config-reference/codegen-config
+schema:
+  - packages/typescript-resolver-files-e2e/src/test-extend-non-query/**/*.graphqls
+  - packages/typescript-resolver-files-e2e/src/test-extend-non-query/**/*.graphqls.ts
+hooks:
+  afterAllFileWrite:
+    - prettier --write
+generates:
+  packages/typescript-resolver-files-e2e/src/test-extend-non-query/modules:
+    preset: ./dist/packages/typescript-resolver-files/src/index.js
+    presetConfig:
+      enableExtendNonRootOperations: true
