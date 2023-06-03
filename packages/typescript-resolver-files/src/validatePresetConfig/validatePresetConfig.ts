@@ -49,6 +49,7 @@ export interface ParsedPresetConfig {
   tsMorphProjectOptions: ProjectOptions;
   fixObjectTypeResolvers: FixObjectTypeResolvers;
   emitLegacyCommonJSImports: boolean;
+  enableExtendNonRootOperations: boolean;
 }
 
 export interface RawPresetConfig {
@@ -74,6 +75,7 @@ export interface RawPresetConfig {
   tsConfigFilePath?: string;
   fixObjectTypeResolvers?: string;
   emitLegacyCommonJSImports?: boolean;
+  enableExtendNonRootOperations?: boolean;
 }
 
 export interface TypedPresetConfig extends RawPresetConfig {
@@ -103,6 +105,7 @@ export const validatePresetConfig = ({
   tsConfigFilePath = './tsconfig.json',
   fixObjectTypeResolvers = 'smart',
   emitLegacyCommonJSImports = true,
+  enableExtendNonRootOperations = false,
 }: RawPresetConfig): ParsedPresetConfig => {
   if (mode !== 'merged' && mode !== 'modules') {
     throw new Error(
@@ -263,6 +266,7 @@ export const validatePresetConfig = ({
     tsMorphProjectOptions,
     fixObjectTypeResolvers,
     emitLegacyCommonJSImports,
+    enableExtendNonRootOperations,
   };
 };
 

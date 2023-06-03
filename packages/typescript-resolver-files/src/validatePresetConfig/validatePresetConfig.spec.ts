@@ -21,6 +21,7 @@ const defaultExpected: ReturnType<typeof validatePresetConfig> = {
   },
   fixObjectTypeResolvers: 'smart',
   emitLegacyCommonJSImports: true,
+  enableExtendNonRootOperations: false,
 };
 
 describe('validatePresetConfig - general', () => {
@@ -213,6 +214,17 @@ describe('validatePresetConfig - general', () => {
     ).toThrowError(
       '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typesPluginsConfig.emitLegacyCommonJSImports is not supported. Use presetConfig.emitLegacyCommonJSImports instead.'
     );
+  });
+
+  it('returns result.enableExtendNonRootOperations = true if set to true', () => {
+    const parsed = validatePresetConfig({
+      enableExtendNonRootOperations: true,
+    });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      enableExtendNonRootOperations: true,
+    });
   });
 
   it('throws if result.fixObjectTypeResolvers is not valid', () => {

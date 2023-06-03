@@ -273,6 +273,12 @@ Statically compares object type's mapper types' field against schema types' fiel
 
 Determines whether imports emitted should use CommonJS syntax or ESM syntax (with `.js` file endings)
 
+### enableExtendNonRootOperations
+
+`bool` (Default: `false`)
+
+Determines whether to generate resolvers for non-root operations (e.g. `User` in `extend type User { ... }`)
+
 ## Config Examples
 
 #### 1. Custom Config
