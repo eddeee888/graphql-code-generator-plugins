@@ -540,6 +540,8 @@ describe('collectTypeMappersFromSourceFile', () => {
         private tsPrivateField: string;
         private readonly tsPrivateReadonlyField: string;
         #ecmaPrivateField: string;
+        method(): string
+        get getter(): string
       }
 
       export class NotMapperInlineExport1 {
@@ -552,7 +554,7 @@ describe('collectTypeMappersFromSourceFile', () => {
 
       class Base {
         id: string;
-        title: string;
+        private title: string;
       }
 
       class Like extends Base {
@@ -579,16 +581,13 @@ describe('collectTypeMappersFromSourceFile', () => {
     );
 
     expect(result).toEqual({
-      User: {
-        configImportPath: './module1/schema.mappers#UserTypeMapper',
-        schemaType: 'User',
-        typeMapperName: 'UserTypeMapper',
+      Like: {
+        configImportPath: './module1/schema.mappers#LikeTypeMapper',
+        schemaType: 'Like',
+        typeMapperName: 'LikeTypeMapper',
         typeMapperPropertyMap: {
           id: { name: 'id' },
-          firstName: { name: 'firstName' },
-          lastName: { name: 'lastName' },
           createdAt: { name: 'createdAt' },
-          updatedAt: { name: 'updatedAt' },
         },
       },
       Post: {
@@ -599,14 +598,16 @@ describe('collectTypeMappersFromSourceFile', () => {
           id: { name: 'id' },
         },
       },
-      Like: {
-        configImportPath: './module1/schema.mappers#LikeTypeMapper',
-        schemaType: 'Like',
-        typeMapperName: 'LikeTypeMapper',
+      User: {
+        configImportPath: './module1/schema.mappers#UserTypeMapper',
+        schemaType: 'User',
+        typeMapperName: 'UserTypeMapper',
         typeMapperPropertyMap: {
           id: { name: 'id' },
-          title: { name: 'title' },
+          firstName: { name: 'firstName' },
+          lastName: { name: 'lastName' },
           createdAt: { name: 'createdAt' },
+          updatedAt: { name: 'updatedAt' },
         },
       },
     });
