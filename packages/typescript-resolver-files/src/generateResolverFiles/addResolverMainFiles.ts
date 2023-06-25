@@ -22,6 +22,14 @@ const createDefaultFileDetails = (): FileDetails => ({
   objectTypes: [],
 });
 
+/**
+ * addResolverMainFiles
+ *
+ * @description Function to create resolver main file/s (default: resolvers.generated.ts)
+ * If resolverMainFileMode=merged, only one file is generated
+ * If resolverMainFileMode=modules, one file is generated for each module
+ * If no resolvers are created or imported, do not generate a file.
+ */
 export const addResolverMainFiles = ({
   config: {
     baseOutputDir,
