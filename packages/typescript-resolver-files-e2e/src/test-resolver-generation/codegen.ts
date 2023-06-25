@@ -10,8 +10,14 @@ const config: CodegenConfig = {
     afterAllFileWrite: ['prettier --write'],
   },
   generates: {
-    'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema':
-      defineConfig(),
+    'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-disabled':
+      defineConfig({ resolverGeneration: 'disabled' }),
+
+    'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-recommended':
+      defineConfig({ resolverGeneration: 'recommended' }),
+
+    'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-full':
+      defineConfig({ resolverGeneration: 'full' }),
   },
 };
 
