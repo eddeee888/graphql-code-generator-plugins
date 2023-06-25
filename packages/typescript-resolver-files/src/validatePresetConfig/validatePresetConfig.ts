@@ -24,6 +24,7 @@ type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
 export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
 type FixObjectTypeResolvers = 'smart' | 'disabled';
+type ResolverGeneration = 'disabled' | 'recommended' | 'full'; // TODO: also take object in the future
 
 export type ScalarsOverridesType = string | { input: string; output: string };
 
@@ -32,6 +33,15 @@ export interface ParsedPresetConfig {
   resolverRelativeTargetDir: string;
   resolverMainFile: string;
   resolverMainFileMode: ResolverMainFileMode;
+  resolverGeneration: {
+    query: boolean;
+    mutation: boolean;
+    subscription: boolean;
+    scalar: boolean;
+    object: boolean;
+    union: boolean;
+    interface: boolean;
+  };
   typeDefsFilePath: string | false;
   typeDefsFileMode: TypeDefsFileMode;
   mappersFileExtension: string;
@@ -56,6 +66,7 @@ export interface RawPresetConfig {
   resolverRelativeTargetDir?: string;
   resolverMainFile?: string;
   resolverMainFileMode?: string;
+  resolverGeneration?: string;
   typeDefsFilePath?: string | boolean;
   typeDefsFileMode?: string;
   mappersFileExtension?: string;
@@ -82,6 +93,7 @@ export interface TypedPresetConfig extends RawPresetConfig {
   typeDefsFileMode?: TypeDefsFileMode;
   fixObjectTypeResolvers?: FixObjectTypeResolvers;
   typesPluginsConfig?: ParsedTypesPluginsConfig;
+  resolverGeneration?: ResolverGeneration;
 }
 
 export const validatePresetConfig = ({
@@ -89,6 +101,7 @@ export const validatePresetConfig = ({
   resolverRelativeTargetDir,
   resolverMainFile = 'resolvers.generated.ts',
   resolverMainFileMode = 'merged',
+  resolverGeneration = 'recommended',
   typeDefsFilePath = defaultTypeDefsFilePath,
   typeDefsFileMode: inputTypeDefsFileMode = 'merged',
   mappersFileExtension = '.mappers.ts',
@@ -120,6 +133,19 @@ export const validatePresetConfig = ({
     throw new Error(
       fmt.error(
         'presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")',
+        'Validation'
+      )
+    );
+  }
+
+  if (
+    resolverGeneration !== 'disabled' &&
+    resolverGeneration !== 'recommended' &&
+    resolverGeneration !== 'full'
+  ) {
+    throw new Error(
+      fmt.error(
+        'presetConfig.resolverGeneration must be "disabled", "recommended" or "full" (default is "recommended")',
         'Validation'
       )
     );
@@ -249,6 +275,7 @@ export const validatePresetConfig = ({
     resolverRelativeTargetDir: finalResolverRelativeTargetDir,
     resolverMainFile,
     resolverMainFileMode,
+    resolverGeneration: parseResolverGeneration(resolverGeneration),
     typeDefsFilePath: finalTypeDefsFilePath,
     typeDefsFileMode,
     mode,
@@ -290,4 +317,40 @@ const validateTypesPluginsConfig = (
   const { scalars: _, emitLegacyCommonJSImports: __, ...rest } = config;
 
   return rest;
+};
+
+const parseResolverGeneration = (
+  resolverGeneration: ResolverGeneration
+): ParsedPresetConfig['resolverGeneration'] => {
+  if (resolverGeneration === 'full') {
+    return {
+      query: true,
+      mutation: true,
+      subscription: true,
+      scalar: true,
+      object: true,
+      union: true,
+      interface: true,
+    };
+  } else if (resolverGeneration === 'recommended') {
+    return {
+      query: true,
+      mutation: true,
+      subscription: true,
+      scalar: true,
+      object: true,
+      union: false,
+      interface: false,
+    };
+  }
+
+  return {
+    query: false,
+    mutation: false,
+    subscription: false,
+    scalar: false,
+    object: false,
+    union: false,
+    interface: false,
+  };
 };

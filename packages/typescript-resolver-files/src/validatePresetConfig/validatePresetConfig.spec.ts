@@ -1,11 +1,23 @@
-import { validatePresetConfig } from './validatePresetConfig';
+import {
+  type ParsedPresetConfig,
+  validatePresetConfig,
+} from './validatePresetConfig';
 
-const defaultExpected: ReturnType<typeof validatePresetConfig> = {
+const defaultExpected: ParsedPresetConfig = {
   mode: 'modules',
   resolverMainFile: 'resolvers.generated.ts',
   resolverMainFileMode: 'merged',
   resolverRelativeTargetDir: 'resolvers',
   resolverTypesPath: './types.generated.ts',
+  resolverGeneration: {
+    query: true,
+    mutation: true,
+    subscription: true,
+    scalar: true,
+    object: true,
+    union: false,
+    interface: false,
+  },
   typeDefsFilePath: './typeDefs.generated.ts',
   typeDefsFileMode: 'merged',
   mappersFileExtension: '.mappers.ts',
@@ -356,6 +368,65 @@ describe('validatePresetConfig - mode: merged', () => {
       })
     ).toThrowError(
       '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.blacklistedModules can only be used with presetConfig.mode == "modules"'
+    );
+  });
+});
+
+describe('validatePresetConfig - resolverGeneration', () => {
+  it.each<{
+    input: 'disabled' | 'recommended' | 'full';
+    expected: ParsedPresetConfig['resolverGeneration'];
+  }>([
+    {
+      input: 'disabled',
+      expected: {
+        query: false,
+        mutation: false,
+        subscription: false,
+        scalar: false,
+        object: false,
+        union: false,
+        interface: false,
+      },
+    },
+    {
+      input: 'recommended',
+      expected: {
+        query: true,
+        mutation: true,
+        subscription: true,
+        scalar: true,
+        object: true,
+        union: false,
+        interface: false,
+      },
+    },
+    {
+      input: 'full',
+      expected: {
+        query: true,
+        mutation: true,
+        subscription: true,
+        scalar: true,
+        object: true,
+        union: true,
+        interface: true,
+      },
+    },
+  ])(
+    'correctly returns the parsed "$input" resolverGeneration object',
+    ({ input, expected }) => {
+      const result = validatePresetConfig({ resolverGeneration: input });
+
+      expect(result.resolverGeneration).toEqual(expected);
+    }
+  );
+
+  it('throws if invalid resolverGeneration is provided', () => {
+    expect(() =>
+      validatePresetConfig({ resolverGeneration: 'omg_what_is_this' })
+    ).toThrowError(
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.resolverGeneration must be "disabled", "recommended" or "full" (default is "recommended")'
     );
   });
 });
