@@ -5,13 +5,9 @@ import { topicEdit as Mutation_topicEdit } from './resolvers/Mutation/topicEdit'
 import { topicById as Query_topicById } from './resolvers/Query/topicById';
 import { topicsCreatedByUser as Query_topicsCreatedByUser } from './resolvers/Query/topicsCreatedByUser';
 import { Topic } from './resolvers/Topic';
-import { TopicByIdPayload } from './resolvers/TopicByIdPayload';
 import { TopicByIdResult } from './resolvers/TopicByIdResult';
-import { TopicCreatePayload } from './resolvers/TopicCreatePayload';
 import { TopicCreateResult } from './resolvers/TopicCreateResult';
-import { TopicEditPayload } from './resolvers/TopicEditPayload';
 import { TopicEditResult } from './resolvers/TopicEditResult';
-import { TopicsCreatedByUserPayload } from './resolvers/TopicsCreatedByUserPayload';
 import { TopicsCreatedByUserResult } from './resolvers/TopicsCreatedByUserResult';
 export const resolvers: Resolvers = {
   Query: {
@@ -24,12 +20,8 @@ export const resolvers: Resolvers = {
   },
 
   Topic: Topic,
-  TopicByIdPayload: TopicByIdPayload,
   TopicByIdResult: TopicByIdResult,
-  TopicCreatePayload: TopicCreatePayload,
   TopicCreateResult: TopicCreateResult,
-  TopicEditPayload: TopicEditPayload,
   TopicEditResult: TopicEditResult,
-  TopicsCreatedByUserPayload: TopicsCreatedByUserPayload,
   TopicsCreatedByUserResult: TopicsCreatedByUserResult,
 };

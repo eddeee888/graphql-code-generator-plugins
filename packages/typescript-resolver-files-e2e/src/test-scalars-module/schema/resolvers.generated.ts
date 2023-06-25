@@ -1,7 +1,6 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.generated';
 import { DateTime } from './base/resolvers/DateTime';
-import { Error } from './base/resolvers/Error';
 import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/topicCreate';
 import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
 import { PaginationResult } from './base/resolvers/PaginationResult';
@@ -14,16 +13,11 @@ import { userByAccountName as Query_userByAccountName } from './user/resolvers/Q
 import { SomeRandomScalar } from './base/resolvers/SomeRandomScalar';
 import { profileChanges as Subscription_profileChanges } from './user/resolvers/Subscription/profileChanges';
 import { Topic } from './topic/resolvers/Topic';
-import { TopicByIdPayload } from './topic/resolvers/TopicByIdPayload';
 import { TopicByIdResult } from './topic/resolvers/TopicByIdResult';
-import { TopicCreatePayload } from './topic/resolvers/TopicCreatePayload';
 import { TopicCreateResult } from './topic/resolvers/TopicCreateResult';
-import { TopicEditPayload } from './topic/resolvers/TopicEditPayload';
 import { TopicEditResult } from './topic/resolvers/TopicEditResult';
-import { TopicsCreatedByUserPayload } from './topic/resolvers/TopicsCreatedByUserPayload';
 import { TopicsCreatedByUserResult } from './topic/resolvers/TopicsCreatedByUserResult';
 import { User } from './user/resolvers/User';
-import { UserPayload } from './user/resolvers/UserPayload';
 import { UserResult } from './user/resolvers/UserResult';
 export const resolvers: Resolvers = {
   Query: {
@@ -38,21 +32,15 @@ export const resolvers: Resolvers = {
   },
   Subscription: { profileChanges: Subscription_profileChanges },
   DateTime: DateTime,
-  Error: Error,
   PaginationResult: PaginationResult,
   PayloadError: PayloadError,
   Profile: Profile,
   SomeRandomScalar: SomeRandomScalar,
   Topic: Topic,
-  TopicByIdPayload: TopicByIdPayload,
   TopicByIdResult: TopicByIdResult,
-  TopicCreatePayload: TopicCreatePayload,
   TopicCreateResult: TopicCreateResult,
-  TopicEditPayload: TopicEditPayload,
   TopicEditResult: TopicEditResult,
-  TopicsCreatedByUserPayload: TopicsCreatedByUserPayload,
   TopicsCreatedByUserResult: TopicsCreatedByUserResult,
   User: User,
-  UserPayload: UserPayload,
   UserResult: UserResult,
 };

@@ -1,6 +1,5 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.gen';
-import { Error } from './base/rslvrs/Error';
 import { topicCreate as Mutation_topicCreate } from './topic/rslvrs/Mutation/topicCreate';
 import { topicEdit as Mutation_topicEdit } from './topic/rslvrs/Mutation/topicEdit';
 import { PaginationResult } from './base/rslvrs/PaginationResult';
@@ -13,16 +12,11 @@ import { SomeOtherScalars } from './base/rslvrs/SomeOtherScalars';
 import { StandardError } from './base/rslvrs/StandardError';
 import { profileChanges as Subscription_profileChanges } from './user/rslvrs/Subscription/profileChanges';
 import { Topic } from './topic/rslvrs/Topic';
-import { TopicByIdPayload } from './topic/rslvrs/TopicByIdPayload';
 import { TopicByIdResult } from './topic/rslvrs/TopicByIdResult';
-import { TopicCreatePayload } from './topic/rslvrs/TopicCreatePayload';
 import { TopicCreateResult } from './topic/rslvrs/TopicCreateResult';
-import { TopicEditPayload } from './topic/rslvrs/TopicEditPayload';
 import { TopicEditResult } from './topic/rslvrs/TopicEditResult';
-import { TopicsCreatedByUserPayload } from './topic/rslvrs/TopicsCreatedByUserPayload';
 import { TopicsCreatedByUserResult } from './topic/rslvrs/TopicsCreatedByUserResult';
 import { User } from './user/rslvrs/User';
-import { UserPayload } from './user/rslvrs/UserPayload';
 import { UserResult } from './user/rslvrs/UserResult';
 import { WithInputOutput } from './base/rslvrs/WithInputOutput';
 import CustomBigIntResolver from './base/CustomBigIntResolver';
@@ -39,22 +33,16 @@ export const resolvers: Resolvers = {
     topicEdit: Mutation_topicEdit,
   },
   Subscription: { profileChanges: Subscription_profileChanges },
-  Error: Error,
   PaginationResult: PaginationResult,
   Profile: Profile,
   SomeOtherScalars: SomeOtherScalars,
   StandardError: StandardError,
   Topic: Topic,
-  TopicByIdPayload: TopicByIdPayload,
   TopicByIdResult: TopicByIdResult,
-  TopicCreatePayload: TopicCreatePayload,
   TopicCreateResult: TopicCreateResult,
-  TopicEditPayload: TopicEditPayload,
   TopicEditResult: TopicEditResult,
-  TopicsCreatedByUserPayload: TopicsCreatedByUserPayload,
   TopicsCreatedByUserResult: TopicsCreatedByUserResult,
   User: User,
-  UserPayload: UserPayload,
   UserResult: UserResult,
   WithInputOutput: WithInputOutput,
   BigInt: CustomBigIntResolver,
