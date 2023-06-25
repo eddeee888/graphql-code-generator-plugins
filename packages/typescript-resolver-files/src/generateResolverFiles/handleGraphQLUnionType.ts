@@ -9,8 +9,12 @@ export const handleGraphQLUnionType: GraphQLTypeHandler = (
     resolversTypeMeta,
     moduleName,
   },
-  { result, config: { emitLegacyCommonJSImports } }
+  { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
 ) => {
+  if (!resolverGeneration.union) {
+    return;
+  }
+
   const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { /* Implement ${resolverName} union logic here */ };`;
 
   result.files[fieldFilePath] = {

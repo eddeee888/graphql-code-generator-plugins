@@ -5,8 +5,12 @@ const graphQLScalarType = 'GraphQLScalarType';
 
 export const handleGraphQLScalarType: GraphQLTypeHandler = (
   { fieldFilePath, resolverName, normalizedResolverName, moduleName },
-  { result, config: { emitLegacyCommonJSImports } }
+  { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
 ) => {
+  if (!resolverGeneration.scalar) {
+    return;
+  }
+
   const variableStatement = `export const ${resolverName}: ${graphQLScalarType} = { /* Implement ${resolverName} scalar logic here */ };`;
 
   result.files[fieldFilePath] = {

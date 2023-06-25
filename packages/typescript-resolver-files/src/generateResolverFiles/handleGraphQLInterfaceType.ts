@@ -9,8 +9,12 @@ export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
     resolversTypeMeta,
     moduleName,
   },
-  { result, config: { emitLegacyCommonJSImports } }
+  { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
 ) => {
+  if (!resolverGeneration.interface) {
+    return;
+  }
+
   const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { /* Implement ${resolverName} interface logic here */ };`;
 
   result.files[fieldFilePath] = {
