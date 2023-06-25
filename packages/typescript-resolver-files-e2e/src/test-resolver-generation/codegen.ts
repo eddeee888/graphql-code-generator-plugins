@@ -3,14 +3,14 @@ import { defineConfig } from '../../../../dist/packages/typescript-resolver-file
 
 const config: CodegenConfig = {
   schema: [
-    'packages/typescript-resolver-files-e2e/src/test-test-resolver-generation/**/*.graphqls',
-    'packages/typescript-resolver-files-e2e/src/test-test-resolver-generation/**/*.graphqls.ts',
+    'packages/typescript-resolver-files-e2e/src/test-resolver-generation/**/*.graphqls',
+    'packages/typescript-resolver-files-e2e/src/test-resolver-generation/**/*.graphqls.ts',
   ],
   hooks: {
     afterAllFileWrite: ['prettier --write'],
   },
   generates: {
-    'packages/typescript-resolver-files-e2e/src/test-test-resolver-generation/schema':
+    'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema':
       defineConfig(),
   },
 };
