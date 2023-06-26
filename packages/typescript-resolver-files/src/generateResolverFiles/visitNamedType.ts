@@ -10,7 +10,6 @@ import {
 import {
   relativeModulePath,
   parseLocationForWhitelistedModule,
-  RootObjectType,
 } from '../utils';
 import {
   GraphQLTypeHandler,
@@ -22,13 +21,13 @@ import { addExternalResolverImport } from './addExternalResolverImport';
 export interface VisitNamedTypeParams {
   namedType: GraphQLNamedType;
   resolverName: string;
-  belongsToRootObject: RootObjectType | null;
+  belongsToRootObject: string | null;
   visitor: {
-    RootObjectTypeField: GraphQLTypeHandler<RootObjectType>;
-    ObjectType: GraphQLTypeHandler;
-    ScalarType: GraphQLTypeHandler;
-    UnionType: GraphQLTypeHandler;
-    InterfaceType: GraphQLTypeHandler;
+    RootObjectTypeField: GraphQLTypeHandler<string>;
+    ObjectType: GraphQLTypeHandler<string | null>;
+    ScalarType: GraphQLTypeHandler<string | null>;
+    UnionType: GraphQLTypeHandler<string | null>;
+    InterfaceType: GraphQLTypeHandler<string | null>;
   };
   location?: Location;
 }
@@ -163,7 +162,7 @@ interface ValidateAndPrepareForGraphQLTypeParams {
   resolverName: string;
   normalizedResolverName: string;
   outputDir: string;
-  belongsToRootObject: RootObjectType | null;
+  belongsToRootObject: string | null;
   moduleName: string;
 }
 const validateAndPrepareForGraphQLTypeHandler = (
@@ -175,7 +174,7 @@ const validateAndPrepareForGraphQLTypeHandler = (
     moduleName,
   }: ValidateAndPrepareForGraphQLTypeParams,
   { config, result }: GenerateResolverFilesContext
-): GraphQLTypeHandlerParams<RootObjectType> | GraphQLTypeHandlerParams => {
+): GraphQLTypeHandlerParams<string> | GraphQLTypeHandlerParams => {
   const fieldFilePath = path.posix.join(outputDir, `${resolverName}.ts`);
   if (result.files[fieldFilePath]) {
     throw new Error(
@@ -220,7 +219,7 @@ const validateAndPrepareForGraphQLTypeHandler = (
  */
 const normalizeResolverName = (
   name: string,
-  rootObject: RootObjectType | null
+  rootObject: string | null
 ): string => {
   if (!rootObject) {
     return name;

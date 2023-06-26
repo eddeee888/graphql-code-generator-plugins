@@ -3,7 +3,7 @@ import type { GraphQLTypeHandler } from './types';
 
 const graphQLScalarType = 'GraphQLScalarType';
 
-export const handleGraphQLScalarType: GraphQLTypeHandler = (
+export const handleGraphQLScalarType: GraphQLTypeHandler<string | null> = (
   { fieldFilePath, resolverName, normalizedResolverName, moduleName },
   { result, config: { emitLegacyCommonJSImports } }
 ) => {

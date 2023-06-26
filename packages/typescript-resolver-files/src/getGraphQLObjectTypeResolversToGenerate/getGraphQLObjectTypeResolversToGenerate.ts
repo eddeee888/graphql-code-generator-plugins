@@ -6,6 +6,7 @@ import {
 } from 'ts-morph';
 import type { TypeMappersMap } from '../parseTypeMappers';
 import { type NodePropertyMap, getNodePropertyMap } from '../utils';
+import { ExtendObjectType } from '../getExtendObjectType/getExtendObjectType';
 
 export type GraphQLObjectTypeResolversToGenerate = Record<
   string,
@@ -16,10 +17,12 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
   typesSourceFile,
   userDefinedSchemaObjectTypeMap,
   typeMappersMap,
+  extendObject,
 }: {
   typesSourceFile: SourceFile;
   typeMappersMap: TypeMappersMap;
   userDefinedSchemaObjectTypeMap: Record<string, true>;
+  extendObject: ExtendObjectType;
 }): GraphQLObjectTypeResolversToGenerate => {
   const typeMappersEntries = Object.entries(typeMappersMap);
   if (typeMappersEntries.length === 0) {
@@ -58,8 +61,14 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
               typeMapperPropertyMap[schemaTypeProperty.name];
             const typeMapperPropertyIdentifier = `${typeMapperName}.${schemaTypeProperty.name}`;
             const schemaTypePropertyIdentifier = `${schemaType}.${schemaTypeProperty.name}`;
+            const isExtendedField = !!extendObject[schemaType]?.has(
+              schemaTypeProperty.name
+            );
 
             if (schemaTypeProperty.name === '__typename') {
+              return;
+            }
+            if (isExtendedField) {
               return;
             }
 

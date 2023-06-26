@@ -19,6 +19,7 @@ import { addVirtualTypesFileToTsMorphProject } from './addVirtualTypesFileToTsMo
 import { parseTypeMappers } from './parseTypeMappers';
 import { RawPresetConfig, validatePresetConfig } from './validatePresetConfig';
 import { validateAndMergeParsedConfigs } from './validateAndMergeParsedConfigs';
+import { getExtendObjectType } from './getExtendObjectType/getExtendObjectType';
 
 export const presetName = '@eddeee888/gcg-typescript-resolver-files';
 
@@ -103,6 +104,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       externalResolvers,
       parsedGraphQLSchemaMeta,
     });
+    const extendObject = getExtendObjectType(Object.values(sourceMap));
 
     // typescript and typescript-resolvers plugins config
     const resolverTypesConfig = {
@@ -144,6 +146,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           userDefinedSchemaObjectTypeMap:
             mergedConfig.userDefinedSchemaTypeMap.object,
           typeMappersMap,
+          extendObject,
         }),
       createProfilerRunName('graphQLObjectTypeResolversToGenerate')
     );
@@ -196,6 +199,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         generateResolverFiles({
           config: {
             schema: schemaAst,
+            extendObject,
             sourceMap,
             baseOutputDir,
             resolverTypesPath,

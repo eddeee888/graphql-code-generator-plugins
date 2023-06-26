@@ -2,8 +2,9 @@ import type { GraphQLSchema } from 'graphql';
 import { type SourceFile, Project } from 'ts-morph';
 import type { GraphQLObjectTypeResolversToGenerate } from '../getGraphQLObjectTypeResolversToGenerate';
 import type { ParseSourcesResult } from '../parseSources';
-import type { ImportLineMeta, RootObjectType } from '../utils';
+import type { ImportLineMeta } from '../utils';
 import type { ParsedPresetConfig } from '../validatePresetConfig';
+import { ExtendObjectType } from '../getExtendObjectType/getExtendObjectType';
 
 interface BaseVirtualFile {
   __filetype: string;
@@ -29,7 +30,7 @@ export interface RootObjectTypeFieldResolverFile extends BaseVirtualFile {
   __filetype: 'rootObjectTypeFieldResolver';
   meta: {
     moduleName: string;
-    belongsToRootObject: RootObjectType;
+    belongsToRootObject: string;
     variableStatement: string;
     normalizedResolverName: string;
   };
@@ -51,9 +52,15 @@ export type ResolverFile =
   | RootObjectTypeFieldResolverFile
   | ObjectTypeFile;
 
+export interface ObjectTypeExtensionFields {
+  objectTypeName: string;
+  fieldName: string;
+}
+
 export interface GenerateResolverFilesContext {
   config: {
     schema: GraphQLSchema;
+    extendObject: ExtendObjectType;
     sourceMap: ParseSourcesResult['sourceMap'];
     baseOutputDir: string;
     resolverTypesPath: string;
@@ -103,9 +110,7 @@ export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
     module: ImportLineMeta['module'];
     moduleType: ImportLineMeta['moduleType'];
     // typeString: valid type specified for a field or object type
-    typeString:
-      | `${string}Resolvers`
-      | `${RootObjectType}Resolvers['${string}']`;
+    typeString: `${string}Resolvers` | `${string}Resolvers['${string}']`;
   };
 }
 

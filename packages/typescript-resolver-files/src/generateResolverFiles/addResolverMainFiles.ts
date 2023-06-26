@@ -12,6 +12,10 @@ interface FileDetails {
   queryFields: ObjectFieldMapping[];
   mutationFields: ObjectFieldMapping[];
   subscriptionFields: ObjectFieldMapping[];
+  objectExtensionFields: {
+    objectTypeName: string;
+    field: ObjectFieldMapping;
+  }[];
   objectTypes: ObjectFieldMapping[];
 }
 const createDefaultFileDetails = (): FileDetails => ({
@@ -19,6 +23,7 @@ const createDefaultFileDetails = (): FileDetails => ({
   queryFields: [],
   mutationFields: [],
   subscriptionFields: [],
+  objectExtensionFields: [],
   objectTypes: [],
 });
 
@@ -101,7 +106,14 @@ export const addResolverMainFiles = ({
       Subscription: () =>
         res[resolverMainFilename].subscriptionFields.push(fieldMapping),
     };
-    rootObjectMap[file.meta.belongsToRootObject]();
+    if (isRootObjectType(file.meta.belongsToRootObject)) {
+      rootObjectMap[file.meta.belongsToRootObject]();
+    } else {
+      res[resolverMainFilename].objectExtensionFields.push({
+        objectTypeName: file.meta.belongsToRootObject,
+        field: fieldMapping,
+      });
+    }
 
     return res;
   }, {});
@@ -197,7 +209,13 @@ export const addResolverMainFiles = ({
         .filter((v) => v.isScalar !== true)
         .map(
           (mapping) =>
-            `${mapping.propertyName}: { ...${mapping.identifierName} },`
+            `${mapping.propertyName}: { ...${
+              mapping.identifierName
+            }, ${resolverMainFile.objectExtensionFields
+              .filter((v) => v.objectTypeName === mapping.identifierName)
+              .map((v) => v.field)
+              .map(printObjectMapping)
+              .join(',')} },`
         )
         .join('\n');
 

@@ -47,6 +47,26 @@ export const generateResolverFiles = (
         return;
       }
 
+      if (isObjectType(namedType)) {
+        Object.values(namedType.getFields()).forEach((field) => {
+          const isExtendedField = !!ctx.config.extendObject[
+            namedType.name
+          ]?.has(field.name);
+          if (!isExtendedField) return;
+
+          visitNamedType(
+            {
+              namedType,
+              resolverName: field.name,
+              belongsToRootObject: namedType.name,
+              location: field.astNode?.loc,
+              visitor,
+            },
+            ctx
+          );
+        });
+      }
+
       visitNamedType(
         {
           namedType,

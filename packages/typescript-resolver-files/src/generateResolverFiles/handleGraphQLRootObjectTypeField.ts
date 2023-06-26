@@ -1,9 +1,7 @@
-import { printImportLine, type RootObjectType } from '../utils';
+import { printImportLine } from '../utils';
 import type { GraphQLTypeHandler } from './types';
 
-export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
-  RootObjectType
-> = (
+export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<string> = (
   {
     fieldFilePath,
     resolverName,
