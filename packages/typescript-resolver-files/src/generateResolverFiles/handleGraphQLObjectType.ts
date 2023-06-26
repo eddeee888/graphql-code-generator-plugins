@@ -35,6 +35,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler = (
       normalizedResolverName,
       variableStatement,
       resolversToGenerate: graphQLObjectTypeResolversToGenerate[resolverName], // Array of all resolvers that may need type checking
+      isScalar: false,
     },
   };
 };

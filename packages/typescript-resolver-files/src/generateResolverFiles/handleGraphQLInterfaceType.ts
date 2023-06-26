@@ -29,6 +29,7 @@ export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
       moduleName,
       normalizedResolverName,
       variableStatement,
+      isScalar: false,
     },
   };
 };

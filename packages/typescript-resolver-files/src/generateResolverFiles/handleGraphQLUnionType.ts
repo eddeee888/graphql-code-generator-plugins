@@ -29,6 +29,7 @@ export const handleGraphQLUnionType: GraphQLTypeHandler = (
       moduleName,
       normalizedResolverName,
       variableStatement,
+      isScalar: false,
     },
   };
 };

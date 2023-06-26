@@ -70,6 +70,7 @@ export const addResolverMainFiles = ({
       res[resolverMainFilename].objectTypes.push({
         propertyName: file.mainImportIdentifier,
         identifierName: file.mainImportIdentifier,
+        isScalar: file.meta.isScalar,
       });
       return res;
     }
@@ -135,6 +136,7 @@ export const addResolverMainFiles = ({
         res[resolverMainFilename].objectTypes.push({
           propertyName: resolverNameParts[0],
           identifierName: usage.identifierName,
+          isScalar: true,
         });
         return;
       }
@@ -191,6 +193,14 @@ export const addResolverMainFiles = ({
               .join(',')} },`
           : '';
 
+      const objectTypes = resolverMainFile.objectTypes
+        .filter((v) => v.isScalar !== true)
+        .map(
+          (mapping) =>
+            `${mapping.propertyName}: { ...${mapping.identifierName} },`
+        )
+        .join('\n');
+
       result.files[resolverMainFilename] = {
         __filetype: 'file',
         content: `/* This file was automatically generated. DO NOT UPDATE MANUALLY. */
@@ -206,7 +216,11 @@ export const addResolverMainFiles = ({
       ${queries}
       ${mutations}
       ${suscriptions}
-      ${resolverMainFile.objectTypes.map(printObjectMapping).join(',\n')}
+      ${objectTypes}
+      ${resolverMainFile.objectTypes
+        .filter((v) => v.isScalar)
+        .map(printObjectMapping)
+        .join(',\n')}
     }`,
         mainImportIdentifier: resolversIdentifier,
       };
@@ -217,6 +231,7 @@ export const addResolverMainFiles = ({
 interface ObjectFieldMapping {
   propertyName: string;
   identifierName: string;
+  isScalar?: boolean;
 }
 const printObjectMapping = ({
   propertyName,

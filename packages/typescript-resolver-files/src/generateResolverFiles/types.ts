@@ -21,6 +21,7 @@ export interface GeneralResolverFile extends BaseVirtualFile {
     moduleName: string;
     variableStatement: string;
     normalizedResolverName: string;
+    isScalar: boolean;
   };
 }
 
@@ -41,6 +42,7 @@ export interface ObjectTypeFile extends BaseVirtualFile {
     variableStatement: string;
     normalizedResolverName: string;
     resolversToGenerate?: GraphQLObjectTypeResolversToGenerate[number];
+    isScalar: false;
   };
 }
 
