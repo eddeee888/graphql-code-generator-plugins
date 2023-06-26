@@ -186,7 +186,7 @@ export const addResolverMainFiles = ({
               .map(printObjectMapping)
               .join(',')} },`
           : '';
-      const suscriptions =
+      const subscriptions =
         resolverMainFile.subscriptionFields.length > 0
           ? `Subscription: { ${resolverMainFile.subscriptionFields
               .map(printObjectMapping)
@@ -215,7 +215,7 @@ export const addResolverMainFiles = ({
     export const ${resolversIdentifier}: ${resolversTypeName} = {
       ${queries}
       ${mutations}
-      ${suscriptions}
+      ${subscriptions}
       ${objectTypes}
       ${resolverMainFile.objectTypes
         .filter((v) => v.isScalar)
