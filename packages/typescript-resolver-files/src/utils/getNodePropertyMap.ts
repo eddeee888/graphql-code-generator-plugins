@@ -1,5 +1,4 @@
-import { ClassDeclaration } from 'ts-morph';
-import { type TypeNode, Node, SyntaxKind } from 'ts-morph';
+import { type TypeNode, Node, SyntaxKind, ClassDeclaration } from 'ts-morph';
 
 export type NodePropertyMap = Record<string, { name: string }>;
 

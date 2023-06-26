@@ -3,6 +3,7 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from 'graphql';
+import { BookMapper } from './book/book.mappers';
 import { ProfileMapper } from './user/profile.mappers';
 import { TopicMapper } from './topic/topic.mappers';
 export type Maybe<T> = T | null;
@@ -37,6 +38,15 @@ export type Scalars = {
   Int: { input: number; output: number };
   Float: { input: number; output: number };
   DateTime: { input: Date | string; output: Date | string };
+};
+
+export type Book = {
+  __typename?: 'Book';
+  author: User;
+  id: Scalars['ID']['output'];
+  isbn: Scalars['String']['output'];
+  mainGenre: Scalars['String']['output'];
+  publishedAt: Scalars['DateTime']['output'];
 };
 
 export type Error = {
@@ -83,10 +93,15 @@ export type Profile = {
 
 export type Query = {
   __typename?: 'Query';
+  book?: Maybe<Book>;
   me: UserPayload;
   topicById: TopicByIdPayload;
   topicsCreatedByUser: TopicsCreatedByUserPayload;
   userByAccountName: UserPayload;
+};
+
+export type QueryBookArgs = {
+  id: Scalars['ID']['input'];
 };
 
 export type QueryTopicByIdArgs = {
@@ -323,6 +338,9 @@ export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Book: ResolverTypeWrapper<BookMapper>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Error']>;
   ErrorType: ErrorType;
@@ -331,9 +349,7 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PaginationResult: ResolverTypeWrapper<PaginationResult>;
   Profile: ResolverTypeWrapper<ProfileMapper>;
-  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Query: ResolverTypeWrapper<{}>;
-  String: ResolverTypeWrapper<Scalars['String']['output']>;
   StandardError: ResolverTypeWrapper<StandardError>;
   Subscription: ResolverTypeWrapper<{}>;
   Topic: ResolverTypeWrapper<TopicMapper>;
@@ -378,6 +394,9 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Book: BookMapper;
+  ID: Scalars['ID']['output'];
+  String: Scalars['String']['output'];
   DateTime: Scalars['DateTime']['output'];
   Error: ResolversInterfaceTypes<ResolversParentTypes>['Error'];
   Mutation: {};
@@ -385,9 +404,7 @@ export type ResolversParentTypes = {
   Int: Scalars['Int']['output'];
   PaginationResult: PaginationResult;
   Profile: ProfileMapper;
-  ID: Scalars['ID']['output'];
   Query: {};
-  String: Scalars['String']['output'];
   StandardError: StandardError;
   Subscription: {};
   Topic: TopicMapper;
@@ -414,6 +431,18 @@ export type ResolversParentTypes = {
   UserPayload: ResolversUnionTypes<ResolversParentTypes>['UserPayload'];
   UserResult: UserResult;
   Boolean: Scalars['Boolean']['output'];
+};
+
+export type BookResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']
+> = {
+  author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isbn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  mainGenre?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  publishedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export interface DateTimeScalarConfig
@@ -470,6 +499,12 @@ export type QueryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
+  book?: Resolver<
+    Maybe<ResolversTypes['Book']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryBookArgs, 'id'>
+  >;
   me?: Resolver<ResolversTypes['UserPayload'], ParentType, ContextType>;
   topicById?: Resolver<
     ResolversTypes['TopicByIdPayload'],
@@ -650,6 +685,7 @@ export type UserResultResolvers<
 };
 
 export type Resolvers<ContextType = any> = {
+  Book?: BookResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   Error?: ErrorResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
