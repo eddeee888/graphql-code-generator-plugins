@@ -11,8 +11,8 @@ export const resolvers: Resolvers = {
   Query: { me: Query_me, userByAccountName: Query_userByAccountName },
 
   Subscription: { profileChanges: Subscription_profileChanges },
-  Profile: Profile,
-  User: User,
-  UserPayload: UserPayload,
-  UserResult: UserResult,
+  Profile: { ...Profile },
+  User: { ...User },
+  UserPayload: { ...UserPayload },
+  UserResult: { ...UserResult },
 };

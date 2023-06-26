@@ -5,5 +5,5 @@ import { cat as Query_cat } from './cat/resolvers/Query/cat';
 export const resolvers: Resolvers = {
   Query: { cat: Query_cat },
 
-  Cat: Cat,
+  Cat: { ...Cat },
 };
