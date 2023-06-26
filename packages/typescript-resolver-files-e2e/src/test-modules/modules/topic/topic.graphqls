@@ -10,6 +10,10 @@ extend type Mutation {
   topicEdit(input: TopicEditInput!): TopicEditPayload!
 }
 
+extend type Profile {
+  watchingTopics: [Topic!]!
+}
+
 type Topic {
   id: ID!
   name: String!

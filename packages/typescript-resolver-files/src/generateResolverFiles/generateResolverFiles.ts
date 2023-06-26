@@ -51,7 +51,7 @@ export const generateResolverFiles = (
         Object.values(namedType.getFields()).forEach((field) => {
           const isExtendedField = !!ctx.config.extendObject[
             namedType.name
-          ]?.has(field.name);
+          ]?.extendedFields.has(field.name);
           if (!isExtendedField) return;
 
           visitNamedType(
@@ -72,7 +72,9 @@ export const generateResolverFiles = (
           namedType,
           resolverName: namedType.name,
           belongsToRootObject: null,
-          location: namedType.astNode?.loc,
+          location:
+            ctx.config.extendObject[namedType.name]?.realLocation ??
+            namedType.astNode?.loc,
           visitor,
         },
         ctx

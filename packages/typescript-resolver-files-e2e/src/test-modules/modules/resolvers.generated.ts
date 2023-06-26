@@ -4,6 +4,7 @@ import { Error } from './base/resolvers/Error';
 import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/topicCreate';
 import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
 import { PaginationResult } from './base/resolvers/PaginationResult';
+import { watchingTopics as Profile_watchingTopics } from './topic/resolvers/Profile/watchingTopics';
 import { Profile } from './user/resolvers/Profile';
 import { me as Query_me } from './user/resolvers/Query/me';
 import { topicById as Query_topicById } from './topic/resolvers/Query/topicById';
@@ -11,6 +12,7 @@ import { topicsCreatedByUser as Query_topicsCreatedByUser } from './topic/resolv
 import { userByAccountName as Query_userByAccountName } from './user/resolvers/Query/userByAccountName';
 import { StandardError } from './base/resolvers/StandardError';
 import { profileChanges as Subscription_profileChanges } from './user/resolvers/Subscription/profileChanges';
+import { author as Topic_author } from './user/resolvers/Topic/author';
 import { Topic } from './topic/resolvers/Topic';
 import { TopicByIdPayload } from './topic/resolvers/TopicByIdPayload';
 import { TopicByIdResult } from './topic/resolvers/TopicByIdResult';
@@ -38,9 +40,9 @@ export const resolvers: Resolvers = {
   Subscription: { profileChanges: Subscription_profileChanges },
   Error: { ...Error },
   PaginationResult: { ...PaginationResult },
-  Profile: { ...Profile },
+  Profile: { ...Profile, watchingTopics: Profile_watchingTopics },
   StandardError: { ...StandardError },
-  Topic: { ...Topic },
+  Topic: { ...Topic, author: Topic_author },
   TopicByIdPayload: { ...TopicByIdPayload },
   TopicByIdResult: { ...TopicByIdResult },
   TopicCreatePayload: { ...TopicCreatePayload },

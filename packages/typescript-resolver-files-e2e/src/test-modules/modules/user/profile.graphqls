@@ -6,3 +6,7 @@ type Profile {
   id: ID!
   user: User!
 }
+
+extend type Topic {
+  author: User!
+}

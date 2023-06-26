@@ -61,9 +61,9 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
               typeMapperPropertyMap[schemaTypeProperty.name];
             const typeMapperPropertyIdentifier = `${typeMapperName}.${schemaTypeProperty.name}`;
             const schemaTypePropertyIdentifier = `${schemaType}.${schemaTypeProperty.name}`;
-            const isExtendedField = !!extendObject[schemaType]?.has(
-              schemaTypeProperty.name
-            );
+            const isExtendedField = !!extendObject[
+              schemaType
+            ]?.extendedFields.has(schemaTypeProperty.name);
 
             if (schemaTypeProperty.name === '__typename') {
               return;

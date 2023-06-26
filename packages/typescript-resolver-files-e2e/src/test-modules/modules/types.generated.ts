@@ -79,6 +79,7 @@ export type Profile = {
   __typename?: 'Profile';
   id: Scalars['ID']['output'];
   user: User;
+  watchingTopics: Array<Topic>;
 };
 
 export type Query = {
@@ -113,6 +114,7 @@ export type Subscription = {
 
 export type Topic = {
   __typename?: 'Topic';
+  author: User;
   createdAt: Scalars['DateTime']['output'];
   creator: User;
   id: Scalars['ID']['output'];
@@ -463,6 +465,11 @@ export type ProfileResolvers<
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  watchingTopics?: Resolver<
+    Array<ResolversTypes['Topic']>,
+    ParentType,
+    ContextType
+  >;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -515,6 +522,7 @@ export type TopicResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Topic'] = ResolversParentTypes['Topic']
 > = {
+  author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   creator?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;

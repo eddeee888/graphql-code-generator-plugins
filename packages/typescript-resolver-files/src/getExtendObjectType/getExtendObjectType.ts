@@ -1,4 +1,4 @@
-import { visit } from 'graphql';
+import { Location, visit } from 'graphql';
 import { ParsedSource } from '../parseSources';
 
 /**
@@ -6,7 +6,13 @@ import { ParsedSource } from '../parseSources';
  * Record<TypeName, Set<FieldName>>
  * ```
  */
-export type ExtendObjectType = Record<string, Set<string>>;
+export type ExtendObjectType = Record<
+  string,
+  {
+    extendedFields: Set<string>;
+    realLocation?: Location;
+  }
+>;
 
 export const getExtendObjectType = (
   parsedSources: ParsedSource[]
@@ -21,10 +27,21 @@ export const getExtendObjectType = (
         const typeName = node.name.value;
         node.fields?.forEach((field) => {
           if (!result[typeName]) {
-            result[typeName] = new Set();
+            result[typeName] = {
+              extendedFields: new Set(),
+            };
           }
-          result[typeName].add(field.name.value);
+          result[typeName].extendedFields.add(field.name.value);
         });
+      },
+      ObjectTypeDefinition: (node) => {
+        const typeName = node.name.value;
+        if (!result[typeName]) {
+          result[typeName] = {
+            extendedFields: new Set(),
+          };
+        }
+        result[typeName].realLocation = node.loc;
       },
     });
   });
