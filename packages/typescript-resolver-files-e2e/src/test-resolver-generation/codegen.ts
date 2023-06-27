@@ -30,7 +30,7 @@ const config: CodegenConfig = {
           'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-full/**/*.graphqls',
           'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-full/**/*.graphqls.ts',
         ],
-        ...defineConfig({ resolverGeneration: 'full' }),
+        ...defineConfig({ resolverGeneration: 'all' }),
       },
   },
 };

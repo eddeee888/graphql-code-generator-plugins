@@ -24,7 +24,7 @@ type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
 export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
 type FixObjectTypeResolvers = 'smart' | 'disabled';
-type ResolverGeneration = 'disabled' | 'recommended' | 'full'; // TODO: also take object in the future
+type ResolverGeneration = 'disabled' | 'recommended' | 'all'; // TODO: also take object in the future
 
 export type ScalarsOverridesType = string | { input: string; output: string };
 
@@ -141,7 +141,7 @@ export const validatePresetConfig = ({
   if (
     resolverGeneration !== 'disabled' &&
     resolverGeneration !== 'recommended' &&
-    resolverGeneration !== 'full'
+    resolverGeneration !== 'all'
   ) {
     throw new Error(
       fmt.error(
@@ -322,7 +322,7 @@ const validateTypesPluginsConfig = (
 const parseResolverGeneration = (
   resolverGeneration: ResolverGeneration
 ): ParsedPresetConfig['resolverGeneration'] => {
-  if (resolverGeneration === 'full') {
+  if (resolverGeneration === 'all') {
     return {
       query: true,
       mutation: true,

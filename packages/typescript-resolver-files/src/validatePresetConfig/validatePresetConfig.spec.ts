@@ -374,7 +374,7 @@ describe('validatePresetConfig - mode: merged', () => {
 
 describe('validatePresetConfig - resolverGeneration', () => {
   it.each<{
-    input: 'disabled' | 'recommended' | 'full';
+    input: 'disabled' | 'recommended' | 'all';
     expected: ParsedPresetConfig['resolverGeneration'];
   }>([
     {
@@ -402,7 +402,7 @@ describe('validatePresetConfig - resolverGeneration', () => {
       },
     },
     {
-      input: 'full',
+      input: 'all',
       expected: {
         query: true,
         mutation: true,
