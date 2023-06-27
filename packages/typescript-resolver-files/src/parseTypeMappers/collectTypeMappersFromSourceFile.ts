@@ -95,6 +95,30 @@ export const collectTypeMappersFromSourceFile = (
       );
     });
   });
+
+  typeMappersSourceFile.getClasses().forEach((classDeclaration) => {
+    if (!classDeclaration.hasExportKeyword()) {
+      return;
+    }
+    const identifierNode = classDeclaration.getNameNode();
+    if (!identifierNode) {
+      // Anonymous class is skipped
+      return;
+    }
+
+    addTypeMapperDetailsIfValid(
+      {
+        declarationNode: null,
+        identifierNode,
+        typeMappersSuffix,
+        typeMappersFilePath: typeMappersSourceFile.getFilePath(),
+        resolverTypesPath,
+        shouldCollectPropertyMap,
+        emitLegacyCommonJSImports,
+      },
+      result
+    );
+  });
 };
 
 const addTypeMapperDetailsIfValid = (

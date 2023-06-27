@@ -523,6 +523,96 @@ describe('collectTypeMappersFromSourceFile', () => {
     });
   });
 
+  it('mutates the result based on typeMappersSuffix for locally declared class and exported', () => {
+    const project = new Project();
+    const mapperFile = project.createSourceFile(
+      '/path/to/schemas/module1/schema.mappers.ts',
+      `
+      export class UserTypeMapper {
+        id: string;
+        firstName!: string;
+        readonly lastName: string;
+        public createdAt: string;
+        public readonly updatedAt: string;
+        // bellow are not going to be collected
+        protected protectedField: string;
+        static notInstanceField: string;
+        private tsPrivateField: string;
+        private readonly tsPrivateReadonlyField: string;
+        #ecmaPrivateField: string;
+        method(): string
+        get getter(): string
+      }
+
+      export class NotMapperInlineExport1 {
+        id: string;
+      }
+
+      class PostTypeMapper {
+        id: string
+      }
+
+      class Base {
+        id: string;
+        private title: string;
+      }
+
+      class Like extends Base {
+        createdAt: string
+      }
+
+      export { 
+        Like as LikeTypeMapper,
+        PostTypeMapper,
+      };`
+    );
+
+    const result = {};
+
+    collectTypeMappersFromSourceFile(
+      {
+        typeMappersSourceFile: mapperFile,
+        typeMappersSuffix: 'TypeMapper',
+        resolverTypesPath: '/path/to/schemas/types.generated.ts',
+        shouldCollectPropertyMap: true,
+        emitLegacyCommonJSImports: true,
+      },
+      result
+    );
+
+    expect(result).toEqual({
+      Like: {
+        configImportPath: './module1/schema.mappers#LikeTypeMapper',
+        schemaType: 'Like',
+        typeMapperName: 'LikeTypeMapper',
+        typeMapperPropertyMap: {
+          id: { name: 'id' },
+          createdAt: { name: 'createdAt' },
+        },
+      },
+      Post: {
+        configImportPath: './module1/schema.mappers#PostTypeMapper',
+        schemaType: 'Post',
+        typeMapperName: 'PostTypeMapper',
+        typeMapperPropertyMap: {
+          id: { name: 'id' },
+        },
+      },
+      User: {
+        configImportPath: './module1/schema.mappers#UserTypeMapper',
+        schemaType: 'User',
+        typeMapperName: 'UserTypeMapper',
+        typeMapperPropertyMap: {
+          id: { name: 'id' },
+          firstName: { name: 'firstName' },
+          lastName: { name: 'lastName' },
+          createdAt: { name: 'createdAt' },
+          updatedAt: { name: 'updatedAt' },
+        },
+      },
+    });
+  });
+
   it('mutates the result on multiple runs', () => {
     const project = new Project({
       compilerOptions: {

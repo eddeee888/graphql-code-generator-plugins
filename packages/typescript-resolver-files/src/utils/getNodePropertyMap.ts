@@ -1,4 +1,4 @@
-import { type TypeNode, Node, SyntaxKind } from 'ts-morph';
+import { type TypeNode, Node, SyntaxKind, ClassDeclaration } from 'ts-morph';
 
 export type NodePropertyMap = Record<string, { name: string }>;
 
@@ -38,6 +38,10 @@ const getNodeProperties = (node: Node): Properties => {
     const properties: Properties = [];
     collectTypeNodeProperties(typeNode, properties);
     return properties;
+  } else if (node.isKind(SyntaxKind.ClassDeclaration)) {
+    const properties: Properties = [];
+    collectClassNodeProperties(node, properties);
+    return properties;
   }
   return [];
 };
@@ -62,4 +66,32 @@ const collectTypeNodeProperties = (
       collectTypeNodeProperties(typeNode, result); // May contain duplicated properties from different typeNodes. Will be deduped in getNodePropertyMap.
     });
   }
+};
+
+const collectClassNodeProperties = (
+  classNode: ClassDeclaration,
+  result: Properties
+): void => {
+  const baseClass = classNode.getBaseClass();
+  if (baseClass) {
+    collectClassNodeProperties(baseClass, result);
+  }
+
+  classNode.getInstanceProperties().forEach((prop) => {
+    if (
+      prop.hasModifier(SyntaxKind.PrivateKeyword) ||
+      prop.hasModifier(SyntaxKind.ProtectedKeyword)
+    ) {
+      return;
+    }
+    if (prop.getName().startsWith('#')) {
+      // ecma script private field is skipped
+      return;
+    }
+    if (classNode.getGetAccessor(prop.getName())) {
+      // getter is skipped
+      return;
+    }
+    result.push({ propertyName: prop.getName() });
+  });
 };

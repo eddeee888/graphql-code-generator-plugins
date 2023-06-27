@@ -1,0 +1,11 @@
+extend type Query {
+  book(id: ID!): Book
+}
+
+type Book {
+  id: ID!
+  isbn: String!
+  author: User!
+  mainGenre: String!
+  publishedAt: DateTime!
+}

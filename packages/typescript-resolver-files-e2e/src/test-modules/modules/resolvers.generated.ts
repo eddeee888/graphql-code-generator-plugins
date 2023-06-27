@@ -1,10 +1,12 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.generated';
+import { Book } from './book/resolvers/Book';
 import { Error } from './base/resolvers/Error';
 import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/topicCreate';
 import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
 import { PaginationResult } from './base/resolvers/PaginationResult';
 import { Profile } from './user/resolvers/Profile';
+import { book as Query_book } from './book/resolvers/Query/book';
 import { me as Query_me } from './user/resolvers/Query/me';
 import { topicById as Query_topicById } from './topic/resolvers/Query/topicById';
 import { topicsCreatedByUser as Query_topicsCreatedByUser } from './topic/resolvers/Query/topicsCreatedByUser';
@@ -26,6 +28,7 @@ import { UserResult } from './user/resolvers/UserResult';
 import { DateTimeResolver } from 'graphql-scalars';
 export const resolvers: Resolvers = {
   Query: {
+    book: Query_book,
     me: Query_me,
     topicById: Query_topicById,
     topicsCreatedByUser: Query_topicsCreatedByUser,
@@ -36,6 +39,7 @@ export const resolvers: Resolvers = {
     topicEdit: Mutation_topicEdit,
   },
   Subscription: { profileChanges: Subscription_profileChanges },
+  Book: Book,
   Error: Error,
   PaginationResult: PaginationResult,
   Profile: Profile,
