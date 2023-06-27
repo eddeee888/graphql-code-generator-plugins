@@ -11,13 +11,25 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
     return;
   }
 
-  const variableStatement = `export const ${resolverName}: ${graphQLScalarType} = { /* Implement ${resolverName} scalar logic here */ };`;
+  const variableStatement = `export const ${resolverName} = new GraphQLScalarType({
+    name: '${resolverName}',
+    description: '${resolverName} description',
+    serialize: (value) => {
+      /* Implement logic to turn the returned value from resolvers to a value that can be sent to clients */
+    },
+    parseValue: (value) => {
+      /* Implement logic to parse input that was sent to the server as variables */
+    },
+    parseLiteral: (ast) => {
+      /* Implement logic to parse input that was sent to the server as literal values (string, number, or boolean) */
+    },
+  });`;
 
   result.files[fieldFilePath] = {
     __filetype: 'generalResolver',
     content: `
     ${printImportLine({
-      isTypeImport: true,
+      isTypeImport: false,
       module: 'graphql',
       moduleType: 'module',
       namedImports: [graphQLScalarType],
