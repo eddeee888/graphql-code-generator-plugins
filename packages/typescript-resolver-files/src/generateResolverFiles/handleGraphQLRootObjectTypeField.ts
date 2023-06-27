@@ -12,8 +12,16 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
     resolversTypeMeta,
     moduleName,
   },
-  { result, config: { emitLegacyCommonJSImports } }
+  { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
 ) => {
+  if (
+    (belongsToRootObject === 'Query' && !resolverGeneration.query) ||
+    (belongsToRootObject === 'Mutation' && !resolverGeneration.mutation) ||
+    (belongsToRootObject === 'Subscription' && !resolverGeneration.subscription)
+  ) {
+    return;
+  }
+
   const suggestion = `/* Implement ${normalizedResolverName} resolver logic here */`;
 
   let variableStatement = `export const ${resolverName}: NonNullable<${resolversTypeMeta.typeString}> = async (_parent, _arg, _ctx) => { ${suggestion} };`;

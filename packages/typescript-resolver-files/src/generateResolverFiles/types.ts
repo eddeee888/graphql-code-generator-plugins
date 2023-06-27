@@ -58,6 +58,7 @@ export interface GenerateResolverFilesContext {
     resolverRelativeTargetDir: string;
     resolverMainFile: string;
     resolverMainFileMode: ParsedPresetConfig['resolverMainFileMode'];
+    resolverGeneration: ParsedPresetConfig['resolverGeneration'];
     mode: ParsedPresetConfig['mode'];
     whitelistedModules: string[];
     blacklistedModules: string[];

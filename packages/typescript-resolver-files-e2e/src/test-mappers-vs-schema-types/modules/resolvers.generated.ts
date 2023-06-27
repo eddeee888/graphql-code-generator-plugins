@@ -14,16 +14,11 @@ import { topicsCreatedByUser as Query_topicsCreatedByUser } from './topic/resolv
 import { userByAccountName as Query_userByAccountName } from './user/resolvers/Query/userByAccountName';
 import { profileChanges as Subscription_profileChanges } from './user/resolvers/Subscription/profileChanges';
 import { Topic } from './topic/resolvers/Topic';
-import { TopicByIdPayload } from './topic/resolvers/TopicByIdPayload';
 import { TopicByIdResult } from './topic/resolvers/TopicByIdResult';
-import { TopicCreatePayload } from './topic/resolvers/TopicCreatePayload';
 import { TopicCreateResult } from './topic/resolvers/TopicCreateResult';
-import { TopicEditPayload } from './topic/resolvers/TopicEditPayload';
 import { TopicEditResult } from './topic/resolvers/TopicEditResult';
-import { TopicsCreatedByUserPayload } from './topic/resolvers/TopicsCreatedByUserPayload';
 import { TopicsCreatedByUserResult } from './topic/resolvers/TopicsCreatedByUserResult';
 import { User } from './user/resolvers/User';
-import { UserPayload } from './user/resolvers/UserPayload';
 import { UserResult } from './user/resolvers/UserResult';
 import { DateTimeResolver } from 'graphql-scalars';
 export const resolvers: Resolvers = {
@@ -45,16 +40,11 @@ export const resolvers: Resolvers = {
   Profile: Profile,
   ProfileMeta: ProfileMeta,
   Topic: Topic,
-  TopicByIdPayload: TopicByIdPayload,
   TopicByIdResult: TopicByIdResult,
-  TopicCreatePayload: TopicCreatePayload,
   TopicCreateResult: TopicCreateResult,
-  TopicEditPayload: TopicEditPayload,
   TopicEditResult: TopicEditResult,
-  TopicsCreatedByUserPayload: TopicsCreatedByUserPayload,
   TopicsCreatedByUserResult: TopicsCreatedByUserResult,
   User: User,
-  UserPayload: UserPayload,
   UserResult: UserResult,
   DateTime: DateTimeResolver,
 };

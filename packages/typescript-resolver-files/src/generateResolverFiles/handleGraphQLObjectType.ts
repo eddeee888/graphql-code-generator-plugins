@@ -11,9 +11,17 @@ export const handleGraphQLObjectType: GraphQLTypeHandler = (
   },
   {
     result,
-    config: { graphQLObjectTypeResolversToGenerate, emitLegacyCommonJSImports },
+    config: {
+      resolverGeneration,
+      graphQLObjectTypeResolversToGenerate,
+      emitLegacyCommonJSImports,
+    },
   }
 ) => {
+  if (!resolverGeneration.object) {
+    return;
+  }
+
   const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { 
     /* Implement ${resolverName} resolver logic here */ 
   };`;

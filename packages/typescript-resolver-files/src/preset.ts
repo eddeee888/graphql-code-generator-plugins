@@ -47,6 +47,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       mappersSuffix: typeMappersSuffix,
       resolverMainFile,
       resolverMainFileMode,
+      resolverGeneration,
       typeDefsFilePath,
       typeDefsFileMode,
       scalarsModule,
@@ -202,6 +203,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
             resolverRelativeTargetDir,
             resolverMainFile,
             resolverMainFileMode,
+            resolverGeneration,
             graphQLObjectTypeResolversToGenerate,
             tsMorph: {
               project: tsMorphProject,

@@ -1,10 +1,12 @@
-# typescript-resolver-files
+# typescript-resolver-files-e2e
 
-This library was generated with [Nx](https://nx.dev).
+This is the e2e tests for `typescript-resolver-files`
 
-## Running lint
+## Generate a new test suite
 
-Run `nx lint typescript-resolver-files` to execute the lint via [ESLint](https://eslint.org/).
+```shell
+nx g @graphql-code-generator-plugins/workspace-plugin:typescript-resolver-files-add-e2e-test <test-name-in-kebab-case>
+```
 
 ## Testing
 
