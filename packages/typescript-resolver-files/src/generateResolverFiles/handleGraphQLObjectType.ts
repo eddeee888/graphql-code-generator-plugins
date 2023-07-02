@@ -1,13 +1,17 @@
 import type { GraphQLTypeHandler } from './types';
 import { printImportLine } from '../utils';
 
-export const handleGraphQLObjectType: GraphQLTypeHandler = (
+export const handleGraphQLObjectType: GraphQLTypeHandler<
+  null,
+  { fieldsToPick?: string[] }
+> = (
   {
     fieldFilePath,
     resolverName,
     normalizedResolverName,
     resolversTypeMeta,
     moduleName,
+    fieldsToPick = [], // If fieldsToPick.length === 0, it means the current object handles all resolvers
   },
   {
     result,
@@ -22,7 +26,31 @@ export const handleGraphQLObjectType: GraphQLTypeHandler = (
     return;
   }
 
-  const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { 
+  // `typeString` contains the resolver type
+  // If there's fieldsToPick, we must only pick said fields from the original resolver type
+  const typeString =
+    fieldsToPick.length > 0
+      ? `Pick<${resolversTypeMeta.typeString}, ${fieldsToPick
+          .map((fieldName) => `'${fieldName}'`)
+          .join('|')}>`
+      : resolversTypeMeta.typeString;
+
+  // Array of all resolvers that may need type checking
+  // If there's fieldsToPick, we must only generate said fields
+  const allResolversToGenerate =
+    graphQLObjectTypeResolversToGenerate[resolverName];
+  const resolversToGenerate =
+    fieldsToPick.length > 0
+      ? fieldsToPick.reduce<typeof allResolversToGenerate>(
+          (res, fieldToPick) => {
+            res[fieldToPick] = allResolversToGenerate[fieldToPick];
+            return res;
+          },
+          {}
+        )
+      : allResolversToGenerate;
+
+  const variableStatement = `export const ${resolverName}: ${typeString} = { 
     /* Implement ${resolverName} resolver logic here */ 
   };`;
 
@@ -42,7 +70,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler = (
       moduleName,
       normalizedResolverName,
       variableStatement,
-      resolversToGenerate: graphQLObjectTypeResolversToGenerate[resolverName], // Array of all resolvers that may need type checking
+      resolversToGenerate,
     },
   };
 };

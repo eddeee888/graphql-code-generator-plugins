@@ -33,14 +33,15 @@ export interface VisitNamedTypeParams {
   location?: Location;
 }
 
-export const visitNamedType = (
+export const visitNamedType = <P extends Record<string, unknown>>(
   {
     namedType,
     resolverName,
     belongsToRootObject,
     location,
     visitor,
-  }: VisitNamedTypeParams,
+    ...extraParams
+  }: VisitNamedTypeParams & P,
   ctx: GenerateResolverFilesContext
 ): void => {
   const normalizedResolverName = normalizeResolverName(
@@ -78,7 +79,7 @@ export const visitNamedType = (
   }
 
   // Generate resolver files based on its type
-  const visitorHandlerParams = validateAndPrepareForGraphQLTypeHandler(
+  const visitorHandlerParamsBase = validateAndPrepareForGraphQLTypeHandler(
     {
       resolverName,
       normalizedResolverName,
@@ -88,6 +89,8 @@ export const visitNamedType = (
     },
     ctx
   );
+
+  const visitorHandlerParams = { ...visitorHandlerParamsBase, ...extraParams };
 
   if (visitorHandlerParams.belongsToRootObject) {
     visitor['RootObjectTypeField'](visitorHandlerParams, ctx);

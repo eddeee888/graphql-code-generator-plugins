@@ -102,13 +102,14 @@ export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
     module: ImportLineMeta['module'];
     moduleType: ImportLineMeta['moduleType'];
     // typeString: valid type specified for a field or object type
-    typeString:
-      | `${string}Resolvers`
-      | `${RootObjectType}Resolvers['${string}']`;
+    typeString: string;
   };
 }
 
-export type GraphQLTypeHandler<BelongsToRootObject = null> = (
-  params: GraphQLTypeHandlerParams<BelongsToRootObject>,
+export type GraphQLTypeHandler<
+  BelongsToRootObject = null,
+  ExtraParams = Record<string, unknown>
+> = (
+  params: GraphQLTypeHandlerParams<BelongsToRootObject> & ExtraParams,
   ctx: GenerateResolverFilesContext
 ) => void;
