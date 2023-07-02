@@ -7,31 +7,37 @@ const config: CodegenConfig = {
   },
   generates: {
     'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-disabled':
-      {
-        schema: [
-          'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-disabled/**/*.graphqls',
-          'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-disabled/**/*.graphqls.ts',
-        ],
-        ...defineConfig({ resolverGeneration: 'disabled' }),
-      },
+      defineConfig(
+        { resolverGeneration: 'disabled' },
+        {
+          schema: [
+            'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-disabled/**/*.graphqls',
+            'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-disabled/**/*.graphqls.ts',
+          ],
+        }
+      ),
 
     'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-recommended':
-      {
-        schema: [
-          'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-recommended/**/*.graphqls',
-          'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-recommended/**/*.graphqls.ts',
-        ],
-        ...defineConfig({ resolverGeneration: 'recommended' }),
-      },
+      defineConfig(
+        { resolverGeneration: 'recommended' },
+        {
+          schema: [
+            'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-recommended/**/*.graphqls',
+            'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-recommended/**/*.graphqls.ts',
+          ],
+        }
+      ),
 
     'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-full':
-      {
-        schema: [
-          'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-full/**/*.graphqls',
-          'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-full/**/*.graphqls.ts',
-        ],
-        ...defineConfig({ resolverGeneration: 'all' }),
-      },
+      defineConfig(
+        { resolverGeneration: 'all' },
+        {
+          schema: [
+            'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-full/**/*.graphqls',
+            'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-full/**/*.graphqls.ts',
+          ],
+        }
+      ),
   },
 };
 
