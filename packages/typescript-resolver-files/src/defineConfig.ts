@@ -5,9 +5,15 @@ import { preset } from './preset';
 
 export const defineConfig = (
   presetConfig: TypedPresetConfig = {},
-  context: { baseOutputDir: string } = { baseOutputDir: '' }
-): Pick<Types.ConfiguredOutput, 'preset' | 'presetConfig' | 'watchPattern'> => {
-  const { baseOutputDir } = context;
+  context: {
+    baseOutputDir?: string;
+    schema?: Types.ConfiguredOutput['schema'];
+  } = {}
+): Pick<
+  Types.ConfiguredOutput,
+  'preset' | 'presetConfig' | 'watchPattern' | 'schema'
+> => {
+  const { schema, baseOutputDir = '' } = context;
 
   const mappersFileExtension =
     presetConfig.mappersFileExtension || '.mappers.ts';
@@ -24,5 +30,6 @@ export const defineConfig = (
     preset,
     presetConfig,
     watchPattern,
+    schema,
   };
 };

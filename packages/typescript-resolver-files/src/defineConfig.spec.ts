@@ -3,20 +3,34 @@ import { preset as defaultPreset } from './preset';
 
 describe('defineConfig()', () => {
   it('returns default values correctly', () => {
-    const { preset, presetConfig, watchPattern } = defineConfig();
-    expect(preset).toBe(defaultPreset);
-    expect(presetConfig).toEqual({});
-    expect(watchPattern).toEqual(['**/*.mappers.ts']);
+    const result = defineConfig();
+
+    expect(result).toEqual({
+      preset: defaultPreset,
+      presetConfig: {},
+      watchPattern: ['**/*.mappers.ts'],
+    });
   });
 
   it('returns default values correctly with baseOutputDir', () => {
-    const { preset, presetConfig, watchPattern } = defineConfig(
-      {},
-      { baseOutputDir: 'src/schema' }
-    );
-    expect(preset).toBe(defaultPreset);
-    expect(presetConfig).toEqual({});
-    expect(watchPattern).toEqual(['src/schema/**/*.mappers.ts']);
+    const result = defineConfig({}, { baseOutputDir: 'src/schema' });
+
+    expect(result).toEqual({
+      preset: defaultPreset,
+      presetConfig: {},
+      watchPattern: ['src/schema/**/*.mappers.ts'],
+    });
+  });
+
+  it('returns schema value correctly when set', () => {
+    const result = defineConfig({}, { schema: ['src/**/*.graphqls'] });
+
+    expect(result).toEqual({
+      preset: defaultPreset,
+      presetConfig: {},
+      watchPattern: ['**/*.mappers.ts'],
+      schema: ['src/**/*.graphqls'],
+    });
   });
 
   it('returns presetConfig with declared config', () => {
