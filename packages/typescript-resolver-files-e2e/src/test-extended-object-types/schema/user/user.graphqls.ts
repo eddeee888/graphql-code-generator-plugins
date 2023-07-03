@@ -24,6 +24,7 @@ export const userTypeDefs = gql`
   union UserPayload = UserResult | PayloadError
 
   extend type Topic {
-    creator: User!
+    extendedTopicFieldInDifferentFileAndDifferentModule2: User!
+    extendedTopicFieldInDifferentFileAndDifferentModule3: User!
   }
 `;

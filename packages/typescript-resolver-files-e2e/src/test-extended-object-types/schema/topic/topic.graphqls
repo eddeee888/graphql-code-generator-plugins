@@ -17,6 +17,15 @@ type Topic {
   createdAt: DateTime!
 }
 
+extend type Topic {
+  extendedTopicFieldInTheSameFileAndSameModule1: Profile!
+}
+
+extend type Topic {
+  extendedTopicFieldInTheSameFileAndSameModule2: Profile!
+  extendedTopicFieldInTheSameFileAndSameModule3: Profile!
+}
+
 type TopicByIdResult {
   result: Topic
 }

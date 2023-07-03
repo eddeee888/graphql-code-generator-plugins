@@ -2,6 +2,6 @@ export type TopicMapper = {
   id: string;
   name: string;
   url: string | null;
-  creatorUserId: string;
+  creator: string;
   createdAt: Date;
 };

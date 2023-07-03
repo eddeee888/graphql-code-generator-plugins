@@ -1,0 +1,3 @@
+extend type Topic {
+  extendedTopicFieldInDifferentFileAndSameModule1: Topic!
+}
