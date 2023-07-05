@@ -31,7 +31,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     profiler = createNoopProfiler(),
   }) => {
     if (!schemaAst) {
-      throw new Error('Missing schemaAst');
+      throw new Error('Missing schemaAst.');
     }
     const sources = schemaAst.extensions.extendedSources;
     if (!Array.isArray(sources) || sources.length === 0) {
