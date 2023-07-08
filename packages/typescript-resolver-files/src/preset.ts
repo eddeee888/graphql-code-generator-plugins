@@ -110,9 +110,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     const resolverTypesConfig = defineServerConfig({
       emitLegacyCommonJSImports,
       ...typesPluginsConfig,
-      scalars: {
-        ...mergedConfig.scalarTypes,
-      },
+      scalars: mergedConfig.scalarTypes,
       mappers: {
         ...mergedConfig.typeMappers,
         ...typesPluginsConfig.mappers,
