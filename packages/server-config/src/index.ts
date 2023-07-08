@@ -1,1 +1,1 @@
-export * from './lib/server-config';
+export { defineServerConfig, ServerConfig } from './defineServerConfig';
