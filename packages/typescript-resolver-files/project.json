@@ -17,6 +17,10 @@
         "updateBuildableProjectDepsInPackageJson": false
       }
     },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs server-config {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
     "lint": {
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
@@ -30,6 +34,12 @@
       "options": {
         "jestConfig": "packages/typescript-resolver-files/jest.config.ts",
         "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     }
   },
