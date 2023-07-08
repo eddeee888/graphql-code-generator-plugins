@@ -40,7 +40,7 @@ const normalizeOptions = (
   };
 };
 
-const addFiles = (tree: Tree, options: NormalizedSchema) => {
+const addFiles = (tree: Tree, options: NormalizedSchema): void => {
   generateFiles(
     tree,
     path.posix.join(__dirname, 'files'),
@@ -95,7 +95,7 @@ const updateProjectConfig = (tree: Tree, options: NormalizedSchema): void => {
 export default async function (
   tree: Tree,
   options: TypescriptResolverFilesAddE2ETestSchema
-) {
+): Promise<void> {
   const normalizedOptions = normalizeOptions(tree, options);
   addFiles(tree, normalizedOptions);
   updateProjectConfig(tree, normalizedOptions);
