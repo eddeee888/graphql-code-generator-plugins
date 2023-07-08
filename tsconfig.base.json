@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@eddeee888/gcg-server-config": ["packages/server-config/src/index.ts"],
       "@eddeee888/gcg-typescript-resolver-files": [
         "packages/typescript-resolver-files/src/index.ts"
       ],
