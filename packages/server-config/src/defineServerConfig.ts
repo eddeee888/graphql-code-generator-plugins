@@ -9,8 +9,8 @@ const nativeScalarTypes = {
 };
 
 export const defineServerConfig = (config: ServerConfig = {}): ServerConfig => {
-  const scalars = config.scalars || {};
-  if (typeof scalars === 'string') {
+  const configScalars = config.scalars || {};
+  if (typeof configScalars === 'string') {
     // TODO: maybe share a `fmt` between two libs?
     throw new Error(
       '[@eddeee888/gcg-server-config] ERROR: defineServerConfig does not support config.scalars string'
@@ -27,7 +27,7 @@ export const defineServerConfig = (config: ServerConfig = {}): ServerConfig => {
     ...config,
     scalars: {
       ...nativeScalarTypes,
-      ...scalars,
+      ...configScalars,
     },
   };
 };
