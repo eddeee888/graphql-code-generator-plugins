@@ -141,7 +141,7 @@
           "parallel": false
         }
       },
-      "dependsOn": ["^build"]
+      "dependsOn": ["prepare-e2e-modules"]
     },
     "graphql-codegen": {
       "executor": "@eddeee888/nx-graphql-code-generator:codegen",
@@ -186,6 +186,19 @@
         "test-resolver-generation": {
           "configFile": "packages/typescript-resolver-files-e2e/src/test-resolver-generation/codegen.ts"
         }
+      },
+      "dependsOn": ["prepare-e2e-modules"]
+    },
+    "prepare-e2e-modules": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "rimraf node_modules/@eddeee888/gcg-server-config",
+          "cp -r dist/packages/server-config node_modules/@eddeee888/gcg-server-config",
+          "rimraf node_modules/@eddeee888/gcg-typescript-resolver-files",
+          "cp -r dist/packages/typescript-resolver-files node_modules/@eddeee888/gcg-typescript-resolver-files"
+        ],
+        "parallel": false
       },
       "dependsOn": ["^build"]
     },

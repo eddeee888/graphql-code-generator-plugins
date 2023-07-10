@@ -5,10 +5,6 @@ import type {
 } from '../validatePresetConfig';
 import { fmt } from '../utils';
 
-const nativeScalarTypes: Record<string, ScalarsOverridesType> = {
-  ID: { input: 'string', output: 'string | number' },
-};
-
 interface MergedConfig {
   userDefinedSchemaTypeMap: ParsedGraphQLSchemaMeta['userDefinedSchemaTypeMap'];
   externalResolvers: ParsedPresetConfig['externalResolvers'];
@@ -53,7 +49,6 @@ export const validateAndMergeParsedConfigs = ({
       ...externalResolvers,
     },
     scalarTypes: {
-      ...nativeScalarTypes,
       ...defaultScalarTypesMap,
     },
     typeMappers: defaultTypeMappers,

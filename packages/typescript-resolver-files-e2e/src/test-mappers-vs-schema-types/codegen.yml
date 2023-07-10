@@ -7,6 +7,6 @@ hooks:
     - prettier --write
 generates:
   packages/typescript-resolver-files-e2e/src/test-mappers-vs-schema-types/modules:
-    preset: ./dist/packages/typescript-resolver-files/src/index.js
+    preset: '@eddeee888/gcg-typescript-resolver-files'
     presetConfig:
       tsConfigFilePath: packages/typescript-resolver-files-e2e/tsconfig.json

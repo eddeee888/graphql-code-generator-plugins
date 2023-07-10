@@ -1,18 +1,18 @@
 {
-  "name": "typescript-resolver-files",
+  "name": "server-config",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/typescript-resolver-files/src",
+  "sourceRoot": "packages/server-config/src",
   "projectType": "library",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/typescript-resolver-files",
-        "tsConfig": "packages/typescript-resolver-files/tsconfig.lib.json",
-        "packageJson": "packages/typescript-resolver-files/package.json",
-        "main": "packages/typescript-resolver-files/src/index.ts",
-        "assets": ["packages/typescript-resolver-files/README.md"],
+        "outputPath": "dist/packages/server-config",
+        "tsConfig": "packages/server-config/tsconfig.lib.json",
+        "packageJson": "packages/server-config/package.json",
+        "main": "packages/server-config/src/index.ts",
+        "assets": ["packages/server-config/README.md"],
         "clean": true,
         "updateBuildableProjectDepsInPackageJson": false
       }
@@ -25,14 +25,14 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["packages/typescript-resolver-files/**/*.ts"]
+        "lintFilePatterns": ["packages/server-config/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "packages/typescript-resolver-files/jest.config.ts",
+        "jestConfig": "packages/server-config/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {

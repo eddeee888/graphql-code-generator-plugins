@@ -7,7 +7,7 @@ hooks:
     - prettier --write
 generates:
   packages/typescript-resolver-files-e2e/src/test-whitelisted/modules:
-    preset: ./dist/packages/typescript-resolver-files/src/index.js
+    preset: '@eddeee888/gcg-typescript-resolver-files'
     presetConfig:
       whitelistedModules:
         - base
@@ -16,7 +16,7 @@ generates:
         - user
 
   packages/typescript-resolver-files-e2e/src/test-whitelisted/modules-typedefs-file-mode-mergedWhitelisted:
-    preset: ./dist/packages/typescript-resolver-files/src/index.js
+    preset: '@eddeee888/gcg-typescript-resolver-files'
     presetConfig:
       typeDefsFileMode: 'mergedWhitelisted'
       whitelistedModules:

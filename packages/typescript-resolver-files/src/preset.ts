@@ -7,6 +7,7 @@ import {
   createNoopProfiler,
 } from '@graphql-codegen/plugin-helpers';
 import { Project } from 'ts-morph';
+import { defineServerConfig } from '@eddeee888/gcg-server-config';
 import { parseSources } from './parseSources';
 import { parseGraphQLSchema } from './parseGraphQLSchema';
 import {
@@ -106,23 +107,15 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     });
 
     // typescript and typescript-resolvers plugins config
-    const resolverTypesConfig = {
-      enumsAsTypes: true,
+    const resolverTypesConfig = defineServerConfig({
       emitLegacyCommonJSImports,
-      optionalResolveType: true,
-      resolversNonOptionalTypename: {
-        unionMember: true,
-        interfaceImplementingType: true,
-      },
       ...typesPluginsConfig,
-      scalars: {
-        ...mergedConfig.scalarTypes,
-      },
+      scalars: mergedConfig.scalarTypes,
       mappers: {
         ...mergedConfig.typeMappers,
         ...typesPluginsConfig.mappers,
       },
-    };
+    });
 
     // typesSourceFile is the virtual `types.generated.ts`
     // This is useful when we need to do static analysis as most types come from this file

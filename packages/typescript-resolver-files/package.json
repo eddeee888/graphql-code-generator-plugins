@@ -27,6 +27,7 @@
     "graphql": "^15.0.0 || ^16.0.0"
   },
   "dependencies": {
+    "@eddeee888/gcg-server-config": "0.0.0",
     "@graphql-codegen/add": "^5.0.0",
     "@graphql-codegen/plugin-helpers": "^5.0.0",
     "@graphql-codegen/typescript": "^4.0.0",

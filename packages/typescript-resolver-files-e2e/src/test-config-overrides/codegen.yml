@@ -7,7 +7,7 @@ hooks:
     - prettier --write
 generates:
   packages/typescript-resolver-files-e2e/src/test-config-overrides/modules:
-    preset: ./dist/packages/typescript-resolver-files/src/index.js
+    preset: '@eddeee888/gcg-typescript-resolver-files'
     presetConfig:
       resolverTypesPath: ./types.gen.ts
       resolverRelativeTargetDir: rslvrs

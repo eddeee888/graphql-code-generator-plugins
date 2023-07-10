@@ -7,7 +7,7 @@ hooks:
     - prettier --write
 generates:
   packages/typescript-resolver-files-e2e/src/test-external-resolvers/modules:
-    preset: ./dist/packages/typescript-resolver-files/src/index.js
+    preset: '@eddeee888/gcg-typescript-resolver-files'
     presetConfig:
       scalarsOverrides:
         DateTimeNamedImport:
