@@ -8,14 +8,8 @@ const nativeScalarTypes = {
   ID: { input: 'string', output: 'string | number' },
 };
 
-export const defineServerConfig = (config: ServerConfig = {}): ServerConfig => {
+export const defineConfig = (config: ServerConfig = {}): ServerConfig => {
   const configScalars = config.scalars || {};
-  if (typeof configScalars === 'string') {
-    // TODO: maybe share a `fmt` between two libs?
-    throw new Error(
-      '[@eddeee888/gcg-server-config] ERROR: defineServerConfig does not support config.scalars string'
-    );
-  }
 
   return {
     enumsAsTypes: true,
@@ -25,9 +19,12 @@ export const defineServerConfig = (config: ServerConfig = {}): ServerConfig => {
       interfaceImplementingType: true,
     },
     ...config,
-    scalars: {
-      ...nativeScalarTypes,
-      ...configScalars,
-    },
+    scalars:
+      typeof configScalars === 'string'
+        ? configScalars
+        : {
+            ...nativeScalarTypes,
+            ...configScalars,
+          },
   };
 };

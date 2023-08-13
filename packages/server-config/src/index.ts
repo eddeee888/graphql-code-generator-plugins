@@ -1,1 +1,1 @@
-export { defineServerConfig, type ServerConfig } from './defineServerConfig';
+export { defineConfig, type ServerConfig } from './defineConfig';
