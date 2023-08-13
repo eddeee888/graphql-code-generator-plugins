@@ -7,7 +7,7 @@ import {
   createNoopProfiler,
 } from '@graphql-codegen/plugin-helpers';
 import { Project } from 'ts-morph';
-import { defineServerConfig } from '@eddeee888/gcg-server-config';
+import { defineConfig } from '@eddeee888/gcg-server-config';
 import { parseSources } from './parseSources';
 import { parseGraphQLSchema } from './parseGraphQLSchema';
 import {
@@ -107,7 +107,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     });
 
     // typescript and typescript-resolvers plugins config
-    const resolverTypesConfig = defineServerConfig({
+    const resolverTypesConfig = defineConfig({
       emitLegacyCommonJSImports,
       ...typesPluginsConfig,
       scalars: mergedConfig.scalarTypes,

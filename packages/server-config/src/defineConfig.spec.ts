@@ -1,4 +1,4 @@
-import { type ServerConfig, defineServerConfig } from './defineServerConfig';
+import { type ServerConfig, defineConfig } from './defineConfig';
 
 const defaultServerConfig: ServerConfig = {
   enumsAsTypes: true,
@@ -15,15 +15,15 @@ const defaultServerConfig: ServerConfig = {
   },
 };
 
-describe('defineServerConfig', () => {
+describe('defineConfig', () => {
   it('returns default server config correctly', () => {
-    const result = defineServerConfig();
+    const result = defineConfig();
 
     expect(result).toEqual(defaultServerConfig);
   });
 
   it('returns config with overriden root-level options correctly', () => {
-    const result = defineServerConfig({
+    const result = defineConfig({
       enumsAsTypes: false,
       contextType: 'Test',
     });
@@ -36,7 +36,7 @@ describe('defineServerConfig', () => {
   });
 
   it('returns config with overriden `scalars` correctly', () => {
-    const result = defineServerConfig({
+    const result = defineConfig({
       scalars: {
         ID: 'string',
         Date: 'Date',
@@ -53,12 +53,13 @@ describe('defineServerConfig', () => {
   });
 
   it('throws if a string is used for `scalars`', () => {
-    expect(() =>
-      defineServerConfig({
-        scalars: 'test',
-      })
-    ).toThrowError(
-      '[@eddeee888/gcg-server-config] ERROR: defineServerConfig does not support config.scalars string'
-    );
+    const result = defineConfig({
+      scalars: 'test',
+    });
+
+    expect(result).toEqual({
+      ...defaultServerConfig,
+      scalars: 'test',
+    });
   });
 });
