@@ -1,5 +1,42 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.6.0
+
+### Minor Changes
+
+- d0e17ad: Add resolverGeneration option
+
+  `disabled` or `recommended` or `all` (Default: `recommended`)
+
+  Decides which resolvers to generate:
+
+  - `disabled`: generates no resolvers. Use this if you want to use your own structures. Note: if custom scalars are detected and used, resolver main files are still generated.
+  - `recommended`: generates the minimal amount of resolvers. Use this if you want a managed experience.
+    - no union/interface resolvers are generated because we rely on certain settings in `typescript-resolvers` that make these not required.
+  - `all`: generates all resolvers. Use this if you want all resolvers to be generated and use the ones you need.
+
+- 1586d73: Add missing Interface file generation
+
+### Patch Changes
+
+- c3ee642: Fix emitLegacyCommonJSImports issues
+
+  - Fix issue where warning always logged if `presetConfig.emitLegacyCommonJSImports` is used
+  - Throw error when `presetConfig.typesPluginsConfig.emitLegacyCommonJSImports` is used
+  - (Internal) Replace automatic file detection in `printImportLine` with 3 options: `file`, `module` and `preserve`:
+    - This is to fix rare cases where absolute alias path is used in `externalResolvers` option e.g. `src/module/file` was missing `.js` because it was being detected as a module. `externalResolvers` is set by the user and also used internally for scalar types, so we can use `preserve` instead to keep the module value as-is.
+    - Options:
+      - `file`: import is a file. For ESM, .js extension is added. For CJS, no extension is added.
+      - `module`: import is a module from `node_modules` or aliased e.g. `graphql-scalars` or `@org/your-module`. No extension is added.
+      - `preserve`: preserve what the config declares. This is only used when taking user's config or preset-controlled config e.g. `externalExternals` because the import could be either file or module
+
+- 191705f: Add schema option to defineConfig
+- 49ba468: Added support for the case where the Type mapper is a class
+- c968c2c: Fix: defineConfig's type no longer allows typesPluginsConfig.scalars or typesPluginsConfig.emitLegacyCommonJSImports
+- 2205e3f: Update default custom GraphQLScalar template to guide users better
+- Updated dependencies [5e58a08]
+  - @eddeee888/gcg-server-config@0.0.1
+
 ## 0.5.0
 
 ### Minor Changes
