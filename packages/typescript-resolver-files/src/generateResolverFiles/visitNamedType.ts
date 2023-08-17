@@ -44,11 +44,6 @@ export const visitNamedType = <P extends Record<string, unknown>>(
   }: VisitNamedTypeParams & P,
   ctx: GenerateResolverFilesContext
 ): void => {
-  const normalizedResolverName = normalizeResolverName(
-    resolverName,
-    belongsToRootObject
-  );
-
   // Check to see if need to generate resolver files
   const parsedDetails = parseLocationForOutputDir(
     belongsToRootObject ? [belongsToRootObject] : [],
@@ -62,14 +57,21 @@ export const visitNamedType = <P extends Record<string, unknown>>(
 
   const { moduleName, outputDir } = parsedDetails;
 
+  const normalizedResolverName = normalizeResolverName(
+    moduleName,
+    resolverName,
+    belongsToRootObject
+  );
+
   const externalResolverImportSyntax =
-    ctx.config.externalResolvers[normalizedResolverName];
+    ctx.config.externalResolvers[normalizedResolverName.base];
+
   if (externalResolverImportSyntax) {
     // If has external resolver, use it
     addExternalResolverImport(
       {
         moduleName,
-        normalizedResolverName,
+        normalizedResolverName: normalizedResolverName.base,
         configImportSyntax: externalResolverImportSyntax,
       },
       ctx
@@ -82,7 +84,7 @@ export const visitNamedType = <P extends Record<string, unknown>>(
   const visitorHandlerParamsBase = validateAndPrepareForGraphQLTypeHandler(
     {
       resolverName,
-      normalizedResolverName,
+      normalizedResolverName: normalizedResolverName.withModule,
       outputDir,
       belongsToRootObject,
       moduleName,
@@ -220,13 +222,19 @@ const validateAndPrepareForGraphQLTypeHandler = (
  * Function to get format resolver name based on its definition in the schema
  * - Root object type resolver e.g Query.me, Mutation.updateUser
  * - Object type e.g. User, Profile
+ *
+ * Returns an object with 2 key/value pairs:
+ *   - base: resolver name without module. This is used by to match up with config.externalResolvers.
+ *   - withModule: resolver name with module. This is used to identify the resolver INTERNAL unique path used in main resolver files.
  */
 const normalizeResolverName = (
+  moduleName: string,
   name: string,
   rootObject: RootObjectType | null
-): string => {
-  if (!rootObject) {
-    return name;
-  }
-  return `${rootObject}.${name}`;
+): { base: string; withModule: string } => {
+  const baseResolverName = !rootObject ? name : `${rootObject}.${name}`;
+  return {
+    base: baseResolverName,
+    withModule: `${moduleName}.${baseResolverName}`,
+  };
 };
