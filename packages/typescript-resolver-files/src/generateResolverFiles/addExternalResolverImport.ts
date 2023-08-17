@@ -35,7 +35,7 @@ export const addExternalResolverImport = (
         emitLegacyCommonJSImports,
       },
       identifierUsages: [],
-    } as GenerateResolverFilesContext['result']['externalImports'][number]);
+    } satisfies GenerateResolverFilesContext['result']['externalImports'][number]);
 
   const externalImport = result.externalImports[moduleImport];
 
