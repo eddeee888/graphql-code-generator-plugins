@@ -31,6 +31,7 @@ export const generateResolverFiles = (
         InterfaceType: handleGraphQLInterfaceType,
       };
 
+      // Root object types e.g. Query, Mutation, Subscription
       if (isRootObjectType(schemaType) && isObjectType(namedType)) {
         Object.entries(namedType.getFields()).forEach(
           ([fieldName, fieldNode]) =>
@@ -48,6 +49,7 @@ export const generateResolverFiles = (
         return;
       }
 
+      // Other output object types
       if (isObjectType(namedType)) {
         const fieldsByGraphQLModule = Object.entries(
           namedType.getFields()
@@ -102,6 +104,7 @@ export const generateResolverFiles = (
         }
       }
 
+      // Other types e.g. Union, Scalar, Interface
       visitNamedType(
         {
           namedType,
