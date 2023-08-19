@@ -66,7 +66,6 @@ export const visitNamedType = <P extends Record<string, unknown>>(
   const externalResolverImportSyntax =
     ctx.config.externalResolvers[normalizedResolverName.base];
 
-  // FIXME: This is currently adding multiple imports for the same normalizedResolverName
   // when used with extended object types scenario
   if (externalResolverImportSyntax) {
     // If has external resolver, use it
