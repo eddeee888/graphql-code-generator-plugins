@@ -16,6 +16,20 @@ const config: CodegenConfig = {
           ],
         }
       ),
+    'packages/typescript-resolver-files-e2e/src/test-extended-object-types/schema-external-resolver-override-extended-object-type':
+      defineConfig(
+        {
+          externalResolvers: {
+            Topic: '~@org/topic-module#Topic as TopicResolver',
+          },
+        },
+        {
+          schema: [
+            'packages/typescript-resolver-files-e2e/src/test-extended-object-types/schema-external-resolver-override-extended-object-type/**/*.graphqls',
+            'packages/typescript-resolver-files-e2e/src/test-extended-object-types/schema-external-resolver-override-extended-object-type/**/*.graphqls.ts',
+          ],
+        }
+      ),
   },
 };
 
