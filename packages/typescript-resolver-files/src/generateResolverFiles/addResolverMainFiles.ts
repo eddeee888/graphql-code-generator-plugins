@@ -214,7 +214,7 @@ export const addResolverMainFiles = ({
       namedImports: [resolversTypeName],
       emitLegacyCommonJSImports,
     })}
-    ${resolverMainFile.importLines.map((line) => line).join('\n')}
+    ${resolverMainFile.importLines.join('\n')}
     export const ${resolversIdentifier}: ${resolversTypeName} = {
       ${queries}
       ${mutations}
