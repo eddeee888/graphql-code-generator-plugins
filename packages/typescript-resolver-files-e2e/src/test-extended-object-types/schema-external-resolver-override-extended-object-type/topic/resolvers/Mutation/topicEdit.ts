@@ -4,5 +4,5 @@ export const topicEdit: NonNullable<MutationResolvers['topicEdit']> = async (
   _arg,
   _ctx
 ) => {
-  /* Implement topic.Mutation.topicEdit resolver logic here */
+  /* Implement Mutation.topicEdit resolver logic here */
 };

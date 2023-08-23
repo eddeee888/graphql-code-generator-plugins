@@ -4,5 +4,5 @@ export const topicById: NonNullable<QueryResolvers['topicById']> = async (
   _arg,
   _ctx
 ) => {
-  /* Implement topic.Query.topicById resolver logic here */
+  /* Implement Query.topicById resolver logic here */
 };

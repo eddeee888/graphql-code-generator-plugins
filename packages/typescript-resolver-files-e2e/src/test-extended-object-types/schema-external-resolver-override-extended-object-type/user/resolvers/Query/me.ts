@@ -4,5 +4,5 @@ export const me: NonNullable<QueryResolvers['me']> = async (
   _arg,
   _ctx
 ) => {
-  /* Implement user.Query.me resolver logic here */
+  /* Implement Query.me resolver logic here */
 };

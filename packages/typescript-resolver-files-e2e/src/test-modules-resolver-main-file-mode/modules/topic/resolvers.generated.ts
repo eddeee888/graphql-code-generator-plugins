@@ -1,27 +1,27 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './../types.generated';
-import { topicCreate as Mutation_topicCreate } from './resolvers/Mutation/topicCreate';
-import { topicEdit as Mutation_topicEdit } from './resolvers/Mutation/topicEdit';
-import { topicById as Query_topicById } from './resolvers/Query/topicById';
-import { topicsCreatedByUser as Query_topicsCreatedByUser } from './resolvers/Query/topicsCreatedByUser';
-import { Topic } from './resolvers/Topic';
-import { TopicByIdResult } from './resolvers/TopicByIdResult';
-import { TopicCreateResult } from './resolvers/TopicCreateResult';
-import { TopicEditResult } from './resolvers/TopicEditResult';
-import { TopicsCreatedByUserResult } from './resolvers/TopicsCreatedByUserResult';
+import { topicCreate as topic_Mutation_topicCreate } from './resolvers/Mutation/topicCreate';
+import { topicEdit as topic_Mutation_topicEdit } from './resolvers/Mutation/topicEdit';
+import { topicById as topic_Query_topicById } from './resolvers/Query/topicById';
+import { topicsCreatedByUser as topic_Query_topicsCreatedByUser } from './resolvers/Query/topicsCreatedByUser';
+import { Topic as topic_Topic } from './resolvers/Topic';
+import { TopicByIdResult as topic_TopicByIdResult } from './resolvers/TopicByIdResult';
+import { TopicCreateResult as topic_TopicCreateResult } from './resolvers/TopicCreateResult';
+import { TopicEditResult as topic_TopicEditResult } from './resolvers/TopicEditResult';
+import { TopicsCreatedByUserResult as topic_TopicsCreatedByUserResult } from './resolvers/TopicsCreatedByUserResult';
 export const resolvers: Resolvers = {
   Query: {
-    topicById: Query_topicById,
-    topicsCreatedByUser: Query_topicsCreatedByUser,
+    topicById: topic_Query_topicById,
+    topicsCreatedByUser: topic_Query_topicsCreatedByUser,
   },
   Mutation: {
-    topicCreate: Mutation_topicCreate,
-    topicEdit: Mutation_topicEdit,
+    topicCreate: topic_Mutation_topicCreate,
+    topicEdit: topic_Mutation_topicEdit,
   },
 
-  Topic: Topic,
-  TopicByIdResult: TopicByIdResult,
-  TopicCreateResult: TopicCreateResult,
-  TopicEditResult: TopicEditResult,
-  TopicsCreatedByUserResult: TopicsCreatedByUserResult,
+  Topic: topic_Topic,
+  TopicByIdResult: topic_TopicByIdResult,
+  TopicCreateResult: topic_TopicCreateResult,
+  TopicEditResult: topic_TopicEditResult,
+  TopicsCreatedByUserResult: topic_TopicsCreatedByUserResult,
 };
