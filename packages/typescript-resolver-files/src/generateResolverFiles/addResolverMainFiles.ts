@@ -63,6 +63,7 @@ export const addResolverMainFiles = ({
 
     const identifierName = file.meta.normalizedResolverName.withModule
       .split('.')
+      .filter((part) => Boolean(part))
       .join('_');
     const fieldMapping: ObjectFieldMapping = {
       propertyName: file.mainImportIdentifier,
