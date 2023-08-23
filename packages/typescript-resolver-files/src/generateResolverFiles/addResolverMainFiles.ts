@@ -61,7 +61,7 @@ export const addResolverMainFiles = ({
       res[resolverMainFilename] = createDefaultFileDetails();
     }
 
-    const identifierName = file.meta.normalizedResolverName
+    const identifierName = file.meta.normalizedResolverName.withModule
       .split('.')
       .join('_');
     const fieldMapping: ObjectFieldMapping = {

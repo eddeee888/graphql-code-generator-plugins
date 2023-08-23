@@ -85,7 +85,7 @@ export const visitNamedType = <P extends Record<string, unknown>>(
   const visitorHandlerParamsBase = validateAndPrepareForGraphQLTypeHandler(
     {
       resolverName,
-      normalizedResolverName: normalizedResolverName.withModule,
+      normalizedResolverName,
       outputDir,
       belongsToRootObject,
       moduleName,
@@ -167,7 +167,7 @@ const parseLocationForOutputDir = (
 
 interface ValidateAndPrepareForGraphQLTypeParams {
   resolverName: string;
-  normalizedResolverName: string;
+  normalizedResolverName: NormalizedResolverName;
   outputDir: string;
   belongsToRootObject: RootObjectType | null;
   moduleName: string;
@@ -219,6 +219,11 @@ const validateAndPrepareForGraphQLTypeHandler = (
   };
 };
 
+export interface NormalizedResolverName {
+  base: string;
+  withModule: string;
+}
+
 /**
  * Function to get format resolver name based on its definition in the schema
  * - Root object type resolver e.g Query.me, Mutation.updateUser
@@ -232,7 +237,7 @@ const normalizeResolverName = (
   moduleName: string,
   name: string,
   rootObject: RootObjectType | null
-): { base: string; withModule: string } => {
+): NormalizedResolverName => {
   const baseResolverName = !rootObject ? name : `${rootObject}.${name}`;
   return {
     base: baseResolverName,
