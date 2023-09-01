@@ -134,7 +134,10 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
       mainImportIdentifier: 'User',
       meta: {
         moduleName: 'user',
-        normalizedResolverName: '',
+        normalizedResolverName: {
+          base: 'User',
+          withModule: 'user.User',
+        },
         variableStatement: '',
         resolversToGenerate: {
           id: {
@@ -305,7 +308,10 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
       mainImportIdentifier: 'User',
       meta: {
         moduleName: 'user',
-        normalizedResolverName: '',
+        normalizedResolverName: {
+          base: 'User',
+          withModule: 'user.User',
+        },
         variableStatement: '',
         resolversToGenerate: {
           id: {
