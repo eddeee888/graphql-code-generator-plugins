@@ -151,7 +151,7 @@
           "configFile": "packages/typescript-resolver-files-e2e/src/test-merged/codegen.yml"
         },
         "test-modules": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-modules/codegen.yml"
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-modules/codegen.ts"
         },
         "test-whitelisted": {
           "configFile": "packages/typescript-resolver-files-e2e/src/test-whitelisted/codegen.yml"
