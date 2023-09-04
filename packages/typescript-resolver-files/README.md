@@ -173,7 +173,7 @@ If `typeDefsFileMode=modules`, this path is relative from each module directory.
 
 `Record<string, (@graphql-codegen/add).AddPluginConfig>` (Default: `undefined`) (EXPERIMENTAL)
 
-Allows using `add` plugin on a given file.
+Allows using [add](https://the-guild.dev/graphql/codegen/plugins/other/add) plugin on a given file.
 
 Note: Currently only supports `resolverTypesPath` file i.e. `types.generated.ts`
 
