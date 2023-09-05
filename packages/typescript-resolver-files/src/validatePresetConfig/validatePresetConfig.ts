@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import type { AddPluginConfig } from '@graphql-codegen/add/typings/config';
 import * as typeScriptPlugin from '@graphql-codegen/typescript';
 import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import type { ProjectOptions } from 'ts-morph';
@@ -29,6 +30,7 @@ type ResolverGeneration = 'disabled' | 'recommended' | 'all'; // TODO: also take
 export type ScalarsOverridesType = string | { input: string; output: string };
 
 export interface ParsedPresetConfig {
+  add?: Record<string, AddPluginConfig>;
   resolverTypesPath: string;
   resolverRelativeTargetDir: string;
   resolverMainFile: string;
@@ -62,6 +64,7 @@ export interface ParsedPresetConfig {
 }
 
 export interface RawPresetConfig {
+  add?: Record<string, unknown>;
   resolverTypesPath?: string;
   resolverRelativeTargetDir?: string;
   resolverMainFile?: string;
@@ -88,6 +91,7 @@ export interface RawPresetConfig {
 }
 
 export interface TypedPresetConfig extends RawPresetConfig {
+  add?: Record<string, AddPluginConfig>;
   mode?: ConfigMode;
   resolverMainFileMode?: ResolverMainFileMode;
   typeDefsFileMode?: TypeDefsFileMode;
@@ -97,6 +101,7 @@ export interface TypedPresetConfig extends RawPresetConfig {
 }
 
 export const validatePresetConfig = ({
+  add,
   resolverTypesPath = './types.generated.ts',
   resolverRelativeTargetDir,
   resolverMainFile = 'resolvers.generated.ts',
@@ -270,7 +275,10 @@ export const validatePresetConfig = ({
     }
   }
 
+  const validatedAdd = validateAddOption(add);
+
   return {
+    add: validatedAdd,
     resolverTypesPath,
     resolverRelativeTargetDir: finalResolverRelativeTargetDir,
     resolverMainFile,
@@ -353,4 +361,32 @@ const parseResolverGeneration = (
     union: false,
     interface: false,
   };
+};
+
+const validateAddOption = (
+  add: RawPresetConfig['add']
+): ParsedPresetConfig['add'] => {
+  if (!add) {
+    return undefined;
+  }
+
+  Object.entries(add).forEach(([_, pluginConfig]) => {
+    if (typeof pluginConfig !== 'object' || pluginConfig === null) {
+      throw new Error(
+        fmt.error('presetConfig.add must be an object', 'Validation')
+      );
+    }
+
+    if (!('content' in pluginConfig)) {
+      throw new Error(
+        fmt.error(
+          'presetConfig.add must contain a "content" property',
+          'Validation'
+        )
+      );
+    }
+  });
+
+  // TODO: a bit hacky here but what's a good way to coerce this type? 🤔
+  return add as ParsedPresetConfig['add'];
 };

@@ -169,6 +169,29 @@ If `typeDefsFileMode=merged` or `typeDefsFileMode=mergedWhitelisted`, this path 
 
 If `typeDefsFileMode=modules`, this path is relative from each module directory.
 
+### add
+
+`Record<string, (@graphql-codegen/add).AddPluginConfig>` (Default: `undefined`) (EXPERIMENTAL)
+
+Allows using [add](https://the-guild.dev/graphql/codegen/plugins/other/add) plugin on a given file.
+
+Note: Currently only supports `resolverTypesPath` file i.e. `types.generated.ts`
+
+Example:
+
+```ts
+// codegen.ts
+{
+  generates: {
+    'src/schema': defineConfig({
+      add: {
+        './types.generated.ts': { content: '/* eslint-disable */' },
+      },
+    })
+  }
+}
+```
+
 ### whitelistedModules
 
 `Array<string>` (Only works with `config.mode=modules`)

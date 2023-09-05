@@ -20,6 +20,7 @@ import { addVirtualTypesFileToTsMorphProject } from './addVirtualTypesFileToTsMo
 import { parseTypeMappers } from './parseTypeMappers';
 import { RawPresetConfig, validatePresetConfig } from './validatePresetConfig';
 import { validateAndMergeParsedConfigs } from './validateAndMergeParsedConfigs';
+import { normalizeAddConfigPath } from './normalizeAddConfigPath';
 
 export const presetName = '@eddeee888/gcg-typescript-resolver-files';
 
@@ -42,6 +43,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     }
 
     const {
+      add,
       resolverTypesPath: relativeResolverTypesPathFromBaseOutputDir,
       resolverRelativeTargetDir,
       mappersFileExtension: typeMappersFileExtension,
@@ -67,6 +69,8 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       baseOutputDir,
       relativeResolverTypesPathFromBaseOutputDir
     );
+
+    const normalizedAdd = normalizeAddConfigPath({ add, baseOutputDir });
 
     const { sourceMap } = parseSources(sources);
 
@@ -127,6 +131,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           schemaAst,
           resolverTypesConfig,
           resolverTypesPath,
+          addConfig: normalizedAdd?.[resolverTypesPath],
         }),
       createProfilerRunName('addVirtualTypesFileToTsMorphProject')
     );
@@ -141,13 +146,24 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         }),
       createProfilerRunName('graphQLObjectTypeResolversToGenerate')
     );
+
+    const resolverTypesFilePlugins: Types.PluginConfig[] = [
+      { typescript: {} },
+      { ['typescript-resolvers']: {} },
+    ];
+    if (normalizedAdd?.[resolverTypesPath]) {
+      resolverTypesFilePlugins.push({
+        add: normalizedAdd[resolverTypesPath],
+      });
+    }
     const resolverTypesFile: Types.GenerateOptions = {
       filename: resolverTypesPath,
       pluginMap: {
         typescript: typeScriptPlugin,
         'typescript-resolvers': typeScriptResolversPlugin,
+        add: addPlugin,
       },
-      plugins: [{ typescript: {} }, { ['typescript-resolvers']: {} }],
+      plugins: resolverTypesFilePlugins,
       config: resolverTypesConfig,
       schema,
       documents: [],
