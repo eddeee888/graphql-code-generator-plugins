@@ -2,9 +2,11 @@
 '@eddeee888/gcg-typescript-resolver-files': minor
 ---
 
-Add experimental support for [add](https://the-guild.dev/graphql/codegen/plugins/other/add) plugin
+Add experimental support for [add](https://the-guild.dev/graphql/codegen/plugins/other/add) plugin.
 
-Consumers can now use [add](https://the-guild.dev/graphql/codegen/plugins/other/add) plugin on the generated resolvers type (default `types.generated.ts`):
+Consumers can use the preset's `add` option to do the equivalent of the `add` plugin to target the generated resolvers type file (default `types.generated.ts`).
+
+Example:
 
 ```ts
 // codegen.ts
