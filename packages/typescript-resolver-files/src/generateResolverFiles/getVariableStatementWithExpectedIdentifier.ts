@@ -26,6 +26,24 @@ export const getVariableStatementWithExpectedIdentifier = (
       return hasExpectedIdentifier;
     });
 
+  /**
+   * If we found the variable statement replace its type with the expected resolver type string
+   *
+   * This is because we change the type of the resolver in some cases:
+   * 1. When `extend type <Object>` is used, we might change its original type to the picked version
+   *    e.g. `Book` might become `Pick<Book, 'title' | 'author'>`
+   */
+  if (
+    variableStatementWithExpectedIdentifier &&
+    resolverFile.meta.resolverTypeString
+  ) {
+    variableStatementWithExpectedIdentifier
+      .getDeclarationList()
+      .getDeclarations()[0]
+      ?.getTypeNode()
+      ?.replaceWithText(resolverFile.meta.resolverTypeString);
+  }
+
   return {
     variableStatement: variableStatementWithExpectedIdentifier,
     isExported,

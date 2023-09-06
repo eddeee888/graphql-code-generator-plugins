@@ -24,9 +24,11 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
 
   const suggestion = `/* Implement ${normalizedResolverName.base} resolver logic here */`;
 
-  let variableStatement = `export const ${resolverName}: NonNullable<${resolversTypeMeta.typeString}> = async (_parent, _arg, _ctx) => { ${suggestion} };`;
+  const resolverTypeString = `NonNullable<${resolversTypeMeta.typeString}>`;
+
+  let variableStatement = `export const ${resolverName}: ${resolverTypeString} = async (_parent, _arg, _ctx) => { ${suggestion} };`;
   if (belongsToRootObject === 'Subscription') {
-    variableStatement = `export const ${resolverName}: NonNullable<${resolversTypeMeta.typeString}> = {
+    variableStatement = `export const ${resolverName}: ${resolverTypeString} = {
       subscribe: async (_parent, _arg, _ctx) => { ${suggestion} },
     }`;
   }
@@ -47,6 +49,7 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
       moduleName,
       belongsToRootObject,
       variableStatement,
+      resolverTypeString,
       normalizedResolverName,
     },
   };

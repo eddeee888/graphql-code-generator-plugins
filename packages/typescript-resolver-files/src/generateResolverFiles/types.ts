@@ -21,6 +21,7 @@ export interface GeneralResolverFile extends BaseVirtualFile {
   meta: {
     moduleName: string;
     variableStatement: string;
+    resolverTypeString: string | null; // GraphQL Scalar's resolverTypeString is null
     normalizedResolverName: NormalizedResolverName;
   };
 }
@@ -31,6 +32,7 @@ export interface RootObjectTypeFieldResolverFile extends BaseVirtualFile {
     moduleName: string;
     belongsToRootObject: RootObjectType;
     variableStatement: string;
+    resolverTypeString: string;
     normalizedResolverName: NormalizedResolverName;
   };
 }
@@ -40,6 +42,7 @@ export interface ObjectTypeFile extends BaseVirtualFile {
   meta: {
     moduleName: string;
     variableStatement: string;
+    resolverTypeString: string;
     normalizedResolverName: NormalizedResolverName;
     resolversToGenerate?: GraphQLObjectTypeResolversToGenerate[number];
   };

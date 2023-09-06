@@ -32,6 +32,7 @@ export const handleGraphQLUnionType: GraphQLTypeHandler = (
     meta: {
       moduleName,
       normalizedResolverName,
+      resolverTypeString: resolversTypeMeta.typeString,
       variableStatement,
     },
   };

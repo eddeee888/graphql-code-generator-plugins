@@ -72,6 +72,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
       moduleName,
       normalizedResolverName,
       variableStatement,
+      resolverTypeString: typeString,
       resolversToGenerate,
     },
   };
