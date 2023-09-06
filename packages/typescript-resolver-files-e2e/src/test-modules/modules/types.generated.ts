@@ -6,8 +6,8 @@ import {
 import { BookMapper } from './book/book.mappers';
 import { ProfileMapper } from './user/profile.mappers';
 import { TopicMapper } from './topic/topic.mappers';
-export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
+export type Maybe<T> = T | null | undefined;
+export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
 };
