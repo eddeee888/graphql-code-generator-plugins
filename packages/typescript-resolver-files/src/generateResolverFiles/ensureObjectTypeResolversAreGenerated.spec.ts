@@ -42,12 +42,12 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         Float: number;
         DateTime: Date | string;
       };
-      
+
       export type Query = {
         __typename: 'Query';
         me?: Maybe<User>;
       };
-      
+
       export type User = {
         __typename: 'User';
         accountGitHub?: Maybe<Scalars['String']>;
@@ -57,25 +57,25 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         id: Scalars['ID'];
         role: UserRole;
       };
-      
+
       export type UserRole = 'ADMIN' | 'USER';
-      
+
       export type ResolverTypeWrapper<T> = Promise<T> | T;
-      
+
       export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
         resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
       };
       export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
         | ResolverFn<TResult, TParent, TContext, TArgs>
         | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
-      
+
       export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         parent: TParent,
         args: TArgs,
         context: TContext,
         info: any
       ) => Promise<TResult> | TResult;
-      
+
       /** Mapping between all available schema types and the resolvers types */
       export type ResolversTypes = {
         DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
@@ -86,7 +86,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         UserRole: UserRole;
         Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
       };
-      
+
       /** Mapping between all available schema types and the resolvers parents */
       export type ResolversParentTypes = {
         DateTime: Scalars['DateTime'];
@@ -96,7 +96,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         ID: Scalars['ID'];
         Boolean: Scalars['Boolean'];
       };
-      
+
       export type UserResolvers<
         ContextType = any,
         ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
@@ -139,6 +139,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
           withModule: 'user.User',
         },
         variableStatement: '',
+        resolverTypeString: 'UserResolvers',
         resolversToGenerate: {
           id: {
             resolverName: 'id',
@@ -216,12 +217,12 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         Float: number;
         DateTime: Date | string;
       };
-      
+
       export type Query = {
         __typename: 'Query';
         me?: Maybe<User>;
       };
-      
+
       export type User = {
         __typename: 'User';
         accountGitHub?: Maybe<Scalars['String']>;
@@ -231,25 +232,25 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         id: Scalars['ID'];
         role: UserRole;
       };
-      
+
       export type UserRole = 'ADMIN' | 'USER';
-      
+
       export type ResolverTypeWrapper<T> = Promise<T> | T;
-      
+
       export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
         resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
       };
       export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
         | ResolverFn<TResult, TParent, TContext, TArgs>
         | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
-      
+
       export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         parent: TParent,
         args: TArgs,
         context: TContext,
         info: any
       ) => Promise<TResult> | TResult;
-      
+
       /** Mapping between all available schema types and the resolvers types */
       export type ResolversTypes = {
         DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
@@ -260,7 +261,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         UserRole: UserRole;
         Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
       };
-      
+
       /** Mapping between all available schema types and the resolvers parents */
       export type ResolversParentTypes = {
         DateTime: Scalars['DateTime'];
@@ -270,7 +271,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         ID: Scalars['ID'];
         Boolean: Scalars['Boolean'];
       };
-      
+
       export type UserResolvers<
         ContextType = any,
         ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
@@ -313,6 +314,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
           withModule: 'user.User',
         },
         variableStatement: '',
+        resolverTypeString: 'UserResolvers',
         resolversToGenerate: {
           id: {
             resolverName: 'id',

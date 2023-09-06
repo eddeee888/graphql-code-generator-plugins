@@ -25,6 +25,7 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
       meta: {
         moduleName: 'user',
         variableStatement: '',
+        resolverTypeString: 'UserResolvers',
         normalizedResolverName: {
           base: 'User',
           withModule: 'user.User',
@@ -63,6 +64,7 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
       meta: {
         moduleName: 'user',
         variableStatement: '',
+        resolverTypeString: 'UserResolvers',
         normalizedResolverName: {
           base: 'User',
           withModule: 'user.User',
@@ -97,6 +99,7 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
       meta: {
         moduleName: 'user',
         variableStatement: '',
+        resolverTypeString: 'UserResolvers',
         normalizedResolverName: {
           base: 'User',
           withModule: 'user.User',
