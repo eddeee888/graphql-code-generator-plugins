@@ -43,7 +43,9 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     fieldsToPick.length > 0
       ? fieldsToPick.reduce<typeof allResolversToGenerate>(
           (res, fieldToPick) => {
-            res[fieldToPick] = allResolversToGenerate[fieldToPick];
+            if (allResolversToGenerate) {
+              res[fieldToPick] = allResolversToGenerate[fieldToPick];
+            }
             return res;
           },
           {}
