@@ -41,8 +41,8 @@ export type Scalars = {
 };
 
 export enum Currency {
-  Aud = 'AUD',
-  Usd = 'USD',
+  AUD = 'AUD',
+  USD = 'USD',
 }
 
 export type Error = {
@@ -50,10 +50,10 @@ export type Error = {
 };
 
 export enum ErrorType {
-  ForbiddenError = 'FORBIDDEN_ERROR',
-  InputValidationError = 'INPUT_VALIDATION_ERROR',
-  NotFound = 'NOT_FOUND',
-  UnexpectedError = 'UNEXPECTED_ERROR',
+  FORBIDDEN_ERROR = 'FORBIDDEN_ERROR',
+  INPUT_VALIDATION_ERROR = 'INPUT_VALIDATION_ERROR',
+  NOT_FOUND = 'NOT_FOUND',
+  UNEXPECTED_ERROR = 'UNEXPECTED_ERROR',
 }
 
 export type Mutation = {
@@ -62,11 +62,11 @@ export type Mutation = {
   topicEdit: TopicEditPayload;
 };
 
-export type MutationTopicCreateArgs = {
+export type MutationtopicCreateArgs = {
   input: TopicCreateInput;
 };
 
-export type MutationTopicEditArgs = {
+export type MutationtopicEditArgs = {
   input: TopicEditInput;
 };
 
@@ -96,15 +96,15 @@ export type Query = {
   userByAccountName: UserPayload;
 };
 
-export type QueryTopicByIdArgs = {
+export type QuerytopicByIdArgs = {
   id: Scalars['ID']['input'];
 };
 
-export type QueryTopicsCreatedByUserArgs = {
+export type QuerytopicsCreatedByUserArgs = {
   input: TopicsCreatedByUserInput;
 };
 
-export type QueryUserByAccountNameArgs = {
+export type QueryuserByAccountNameArgs = {
   accountName: Scalars['String']['input'];
 };
 
@@ -428,13 +428,13 @@ export type MutationResolvers<
     ResolversTypes['TopicCreatePayload'],
     ParentType,
     ContextType,
-    RequireFields<MutationTopicCreateArgs, 'input'>
+    RequireFields<MutationtopicCreateArgs, 'input'>
   >;
   topicEdit?: Resolver<
     ResolversTypes['TopicEditPayload'],
     ParentType,
     ContextType,
-    RequireFields<MutationTopicEditArgs, 'input'>
+    RequireFields<MutationtopicEditArgs, 'input'>
   >;
 };
 
@@ -466,19 +466,19 @@ export type QueryResolvers<
     ResolversTypes['TopicByIdPayload'],
     ParentType,
     ContextType,
-    RequireFields<QueryTopicByIdArgs, 'id'>
+    RequireFields<QuerytopicByIdArgs, 'id'>
   >;
   topicsCreatedByUser?: Resolver<
     ResolversTypes['TopicsCreatedByUserPayload'],
     ParentType,
     ContextType,
-    RequireFields<QueryTopicsCreatedByUserArgs, 'input'>
+    RequireFields<QuerytopicsCreatedByUserArgs, 'input'>
   >;
   userByAccountName?: Resolver<
     ResolversTypes['UserPayload'],
     ParentType,
     ContextType,
-    RequireFields<QueryUserByAccountNameArgs, 'accountName'>
+    RequireFields<QueryuserByAccountNameArgs, 'accountName'>
   >;
 };
 

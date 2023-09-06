@@ -46,7 +46,7 @@ export type Query = {
   cat?: Maybe<Cat>;
 };
 
-export type QueryCatArgs = {
+export type QuerycatArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -195,7 +195,7 @@ export type QueryResolvers<
     Maybe<ResolversTypes['Cat']>,
     ParentType,
     ContextType,
-    RequireFields<QueryCatArgs, 'id'>
+    RequireFields<QuerycatArgs, 'id'>
   >;
 };
 
