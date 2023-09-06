@@ -7,7 +7,7 @@ import {
   createNoopProfiler,
 } from '@graphql-codegen/plugin-helpers';
 import { Project } from 'ts-morph';
-import { defineConfig } from '@eddeee888/gcg-server-config';
+import { defineConfig as defineServerConfig } from '@eddeee888/gcg-server-config';
 import { parseSources } from './parseSources';
 import { parseGraphQLSchema } from './parseGraphQLSchema';
 import {
@@ -111,7 +111,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     });
 
     // typescript and typescript-resolvers plugins config
-    const resolverTypesConfig = defineConfig({
+    const resolverTypesConfig = defineServerConfig({
       emitLegacyCommonJSImports,
       ...typesPluginsConfig,
       scalars: mergedConfig.scalarTypes,
@@ -119,6 +119,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         ...mergedConfig.typeMappers,
         ...typesPluginsConfig.mappers,
       },
+      namingConvention: 'keep', // Currently, we don't support changing naming convention. Otherwise, we'd be duplicating the logic in the `typescript` plugin
     });
 
     // typesSourceFile is the virtual `types.generated.ts`

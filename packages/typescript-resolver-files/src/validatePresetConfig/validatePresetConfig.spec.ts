@@ -227,6 +227,16 @@ describe('validatePresetConfig - general', () => {
     );
   });
 
+  it('throws if config.typesPluginsConfig.namingConvention is used', () => {
+    expect(() =>
+      validatePresetConfig({
+        typesPluginsConfig: { namingConvention: 'change-case-all#pascalCase' },
+      })
+    ).toThrowError(
+      "[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typesPluginsConfig.namingConvention is not currently supported. This is set as `namingConvention: 'keep'`."
+    );
+  });
+
   it('throws if result.fixObjectTypeResolvers is not valid', () => {
     expect(() =>
       validatePresetConfig({ fixObjectTypeResolvers: 'not-valid-for-sure' })
