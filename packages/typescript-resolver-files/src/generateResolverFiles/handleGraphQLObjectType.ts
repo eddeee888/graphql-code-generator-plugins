@@ -50,8 +50,8 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
         )
       : allResolversToGenerate;
 
-  const variableStatement = `export const ${resolverName}: ${typeString} = { 
-    /* Implement ${resolverName} resolver logic here */ 
+  const variableStatement = `export const ${resolverName}: ${typeString} = {
+    /* Implement ${resolverName} resolver logic here */
   };`;
 
   result.files[fieldFilePath] = {
