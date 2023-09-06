@@ -39,6 +39,11 @@ export type Scalars = {
   SomeRandomScalar: { input: any; output: any };
 };
 
+export type BookStore_New = {
+  __typename?: 'BookStore_New';
+  id: Scalars['ID']['output'];
+};
+
 export type Error = {
   error: ErrorType;
 };
@@ -113,6 +118,7 @@ export type Subscription = {
 
 export type Topic = {
   __typename?: 'Topic';
+  bookStore_for_topic?: Maybe<BookStore_New>;
   createdAt: Scalars['DateTime']['output'];
   creator: User;
   extendedTopicFieldInDifferentFileAndDifferentModule1: Profile;
@@ -182,6 +188,7 @@ export type User = {
   accountTwitter?: Maybe<Scalars['String']['output']>;
   accountWebsite?: Maybe<Scalars['String']['output']>;
   avatar?: Maybe<Scalars['String']['output']>;
+  bookStore_4_user?: Maybe<BookStore_New>;
   id: Scalars['ID']['output'];
   name?: Maybe<Scalars['String']['output']>;
 };
@@ -332,6 +339,8 @@ export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  BookStore_New: ResolverTypeWrapper<BookStore_New>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Error']>;
   ErrorType: ErrorType;
@@ -341,7 +350,6 @@ export type ResolversTypes = {
   PaginationResult: ResolverTypeWrapper<PaginationResult>;
   PayloadError: ResolverTypeWrapper<PayloadError>;
   Profile: ResolverTypeWrapper<Profile>;
-  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   SomeRandomScalar: ResolverTypeWrapper<Scalars['SomeRandomScalar']['output']>;
@@ -388,6 +396,8 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  BookStore_New: BookStore_New;
+  ID: Scalars['ID']['output'];
   DateTime: Scalars['DateTime']['output'];
   Error: ResolversInterfaceTypes<ResolversParentTypes>['Error'];
   Mutation: {};
@@ -396,7 +406,6 @@ export type ResolversParentTypes = {
   PaginationResult: PaginationResult;
   PayloadError: PayloadError;
   Profile: Profile;
-  ID: Scalars['ID']['output'];
   Query: {};
   String: Scalars['String']['output'];
   SomeRandomScalar: Scalars['SomeRandomScalar']['output'];
@@ -425,6 +434,14 @@ export type ResolversParentTypes = {
   UserPayload: ResolversUnionTypes<ResolversParentTypes>['UserPayload'];
   UserResult: UserResult;
   Boolean: Scalars['Boolean']['output'];
+};
+
+export type BookStore_NewResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['BookStore_New'] = ResolversParentTypes['BookStore_New']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export interface DateTimeScalarConfig
@@ -531,6 +548,11 @@ export type TopicResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Topic'] = ResolversParentTypes['Topic']
 > = {
+  bookStore_for_topic?: Resolver<
+    Maybe<ResolversTypes['BookStore_New']>,
+    ParentType,
+    ContextType
+  >;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   creator?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   extendedTopicFieldInDifferentFileAndDifferentModule1?: Resolver<
@@ -686,6 +708,11 @@ export type UserResolvers<
     ContextType
   >;
   avatar?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  bookStore_4_user?: Resolver<
+    Maybe<ResolversTypes['BookStore_New']>,
+    ParentType,
+    ContextType
+  >;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -711,6 +738,7 @@ export type UserResultResolvers<
 };
 
 export type Resolvers<ContextType = any> = {
+  BookStore_New?: BookStore_NewResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   Error?: ErrorResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
