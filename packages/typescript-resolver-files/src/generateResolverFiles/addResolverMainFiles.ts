@@ -40,6 +40,8 @@ export const addResolverMainFiles = ({
   },
   result,
 }: GenerateResolverFilesContext): void => {
+  const baseIdentifierUsage = countBaseIdentifiersUsage(result.files);
+
   const resolverMainFiles = Object.entries(result.files).reduce<
     Record<string, FileDetails>
   >((res, [filepath, file]) => {
@@ -61,10 +63,16 @@ export const addResolverMainFiles = ({
       res[resolverMainFilename] = createDefaultFileDetails();
     }
 
-    const identifierName = file.meta.normalizedResolverName.withModule
-      .split('.')
-      .filter((part) => Boolean(part))
-      .join('_');
+    const baseIdentifierName = makeNormalizedResolverNameVariableCompatible(
+      file.meta.normalizedResolverName.base
+    );
+    const identifierName =
+      baseIdentifierUsage[baseIdentifierName] > 1
+        ? makeNormalizedResolverNameVariableCompatible(
+            file.meta.normalizedResolverName.withModule
+          )
+        : baseIdentifierName;
+
     const fieldMapping: ObjectFieldMapping = {
       propertyName: file.mainImportIdentifier,
       identifierName,
@@ -266,4 +274,43 @@ const printObjectTypes = (objectTypes: ObjectTypesMap): string => {
       return `${property}: { ${spreadedValueString} }`;
     })
     .join(',\n');
+};
+
+/**
+ * countBaseIdentifiersUsage
+ *
+ * function to count how many of the same identifier is used across all files
+ */
+const countBaseIdentifiersUsage = (
+  files: GenerateResolverFilesContext['result']['files']
+): Record<string, number> => {
+  return Object.entries(files).reduce<Record<string, number>>(
+    (res, [_filepath, file]) => {
+      if (file.__filetype === 'file') {
+        return res;
+      }
+
+      const identifier = makeNormalizedResolverNameVariableCompatible(
+        file.meta.normalizedResolverName.base
+      );
+
+      if (!res[identifier]) {
+        res[identifier] = 0;
+      }
+
+      res[identifier]++;
+
+      return res;
+    },
+    {}
+  );
+};
+
+const makeNormalizedResolverNameVariableCompatible = (
+  identifier: string
+): string => {
+  return identifier
+    .split('.')
+    .filter((part) => Boolean(part))
+    .join('_');
 };
