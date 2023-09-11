@@ -1,5 +1,97 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.7.0
+
+### Minor Changes
+
+- ab6a9e7: Support extending non-root object types
+
+  For example, given this schema:
+
+  ```graphql
+  # user/schema.graphql
+  type User {
+    id: ID!
+  }
+
+  #  car/schema.graphql
+  extend type User {
+    cars: [Car!]!
+  }
+
+  # house/schema.graphql
+  extend type User {
+    housesOwned: [House!]!
+    housesSold: [House!]!
+  }
+  ```
+
+  It'd generate these files:
+
+  ```ts
+  // user/resolvers/User.ts
+  export const User: Pick<UserResolvers, 'id'> = {
+    // ...
+  };
+
+  // car/resolvers/User.ts
+  export const User: Pick<UserResolvers, 'cars'> = {
+    // ...
+  };
+
+  // house/resolvers/User.ts
+  export const User: Pick<UserResolvers, 'housesOwned' | 'housesSold'> = {
+    // ...
+  };
+  ```
+
+  And the main resolver file:
+
+  ```ts
+  // resolvers.generated.ts
+  import { User as user_User } from './user/resolvers/User';
+  import { User as car_User } from './car/resolvers/User';
+  import { User as house_User } from './house/resolvers/User';
+
+  export const resolvers: Resolvers = {
+    User: {
+      ...user_User,
+      ...car_User,
+      ...house_User,
+    },
+  };
+  ```
+
+- d5d9577: Drop support for `typesPluginsConfig.namingConvention` - this is now always `keep`
+
+  In the preset, we made the assumption that the types used in resolver files are in the same format as the schema. So we `keep` the naming convention.
+
+  Some types in `types.generated.ts` are affected. However, they are not currently used in any of the resolver files. So, if consumers have leaned into the recommended default config and generated resolver files (which is the intention of the preset), then there should be no issue upgrading.
+
+- 5497e8f: Add experimental support for [add](https://the-guild.dev/graphql/codegen/plugins/other/add) plugin.
+
+  Consumers can use the preset's `add` option to do the equivalent of the `add` plugin to target the generated resolvers type file (default `types.generated.ts`).
+
+  Example:
+
+  ```ts
+  // codegen.ts
+  {
+    generates: {
+      'src/schema': defineConfig({
+        add: {
+          './types.generated.ts': { content: '/* eslint-disable */' },
+        },
+      })
+    }
+  }
+  ```
+
+### Patch Changes
+
+- Updated dependencies [ccdc5e2]
+  - @eddeee888/gcg-server-config@0.1.0
+
 ## 0.6.0
 
 ### Minor Changes
