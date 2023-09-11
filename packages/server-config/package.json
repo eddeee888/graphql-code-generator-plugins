@@ -1,6 +1,6 @@
 {
   "name": "@eddeee888/gcg-server-config",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/eddeee888/graphql-code-generator-plugins.git",
