@@ -1,0 +1,11 @@
+type BookStore_New {
+  id: ID!
+}
+
+extend type Topic {
+  bookStore_for_topic: BookStore_New
+}
+
+extend type User {
+  bookStore_4_user: BookStore_New
+}

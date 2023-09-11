@@ -1,0 +1,13 @@
+extend type Subscription {
+  profileChanges: Profile!
+}
+
+type Profile {
+  id: ID!
+  user: User!
+}
+
+extend type Topic {
+  creator: User!
+  extendedTopicFieldInDifferentFileAndDifferentModule1: Profile!
+}

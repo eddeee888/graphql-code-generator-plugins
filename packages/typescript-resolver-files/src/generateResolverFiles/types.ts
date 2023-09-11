@@ -4,6 +4,7 @@ import type { GraphQLObjectTypeResolversToGenerate } from '../getGraphQLObjectTy
 import type { ParseSourcesResult } from '../parseSources';
 import type { ImportLineMeta, RootObjectType } from '../utils';
 import type { ParsedPresetConfig } from '../validatePresetConfig';
+import type { NormalizedResolverName } from './visitNamedType';
 
 interface BaseVirtualFile {
   __filetype: string;
@@ -20,7 +21,8 @@ export interface GeneralResolverFile extends BaseVirtualFile {
   meta: {
     moduleName: string;
     variableStatement: string;
-    normalizedResolverName: string;
+    resolverTypeString: string | null; // GraphQL Scalar's resolverTypeString is null
+    normalizedResolverName: NormalizedResolverName;
   };
 }
 
@@ -30,7 +32,8 @@ export interface RootObjectTypeFieldResolverFile extends BaseVirtualFile {
     moduleName: string;
     belongsToRootObject: RootObjectType;
     variableStatement: string;
-    normalizedResolverName: string;
+    resolverTypeString: string;
+    normalizedResolverName: NormalizedResolverName;
   };
 }
 
@@ -39,7 +42,8 @@ export interface ObjectTypeFile extends BaseVirtualFile {
   meta: {
     moduleName: string;
     variableStatement: string;
-    normalizedResolverName: string;
+    resolverTypeString: string;
+    normalizedResolverName: NormalizedResolverName;
     resolversToGenerate?: GraphQLObjectTypeResolversToGenerate[number];
   };
 }
@@ -92,7 +96,7 @@ export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
   fieldFilePath: string;
   resolverName: string;
   belongsToRootObject: BelongsToRootObject;
-  normalizedResolverName: string;
+  normalizedResolverName: NormalizedResolverName;
   resolversTypeMeta: {
     // typeNamedImport: name of the type to be imported from `module`.
     // If it's a root object type field, this is the root type (e.g. Query, Mutation, Subscription).
@@ -102,13 +106,14 @@ export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
     module: ImportLineMeta['module'];
     moduleType: ImportLineMeta['moduleType'];
     // typeString: valid type specified for a field or object type
-    typeString:
-      | `${string}Resolvers`
-      | `${RootObjectType}Resolvers['${string}']`;
+    typeString: string;
   };
 }
 
-export type GraphQLTypeHandler<BelongsToRootObject = null> = (
-  params: GraphQLTypeHandlerParams<BelongsToRootObject>,
+export type GraphQLTypeHandler<
+  BelongsToRootObject = null,
+  ExtraParams = Record<string, unknown>
+> = (
+  params: GraphQLTypeHandlerParams<BelongsToRootObject> & ExtraParams,
   ctx: GenerateResolverFilesContext
 ) => void;

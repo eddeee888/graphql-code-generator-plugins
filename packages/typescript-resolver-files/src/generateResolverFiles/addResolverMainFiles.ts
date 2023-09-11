@@ -12,14 +12,14 @@ interface FileDetails {
   queryFields: ObjectFieldMapping[];
   mutationFields: ObjectFieldMapping[];
   subscriptionFields: ObjectFieldMapping[];
-  objectTypes: ObjectFieldMapping[];
+  objectTypes: ObjectTypesMap;
 }
 const createDefaultFileDetails = (): FileDetails => ({
   importLines: [],
   queryFields: [],
   mutationFields: [],
   subscriptionFields: [],
-  objectTypes: [],
+  objectTypes: {},
 });
 
 /**
@@ -40,6 +40,8 @@ export const addResolverMainFiles = ({
   },
   result,
 }: GenerateResolverFilesContext): void => {
+  const baseIdentifierUsage = countBaseIdentifiersUsage(result.files);
+
   const resolverMainFiles = Object.entries(result.files).reduce<
     Record<string, FileDetails>
   >((res, [filepath, file]) => {
@@ -61,6 +63,21 @@ export const addResolverMainFiles = ({
       res[resolverMainFilename] = createDefaultFileDetails();
     }
 
+    const baseIdentifierName = makeNormalizedResolverNameVariableCompatible(
+      file.meta.normalizedResolverName.base
+    );
+    const identifierName =
+      baseIdentifierUsage[baseIdentifierName] > 1
+        ? makeNormalizedResolverNameVariableCompatible(
+            file.meta.normalizedResolverName.withModule
+          )
+        : baseIdentifierName;
+
+    const fieldMapping: ObjectFieldMapping = {
+      propertyName: file.mainImportIdentifier,
+      identifierName,
+    };
+
     // Non Root Object fields that was generated
     if (
       file.__filetype === 'objectType' ||
@@ -71,26 +88,21 @@ export const addResolverMainFiles = ({
           isTypeImport: false,
           module: relativeModulePath(outputDir, filepath),
           moduleType: 'file',
-          namedImports: [file.mainImportIdentifier],
+          namedImports: [fieldMapping],
           emitLegacyCommonJSImports,
         })
       );
-      res[resolverMainFilename].objectTypes.push({
-        propertyName: file.mainImportIdentifier,
-        identifierName: file.mainImportIdentifier,
+
+      pushToObjectTypes({
+        objectTypes: res[resolverMainFilename].objectTypes,
+        property: file.mainImportIdentifier,
+        value: identifierName,
       });
+
       return res;
     }
 
     // Root object fields
-    const identifierName = file.meta.normalizedResolverName
-      .split('.')
-      .join('_');
-
-    const fieldMapping: ObjectFieldMapping = {
-      propertyName: file.mainImportIdentifier,
-      identifierName,
-    };
     res[resolverMainFilename].importLines.push(
       printImportLine({
         isTypeImport: false,
@@ -140,9 +152,10 @@ export const addResolverMainFiles = ({
 
       // Only 1 part, this is a GraphQL ObjectType
       if (resolverNameParts.length === 1) {
-        res[resolverMainFilename].objectTypes.push({
-          propertyName: resolverNameParts[0],
-          identifierName: usage.identifierName,
+        pushToObjectTypes({
+          objectTypes: res[resolverMainFilename].objectTypes,
+          property: resolverNameParts[0],
+          value: usage.identifierName,
         });
         return;
       }
@@ -201,6 +214,7 @@ export const addResolverMainFiles = ({
 
       result.files[resolverMainFilename] = {
         __filetype: 'file',
+        mainImportIdentifier: resolversIdentifier,
         content: `/* This file was automatically generated. DO NOT UPDATE MANUALLY. */
     ${printImportLine({
       isTypeImport: true,
@@ -209,14 +223,13 @@ export const addResolverMainFiles = ({
       namedImports: [resolversTypeName],
       emitLegacyCommonJSImports,
     })}
-    ${resolverMainFile.importLines.map((line) => line).join('\n')}
+    ${resolverMainFile.importLines.join('\n')}
     export const ${resolversIdentifier}: ${resolversTypeName} = {
       ${queries}
       ${mutations}
       ${suscriptions}
-      ${resolverMainFile.objectTypes.map(printObjectMapping).join(',\n')}
+      ${printObjectTypes(resolverMainFile.objectTypes)}
     }`,
-        mainImportIdentifier: resolversIdentifier,
       };
     }
   );
@@ -230,3 +243,74 @@ const printObjectMapping = ({
   propertyName,
   identifierName,
 }: ObjectFieldMapping): string => `${propertyName}: ${identifierName}`;
+
+type ObjectTypesMap = Record<string, string[]>;
+const pushToObjectTypes = ({
+  objectTypes,
+  property,
+  value,
+}: {
+  objectTypes: ObjectTypesMap;
+  property: string;
+  value: string;
+}): void => {
+  if (!objectTypes[property]) {
+    objectTypes[property] = [];
+  }
+
+  objectTypes[property].push(value);
+};
+
+const printObjectTypes = (objectTypes: ObjectTypesMap): string => {
+  return Object.entries(objectTypes)
+    .map(([property, values]) => {
+      if (values.length === 1) {
+        return `${property}: ${values[0]}`;
+      }
+
+      const spreadedValueString = values
+        .map((value) => `...${value}`)
+        .join(',');
+      return `${property}: { ${spreadedValueString} }`;
+    })
+    .join(',\n');
+};
+
+/**
+ * countBaseIdentifiersUsage
+ *
+ * function to count how many of the same identifier is used across all files
+ */
+const countBaseIdentifiersUsage = (
+  files: GenerateResolverFilesContext['result']['files']
+): Record<string, number> => {
+  return Object.entries(files).reduce<Record<string, number>>(
+    (res, [_filepath, file]) => {
+      if (file.__filetype === 'file') {
+        return res;
+      }
+
+      const identifier = makeNormalizedResolverNameVariableCompatible(
+        file.meta.normalizedResolverName.base
+      );
+
+      if (!res[identifier]) {
+        res[identifier] = 0;
+      }
+
+      res[identifier]++;
+
+      return res;
+    },
+    {}
+  );
+};
+
+const makeNormalizedResolverNameVariableCompatible = (
+  identifier: string
+): string => {
+  return identifier
+    .split('.')
+    .filter((part) => Boolean(part))
+    .join('_');
+};

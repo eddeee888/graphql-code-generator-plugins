@@ -12,6 +12,13 @@ interface AddExternalResolverImportParams {
   configImportSyntax: string;
 }
 
+/**
+ * addExternalResolverImport
+ *
+ * 1. parse external resolvers (originally from config.externalResolvers) import syntax
+ * 2. dedupes any duplicated imports
+ * 3. declares the which identifier name to use for GraphQL object or resolver in identifierUsages
+ */
 export const addExternalResolverImport = (
   params: AddExternalResolverImportParams,
   {
@@ -22,6 +29,7 @@ export const addExternalResolverImport = (
   const { importIdentifier, identifierUsage, moduleImport } =
     parseImportSyntax(params);
 
+  let shouldPushIndentifierUsages = false;
   result.externalImports[moduleImport] =
     result.externalImports[moduleImport] ||
     ({
@@ -35,42 +43,61 @@ export const addExternalResolverImport = (
         emitLegacyCommonJSImports,
       },
       identifierUsages: [],
-    } as GenerateResolverFilesContext['result']['externalImports'][number]);
+    } satisfies GenerateResolverFilesContext['result']['externalImports'][number]);
 
-  const externalImport = result.externalImports[moduleImport];
+  const { importLineMeta, identifierUsages } =
+    result.externalImports[moduleImport];
 
   switch (importIdentifier.__type) {
     case 'default':
       if (
-        externalImport.importLineMeta.defaultImport &&
-        externalImport.importLineMeta.defaultImport !==
-          importIdentifier.defaultImport
+        importLineMeta.defaultImport &&
+        importLineMeta.defaultImport !== importIdentifier.defaultImport
       ) {
         throw new Error(
-          `There can be only one default import from '${moduleImport}'. Current: ${externalImport.importLineMeta.defaultImport}. New: ${importIdentifier.defaultImport}`
+          `There can be only one default import from '${moduleImport}'. Current: ${importLineMeta.defaultImport}. New: ${importIdentifier.defaultImport}`
         );
       }
-      externalImport.importLineMeta.defaultImport =
-        importIdentifier.defaultImport;
+      importLineMeta.defaultImport = importIdentifier.defaultImport;
+      shouldPushIndentifierUsages = true;
       break;
-    case 'named':
-      externalImport.importLineMeta.namedImports.push(
-        importIdentifier.namedImport
+    case 'named': {
+      const foundSameImport = importLineMeta.namedImports.find(
+        (existingImport) =>
+          typeof existingImport === 'string' &&
+          existingImport === importIdentifier.namedImport
       );
+      if (!foundSameImport) {
+        importLineMeta.namedImports.push(importIdentifier.namedImport);
+        shouldPushIndentifierUsages = true;
+      }
       break;
-    case 'namedWithAlias':
-      externalImport.importLineMeta.namedImports.push({
-        propertyName: importIdentifier.propertyName,
-        identifierName: importIdentifier.identifierName,
-      });
+    }
+    case 'namedWithAlias': {
+      const foundSameImport = importLineMeta.namedImports.find(
+        (existingImport) =>
+          typeof existingImport === 'object' &&
+          existingImport.identifierName === importIdentifier.identifierName &&
+          existingImport.propertyName === importIdentifier.propertyName
+      );
+      if (!foundSameImport) {
+        importLineMeta.namedImports.push({
+          propertyName: importIdentifier.propertyName,
+          identifierName: importIdentifier.identifierName,
+        });
+        shouldPushIndentifierUsages = true;
+      }
       break;
+    }
     default:
       // importIdentifier is `never` unless new __type is added
       // i.e. this is here for typesafety
       return importIdentifier;
   }
 
-  externalImport.identifierUsages.push(identifierUsage);
+  if (shouldPushIndentifierUsages) {
+    identifierUsages.push(identifierUsage);
+  }
 };
 
 const parseImportSyntax = ({

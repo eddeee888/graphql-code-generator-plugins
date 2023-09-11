@@ -15,7 +15,9 @@ export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
     return;
   }
 
-  const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { /* Implement ${resolverName} interface logic here */ };`;
+  const resolverTypeString = resolversTypeMeta.typeString;
+
+  const variableStatement = `export const ${resolverName}: ${resolverTypeString} = { /* Implement ${resolverName} interface logic here */ };`;
 
   result.files[fieldFilePath] = {
     __filetype: 'generalResolver',
@@ -33,6 +35,7 @@ export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
       moduleName,
       normalizedResolverName,
       variableStatement,
+      resolverTypeString,
     },
   };
 };

@@ -33,21 +33,17 @@ export interface VisitNamedTypeParams {
   location?: Location;
 }
 
-export const visitNamedType = (
+export const visitNamedType = <P extends Record<string, unknown>>(
   {
     namedType,
     resolverName,
     belongsToRootObject,
     location,
     visitor,
-  }: VisitNamedTypeParams,
+    ...extraParams
+  }: VisitNamedTypeParams & P,
   ctx: GenerateResolverFilesContext
 ): void => {
-  const normalizedResolverName = normalizeResolverName(
-    resolverName,
-    belongsToRootObject
-  );
-
   // Check to see if need to generate resolver files
   const parsedDetails = parseLocationForOutputDir(
     belongsToRootObject ? [belongsToRootObject] : [],
@@ -61,14 +57,22 @@ export const visitNamedType = (
 
   const { moduleName, outputDir } = parsedDetails;
 
+  const normalizedResolverName = normalizeResolverName(
+    moduleName,
+    resolverName,
+    belongsToRootObject
+  );
+
   const externalResolverImportSyntax =
-    ctx.config.externalResolvers[normalizedResolverName];
+    ctx.config.externalResolvers[normalizedResolverName.base];
+
+  // when used with extended object types scenario
   if (externalResolverImportSyntax) {
     // If has external resolver, use it
     addExternalResolverImport(
       {
         moduleName,
-        normalizedResolverName,
+        normalizedResolverName: normalizedResolverName.base,
         configImportSyntax: externalResolverImportSyntax,
       },
       ctx
@@ -78,7 +82,7 @@ export const visitNamedType = (
   }
 
   // Generate resolver files based on its type
-  const visitorHandlerParams = validateAndPrepareForGraphQLTypeHandler(
+  const visitorHandlerParamsBase = validateAndPrepareForGraphQLTypeHandler(
     {
       resolverName,
       normalizedResolverName,
@@ -88,6 +92,8 @@ export const visitNamedType = (
     },
     ctx
   );
+
+  const visitorHandlerParams = { ...visitorHandlerParamsBase, ...extraParams };
 
   if (visitorHandlerParams.belongsToRootObject) {
     visitor['RootObjectTypeField'](visitorHandlerParams, ctx);
@@ -161,7 +167,7 @@ const parseLocationForOutputDir = (
 
 interface ValidateAndPrepareForGraphQLTypeParams {
   resolverName: string;
-  normalizedResolverName: string;
+  normalizedResolverName: NormalizedResolverName;
   outputDir: string;
   belongsToRootObject: RootObjectType | null;
   moduleName: string;
@@ -213,17 +219,37 @@ const validateAndPrepareForGraphQLTypeHandler = (
   };
 };
 
+export interface NormalizedResolverName {
+  base: string;
+  withModule: string;
+}
+
 /**
  * Function to get format resolver name based on its definition in the schema
  * - Root object type resolver e.g Query.me, Mutation.updateUser
  * - Object type e.g. User, Profile
+ *
+ * Returns an object with 2 key/value pairs:
+ *   - base: resolver name without module. This is used by to match up with config.externalResolvers.
+ *   - withModule: resolver name with module. This is used to identify the resolver INTERNAL unique path used in main resolver files.
  */
 const normalizeResolverName = (
+  moduleName: string,
   name: string,
   rootObject: RootObjectType | null
-): string => {
-  if (!rootObject) {
-    return name;
-  }
-  return `${rootObject}.${name}`;
+): NormalizedResolverName => {
+  const baseResolverName = !rootObject ? name : `${rootObject}.${name}`;
+
+  // Note: this is to make sure the resolver name is a valid variable name because we use it in resolvers.generated.ts
+  //
+  // However, this naive implementation means there could be a duplicated variable name if a mix of kebab-case and snake_case is used.
+  // e.g. `user-by-account-name` and `user_by_account_name` will both be normalized to `user_by_account_name`
+  //
+  // If users report this issue. We can try another approach.
+  // I'm banking my slim hope in humanity that no codebase is so chaotic that it uses both kebab-case and snake_case.
+  const variableSafeModuleName = moduleName.replace('-', '_');
+  return {
+    base: baseResolverName,
+    withModule: `${variableSafeModuleName}.${baseResolverName}`,
+  };
 };
