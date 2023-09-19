@@ -2,6 +2,13 @@ import {
   type ParsedPresetConfig,
   validatePresetConfig,
 } from './validatePresetConfig';
+import { fmt } from '../utils';
+
+const warnMock = jest.spyOn(fmt, 'warn');
+
+beforeEach(() => {
+  jest.resetAllMocks();
+});
 
 const defaultExpected: ParsedPresetConfig = {
   mode: 'modules',
@@ -227,14 +234,44 @@ describe('validatePresetConfig - general', () => {
     );
   });
 
-  it('throws if config.typesPluginsConfig.namingConvention is used', () => {
-    expect(() =>
-      validatePresetConfig({
-        typesPluginsConfig: { namingConvention: 'change-case-all#pascalCase' },
-      })
-    ).toThrowError(
-      "[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typesPluginsConfig.namingConvention is not currently supported. This is set as `namingConvention: 'keep'`."
+  it('warns if config.typesPluginsConfig.namingConvention is used as an object, but the value is passed through', () => {
+    const parsed = validatePresetConfig({
+      typesPluginsConfig: {
+        namingConvention: {
+          enumValues: 'change-case-all#pascalCase',
+          typeNames: 'change-case-all#upperCase',
+          transformUnderscore: true,
+        },
+      },
+    });
+    expect(warnMock).toHaveBeenNthCalledWith(
+      1,
+      `presetConfig.typesPluginsConfig.namingConvention is not fully supported. The default is \`namingConvention: 'keep'\`. Change at your own risk.`
     );
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      typesPluginsConfig: {
+        namingConvention: {
+          enumValues: 'change-case-all#pascalCase',
+          typeNames: 'change-case-all#upperCase',
+          transformUnderscore: true,
+        },
+      },
+    });
+  });
+
+  it('warns if config.typesPluginsConfig.namingConvention is used as an string, but the value is passed through', () => {
+    const parsed = validatePresetConfig({
+      typesPluginsConfig: { namingConvention: 'change-case-all#test' },
+    });
+    expect(warnMock).toHaveBeenNthCalledWith(
+      1,
+      `presetConfig.typesPluginsConfig.namingConvention is not fully supported. The default is \`namingConvention: 'keep'\`. Change at your own risk.`
+    );
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      typesPluginsConfig: { namingConvention: 'change-case-all#test' },
+    });
   });
 
   it('throws if result.fixObjectTypeResolvers is not valid', () => {
