@@ -2,9 +2,8 @@ import {
   type ParsedPresetConfig,
   validatePresetConfig,
 } from './validatePresetConfig';
-import { fmt } from '../utils';
 
-const warnMock = jest.spyOn(fmt, 'warn');
+const warnMock = jest.spyOn(console, 'warn');
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -246,7 +245,7 @@ describe('validatePresetConfig - general', () => {
     });
     expect(warnMock).toHaveBeenNthCalledWith(
       1,
-      `presetConfig.typesPluginsConfig.namingConvention is not fully supported. The default is \`namingConvention: 'keep'\`. Change at your own risk.`
+      `[@eddeee888/gcg-typescript-resolver-files] WARN: presetConfig.typesPluginsConfig.namingConvention is not fully supported. The default is \`namingConvention: 'keep'\`. Change at your own risk.`
     );
     expect(parsed).toEqual({
       ...defaultExpected,
@@ -266,7 +265,7 @@ describe('validatePresetConfig - general', () => {
     });
     expect(warnMock).toHaveBeenNthCalledWith(
       1,
-      `presetConfig.typesPluginsConfig.namingConvention is not fully supported. The default is \`namingConvention: 'keep'\`. Change at your own risk.`
+      `[@eddeee888/gcg-typescript-resolver-files] WARN: presetConfig.typesPluginsConfig.namingConvention is not fully supported. The default is \`namingConvention: 'keep'\`. Change at your own risk.`
     );
     expect(parsed).toEqual({
       ...defaultExpected,
