@@ -28,6 +28,11 @@ const config: CodegenConfig = {
           },
         },
         typesPluginsConfig: {
+          namingConvention: {
+            typeNames: 'change-case#upperCase',
+            enumValues: 'change-case#lowerCase',
+            transformUnderscore: true,
+          },
           enumsAsTypes: false,
           contextType: './customTypes#ResolverContext',
         },
