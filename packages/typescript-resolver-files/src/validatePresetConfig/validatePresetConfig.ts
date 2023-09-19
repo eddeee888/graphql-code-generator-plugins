@@ -19,7 +19,7 @@ const defaultScalarsModule = 'graphql-scalars';
 type ParsedTypesPluginsConfig = Omit<
   typeScriptPlugin.TypeScriptPluginConfig &
     typeScriptResolversPlugin.TypeScriptResolversPluginConfig,
-  'scalars' | 'emitLegacyCommonJSImports' | 'namingConvention'
+  'scalars' | 'emitLegacyCommonJSImports'
 >;
 type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
