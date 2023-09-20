@@ -19,7 +19,7 @@ const defaultScalarsModule = 'graphql-scalars';
 type ParsedTypesPluginsConfig = Omit<
   typeScriptPlugin.TypeScriptPluginConfig &
     typeScriptResolversPlugin.TypeScriptResolversPluginConfig,
-  'scalars' | 'emitLegacyCommonJSImports' | 'namingConvention'
+  'scalars' | 'emitLegacyCommonJSImports'
 >;
 type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
@@ -323,20 +323,14 @@ const validateTypesPluginsConfig = (
   }
 
   if ('namingConvention' in config) {
-    throw new Error(
-      fmt.error(
-        "presetConfig.typesPluginsConfig.namingConvention is not currently supported. This is set as `namingConvention: 'keep'`.",
-        'Validation'
+    console.warn(
+      fmt.warn(
+        "presetConfig.typesPluginsConfig.namingConvention is not fully supported. The default is `namingConvention: 'keep'`. Change at your own risk."
       )
     );
   }
 
-  const {
-    scalars: _,
-    emitLegacyCommonJSImports: __,
-    namingConvention: ___,
-    ...rest
-  } = config;
+  const { scalars: _, emitLegacyCommonJSImports: __, ...rest } = config;
 
   return rest;
 };

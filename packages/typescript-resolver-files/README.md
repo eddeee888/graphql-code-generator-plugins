@@ -222,6 +222,10 @@ Examples:
 
 Takes [typescript config](https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript) and [typescript-resolvers config](https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-resolvers) to override the defaults.
 
+Experimental options:
+
+- `namingConvention`
+
 ### mappersFileExtension
 
 `string` (Default: `.mappers.ts`)

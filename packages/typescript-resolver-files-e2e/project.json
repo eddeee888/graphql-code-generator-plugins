@@ -176,7 +176,7 @@
           "configFile": "packages/typescript-resolver-files-e2e/src/test-external-resolvers/codegen.yml"
         },
         "test-config-overrides": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-config-overrides/codegen.yml"
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-config-overrides/codegen.ts"
         },
         "test-mappers": {
           "configFile": "packages/typescript-resolver-files-e2e/src/test-mappers/codegen.yml"
