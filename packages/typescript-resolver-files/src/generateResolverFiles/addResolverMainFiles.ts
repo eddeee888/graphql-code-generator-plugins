@@ -309,6 +309,13 @@ const countBaseIdentifiersUsage = (
 /**
  * makeNormalizedResolverNameVariableCompatible
  * @description Function to replace `-` and `.` in a string with underscore to be used as a variable name
+ *
+ * Note: this is to make sure the resolver name is a valid variable name because we use it in resolvers.generated.ts
+ * However, this naive implementation means there could be a duplicated variable name if a mix of kebab-case and snake_case is used.
+ * e.g. `user-by-account-name` and `user_by_account_name` will both be normalized to `user_by_account_name`
+ *
+ * If users report this issue. We can try another approach.
+ * I'm banking my slim hope in humanity that no codebase is so chaotic that it uses both kebab-case and snake_case.
  */
 const makeNormalizedResolverNameVariableCompatible = (
   identifier: string
