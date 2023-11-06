@@ -306,11 +306,12 @@ const countBaseIdentifiersUsage = (
   );
 };
 
+/**
+ * makeNormalizedResolverNameVariableCompatible
+ * @description Function to replace `-` and `.` in a string with underscore to be used as a variable name
+ */
 const makeNormalizedResolverNameVariableCompatible = (
   identifier: string
 ): string => {
-  return identifier
-    .split('.')
-    .filter((part) => Boolean(part))
-    .join('_');
+  return identifier.replace(/[-.]/g, '_');
 };
