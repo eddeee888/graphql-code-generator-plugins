@@ -232,6 +232,7 @@ export interface NormalizedResolverName {
  * Returns an object with 2 key/value pairs:
  *   - base: resolver name without module. This is used by to match up with config.externalResolvers.
  *   - withModule: resolver name with module. This is used to identify the resolver INTERNAL unique path used in main resolver files.
+ * Test release
  */
 const normalizeResolverName = (
   moduleName: string,
