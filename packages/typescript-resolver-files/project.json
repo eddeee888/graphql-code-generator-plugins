@@ -13,8 +13,7 @@
         "packageJson": "packages/typescript-resolver-files/package.json",
         "main": "packages/typescript-resolver-files/src/index.ts",
         "assets": ["packages/typescript-resolver-files/README.md"],
-        "clean": true,
-        "updateBuildableProjectDepsInPackageJson": false
+        "clean": true
       }
     },
     "publish": {
@@ -22,7 +21,7 @@
       "dependsOn": ["build"]
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/typescript-resolver-files/**/*.ts"]
@@ -32,14 +31,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "packages/typescript-resolver-files/jest.config.ts",
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
+        "jestConfig": "packages/typescript-resolver-files/jest.config.ts"
       }
     }
   },
