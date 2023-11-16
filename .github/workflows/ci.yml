@@ -23,7 +23,7 @@ jobs:
           access_token: ${{ github.token }}
 
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -55,7 +55,7 @@ jobs:
     if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' }}
     steps:
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
@@ -91,7 +91,7 @@ jobs:
     if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' || needs.precheck.outputs.affected-typescript-resolver-files-e2e == 'true' }}
     steps:
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
