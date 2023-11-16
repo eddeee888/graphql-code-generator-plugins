@@ -46,10 +46,8 @@ jobs:
   typescript-resolver-files:
     strategy:
       matrix:
-        os:
-          - ubuntu-22.04
-          - windows-latest
-        node-version: [16.x, 18.x, 20.x]
+        os: [ubuntu-22.04, windows-latest]
+        node-version: [18.x, 20.x]
     runs-on: ${{ matrix.os }}
     needs: precheck
     if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' }}
@@ -79,10 +77,8 @@ jobs:
   typescript-resolver-files-e2e:
     strategy:
       matrix:
-        os:
-          - ubuntu-22.04
-          - windows-latest
-        node-version: [16.x, 18.x, 20.x]
+        os: [ubuntu-22.04, windows-latest]
+        node-version: [18.x, 20.x]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
