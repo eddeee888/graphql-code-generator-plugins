@@ -72,7 +72,7 @@ jobs:
           GITHUB_TOKEN: ${{ env.github-token }}
 
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           persist-credentials: true
           repository: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.repo.full_name }}
