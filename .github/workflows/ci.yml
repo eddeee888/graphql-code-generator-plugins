@@ -8,7 +8,6 @@ on:
 
 env:
   node-version: '18.x'
-  supported-node-versions: [18.x, 20.x]
 
 jobs:
   precheck:
@@ -50,7 +49,7 @@ jobs:
         os:
           - ubuntu-22.04
           - windows-latest
-        node-version: ${{ env.supported-node-versions }}
+        node-version: ${{ vars.SUPPORTED_NODE_VERSIONS }}
     runs-on: ${{ matrix.os }}
     needs: precheck
     if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' }}
@@ -83,7 +82,7 @@ jobs:
         os:
           - ubuntu-22.04
           - windows-latest
-        node-version: ${{ env.supported-node-versions }}
+        node-version: ${{ vars.SUPPORTED_NODE_VERSIONS }}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
