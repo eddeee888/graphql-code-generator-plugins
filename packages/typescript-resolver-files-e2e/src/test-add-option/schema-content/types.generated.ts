@@ -21,7 +21,7 @@ export type Incremental<T> =
     };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string | number; output: string };
+  ID: { input: string; output: string | number };
   String: { input: string; output: string };
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
@@ -30,7 +30,16 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
-  test: Scalars['String']['output'];
+  test: Test;
+};
+
+export type Test = {
+  __typename?: 'Test';
+  boolean: Scalars['Boolean']['output'];
+  float: Scalars['Float']['output'];
+  id: Scalars['ID']['output'];
+  int: Scalars['Int']['output'];
+  string: Scalars['String']['output'];
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -141,26 +150,47 @@ export type DirectiveResolverFn<
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Test: ResolverTypeWrapper<Test>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  String: Scalars['String']['output'];
+  Test: Test;
   Boolean: Scalars['Boolean']['output'];
+  Float: Scalars['Float']['output'];
+  ID: Scalars['ID']['output'];
+  Int: Scalars['Int']['output'];
+  String: Scalars['String']['output'];
 };
 
 export type QueryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
-  test?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  test?: Resolver<ResolversTypes['Test'], ParentType, ContextType>;
+};
+
+export type TestResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Test'] = ResolversParentTypes['Test']
+> = {
+  boolean?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  float?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  int?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  string?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
+  Test?: TestResolvers<ContextType>;
 };
 
 /* CONTENT */
