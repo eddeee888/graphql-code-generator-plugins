@@ -1,5 +1,12 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.7.2
+
+### Patch Changes
+
+- 8ed14fc: Fix issue where dashes were not handled correctly when using extended object pattern across multiple schemas
+- 7567190: Declare tslib as a dependency
+
 ## 0.7.1
 
 ### Patch Changes
