@@ -23,7 +23,7 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nx/typescript"],
+      "extends": ["plugin:@nx/typescript", "plugin:@eddeee888/typescript"],
       "rules": {
         "@typescript-eslint/explicit-function-return-type": [
           "error",

@@ -1566,6 +1566,13 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
+"@eddeee888/eslint-plugin@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@eddeee888/eslint-plugin/-/eslint-plugin-0.0.1.tgz#55c9671a8a0d0dda8514002ff01f2014d0c491d5"
+  integrity sha512-FniKAkPiH9xxtRqaq54ce2ExdJZ9161UDcE6QxAoqKCxvP6CkIjfF03HnCA5kTZLfeCHbLEFygZVaYPhNr536w==
+  dependencies:
+    tslib "^2.3.0"
+
 "@eddeee888/nx-graphql-code-generator@0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@eddeee888/nx-graphql-code-generator/-/nx-graphql-code-generator-0.1.1.tgz#50473fc7175d4c4efff4e37b0da8763c0109d03b"
