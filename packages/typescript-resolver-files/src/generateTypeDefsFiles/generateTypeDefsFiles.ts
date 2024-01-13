@@ -1,8 +1,8 @@
 import * as path from 'path';
-import { StandardFile } from '../generateResolverFiles';
+import type { StandardFile } from '../generateResolverFiles';
 import type { ParseSourcesResult } from '../parseSources';
 import { cwd, isWhitelistedModule } from '../utils';
-import { TypeDefsFileMode } from '../validatePresetConfig';
+import type { TypeDefsFileMode } from '../validatePresetConfig';
 import { generateTypeDefsContent } from './generateTypeDefsContent';
 
 interface GenerateTypeDefsFilesParams {

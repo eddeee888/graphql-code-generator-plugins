@@ -1,18 +1,18 @@
 import * as path from 'path';
 import {
-  GraphQLNamedType,
+  type GraphQLNamedType,
   isInterfaceType,
   isObjectType,
   isScalarType,
   isUnionType,
-  Location,
+  type Location,
 } from 'graphql';
 import {
   relativeModulePath,
   parseLocationForWhitelistedModule,
-  RootObjectType,
+  type RootObjectType,
 } from '../utils';
-import {
+import type {
   GraphQLTypeHandler,
   GraphQLTypeHandlerParams,
   GenerateResolverFilesContext,

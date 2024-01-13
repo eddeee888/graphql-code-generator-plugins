@@ -1,8 +1,8 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import type { AddPluginConfig } from '@graphql-codegen/add/typings/config';
-import * as typeScriptPlugin from '@graphql-codegen/typescript';
-import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
+import type * as typeScriptPlugin from '@graphql-codegen/typescript';
+import type * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import type { ProjectOptions } from 'ts-morph';
 import { cwd, fmt } from '../utils';
 

@@ -1,6 +1,6 @@
 import * as path from 'path';
 import {
-  ParseLocationForWhitelistedModule,
+  type ParseLocationForWhitelistedModule,
   parseLocationForWhitelistedModule,
 } from './parseLocationForWhitelistedModule';
 import type { ParsedSource, ParseSourcesResult } from '../parseSources';

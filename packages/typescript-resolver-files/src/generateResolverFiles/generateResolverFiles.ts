@@ -8,7 +8,7 @@ import { handleGraphQLObjectType } from './handleGraphQLObjectType';
 import { handleGraphQLUnionType } from './handleGraphQLUnionType';
 import { handleGraphQLScalarType } from './handleGraphQLScalarType';
 import { handleGraphQLInterfaceType } from './handleGraphQLInterfaceType';
-import { visitNamedType, VisitNamedTypeParams } from './visitNamedType';
+import { visitNamedType, type VisitNamedTypeParams } from './visitNamedType';
 import type { GenerateResolverFilesContext } from './types';
 
 export const generateResolverFiles = (

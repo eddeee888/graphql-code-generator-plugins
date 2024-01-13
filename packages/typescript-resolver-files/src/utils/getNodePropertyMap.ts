@@ -1,4 +1,9 @@
-import { type TypeNode, Node, SyntaxKind, ClassDeclaration } from 'ts-morph';
+import {
+  type TypeNode,
+  Node,
+  SyntaxKind,
+  type ClassDeclaration,
+} from 'ts-morph';
 
 export type NodePropertyMap = Record<string, { name: string }>;
 
@@ -62,8 +67,8 @@ const collectTypeNodeProperties = (
         result.push({ propertyName: prop.getName() });
       });
   } else if (Node.isIntersectionTypeNode(typeNode)) {
-    typeNode.getTypeNodes().forEach((typeNode) => {
-      collectTypeNodeProperties(typeNode, result); // May contain duplicated properties from different typeNodes. Will be deduped in getNodePropertyMap.
+    typeNode.getTypeNodes().forEach((node) => {
+      collectTypeNodeProperties(node, result); // May contain duplicated properties from different typeNodes. Will be deduped in getNodePropertyMap.
     });
   }
 };

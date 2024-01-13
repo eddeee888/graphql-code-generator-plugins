@@ -8,6 +8,9 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
+      "parserOptions": {
+        "project": ["packages/typescript-resolver-files/tsconfig(.*)?.json"]
+      },
       "rules": {}
     },
     {
