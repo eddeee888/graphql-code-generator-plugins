@@ -1,5 +1,5 @@
 import {
-  GraphQLNamedType,
+  type GraphQLNamedType,
   isIntrospectionType,
   isSpecifiedScalarType,
 } from 'graphql';

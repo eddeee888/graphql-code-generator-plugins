@@ -18,7 +18,10 @@ import { generateTypeDefsFiles } from './generateTypeDefsFiles';
 import { getGraphQLObjectTypeResolversToGenerate } from './getGraphQLObjectTypeResolversToGenerate';
 import { addVirtualTypesFileToTsMorphProject } from './addVirtualTypesFileToTsMorphProject';
 import { parseTypeMappers } from './parseTypeMappers';
-import { RawPresetConfig, validatePresetConfig } from './validatePresetConfig';
+import {
+  type RawPresetConfig,
+  validatePresetConfig,
+} from './validatePresetConfig';
 import { validateAndMergeParsedConfigs } from './validateAndMergeParsedConfigs';
 import { normalizeAddConfigPath } from './normalizeAddConfigPath';
 

@@ -1,8 +1,8 @@
 import {
-  GraphQLSchema,
+  type GraphQLSchema,
   isObjectType,
   isScalarType,
-  GraphQLScalarType,
+  type GraphQLScalarType,
   isSpecifiedScalarType,
 } from 'graphql';
 import type { ParseSourcesResult } from '../parseSources';

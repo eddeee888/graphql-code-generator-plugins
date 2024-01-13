@@ -1,4 +1,4 @@
-import { type SourceFile, SyntaxKind, PropertyAssignment } from 'ts-morph';
+import { type SourceFile, SyntaxKind, type PropertyAssignment } from 'ts-morph';
 import type { ObjectTypeFile } from './types';
 import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier';
 

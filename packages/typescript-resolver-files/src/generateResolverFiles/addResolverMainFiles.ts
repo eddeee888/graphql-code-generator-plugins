@@ -3,7 +3,7 @@ import {
   isRootObjectType,
   printImportLine,
   relativeModulePath,
-  RootObjectType,
+  type RootObjectType,
 } from '../utils';
 import type { GenerateResolverFilesContext } from './types';
 
@@ -185,37 +185,34 @@ export const addResolverMainFiles = ({
   const resolversIdentifier = 'resolvers';
   const resolversTypeName = 'Resolvers'; // Generated type from typescript-resolvers plugin
 
-  Object.entries(resolverMainFiles).forEach(
-    ([resolverMainFilename, resolverMainFile]) => {
-      const outputDir = path.dirname(resolverMainFilename);
-      const relativePathToResolverTypes = relativeModulePath(
-        outputDir,
-        resolverTypesPath
-      );
+  Object.entries(resolverMainFiles).forEach(([resolverMainFilename, file]) => {
+    const outputDir = path.dirname(resolverMainFilename);
+    const relativePathToResolverTypes = relativeModulePath(
+      outputDir,
+      resolverTypesPath
+    );
 
-      const queries =
-        resolverMainFile.queryFields.length > 0
-          ? `Query: { ${resolverMainFile.queryFields
-              .map(printObjectMapping)
-              .join(',')} },`
-          : '';
-      const mutations =
-        resolverMainFile.mutationFields.length > 0
-          ? `Mutation: { ${resolverMainFile.mutationFields
-              .map(printObjectMapping)
-              .join(',')} },`
-          : '';
-      const suscriptions =
-        resolverMainFile.subscriptionFields.length > 0
-          ? `Subscription: { ${resolverMainFile.subscriptionFields
-              .map(printObjectMapping)
-              .join(',')} },`
-          : '';
+    const queries =
+      file.queryFields.length > 0
+        ? `Query: { ${file.queryFields.map(printObjectMapping).join(',')} },`
+        : '';
+    const mutations =
+      file.mutationFields.length > 0
+        ? `Mutation: { ${file.mutationFields
+            .map(printObjectMapping)
+            .join(',')} },`
+        : '';
+    const suscriptions =
+      file.subscriptionFields.length > 0
+        ? `Subscription: { ${file.subscriptionFields
+            .map(printObjectMapping)
+            .join(',')} },`
+        : '';
 
-      result.files[resolverMainFilename] = {
-        __filetype: 'file',
-        mainImportIdentifier: resolversIdentifier,
-        content: `/* This file was automatically generated. DO NOT UPDATE MANUALLY. */
+    result.files[resolverMainFilename] = {
+      __filetype: 'file',
+      mainImportIdentifier: resolversIdentifier,
+      content: `/* This file was automatically generated. DO NOT UPDATE MANUALLY. */
     ${printImportLine({
       isTypeImport: true,
       module: relativePathToResolverTypes,
@@ -223,16 +220,15 @@ export const addResolverMainFiles = ({
       namedImports: [resolversTypeName],
       emitLegacyCommonJSImports,
     })}
-    ${resolverMainFile.importLines.join('\n')}
+    ${file.importLines.join('\n')}
     export const ${resolversIdentifier}: ${resolversTypeName} = {
       ${queries}
       ${mutations}
       ${suscriptions}
-      ${printObjectTypes(resolverMainFile.objectTypes)}
+      ${printObjectTypes(file.objectTypes)}
     }`,
-      };
-    }
-  );
+    };
+  });
 };
 
 interface ObjectFieldMapping {
