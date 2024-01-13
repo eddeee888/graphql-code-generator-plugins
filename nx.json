@@ -11,7 +11,10 @@
     },
     "lint": {
       "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
-      "cache": true
+      "cache": true,
+      "options": {
+        "lintFilePatterns": ["{projectRoot}/src/**/*.ts*"]
+      }
     },
     "@nx/jest:jest": {
       "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],

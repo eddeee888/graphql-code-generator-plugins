@@ -226,10 +226,7 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["packages/typescript-resolver-files/**/*.ts"]
-      }
+      "outputs": ["{options.outputFile}"]
     }
   },
   "implicitDependencies": ["typescript-resolver-files"],
