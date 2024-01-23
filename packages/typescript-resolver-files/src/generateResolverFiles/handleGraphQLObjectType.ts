@@ -3,7 +3,10 @@ import { printImportLine } from '../utils';
 
 export const handleGraphQLObjectType: GraphQLTypeHandler<
   null,
-  { fieldsToPick?: string[] }
+  {
+    fieldsToPick?: string[];
+    pickReferenceResolver?: boolean;
+  }
 > = (
   {
     fieldFilePath,
@@ -12,6 +15,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     resolversTypeMeta,
     moduleName,
     fieldsToPick = [], // If fieldsToPick.length === 0, it means the current object handles all resolvers
+    pickReferenceResolver,
   },
   {
     result,
@@ -24,6 +28,10 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
 ) => {
   if (!resolverGeneration.object) {
     return;
+  }
+
+  if (fieldsToPick.length > 0 && pickReferenceResolver) {
+    fieldsToPick.push('__resolveReference');
   }
 
   // `typeString` contains the resolver type

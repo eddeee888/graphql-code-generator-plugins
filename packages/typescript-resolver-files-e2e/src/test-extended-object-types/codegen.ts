@@ -30,6 +30,20 @@ const config: CodegenConfig = {
           ],
         }
       ),
+    'packages/typescript-resolver-files-e2e/src/test-extended-object-types/schema-federated-extended-object-type':
+      defineConfig(
+        {
+          typesPluginsConfig: {
+            federation: true,
+          },
+        },
+        {
+          schema: [
+            'packages/typescript-resolver-files-e2e/src/test-extended-object-types/schema-federated-extended-object-type/**/*.graphqls',
+            'packages/typescript-resolver-files-e2e/src/test-extended-object-types/schema-federated-extended-object-type/**/*.graphqls.ts',
+          ],
+        }
+      ),
   },
 };
 
