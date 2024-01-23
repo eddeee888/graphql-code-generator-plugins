@@ -81,13 +81,10 @@ export const generateResolverFiles = (
         }, {});
 
         let pickReferenceResolver = false;
-        if (ctx.config.federationEnabled) {
-          namedType.astNode?.directives?.forEach((d) => {
-            if (d.name.value === 'key') {
-              pickReferenceResolver = true;
-              return;
-            }
-          });
+        if (ctx.config.federationEnabled && namedType.astNode?.directives) {
+          pickReferenceResolver = namedType.astNode.directives.some(
+            (d) => d.name.value === 'key'
+          );
         }
 
         // If there are multiple object type files to generate e.g. `extend type ObjectType` is used across multiple modules
