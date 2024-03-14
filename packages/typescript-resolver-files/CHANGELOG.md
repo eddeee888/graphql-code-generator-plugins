@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.7.3
+
+### Patch Changes
+
+- 9f3b82b: Federation support: Add \_\_resolveReference to picked fields when extending object types
+
 ## 0.7.2
 
 ### Patch Changes
