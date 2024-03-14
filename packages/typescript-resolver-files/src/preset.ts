@@ -230,6 +230,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
               ...mergedConfig.externalResolvers,
             },
             emitLegacyCommonJSImports,
+            federationEnabled: Boolean(typesPluginsConfig.federation),
           },
           result,
         }),

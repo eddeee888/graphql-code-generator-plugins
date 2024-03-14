@@ -3,7 +3,7 @@ import { defineConfig } from '@eddeee888/gcg-typescript-resolver-files';
 
 const config: CodegenConfig = {
   hooks: {
-    afterAllFileWrite: ['prettier --write'],
+    afterOneFileWrite: ['prettier --write'],
   },
   generates: {
     'packages/typescript-resolver-files-e2e/src/test-extended-object-types/schema-base':
@@ -16,6 +16,7 @@ const config: CodegenConfig = {
           ],
         }
       ),
+
     'packages/typescript-resolver-files-e2e/src/test-extended-object-types/schema-external-resolver-override-extended-object-type':
       defineConfig(
         {
@@ -27,6 +28,21 @@ const config: CodegenConfig = {
           schema: [
             'packages/typescript-resolver-files-e2e/src/test-extended-object-types/schema-external-resolver-override-extended-object-type/**/*.graphqls',
             'packages/typescript-resolver-files-e2e/src/test-extended-object-types/schema-external-resolver-override-extended-object-type/**/*.graphqls.ts',
+          ],
+        }
+      ),
+
+    'packages/typescript-resolver-files-e2e/src/test-extended-object-types/schema-federated-extended-object-type':
+      defineConfig(
+        {
+          typesPluginsConfig: {
+            federation: true,
+          },
+        },
+        {
+          schema: [
+            'packages/typescript-resolver-files-e2e/src/test-extended-object-types/schema-federated-extended-object-type/**/*.graphqls',
+            'packages/typescript-resolver-files-e2e/src/test-extended-object-types/schema-federated-extended-object-type/**/*.graphqls.ts',
           ],
         }
       ),

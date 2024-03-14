@@ -80,6 +80,13 @@ export const generateResolverFiles = (
           return res;
         }, {});
 
+        let pickReferenceResolver = false;
+        if (ctx.config.federationEnabled && namedType.astNode?.directives) {
+          pickReferenceResolver = namedType.astNode.directives.some(
+            (d) => d.name.value === 'key'
+          );
+        }
+
         // If there are multiple object type files to generate e.g. `extend type ObjectType` is used across multiple modules
         // Then, generate one file for each location
         const fieldsToGenerate = Object.entries(fieldsByGraphQLModule);
@@ -87,7 +94,10 @@ export const generateResolverFiles = (
           fieldsToGenerate.forEach(
             ([_, { firstFieldLocation, fieldNodes }]) => {
               const fieldsToPick = fieldNodes.map((field) => field.name);
-              visitNamedType<{ fieldsToPick: string[] }>(
+              visitNamedType<{
+                fieldsToPick: string[];
+                pickReferenceResolver: boolean;
+              }>(
                 {
                   namedType,
                   resolverName: namedType.name,
@@ -95,6 +105,7 @@ export const generateResolverFiles = (
                   location: firstFieldLocation,
                   visitor,
                   fieldsToPick,
+                  pickReferenceResolver,
                 },
                 ctx
               );

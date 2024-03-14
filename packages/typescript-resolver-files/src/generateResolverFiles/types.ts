@@ -74,6 +74,7 @@ export interface GenerateResolverFilesContext {
     graphQLObjectTypeResolversToGenerate: GraphQLObjectTypeResolversToGenerate;
     fixObjectTypeResolvers: ParsedPresetConfig['fixObjectTypeResolvers'];
     emitLegacyCommonJSImports: boolean;
+    federationEnabled: boolean;
   };
   result: {
     files: Record<string, StandardFile | ResolverFile>;
