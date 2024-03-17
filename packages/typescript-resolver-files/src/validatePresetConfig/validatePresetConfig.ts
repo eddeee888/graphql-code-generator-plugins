@@ -25,7 +25,16 @@ type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
 export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
 type FixObjectTypeResolvers = 'smart' | 'disabled';
-type ResolverGeneration = 'disabled' | 'recommended' | 'all'; // TODO: also take object in the future
+type StringResolverGeneration = 'disabled' | 'recommended' | 'all';
+type NormalizedResolverGeneration = {
+  query: string | string[];
+  mutation: string | string[];
+  subscription: string | string[];
+  scalar: string | string[];
+  object: string | string[];
+  union: string | string[];
+  interface: string | string[];
+};
 
 export type ScalarsOverridesType = string | { input: string; output: string };
 
@@ -35,15 +44,7 @@ export interface ParsedPresetConfig {
   resolverRelativeTargetDir: string;
   resolverMainFile: string;
   resolverMainFileMode: ResolverMainFileMode;
-  resolverGeneration: {
-    query: string | string[];
-    mutation: string | string[];
-    subscription: string | string[];
-    scalar: string | string[];
-    object: string | string[];
-    union: string | string[];
-    interface: string | string[];
-  };
+  resolverGeneration: NormalizedResolverGeneration;
   typeDefsFilePath: string | false;
   typeDefsFileMode: TypeDefsFileMode;
   mappersFileExtension: string;
@@ -69,7 +70,7 @@ export interface RawPresetConfig {
   resolverRelativeTargetDir?: string;
   resolverMainFile?: string;
   resolverMainFileMode?: string;
-  resolverGeneration?: string;
+  resolverGeneration?: string | Record<string, string | string[]>;
   typeDefsFilePath?: string | boolean;
   typeDefsFileMode?: string;
   mappersFileExtension?: string;
@@ -97,7 +98,7 @@ export interface TypedPresetConfig extends RawPresetConfig {
   typeDefsFileMode?: TypeDefsFileMode;
   fixObjectTypeResolvers?: FixObjectTypeResolvers;
   typesPluginsConfig?: ParsedTypesPluginsConfig;
-  resolverGeneration?: ResolverGeneration;
+  resolverGeneration?: StringResolverGeneration | NormalizedResolverGeneration;
 }
 
 export const validatePresetConfig = ({
@@ -144,13 +145,14 @@ export const validatePresetConfig = ({
   }
 
   if (
+    typeof resolverGeneration !== 'object' &&
     resolverGeneration !== 'disabled' &&
     resolverGeneration !== 'recommended' &&
     resolverGeneration !== 'all'
   ) {
     throw new Error(
       fmt.error(
-        'presetConfig.resolverGeneration must be "disabled", "recommended" or "all" (default is "recommended")',
+        'presetConfig.resolverGeneration must be an object, "disabled", "recommended" or "all" (default is "recommended")',
         'Validation'
       )
     );
@@ -336,7 +338,9 @@ const validateTypesPluginsConfig = (
 };
 
 const parseResolverGeneration = (
-  resolverGeneration: ResolverGeneration
+  resolverGeneration:
+    | StringResolverGeneration
+    | Record<string, string | string[]>
 ): ParsedPresetConfig['resolverGeneration'] => {
   if (resolverGeneration === 'all') {
     return {
@@ -358,16 +362,26 @@ const parseResolverGeneration = (
       union: '',
       interface: '',
     };
+  } else if (resolverGeneration === 'disabled') {
+    return {
+      query: '',
+      mutation: '',
+      subscription: '',
+      scalar: '',
+      object: '',
+      union: '',
+      interface: '',
+    };
   }
 
   return {
-    query: '',
-    mutation: '',
-    subscription: '',
-    scalar: '',
-    object: '',
-    union: '',
-    interface: '',
+    query: resolverGeneration.query || '',
+    mutation: resolverGeneration.mutation || '',
+    subscription: resolverGeneration.subscription || '',
+    scalar: resolverGeneration.scalar || '',
+    object: resolverGeneration.object || '',
+    union: resolverGeneration.union || '',
+    interface: resolverGeneration.interface || '',
   };
 };
 

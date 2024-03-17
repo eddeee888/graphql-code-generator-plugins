@@ -16,13 +16,13 @@ const defaultExpected: ParsedPresetConfig = {
   resolverRelativeTargetDir: 'resolvers',
   resolverTypesPath: './types.generated.ts',
   resolverGeneration: {
-    query: true,
-    mutation: true,
-    subscription: true,
-    scalar: true,
-    object: true,
-    union: false,
-    interface: false,
+    query: '*',
+    mutation: '*',
+    subscription: '*',
+    scalar: '*',
+    object: '*',
+    union: '',
+    interface: '',
   },
   typeDefsFilePath: './typeDefs.generated.ts',
   typeDefsFileMode: 'merged',
@@ -426,37 +426,37 @@ describe('validatePresetConfig - resolverGeneration', () => {
     {
       input: 'disabled',
       expected: {
-        query: false,
-        mutation: false,
-        subscription: false,
-        scalar: false,
-        object: false,
-        union: false,
-        interface: false,
+        query: '',
+        mutation: '',
+        subscription: '',
+        scalar: '',
+        object: '',
+        union: '',
+        interface: '',
       },
     },
     {
       input: 'recommended',
       expected: {
-        query: true,
-        mutation: true,
-        subscription: true,
-        scalar: true,
-        object: true,
-        union: false,
-        interface: false,
+        query: '*',
+        mutation: '*',
+        subscription: '*',
+        scalar: '*',
+        object: '*',
+        union: '',
+        interface: '',
       },
     },
     {
       input: 'all',
       expected: {
-        query: true,
-        mutation: true,
-        subscription: true,
-        scalar: true,
-        object: true,
-        union: true,
-        interface: true,
+        query: '*',
+        mutation: '*',
+        subscription: '*',
+        scalar: '*',
+        object: '*',
+        union: '*',
+        interface: '*',
       },
     },
   ])(
@@ -468,11 +468,30 @@ describe('validatePresetConfig - resolverGeneration', () => {
     }
   );
 
+  it('correctly returns provided resolverGeneration object', () => {
+    const result = validatePresetConfig({
+      resolverGeneration: {
+        query: '*.Query.*',
+        mutation: '!*.Mutation.*',
+      },
+    });
+
+    expect(result.resolverGeneration).toEqual({
+      query: '*.Query.*',
+      mutation: '!*.Mutation.*',
+      subscription: '',
+      scalar: '',
+      object: '',
+      union: '',
+      interface: '',
+    });
+  });
+
   it('throws if invalid resolverGeneration is provided', () => {
     expect(() =>
       validatePresetConfig({ resolverGeneration: 'omg_what_is_this' })
     ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.resolverGeneration must be "disabled", "recommended" or "all" (default is "recommended")'
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.resolverGeneration must be an object, "disabled", "recommended" or "all" (default is "recommended")'
     );
   });
 });
