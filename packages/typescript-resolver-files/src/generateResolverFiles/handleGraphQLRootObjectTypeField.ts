@@ -1,4 +1,4 @@
-import { printImportLine, type RootObjectType } from '../utils';
+import { printImportLine, isMatch, type RootObjectType } from '../utils';
 import type { GraphQLTypeHandler } from './types';
 
 export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
@@ -16,9 +16,21 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
   { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
 ) => {
   if (
-    (belongsToRootObject === 'Query' && !resolverGeneration.query) ||
-    (belongsToRootObject === 'Mutation' && !resolverGeneration.mutation) ||
-    (belongsToRootObject === 'Subscription' && !resolverGeneration.subscription)
+    (belongsToRootObject === 'Query' &&
+      !isMatch({
+        pattern: resolverGeneration.query,
+        value: normalizedResolverName.withModule,
+      })) ||
+    (belongsToRootObject === 'Mutation' &&
+      !isMatch({
+        pattern: resolverGeneration.mutation,
+        value: normalizedResolverName.withModule,
+      })) ||
+    (belongsToRootObject === 'Subscription' &&
+      !isMatch({
+        pattern: resolverGeneration.subscription,
+        value: normalizedResolverName.withModule,
+      }))
   ) {
     return;
   }

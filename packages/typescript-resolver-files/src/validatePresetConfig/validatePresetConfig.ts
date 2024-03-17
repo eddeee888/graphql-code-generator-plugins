@@ -36,13 +36,13 @@ export interface ParsedPresetConfig {
   resolverMainFile: string;
   resolverMainFileMode: ResolverMainFileMode;
   resolverGeneration: {
-    query: boolean;
-    mutation: boolean;
-    subscription: boolean;
-    scalar: boolean;
-    object: boolean;
-    union: boolean;
-    interface: boolean;
+    query: string | string[];
+    mutation: string | string[];
+    subscription: string | string[];
+    scalar: string | string[];
+    object: string | string[];
+    union: string | string[];
+    interface: string | string[];
   };
   typeDefsFilePath: string | false;
   typeDefsFileMode: TypeDefsFileMode;
@@ -340,34 +340,34 @@ const parseResolverGeneration = (
 ): ParsedPresetConfig['resolverGeneration'] => {
   if (resolverGeneration === 'all') {
     return {
-      query: true,
-      mutation: true,
-      subscription: true,
-      scalar: true,
-      object: true,
-      union: true,
-      interface: true,
+      query: '*',
+      mutation: '*',
+      subscription: '*',
+      scalar: '*',
+      object: '*',
+      union: '*',
+      interface: '*',
     };
   } else if (resolverGeneration === 'recommended') {
     return {
-      query: true,
-      mutation: true,
-      subscription: true,
-      scalar: true,
-      object: true,
-      union: false,
-      interface: false,
+      query: '*',
+      mutation: '*',
+      subscription: '*',
+      scalar: '*',
+      object: '*',
+      union: '',
+      interface: '',
     };
   }
 
   return {
-    query: false,
-    mutation: false,
-    subscription: false,
-    scalar: false,
-    object: false,
-    union: false,
-    interface: false,
+    query: '',
+    mutation: '',
+    subscription: '',
+    scalar: '',
+    object: '',
+    union: '',
+    interface: '',
   };
 };
 

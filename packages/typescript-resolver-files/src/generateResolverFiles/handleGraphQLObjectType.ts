@@ -1,5 +1,5 @@
 import type { GraphQLTypeHandler } from './types';
-import { printImportLine } from '../utils';
+import { printImportLine, isMatch } from '../utils';
 
 export const handleGraphQLObjectType: GraphQLTypeHandler<
   null,
@@ -27,7 +27,12 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     },
   }
 ) => {
-  if (!resolverGeneration.object) {
+  if (
+    !isMatch({
+      pattern: resolverGeneration.object,
+      value: normalizedResolverName.withModule,
+    })
+  ) {
     return;
   }
 
