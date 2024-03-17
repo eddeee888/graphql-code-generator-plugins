@@ -1,4 +1,4 @@
-import { printImportLine, isMatchResolverNamePattern } from '../utils';
+import { printImportLine, isMatchResolverNamePattern, logger } from '../utils';
 import type { GraphQLTypeHandler } from './types';
 
 const graphQLScalarType = 'GraphQLScalarType';
@@ -19,6 +19,9 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
       value: normalizedResolverName.withModule,
     })
   ) {
+    logger.debug(
+      `Skipped resolver generation: ${normalizedResolverName.withModule}. Pattern: ${resolverGeneration.scalar}.`
+    );
     return;
   }
 

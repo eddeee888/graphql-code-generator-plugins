@@ -12,7 +12,7 @@ import type {
   ScalarsOverridesType,
 } from '../validatePresetConfig';
 import {
-  fmt,
+  logger,
   isNativeNamedType,
   isRootObjectType,
   parseLocationForWhitelistedModule,
@@ -165,10 +165,8 @@ const getScalarResolverMapFromModule = async (
       'code' in err &&
       err.code === 'MODULE_NOT_FOUND'
     ) {
-      console.warn(
-        fmt.warn(
-          `Unable to import \`${scalarsModule}\`. Install \`${scalarsModule}\` or you have to implement Scalar resolvers by yourself.`
-        )
+      logger.warn(
+        `Unable to import \`${scalarsModule}\`. Install \`${scalarsModule}\` or you have to implement Scalar resolvers by yourself.`
       );
     }
   }

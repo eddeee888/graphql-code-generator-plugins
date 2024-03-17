@@ -1,4 +1,4 @@
-import { printImportLine, isMatchResolverNamePattern } from '../utils';
+import { printImportLine, isMatchResolverNamePattern, logger } from '../utils';
 import type { GraphQLTypeHandler } from './types';
 
 export const handleGraphQLUnionType: GraphQLTypeHandler = (
@@ -18,6 +18,9 @@ export const handleGraphQLUnionType: GraphQLTypeHandler = (
       value: normalizedResolverName.withModule,
     })
   ) {
+    logger.debug(
+      `Skipped resolver generation: ${normalizedResolverName.withModule}. Pattern: ${resolverGeneration.union}.`
+    );
     return;
   }
 

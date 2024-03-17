@@ -1,4 +1,5 @@
 export * from './cwd';
+export * from './logger';
 export * from './fmt';
 export * from './parseLocationForWhitelistedModule';
 export * from './isNativeNamedType';

@@ -1,6 +1,7 @@
 import {
   printImportLine,
   isMatchResolverNamePattern,
+  logger,
   type RootObjectType,
 } from '../utils';
 import type { GraphQLTypeHandler } from './types';
@@ -36,6 +37,17 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
         value: normalizedResolverName.withModule,
       }))
   ) {
+    const resolverGenerationPattern =
+      belongsToRootObject === 'Query'
+        ? resolverGeneration.query
+        : belongsToRootObject === 'Mutation'
+        ? resolverGeneration.mutation
+        : belongsToRootObject === 'Subscription'
+        ? resolverGeneration.subscription
+        : 'Unknown';
+    logger.debug(
+      `Skipped resolver generation: ${normalizedResolverName.withModule}. Pattern: ${resolverGenerationPattern}.`
+    );
     return;
   }
 
