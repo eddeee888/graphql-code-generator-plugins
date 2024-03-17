@@ -1,4 +1,8 @@
-import { printImportLine, isMatch, type RootObjectType } from '../utils';
+import {
+  printImportLine,
+  isMatchResolverNamePattern,
+  type RootObjectType,
+} from '../utils';
 import type { GraphQLTypeHandler } from './types';
 
 export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
@@ -17,17 +21,17 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
 ) => {
   if (
     (belongsToRootObject === 'Query' &&
-      !isMatch({
+      !isMatchResolverNamePattern({
         pattern: resolverGeneration.query,
         value: normalizedResolverName.withModule,
       })) ||
     (belongsToRootObject === 'Mutation' &&
-      !isMatch({
+      !isMatchResolverNamePattern({
         pattern: resolverGeneration.mutation,
         value: normalizedResolverName.withModule,
       })) ||
     (belongsToRootObject === 'Subscription' &&
-      !isMatch({
+      !isMatchResolverNamePattern({
         pattern: resolverGeneration.subscription,
         value: normalizedResolverName.withModule,
       }))

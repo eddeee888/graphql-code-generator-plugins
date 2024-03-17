@@ -1,4 +1,4 @@
-import { printImportLine, isMatch } from '../utils';
+import { printImportLine, isMatchResolverNamePattern } from '../utils';
 import type { GraphQLTypeHandler } from './types';
 
 const graphQLScalarType = 'GraphQLScalarType';
@@ -14,7 +14,7 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
   { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
 ) => {
   if (
-    !isMatch({
+    !isMatchResolverNamePattern({
       pattern: resolverGeneration.scalar,
       value: normalizedResolverName.withModule,
     })

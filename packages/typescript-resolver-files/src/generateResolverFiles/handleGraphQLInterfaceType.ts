@@ -1,4 +1,4 @@
-import { printImportLine, isMatch } from '../utils';
+import { printImportLine, isMatchResolverNamePattern } from '../utils';
 import type { GraphQLTypeHandler } from './types';
 
 export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
@@ -13,7 +13,7 @@ export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
   { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
 ) => {
   if (
-    !isMatch({
+    !isMatchResolverNamePattern({
       pattern: resolverGeneration.interface,
       value: normalizedResolverName.withModule,
     })
