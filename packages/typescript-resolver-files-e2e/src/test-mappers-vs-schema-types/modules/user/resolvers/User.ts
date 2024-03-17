@@ -1,13 +1,13 @@
 import type { UserResolvers } from './../../types.generated';
 export const User: UserResolvers = {
   /* Implement User resolver logic here */
-  accountGitHub: () => {
+  accountGitHub: async (_parent, _arg, _ctx) => {
     /* User.accountGitHub resolver is required because User.accountGitHub exists but UserMapper.accountGitHub does not */
   },
-  accountGoogle: () => {
+  accountGoogle: async (_parent, _arg, _ctx) => {
     /* User.accountGoogle resolver is required because User.accountGoogle exists but UserMapper.accountGoogle does not */
   },
-  fullName: () => {
+  fullName: async (_parent, _arg, _ctx) => {
     /* User.fullName resolver is required because User.fullName exists but UserMapper.fullName does not */
   },
 };

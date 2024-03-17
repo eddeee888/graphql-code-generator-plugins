@@ -69,7 +69,7 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
             if (!typeMapperProperty) {
               result[schemaType][schemaTypeProperty.name] = {
                 resolverName: schemaTypeProperty.name,
-                resolverDeclaration: `() => { /* ${schemaTypePropertyIdentifier} resolver is required because ${schemaTypePropertyIdentifier} exists but ${typeMapperPropertyIdentifier} does not */ }`,
+                resolverDeclaration: `async (_parent, _arg, _ctx) => { /* ${schemaTypePropertyIdentifier} resolver is required because ${schemaTypePropertyIdentifier} exists but ${typeMapperPropertyIdentifier} does not */ }`,
               };
               return;
             }
@@ -85,7 +85,7 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
              */
             result[schemaType][schemaTypeProperty.name] = {
               resolverName: schemaTypeProperty.name,
-              resolverDeclaration: `({ ${schemaTypeProperty.name} }) => {
+              resolverDeclaration: `({ ${schemaTypeProperty.name} }, _arg, _ctx) => {
                 /* ${schemaTypePropertyIdentifier} resolver is required because ${schemaTypePropertyIdentifier} and ${typeMapperPropertyIdentifier} are not compatible */
                 return ${schemaTypeProperty.name}
               }`,
