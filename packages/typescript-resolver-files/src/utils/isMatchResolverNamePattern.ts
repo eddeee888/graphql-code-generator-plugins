@@ -10,10 +10,10 @@ export const isMatchResolverNamePattern = ({
   pattern: string | string[];
   value: string;
 }): boolean => {
-  const normalisedPatterns = typeof pattern === 'string' ? [pattern] : pattern;
-  const nonEmptyNormalisedPatterns = normalisedPatterns.filter(Boolean);
+  const normalizedPatterns = typeof pattern === 'string' ? [pattern] : pattern;
+  const nonEmptyNormalizedPatterns = normalizedPatterns.filter(Boolean);
 
-  const matchedValues = micromatch([value], nonEmptyNormalisedPatterns, {
+  const matchedValues = micromatch([value], nonEmptyNormalizedPatterns, {
     // `micromatch` mainly matches filesystems whilst we want this function
     // to match object-like path pattern e.g.
     // - `book.Query.books`
