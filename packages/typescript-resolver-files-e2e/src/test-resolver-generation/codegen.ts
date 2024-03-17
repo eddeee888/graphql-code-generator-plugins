@@ -6,6 +6,30 @@ const config: CodegenConfig = {
     afterAllFileWrite: ['prettier --write'],
   },
   generates: {
+    'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-custom-object':
+      defineConfig(
+        {
+          resolverGeneration: {
+            query: '*.Query.*',
+            mutation: [
+              'topic.*',
+              '!topic.Mutation.topicCreate',
+              '!user.Mutation.*',
+            ],
+            subscription: '*',
+            scalar: '!*File',
+            object: ['!*Result', '!*Error'],
+            union: '',
+            interface: '*',
+          },
+        },
+        {
+          schema: [
+            'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-custom-object/**/*.graphqls',
+            'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-custom-object/**/*.graphqls.ts',
+          ],
+        }
+      ),
     'packages/typescript-resolver-files-e2e/src/test-resolver-generation/schema-disabled':
       defineConfig(
         { resolverGeneration: 'disabled' },
