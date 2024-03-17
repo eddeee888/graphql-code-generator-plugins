@@ -8,4 +8,4 @@ export * from './printImportLine';
 export * from './getNodePropertyMap';
 export * from './normalizeRelativePath';
 export * from './relativeModulePath';
-export * from './isMatch';
+export * from './isMatchResolverNamePattern';
