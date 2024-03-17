@@ -19,7 +19,7 @@ export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
     })
   ) {
     logger.debug(
-      `Skipped resolver generation: ${normalizedResolverName.withModule}. Pattern: ${resolverGeneration.interface}.`
+      `Skipped Interface resolver generation: "${normalizedResolverName.withModule}". Pattern: "${resolverGeneration.interface}".`
     );
     return;
   }

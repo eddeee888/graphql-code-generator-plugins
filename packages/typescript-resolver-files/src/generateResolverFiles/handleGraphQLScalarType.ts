@@ -20,7 +20,7 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
     })
   ) {
     logger.debug(
-      `Skipped resolver generation: ${normalizedResolverName.withModule}. Pattern: ${resolverGeneration.scalar}.`
+      `Skipped Scalar resolver generation: "${normalizedResolverName.withModule}". Pattern: "${resolverGeneration.scalar}".`
     );
     return;
   }

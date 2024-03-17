@@ -17,7 +17,7 @@ const config: CodegenConfig = {
               '!user.Mutation.*',
             ],
             subscription: '*',
-            scalar: '!*File',
+            scalar: '!*.File',
             object: ['!*Result', '!*Error'],
             union: '',
             interface: '*',

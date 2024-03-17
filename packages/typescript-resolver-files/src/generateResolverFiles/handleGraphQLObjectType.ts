@@ -34,7 +34,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     })
   ) {
     logger.debug(
-      `Skipped resolver generation: ${normalizedResolverName.withModule}. Pattern: ${resolverGeneration.object}.`
+      `Skipped Object resolver generation: "${normalizedResolverName.withModule}". "Pattern: ${resolverGeneration.object}".`
     );
     return;
   }
