@@ -24,7 +24,10 @@
       "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
       "cache": true,
       "options": {
-        "lintFilePatterns": ["{projectRoot}/src/**/*.ts*"]
+        "lintFilePatterns": [
+          "{projectRoot}/src/**/*.ts*",
+          "{projectRoot}/package.json"
+        ]
       }
     }
   },
