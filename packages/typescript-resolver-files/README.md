@@ -225,6 +225,12 @@ defineConfig({
 });
 ```
 
+Hint: To see why certain files are skipped, run codegen command with `DEBUG` turned on:
+
+```
+DEBUG="@eddeee888/gcg-typescript-resolver-files" yarn graphql-codegen
+```
+
 ### typeDefsFileMode
 
 `merged` or `mergedWhitelisted` or `modules` (Default: `merged`)
