@@ -138,7 +138,7 @@ File that puts all generated resolvers together. Relative from `baseOutputDir`.
 
 ### resolverGeneration
 
-`disabled` or `recommended` or `all` (Default: `recommended`)
+`disabled` or `recommended` or `all` or object (Default: `recommended`)
 
 Decides which resolvers to generate:
 
@@ -146,6 +146,84 @@ Decides which resolvers to generate:
 - `recommended`: generates the minimal amount of resolvers. Use this if you want a managed experience.
   - no union/interface resolvers are generated because we rely on certain settings in `typescript-resolvers` that make these not required.
 - `all`: generates all resolvers. Use this if you want all resolvers to be generated and use the ones you need.
+
+Internally, each string option is turned into an object. This object uses glob pattern to tell which files to be generated based on the file's normalized name (\*). For example, `recommended` option is the equivalent of the following object:
+
+```ts
+{
+  query: '*',
+  mutation: '*',
+  subscription: '*',
+  scalar: '*',
+  object: '*',
+  union: '',
+  interface: '',
+}
+```
+
+(\*) A normalized name has the following shape: `<Module name>.<Top-level type name>.<Field resolver>?`
+
+Consider this schema:
+
+```graphql
+# src/schema/pet/schema.graphql
+extend type Query {
+  pets: [Pet!]!
+}
+
+type Cat {
+  id: ID!
+}
+type Dog {
+  id: ID!
+}
+union Pet = Cat | Dog
+
+# src/schema/user/schema.graphql
+extend type Mutation {
+  createUser(id: ID!): CreateUserResult!
+}
+
+type User {
+  id: ID!
+}
+
+type CreateUserOk {
+  result: User!
+}
+type CreateUserError {
+  error: String!
+}
+union CreateUserResult = CreateUserOk | CreateUserError
+```
+
+Then, the generated files and normalised names are:
+
+- `src/schema/pet/resolvers/Query/pets.ts`, affected by `query` option, normalized name: `pet.Query.pets`
+- `src/schema/pet/resolvers/Cat.ts`, affected by `object` option, normalized name: `pet.Cat`
+- `src/schema/pet/resolvers/Dog.ts`, affected by `object` option, normalized name: `pet.Dog`
+- `src/schema/pet/resolvers/Pet.ts`, affected by `union` option, normalized name: `pet.Pet`
+- `src/schema/user/resolvers/Mutation/createUser.ts`, affected by `mutation` option, normalized name: `user.Mutation.createUser`
+- `src/schema/user/resolvers/User.ts`, affected by `object` option, normalized name: `user.User`
+- `src/schema/user/resolvers/CreateUserOk.ts`, affected by `object` option, normalized name: `user.CreateUserOk`
+- `src/schema/user/resolvers/CreateUserError.ts`, affected by `object` option, normalized name: `user.CreateUserError`
+- `src/schema/user/resolvers/CreateUserResult.ts`, affected by `union` option, normalized name: `user.CreateUserResult`
+
+Now, let's say we want to disable all union files, types ending with `Ok` or `Error`, the config would look like this:
+
+```ts
+defineConfig({
+  resolverGeneration: {
+    query: '*',
+    mutation: '*',
+    subscription: '*',
+    scalar: '*',
+    object: ['!*.*Ok', '!*.*Error'], // Disables objects ending with `Ok` or `Error` in every module
+    union: '', // Empty string disables all file generation of relevant type in every module
+    interface: '*',
+  },
+});
+```
 
 ### typeDefsFileMode
 
