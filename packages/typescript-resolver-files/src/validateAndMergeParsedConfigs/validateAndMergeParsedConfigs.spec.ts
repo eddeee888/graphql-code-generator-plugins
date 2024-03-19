@@ -80,7 +80,7 @@ describe('validateAndMergeParsedConfigs', () => {
         },
       })
     ).toThrow(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - Scalar "DateTime" found in presetConfig.externalResolvers. Use presetConfig.scalarsOverrides to override scalar implementation and type. Remove "DateTime" from presetConfig.externalResolvers.'
+      'Validation - Scalar "DateTime" found in presetConfig.externalResolvers. Use presetConfig.scalarsOverrides to override scalar implementation and type. Remove "DateTime" from presetConfig.externalResolvers.'
     );
   });
 });
