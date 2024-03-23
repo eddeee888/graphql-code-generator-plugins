@@ -9,6 +9,7 @@ import {
   ProfileMapper,
   ProfileMetaMapper,
 } from './user/profile.mappers';
+import { CatMapper, DogMapper } from './pet/schema.mappers';
 import { UserMapper } from './user/user.graphqls.mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
@@ -50,9 +51,25 @@ export type Account = {
   isSubscribed: Scalars['Boolean']['output'];
 };
 
+export type Cat = Pet & {
+  __typename?: 'Cat';
+  age: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  likesToScratch: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type Country = {
   __typename?: 'Country';
   id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type Dog = Pet & {
+  __typename?: 'Dog';
+  age: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  likesToDig: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
 };
 
@@ -73,6 +90,12 @@ export type MutationtopicCreateArgs = {
 
 export type MutationtopicEditArgs = {
   input: TopicEditInput;
+};
+
+export type Pet = {
+  age: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type Profile = {
@@ -319,16 +342,27 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
       });
 };
 
+/** Mapping of interface types */
+export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
+  Pet:
+    | (CatMapper & { __typename: 'Cat' })
+    | (DogMapper & { __typename: 'Dog' });
+};
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Account: ResolverTypeWrapper<AccountMapper>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  Country: ResolverTypeWrapper<CountryMapper>;
+  Cat: ResolverTypeWrapper<CatMapper>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Country: ResolverTypeWrapper<CountryMapper>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  Dog: ResolverTypeWrapper<DogMapper>;
   Error: ResolverTypeWrapper<Error>;
   Mutation: ResolverTypeWrapper<{}>;
+  Pet: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Pet']>;
   Profile: ResolverTypeWrapper<ProfileMapper>;
   ProfileMeta: ResolverTypeWrapper<ProfileMetaMapper>;
   Query: ResolverTypeWrapper<{}>;
@@ -382,11 +416,15 @@ export type ResolversParentTypes = {
   Account: AccountMapper;
   ID: Scalars['ID']['output'];
   Boolean: Scalars['Boolean']['output'];
-  Country: CountryMapper;
+  Cat: CatMapper;
+  Int: Scalars['Int']['output'];
   String: Scalars['String']['output'];
+  Country: CountryMapper;
   DateTime: Scalars['DateTime']['output'];
+  Dog: DogMapper;
   Error: Error;
   Mutation: {};
+  Pet: ResolversInterfaceTypes<ResolversParentTypes>['Pet'];
   Profile: ProfileMapper;
   ProfileMeta: ProfileMetaMapper;
   Query: {};
@@ -427,6 +465,17 @@ export type AccountResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CatResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Cat'] = ResolversParentTypes['Cat']
+> = {
+  age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  likesToScratch?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CountryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Country'] = ResolversParentTypes['Country']
@@ -440,6 +489,17 @@ export interface DateTimeScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
   name: 'DateTime';
 }
+
+export type DogResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Dog'] = ResolversParentTypes['Dog']
+> = {
+  age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  likesToDig?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type ErrorResolvers<
   ContextType = any,
@@ -465,6 +525,16 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationtopicEditArgs, 'input'>
   >;
+};
+
+export type PetResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Pet'] = ResolversParentTypes['Pet']
+> = {
+  __resolveType?: TypeResolveFn<'Cat' | 'Dog', ParentType, ContextType>;
+  age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type ProfileResolvers<
@@ -654,10 +724,13 @@ export type UserResultResolvers<
 
 export type Resolvers<ContextType = any> = {
   Account?: AccountResolvers<ContextType>;
+  Cat?: CatResolvers<ContextType>;
   Country?: CountryResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
+  Dog?: DogResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  Pet?: PetResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
   ProfileMeta?: ProfileMetaResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
