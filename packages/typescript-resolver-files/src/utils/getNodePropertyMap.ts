@@ -1,8 +1,10 @@
 import {
   type TypeNode,
+  type InterfaceDeclaration,
+  type Identifier,
+  type ClassDeclaration,
   Node,
   SyntaxKind,
-  type ClassDeclaration,
 } from 'ts-morph';
 
 export type NodePropertyMap = Record<string, { name: string }>;
@@ -35,9 +37,9 @@ type Properties = { propertyName: string }[];
 
 const getNodeProperties = (node: Node): Properties => {
   if (node.isKind(SyntaxKind.InterfaceDeclaration)) {
-    return node.getProperties().map((prop) => ({
-      propertyName: prop.getName(),
-    }));
+    const properties: Properties = [];
+    collectInterfaceDeclarationProperties(node, properties);
+    return properties;
   } else if (node.isKind(SyntaxKind.TypeAliasDeclaration)) {
     const typeNode = node.getTypeNodeOrThrow();
     const properties: Properties = [];
@@ -49,6 +51,40 @@ const getNodeProperties = (node: Node): Properties => {
     return properties;
   }
   return [];
+};
+
+const collectInterfaceDeclarationProperties = (
+  node: InterfaceDeclaration,
+  result: Properties
+): void => {
+  // 1. Collect current node properties
+  node.getProperties().forEach((prop) => {
+    result.push({
+      propertyName: prop.getName(),
+    });
+  });
+
+  // 2. Recursively go through the extended interfaces and collect properties
+  // Interfaces can `extends` but not `implements`, so we safely target extends clauses here
+  const heritageClause = node.getHeritageClauseByKind(
+    SyntaxKind.ExtendsKeyword
+  );
+  if (heritageClause) {
+    // If `interface Dog extends BaseNode, Pet`, then `extendedIdentifiers` is `[BaseNode, Pet]`
+    const identifiers = heritageClause
+      .getTypeNodes()
+      .map((n) => n.getExpressionIfKind(SyntaxKind.Identifier))
+      .filter<Identifier>((n): n is Identifier => Boolean(n));
+
+    identifiers.forEach((n) => {
+      const parent = n.getDefinitionNodes()[0];
+      if (Node.isInterfaceDeclaration(parent)) {
+        collectInterfaceDeclarationProperties(parent, result);
+      } else {
+        // TODO: maybe log warnings here? or just throw?
+      }
+    });
+  }
 };
 
 const collectTypeNodeProperties = (

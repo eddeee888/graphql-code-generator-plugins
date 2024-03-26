@@ -1,7 +1,9 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.generated';
 import { Account } from './user/resolvers/Account';
+import { Cat } from './pet/resolvers/Cat';
 import { Country } from './user/resolvers/Country';
+import { Dog } from './pet/resolvers/Dog';
 import { Error } from './base/resolvers/Error';
 import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/topicCreate';
 import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
@@ -35,7 +37,9 @@ export const resolvers: Resolvers = {
   },
   Subscription: { profileChanges: Subscription_profileChanges },
   Account: Account,
+  Cat: Cat,
   Country: Country,
+  Dog: Dog,
   Error: Error,
   Profile: Profile,
   ProfileMeta: ProfileMeta,

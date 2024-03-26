@@ -182,7 +182,7 @@
           "configFile": "packages/typescript-resolver-files-e2e/src/test-mappers/codegen.yml"
         },
         "test-mappers-vs-schema-types": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-mappers-vs-schema-types/codegen.yml"
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-mappers-vs-schema-types/codegen.ts"
         },
         "test-config-ts": {
           "configFile": "packages/typescript-resolver-files-e2e/src/test-config-ts/codegen.ts"

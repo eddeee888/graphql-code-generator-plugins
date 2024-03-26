@@ -1,0 +1,19 @@
+interface Pet {
+  id: ID!
+  age: Int!
+  name: String!
+}
+
+type Cat implements Pet {
+  id: ID!
+  age: Int!
+  name: String!
+  likesToScratch: Boolean!
+}
+
+type Dog implements Pet {
+  id: ID!
+  age: Int!
+  name: String!
+  likesToDig: Boolean!
+}
