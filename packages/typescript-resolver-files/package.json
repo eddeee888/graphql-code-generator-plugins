@@ -33,6 +33,7 @@
     "@graphql-codegen/typescript": "^4.0.0",
     "@graphql-codegen/typescript-resolvers": "^4.0.0",
     "@graphql-tools/utils": "^10.0.0",
+    "micromatch": "^4.0.0",
     "ts-morph": "^19.0.0",
     "tslib": "^2.3.0"
   },

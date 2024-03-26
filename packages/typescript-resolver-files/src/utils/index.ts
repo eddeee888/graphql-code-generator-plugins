@@ -1,4 +1,5 @@
 export * from './cwd';
+export * from './logger';
 export * from './fmt';
 export * from './parseLocationForWhitelistedModule';
 export * from './isNativeNamedType';
@@ -8,3 +9,4 @@ export * from './printImportLine';
 export * from './getNodePropertyMap';
 export * from './normalizeRelativePath';
 export * from './relativeModulePath';
+export * from './isMatchResolverNamePattern';
