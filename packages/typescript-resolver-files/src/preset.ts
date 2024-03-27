@@ -75,7 +75,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
 
     const normalizedAdd = normalizeAddConfigPath({ add, baseOutputDir });
 
-    const { sourceMap } = parseSources(sources);
+    const { sourceMap } = parseSources(sources, baseOutputDir);
 
     const tsMorphProject = await profiler.run(
       async () => new Project(tsMorphProjectOptions),
