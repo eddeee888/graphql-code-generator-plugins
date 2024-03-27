@@ -11,7 +11,10 @@ export interface ParseSourcesResult {
   sourceMap: Record<string, ParsedSource>;
 }
 
-export function parseSources(sources: Source[]): ParseSourcesResult {
+export function parseSources(
+  sources: Source[],
+  baseOutputDir: string
+): ParseSourcesResult {
   return sources.reduce<ParseSourcesResult>(
     (result, source) => {
       if (!source.location) {
@@ -21,7 +24,10 @@ export function parseSources(sources: Source[]): ParseSourcesResult {
       const sourcePath = path.parse(source.location);
       const moduleDir = sourcePath.dir;
 
-      const moduleName = path.basename(moduleDir);
+      const moduleName = path.relative(
+        path.resolve(baseOutputDir),
+        path.basename(moduleDir)
+      );
 
       result.sourceMap[source.location] = {
         source,
