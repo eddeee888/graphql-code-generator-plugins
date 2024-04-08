@@ -6,18 +6,22 @@ const config: CodegenConfig = {
     afterAllFileWrite: ['prettier --write'],
   },
   generates: {
-    'packages/typescript-resolver-files-e2e/src/test-scalars-module/schema': {
-      ...defineConfig({
-        scalarsModule: false,
-      }),
-      schema: [
-        'packages/typescript-resolver-files-e2e/src/test-scalars-module/schema/**/*.graphqls',
-        'packages/typescript-resolver-files-e2e/src/test-scalars-module/schema/**/*.graphqls.ts',
-      ],
-    },
+    'packages/typescript-resolver-files-e2e/src/test-scalars-module/schema':
+      defineConfig(
+        {
+          scalarsModule: false,
+        },
+        {
+          schema: [
+            'packages/typescript-resolver-files-e2e/src/test-scalars-module/schema/**/*.graphqls',
+            'packages/typescript-resolver-files-e2e/src/test-scalars-module/schema/**/*.graphqls.ts',
+          ],
+        }
+      ),
+
     'packages/typescript-resolver-files-e2e/src/test-scalars-module/schema-overrides':
-      {
-        ...defineConfig({
+      defineConfig(
+        {
           scalarsModule: false,
           scalarsOverrides: {
             DateTime: {
@@ -33,12 +37,14 @@ const config: CodegenConfig = {
               type: 'bigint',
             },
           },
-        }),
-        schema: [
-          'packages/typescript-resolver-files-e2e/src/test-scalars-module/schema-overrides/**/*.graphqls',
-          'packages/typescript-resolver-files-e2e/src/test-scalars-module/schema-overrides/**/*.graphqls.ts',
-        ],
-      },
+        },
+        {
+          schema: [
+            'packages/typescript-resolver-files-e2e/src/test-scalars-module/schema-overrides/**/*.graphqls',
+            'packages/typescript-resolver-files-e2e/src/test-scalars-module/schema-overrides/**/*.graphqls.ts',
+          ],
+        }
+      ),
   },
 };
 
