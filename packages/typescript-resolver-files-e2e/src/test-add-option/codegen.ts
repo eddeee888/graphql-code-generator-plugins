@@ -47,8 +47,8 @@ const config: CodegenConfig = {
         },
         {
           schema: [
-            'packages/typescript-resolver-files-e2e/src/test-add-option/schema-append/**/*.graphqls',
-            'packages/typescript-resolver-files-e2e/src/test-add-option/schema-append/**/*.graphqls.ts',
+            'packages/typescript-resolver-files-e2e/src/test-add-option/schema-content/**/*.graphqls',
+            'packages/typescript-resolver-files-e2e/src/test-add-option/schema-content/**/*.graphqls.ts',
           ],
         }
       ),

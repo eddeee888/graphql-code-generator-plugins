@@ -41,7 +41,8 @@ jobs:
         id: affected
         run: |
           echo "typescript-resolver-files=$(./tools/ci/bin/check-affected.sh lib typescript-resolver-files origin/master)" >> $GITHUB_OUTPUT
-          echo "typescript-resolver-files-e2e={$(./tools/ci/bin/check-affected.sh lib typescript-resolver-files-e2e origin/master)}" >> $GITHUB_OUTPUT
+          echo "typescript-resolver-files-e2e=$(./tools/ci/bin/check-affected.sh lib typescript-resolver-files-e2e origin/master)" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
 
   typescript-resolver-files:
     strategy:
