@@ -1,4 +1,4 @@
-import type { TopicResolvers } from './../../../types.generated';
+import type { TopicResolvers } from './../../types.generated';
 export const Topic: TopicResolvers = {
   /* Implement Topic resolver logic here */
   creator: async (_parent, _arg, _ctx) => {

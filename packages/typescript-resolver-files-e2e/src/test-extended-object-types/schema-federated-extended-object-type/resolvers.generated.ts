@@ -1,25 +1,25 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.generated';
-import { ForeignType as topic_ForeignType } from './schema/topic/resolvers/ForeignType';
-import { ForeignType as user_ForeignType } from './schema/user/resolvers/ForeignType';
-import { topicCreate as Mutation_topicCreate } from './schema/topic/resolvers/Mutation/topicCreate';
-import { topicEdit as Mutation_topicEdit } from './schema/topic/resolvers/Mutation/topicEdit';
-import { PaginationResult } from './schema/base/resolvers/PaginationResult';
-import { PayloadError } from './schema/base/resolvers/PayloadError';
-import { Profile } from './schema/user/resolvers/Profile';
-import { me as Query_me } from './schema/user/resolvers/Query/me';
-import { topicById as Query_topicById } from './schema/topic/resolvers/Query/topicById';
-import { topicsCreatedByUser as Query_topicsCreatedByUser } from './schema/topic/resolvers/Query/topicsCreatedByUser';
-import { userByAccountName as Query_userByAccountName } from './schema/user/resolvers/Query/userByAccountName';
-import { SomeRandomScalar } from './schema/base/resolvers/SomeRandomScalar';
-import { profileChanges as Subscription_profileChanges } from './schema/user/resolvers/Subscription/profileChanges';
-import { Topic } from './schema/topic/resolvers/Topic';
-import { TopicByIdResult } from './schema/topic/resolvers/TopicByIdResult';
-import { TopicCreateResult } from './schema/topic/resolvers/TopicCreateResult';
-import { TopicEditResult } from './schema/topic/resolvers/TopicEditResult';
-import { TopicsCreatedByUserResult } from './schema/topic/resolvers/TopicsCreatedByUserResult';
-import { User } from './schema/user/resolvers/User';
-import { UserResult } from './schema/user/resolvers/UserResult';
+import { ForeignType as topic_ForeignType } from './topic/resolvers/ForeignType';
+import { ForeignType as user_ForeignType } from './user/resolvers/ForeignType';
+import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/topicCreate';
+import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
+import { PaginationResult } from './base/resolvers/PaginationResult';
+import { PayloadError } from './base/resolvers/PayloadError';
+import { Profile } from './user/resolvers/Profile';
+import { me as Query_me } from './user/resolvers/Query/me';
+import { topicById as Query_topicById } from './topic/resolvers/Query/topicById';
+import { topicsCreatedByUser as Query_topicsCreatedByUser } from './topic/resolvers/Query/topicsCreatedByUser';
+import { userByAccountName as Query_userByAccountName } from './user/resolvers/Query/userByAccountName';
+import { SomeRandomScalar } from './base/resolvers/SomeRandomScalar';
+import { profileChanges as Subscription_profileChanges } from './user/resolvers/Subscription/profileChanges';
+import { Topic } from './topic/resolvers/Topic';
+import { TopicByIdResult } from './topic/resolvers/TopicByIdResult';
+import { TopicCreateResult } from './topic/resolvers/TopicCreateResult';
+import { TopicEditResult } from './topic/resolvers/TopicEditResult';
+import { TopicsCreatedByUserResult } from './topic/resolvers/TopicsCreatedByUserResult';
+import { User } from './user/resolvers/User';
+import { UserResult } from './user/resolvers/UserResult';
 import { DateTimeResolver } from 'graphql-scalars';
 export const resolvers: Resolvers = {
   Query: {

@@ -1,4 +1,4 @@
-import type { SubscriptionResolvers } from './../../../../types.generated';
+import type { SubscriptionResolvers } from './../../../types.generated';
 export const profileChanges: NonNullable<
   SubscriptionResolvers['profileChanges']
 > = {
