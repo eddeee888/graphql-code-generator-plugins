@@ -1,0 +1,11 @@
+extend type StudentProfile {
+  avatar: StudentAvatar
+}
+
+type StudentAvatar {
+  id: ID!
+  hairstyle: String!
+  hairColor: String!
+  skinColor: String!
+  eyeColor: String!
+}

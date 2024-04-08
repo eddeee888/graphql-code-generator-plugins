@@ -1,0 +1,11 @@
+extend type Student {
+  guardians: [StudentGuardian!]!
+}
+
+type StudentGuardian {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String
+}

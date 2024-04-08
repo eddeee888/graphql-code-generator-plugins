@@ -1,0 +1,10 @@
+extend type School {
+  courses: [SchoolCourse!]!
+}
+
+type SchoolCourse {
+  id: ID!
+  name: String!
+  teacher: Teacher!
+  students: [Student!]!
+}

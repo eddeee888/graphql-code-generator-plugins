@@ -1,0 +1,7 @@
+type Teacher {
+  id: ID!
+}
+
+extend type Query {
+  teacher(id: ID!): Teacher
+}

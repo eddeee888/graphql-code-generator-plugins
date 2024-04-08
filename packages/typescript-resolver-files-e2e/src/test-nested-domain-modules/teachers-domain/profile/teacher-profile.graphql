@@ -1,0 +1,11 @@
+extend type Teacher {
+  profile: TeacherProfile
+}
+
+type TeacherProfile {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String
+}

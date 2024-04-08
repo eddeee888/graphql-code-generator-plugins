@@ -1,0 +1,8 @@
+type School {
+  id: ID!
+  name: String!
+}
+
+extend type Query {
+  school(id: ID!): School
+}
