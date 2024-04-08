@@ -1,4 +1,4 @@
-import type { StandardErrorResolvers } from './../../types.generated';
+import type { StandardErrorResolvers } from './../../../modules-typedefs-file-mode-mergedWhitelisted/types.generated';
 export const StandardError: StandardErrorResolvers = {
   /* Implement StandardError resolver logic here */
 };
