@@ -1,13 +1,13 @@
 # https://www.graphql-code-generator.com/docs/config-reference/codegen-config
-schema:
-  - packages/typescript-resolver-files-e2e/src/test-whitelisted/**/*.graphqls
-  - packages/typescript-resolver-files-e2e/src/test-whitelisted/**/*.graphqls.ts
 hooks:
   afterAllFileWrite:
     - prettier --write
 generates:
   packages/typescript-resolver-files-e2e/src/test-whitelisted/modules:
     preset: '@eddeee888/gcg-typescript-resolver-files'
+    schema:
+      - packages/typescript-resolver-files-e2e/src/test-whitelisted/modules/**/*.graphqls
+      - packages/typescript-resolver-files-e2e/src/test-whitelisted/modules/**/*.graphqls.ts
     presetConfig:
       whitelistedModules:
         - base
@@ -17,6 +17,9 @@ generates:
 
   packages/typescript-resolver-files-e2e/src/test-whitelisted/modules-typedefs-file-mode-mergedWhitelisted:
     preset: '@eddeee888/gcg-typescript-resolver-files'
+    schema:
+      - packages/typescript-resolver-files-e2e/src/test-whitelisted/modules-typedefs-file-mode-mergedWhitelisted/**/*.graphqls
+      - packages/typescript-resolver-files-e2e/src/test-whitelisted/modules-typedefs-file-mode-mergedWhitelisted/**/*.graphqls.ts
     presetConfig:
       typeDefsFileMode: 'mergedWhitelisted'
       whitelistedModules:
