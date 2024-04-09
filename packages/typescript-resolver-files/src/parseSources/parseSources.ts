@@ -5,7 +5,7 @@ export interface ParsedSource {
   source: Source;
   sourcePath: path.ParsedPath;
   moduleName: string;
-  relativePathFromBaseToModule: string;
+  relativePathFromBaseToModule: string[];
 }
 
 export interface ParseSourcesResult {
@@ -27,10 +27,9 @@ export function parseSources(
 
       const moduleName = path.basename(moduleDir);
 
-      const relativePathFromBaseToModule = path.relative(
-        path.resolve(baseOutputDir),
-        path.resolve(sourcePath.dir)
-      );
+      const relativePathFromBaseToModule = path
+        .relative(path.resolve(baseOutputDir), path.resolve(sourcePath.dir))
+        .split(path.sep);
 
       result.sourceMap[source.location] = {
         source,
