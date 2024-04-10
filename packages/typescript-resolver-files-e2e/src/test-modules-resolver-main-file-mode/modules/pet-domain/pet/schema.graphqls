@@ -1,0 +1,7 @@
+extend type Query {
+  pet(id: ID!): Pet
+}
+
+type Pet {
+  id: ID!
+}

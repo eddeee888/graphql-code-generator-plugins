@@ -1,0 +1,4 @@
+type PetHousing {
+  id: ID!
+  name: String!
+}
