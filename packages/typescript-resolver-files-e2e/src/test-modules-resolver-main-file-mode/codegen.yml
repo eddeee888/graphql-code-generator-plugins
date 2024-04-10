@@ -11,3 +11,6 @@ generates:
     presetConfig:
       resolverGeneration: 'all'
       resolverMainFileMode: 'modules'
+      externalResolvers:
+        Mutation.addPet: 'addPet#default as petResolver'
+        PetCert: 'PetCert.js#PetCert as petCertResolver'

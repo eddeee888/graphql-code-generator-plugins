@@ -63,8 +63,13 @@ export type ErrorType =
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addPet: Pet;
   topicCreate: TopicCreatePayload;
   topicEdit: TopicEditPayload;
+};
+
+export type MutationaddPetArgs = {
+  id: Scalars['ID']['input'];
 };
 
 export type MutationtopicCreateArgs = {
@@ -89,6 +94,11 @@ export type PaginationResult = {
 
 export type Pet = {
   code: Scalars['PetCode']['output'];
+  id: Scalars['ID']['output'];
+};
+
+export type PetCert = {
+  __typename?: 'PetCert';
   id: Scalars['ID']['output'];
 };
 
@@ -374,6 +384,7 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PaginationResult: ResolverTypeWrapper<PaginationResult>;
   Pet: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Pet']>;
+  PetCert: ResolverTypeWrapper<PetCert>;
   PetCode: ResolverTypeWrapper<Scalars['PetCode']['output']>;
   PetError: ResolverTypeWrapper<PetError>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -426,6 +437,7 @@ export type ResolversParentTypes = {
   Int: Scalars['Int']['output'];
   PaginationResult: PaginationResult;
   Pet: ResolversInterfaceTypes<ResolversParentTypes>['Pet'];
+  PetCert: PetCert;
   PetCode: Scalars['PetCode']['output'];
   PetError: PetError;
   String: Scalars['String']['output'];
@@ -494,6 +506,12 @@ export type MutationResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
 > = {
+  addPet?: Resolver<
+    ResolversTypes['Pet'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationaddPetArgs, 'id'>
+  >;
   topicCreate?: Resolver<
     ResolversTypes['TopicCreatePayload'],
     ParentType,
@@ -525,6 +543,14 @@ export type PetResolvers<
   __resolveType?: TypeResolveFn<'Cat' | 'Dog', ParentType, ContextType>;
   code?: Resolver<ResolversTypes['PetCode'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+};
+
+export type PetCertResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['PetCert'] = ResolversParentTypes['PetCert']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export interface PetCodeScalarConfig
@@ -771,6 +797,7 @@ export type Resolvers<ContextType = any> = {
   Mutation?: MutationResolvers<ContextType>;
   PaginationResult?: PaginationResultResolvers<ContextType>;
   Pet?: PetResolvers<ContextType>;
+  PetCert?: PetCertResolvers<ContextType>;
   PetCode?: GraphQLScalarType;
   PetError?: PetErrorResolvers<ContextType>;
   PetHousing?: PetHousingResolvers<ContextType>;

@@ -8,8 +8,10 @@ import { PetError } from './resolvers/PetError';
 import { PetOk } from './resolvers/PetOk';
 import { PetResult } from './resolvers/PetResult';
 import { pet as Query_pet } from './resolvers/Query/pet';
+import petResolver from './addPet';
 export const resolvers: Resolvers = {
   Query: { pet: Query_pet },
+  Mutation: { addPet: petResolver },
 
   Cat: Cat,
   Dog: Dog,
