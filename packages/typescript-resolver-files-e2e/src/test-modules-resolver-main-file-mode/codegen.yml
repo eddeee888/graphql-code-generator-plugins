@@ -9,4 +9,5 @@ generates:
   packages/typescript-resolver-files-e2e/src/test-modules-resolver-main-file-mode/modules:
     preset: '@eddeee888/gcg-typescript-resolver-files'
     presetConfig:
+      resolverGeneration: 'all'
       resolverMainFileMode: 'modules'

@@ -20,6 +20,7 @@ export interface GeneralResolverFile extends BaseVirtualFile {
   __filetype: 'generalResolver';
   meta: {
     moduleName: string;
+    relativePathFromBaseToModule: string[];
     variableStatement: string;
     resolverTypeString: string | null; // GraphQL Scalar's resolverTypeString is null
     normalizedResolverName: NormalizedResolverName;
@@ -30,6 +31,7 @@ export interface RootObjectTypeFieldResolverFile extends BaseVirtualFile {
   __filetype: 'rootObjectTypeFieldResolver';
   meta: {
     moduleName: string;
+    relativePathFromBaseToModule: string[];
     belongsToRootObject: RootObjectType;
     variableStatement: string;
     resolverTypeString: string;
@@ -41,6 +43,7 @@ export interface ObjectTypeFile extends BaseVirtualFile {
   __filetype: 'objectType';
   meta: {
     moduleName: string;
+    relativePathFromBaseToModule: string[];
     variableStatement: string;
     resolverTypeString: string;
     normalizedResolverName: NormalizedResolverName;
@@ -94,6 +97,7 @@ export interface GenerateResolverFilesContext {
 
 export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
   moduleName: string;
+  relativePathFromBaseToModule: string[];
   fieldFilePath: string;
   resolverName: string;
   belongsToRootObject: BelongsToRootObject;

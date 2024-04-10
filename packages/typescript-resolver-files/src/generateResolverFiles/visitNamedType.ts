@@ -55,7 +55,8 @@ export const visitNamedType = <P extends Record<string, unknown>>(
     return;
   }
 
-  const { moduleName, resolversOutputDir } = parsedDetails;
+  const { moduleName, resolversOutputDir, relativePathFromBaseToModule } =
+    parsedDetails;
 
   const normalizedResolverName = normalizeResolverName(
     moduleName,
@@ -89,6 +90,7 @@ export const visitNamedType = <P extends Record<string, unknown>>(
       resolversOutputDir,
       belongsToRootObject,
       moduleName,
+      relativePathFromBaseToModule,
     },
     ctx
   );
@@ -110,6 +112,13 @@ export const visitNamedType = <P extends Record<string, unknown>>(
   }
 };
 
+type OutputDirResult =
+  | {
+      resolversOutputDir: string;
+      moduleName: string;
+      relativePathFromBaseToModule: string[];
+    }
+  | undefined;
 /**
  * Parse location to see which module it belongs to.
  * Also check against whitelisted and blacklisted to see if need to generate file.
@@ -127,7 +136,7 @@ const parseLocationForOutputDir = (
     },
   }: GenerateResolverFilesContext,
   location?: Location
-): { resolversOutputDir: string; moduleName: string } | undefined => {
+): OutputDirResult => {
   // If mode is "merged", there's only one module:
   //   - always generate a.k.a  it's always whitelisted
   //   - put them together at designated relativeTargetDir
@@ -140,6 +149,7 @@ const parseLocationForOutputDir = (
         ...nestedDirs
       ),
       moduleName: '',
+      relativePathFromBaseToModule: [],
     };
   }
 
@@ -161,6 +171,7 @@ const parseLocationForOutputDir = (
           ...nestedDirs
         ),
         moduleName: parsedSource.moduleName,
+        relativePathFromBaseToModule: parsedSource.relativePathFromBaseToModule,
       }
     : undefined;
 };
@@ -171,6 +182,7 @@ interface ValidateAndPrepareForGraphQLTypeParams {
   resolversOutputDir: string;
   belongsToRootObject: RootObjectType | null;
   moduleName: string;
+  relativePathFromBaseToModule: string[];
 }
 const validateAndPrepareForGraphQLTypeHandler = (
   {
@@ -179,6 +191,7 @@ const validateAndPrepareForGraphQLTypeHandler = (
     resolversOutputDir,
     belongsToRootObject,
     moduleName,
+    relativePathFromBaseToModule,
   }: ValidateAndPrepareForGraphQLTypeParams,
   { config, result }: GenerateResolverFilesContext
 ): GraphQLTypeHandlerParams<RootObjectType> | GraphQLTypeHandlerParams => {
@@ -219,6 +232,7 @@ const validateAndPrepareForGraphQLTypeHandler = (
     normalizedResolverName,
     resolversTypeMeta,
     moduleName,
+    relativePathFromBaseToModule,
   };
 };
 
