@@ -34,6 +34,21 @@ export type Scalars = {
   Int: { input: number; output: number };
   Float: { input: number; output: number };
   DateTime: { input: Date | string; output: Date | string };
+  PetCode: { input: any; output: any };
+};
+
+export type Cat = Pet & {
+  __typename?: 'Cat';
+  code: Scalars['PetCode']['output'];
+  id: Scalars['ID']['output'];
+  scratchy: Scalars['Boolean']['output'];
+};
+
+export type Dog = Pet & {
+  __typename?: 'Dog';
+  barky: Scalars['Boolean']['output'];
+  code: Scalars['PetCode']['output'];
+  id: Scalars['ID']['output'];
 };
 
 export type Error = {
@@ -72,6 +87,30 @@ export type PaginationResult = {
   totalPageCount: Scalars['Int']['output'];
 };
 
+export type Pet = {
+  code: Scalars['PetCode']['output'];
+  id: Scalars['ID']['output'];
+};
+
+export type PetError = Error & {
+  __typename?: 'PetError';
+  code: Scalars['String']['output'];
+  error: ErrorType;
+};
+
+export type PetHousing = {
+  __typename?: 'PetHousing';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type PetOk = {
+  __typename?: 'PetOk';
+  result?: Maybe<Pet>;
+};
+
+export type PetResult = PetError | PetOk;
+
 export type Profile = {
   __typename?: 'Profile';
   id: Scalars['ID']['output'];
@@ -81,9 +120,14 @@ export type Profile = {
 export type Query = {
   __typename?: 'Query';
   me: UserPayload;
+  pet: PetResult;
   topicById: TopicByIdPayload;
   topicsCreatedByUser: TopicsCreatedByUserPayload;
   userByAccountName: UserPayload;
+};
+
+export type QuerypetArgs = {
+  id: Scalars['ID']['input'];
 };
 
 export type QuerytopicByIdArgs = {
@@ -288,6 +332,9 @@ export type DirectiveResolverFn<
 
 /** Mapping of union types */
 export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
+  PetResult:
+    | (PetError & { __typename: 'PetError' })
+    | (PetOk & { __typename: 'PetOk' });
   TopicByIdPayload:
     | (StandardError & { __typename: 'StandardError' })
     | (TopicByIdResult & { __typename: 'TopicByIdResult' });
@@ -307,22 +354,36 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
-  Error: StandardError & { __typename: 'StandardError' };
+  Error:
+    | (PetError & { __typename: 'PetError' })
+    | (StandardError & { __typename: 'StandardError' });
+  Pet: (Cat & { __typename: 'Cat' }) | (Dog & { __typename: 'Dog' });
 };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Cat: ResolverTypeWrapper<Cat>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  Dog: ResolverTypeWrapper<Dog>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Error']>;
   ErrorType: ErrorType;
   Mutation: ResolverTypeWrapper<{}>;
   PaginationInput: PaginationInput;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PaginationResult: ResolverTypeWrapper<PaginationResult>;
-  Profile: ResolverTypeWrapper<Profile>;
-  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
-  Query: ResolverTypeWrapper<{}>;
+  Pet: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Pet']>;
+  PetCode: ResolverTypeWrapper<Scalars['PetCode']['output']>;
+  PetError: ResolverTypeWrapper<PetError>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  PetHousing: ResolverTypeWrapper<PetHousing>;
+  PetOk: ResolverTypeWrapper<PetOk>;
+  PetResult: ResolverTypeWrapper<
+    ResolversUnionTypes<ResolversTypes>['PetResult']
+  >;
+  Profile: ResolverTypeWrapper<Profile>;
+  Query: ResolverTypeWrapper<{}>;
   StandardError: ResolverTypeWrapper<StandardError>;
   Subscription: ResolverTypeWrapper<{}>;
   Topic: ResolverTypeWrapper<Topic>;
@@ -350,21 +411,29 @@ export type ResolversTypes = {
     ResolversUnionTypes<ResolversTypes>['UserPayload']
   >;
   UserResult: ResolverTypeWrapper<UserResult>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Cat: Cat;
+  ID: Scalars['ID']['output'];
+  Boolean: Scalars['Boolean']['output'];
   DateTime: Scalars['DateTime']['output'];
+  Dog: Dog;
   Error: ResolversInterfaceTypes<ResolversParentTypes>['Error'];
   Mutation: {};
   PaginationInput: PaginationInput;
   Int: Scalars['Int']['output'];
   PaginationResult: PaginationResult;
-  Profile: Profile;
-  ID: Scalars['ID']['output'];
-  Query: {};
+  Pet: ResolversInterfaceTypes<ResolversParentTypes>['Pet'];
+  PetCode: Scalars['PetCode']['output'];
+  PetError: PetError;
   String: Scalars['String']['output'];
+  PetHousing: PetHousing;
+  PetOk: PetOk;
+  PetResult: ResolversUnionTypes<ResolversParentTypes>['PetResult'];
+  Profile: Profile;
+  Query: {};
   StandardError: StandardError;
   Subscription: {};
   Topic: Topic;
@@ -382,7 +451,16 @@ export type ResolversParentTypes = {
   User: User;
   UserPayload: ResolversUnionTypes<ResolversParentTypes>['UserPayload'];
   UserResult: UserResult;
-  Boolean: Scalars['Boolean']['output'];
+};
+
+export type CatResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Cat'] = ResolversParentTypes['Cat']
+> = {
+  code?: Resolver<ResolversTypes['PetCode'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  scratchy?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export interface DateTimeScalarConfig
@@ -390,11 +468,25 @@ export interface DateTimeScalarConfig
   name: 'DateTime';
 }
 
+export type DogResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Dog'] = ResolversParentTypes['Dog']
+> = {
+  barky?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  code?: Resolver<ResolversTypes['PetCode'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ErrorResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Error'] = ResolversParentTypes['Error']
 > = {
-  __resolveType?: TypeResolveFn<'StandardError', ParentType, ContextType>;
+  __resolveType?: TypeResolveFn<
+    'PetError' | 'StandardError',
+    ParentType,
+    ContextType
+  >;
   error?: Resolver<ResolversTypes['ErrorType'], ParentType, ContextType>;
 };
 
@@ -426,6 +518,53 @@ export type PaginationResultResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type PetResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Pet'] = ResolversParentTypes['Pet']
+> = {
+  __resolveType?: TypeResolveFn<'Cat' | 'Dog', ParentType, ContextType>;
+  code?: Resolver<ResolversTypes['PetCode'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+};
+
+export interface PetCodeScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['PetCode'], any> {
+  name: 'PetCode';
+}
+
+export type PetErrorResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['PetError'] = ResolversParentTypes['PetError']
+> = {
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  error?: Resolver<ResolversTypes['ErrorType'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PetHousingResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['PetHousing'] = ResolversParentTypes['PetHousing']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PetOkResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['PetOk'] = ResolversParentTypes['PetOk']
+> = {
+  result?: Resolver<Maybe<ResolversTypes['Pet']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PetResultResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['PetResult'] = ResolversParentTypes['PetResult']
+> = {
+  __resolveType?: TypeResolveFn<'PetError' | 'PetOk', ParentType, ContextType>;
+};
+
 export type ProfileResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']
@@ -440,6 +579,12 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
   me?: Resolver<ResolversTypes['UserPayload'], ParentType, ContextType>;
+  pet?: Resolver<
+    ResolversTypes['PetResult'],
+    ParentType,
+    ContextType,
+    RequireFields<QuerypetArgs, 'id'>
+  >;
   topicById?: Resolver<
     ResolversTypes['TopicByIdPayload'],
     ParentType,
@@ -619,10 +764,18 @@ export type UserResultResolvers<
 };
 
 export type Resolvers<ContextType = any> = {
+  Cat?: CatResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
+  Dog?: DogResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   PaginationResult?: PaginationResultResolvers<ContextType>;
+  Pet?: PetResolvers<ContextType>;
+  PetCode?: GraphQLScalarType;
+  PetError?: PetErrorResolvers<ContextType>;
+  PetHousing?: PetHousingResolvers<ContextType>;
+  PetOk?: PetOkResolvers<ContextType>;
+  PetResult?: PetResultResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   StandardError?: StandardErrorResolvers<ContextType>;
