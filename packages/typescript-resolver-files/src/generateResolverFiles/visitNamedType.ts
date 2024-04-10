@@ -55,7 +55,7 @@ export const visitNamedType = <P extends Record<string, unknown>>(
     return;
   }
 
-  const { moduleName, outputDir } = parsedDetails;
+  const { moduleName, resolversOutputDir } = parsedDetails;
 
   const normalizedResolverName = normalizeResolverName(
     moduleName,
@@ -86,7 +86,7 @@ export const visitNamedType = <P extends Record<string, unknown>>(
     {
       resolverName,
       normalizedResolverName,
-      outputDir,
+      resolversOutputDir,
       belongsToRootObject,
       moduleName,
     },
@@ -127,14 +127,14 @@ const parseLocationForOutputDir = (
     },
   }: GenerateResolverFilesContext,
   location?: Location
-): { outputDir: string; moduleName: string } | undefined => {
+): { resolversOutputDir: string; moduleName: string } | undefined => {
   // If mode is "merged", there's only one module:
   //   - always generate a.k.a  it's always whitelisted
   //   - put them together at designated relativeTargetDir
   //   - moduleName='' i.e. no module
   if (mode === 'merged') {
     return {
-      outputDir: path.posix.join(
+      resolversOutputDir: path.posix.join(
         baseOutputDir,
         resolverRelativeTargetDir,
         ...nestedDirs
@@ -154,7 +154,7 @@ const parseLocationForOutputDir = (
 
   return parsedSource
     ? {
-        outputDir: path.posix.join(
+        resolversOutputDir: path.posix.join(
           baseOutputDir,
           ...parsedSource.relativePathFromBaseToModule,
           resolverRelativeTargetDir,
@@ -168,7 +168,7 @@ const parseLocationForOutputDir = (
 interface ValidateAndPrepareForGraphQLTypeParams {
   resolverName: string;
   normalizedResolverName: NormalizedResolverName;
-  outputDir: string;
+  resolversOutputDir: string;
   belongsToRootObject: RootObjectType | null;
   moduleName: string;
 }
@@ -176,13 +176,16 @@ const validateAndPrepareForGraphQLTypeHandler = (
   {
     resolverName,
     normalizedResolverName,
-    outputDir,
+    resolversOutputDir,
     belongsToRootObject,
     moduleName,
   }: ValidateAndPrepareForGraphQLTypeParams,
   { config, result }: GenerateResolverFilesContext
 ): GraphQLTypeHandlerParams<RootObjectType> | GraphQLTypeHandlerParams => {
-  const fieldFilePath = path.posix.join(outputDir, `${resolverName}.ts`);
+  const fieldFilePath = path.posix.join(
+    resolversOutputDir,
+    `${resolverName}.ts`
+  );
   if (result.files[fieldFilePath]) {
     throw new Error(
       `Unexpected duplication in field filename. Type: ${resolverName}, file: ${fieldFilePath}`
@@ -191,7 +194,7 @@ const validateAndPrepareForGraphQLTypeHandler = (
 
   // resolverTypeName are generated from typescript-resolvers plugin
   const resolversTypeMetaModule = relativeModulePath(
-    outputDir,
+    resolversOutputDir,
     config.resolverTypesPath
   );
   const resolversTypeMeta: GraphQLTypeHandlerParams['resolversTypeMeta'] =
