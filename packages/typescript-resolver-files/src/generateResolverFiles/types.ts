@@ -85,6 +85,7 @@ export interface GenerateResolverFilesContext {
       string,
       {
         moduleName: string;
+        relativePathFromBaseToModule: string[];
         importLineMeta: ImportLineMeta;
         identifierUsages: {
           identifierName: string;

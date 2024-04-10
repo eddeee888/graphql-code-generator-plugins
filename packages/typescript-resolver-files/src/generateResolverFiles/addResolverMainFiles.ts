@@ -133,7 +133,11 @@ export const addResolverMainFiles = ({
     // If resolverMainFileMode === 'modules', generate main resolver files into modules, otherwise, do it at baseOutputDir
     const resolverMainFilename =
       resolverMainFileMode === 'modules'
-        ? path.posix.join(baseOutputDir, meta.moduleName, resolverMainFile)
+        ? path.posix.join(
+            baseOutputDir,
+            ...meta.relativePathFromBaseToModule,
+            resolverMainFile
+          )
         : path.posix.join(baseOutputDir, resolverMainFile);
 
     if (!res[resolverMainFilename]) {

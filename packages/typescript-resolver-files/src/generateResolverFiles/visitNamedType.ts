@@ -73,6 +73,7 @@ export const visitNamedType = <P extends Record<string, unknown>>(
     addExternalResolverImport(
       {
         moduleName,
+        relativePathFromBaseToModule,
         normalizedResolverName: normalizedResolverName.base,
         configImportSyntax: externalResolverImportSyntax,
       },
