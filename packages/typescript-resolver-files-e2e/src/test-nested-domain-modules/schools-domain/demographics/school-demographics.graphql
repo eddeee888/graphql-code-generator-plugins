@@ -1,0 +1,14 @@
+extend type School {
+  demographics: SchoolDemographics
+}
+
+type SchoolDemographics {
+  id: ID!
+  schoolId: ID!
+  studentCount: Int!
+  teacherCount: Int!
+  averageStudentAge: Int
+  averageTeacherAge: Int
+  averageStudentGPA: Float
+  averageTeacherExperience: Int
+}

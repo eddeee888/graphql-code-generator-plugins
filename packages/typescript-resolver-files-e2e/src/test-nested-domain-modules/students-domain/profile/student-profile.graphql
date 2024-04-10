@@ -1,0 +1,11 @@
+extend type Student {
+  profile: StudentProfile
+}
+
+type StudentProfile {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String
+}

@@ -156,7 +156,7 @@ const parseLocationForOutputDir = (
     ? {
         outputDir: path.posix.join(
           baseOutputDir,
-          parsedSource.moduleName,
+          ...parsedSource.relativePathFromBaseToModule,
           resolverRelativeTargetDir,
           ...nestedDirs
         ),

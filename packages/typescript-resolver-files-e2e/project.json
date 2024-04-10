@@ -123,6 +123,13 @@
             "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-extended-object-types/**/*.generated.*'"
           ],
           "parallel": false
+        },
+        "test-nested-domain-modules": {
+          "commands": [
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-nested-domain-modules/**/resolvers/'",
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-nested-domain-modules/**/*.generated.*'"
+          ],
+          "parallel": false
         }
       }
     },
@@ -144,7 +151,8 @@
           "nx graphql-codegen typescript-resolver-files-e2e -c test-scalars-module --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-resolver-generation --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-add-option --verbose",
-          "nx graphql-codegen typescript-resolver-files-e2e -c test-extended-object-types --verbose"
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-extended-object-types --verbose",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-nested-domain-modules --verbose"
         ],
         "parallel": false
       },
@@ -207,6 +215,9 @@
         },
         "test-extended-object-types": {
           "configFile": "packages/typescript-resolver-files-e2e/src/test-extended-object-types/codegen.ts"
+        },
+        "test-nested-domain-modules": {
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-nested-domain-modules/codegen.ts"
         }
       },
       "dependsOn": ["prepare-e2e-modules"]

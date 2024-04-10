@@ -1,0 +1,8 @@
+extend type TeacherProfile {
+  avatar: TeacherAvatar
+}
+
+type TeacherAvatar {
+  id: ID!
+  url: String!
+}
