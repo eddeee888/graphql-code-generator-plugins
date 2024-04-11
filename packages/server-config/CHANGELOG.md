@@ -1,5 +1,11 @@
 # @eddeee888/gcg-server-config
 
+## 0.1.1
+
+### Patch Changes
+
+- 47c8fa6: Update package.json with missing deps
+
 ## 0.1.0
 
 ### Minor Changes

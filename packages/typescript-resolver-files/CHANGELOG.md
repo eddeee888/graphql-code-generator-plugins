@@ -1,5 +1,17 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.7.4
+
+### Patch Changes
+
+- e909a17: fix path to output resolver files in main resolver files for nested schema files
+- 067bd7e: Add params to generated resolvers
+- 47c8fa6: Update package.json with missing deps
+- 891f718: fix path to output resolver files so they are always generated near to schema.graphql
+- b226761: Implement recursively pick interface extensions
+- Updated dependencies [47c8fa6]
+  - @eddeee888/gcg-server-config@0.1.1
+
 ## 0.7.3
 
 ### Patch Changes
