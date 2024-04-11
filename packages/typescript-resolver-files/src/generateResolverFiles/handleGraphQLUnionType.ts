@@ -8,6 +8,7 @@ export const handleGraphQLUnionType: GraphQLTypeHandler = (
     normalizedResolverName,
     resolversTypeMeta,
     moduleName,
+    relativePathFromBaseToModule,
   },
   { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
 ) => {
@@ -31,6 +32,7 @@ export const handleGraphQLUnionType: GraphQLTypeHandler = (
     mainImportIdentifier: resolverName,
     meta: {
       moduleName,
+      relativePathFromBaseToModule,
       normalizedResolverName,
       resolverTypeString: resolversTypeMeta.typeString,
       variableStatement,

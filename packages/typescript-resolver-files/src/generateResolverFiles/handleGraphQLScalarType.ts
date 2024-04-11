@@ -4,7 +4,13 @@ import type { GraphQLTypeHandler } from './types';
 const graphQLScalarType = 'GraphQLScalarType';
 
 export const handleGraphQLScalarType: GraphQLTypeHandler = (
-  { fieldFilePath, resolverName, normalizedResolverName, moduleName },
+  {
+    fieldFilePath,
+    resolverName,
+    normalizedResolverName,
+    moduleName,
+    relativePathFromBaseToModule,
+  },
   { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
 ) => {
   if (!resolverGeneration.scalar) {
@@ -39,6 +45,7 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
     mainImportIdentifier: resolverName,
     meta: {
       moduleName,
+      relativePathFromBaseToModule,
       normalizedResolverName,
       variableStatement,
       resolverTypeString: null,

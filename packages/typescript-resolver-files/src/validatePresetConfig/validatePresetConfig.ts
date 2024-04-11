@@ -150,7 +150,7 @@ export const validatePresetConfig = ({
   ) {
     throw new Error(
       fmt.error(
-        'presetConfig.resolverGeneration must be "disabled", "recommended" or "full" (default is "recommended")',
+        'presetConfig.resolverGeneration must be "disabled", "recommended" or "all" (default is "recommended")',
         'Validation'
       )
     );

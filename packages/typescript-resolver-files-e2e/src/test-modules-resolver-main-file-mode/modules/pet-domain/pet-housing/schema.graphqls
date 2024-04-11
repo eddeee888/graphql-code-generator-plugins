@@ -1,0 +1,8 @@
+type PetHousing {
+  id: ID!
+  name: String!
+}
+
+type PetCert {
+  id: ID!
+}

@@ -14,6 +14,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     normalizedResolverName,
     resolversTypeMeta,
     moduleName,
+    relativePathFromBaseToModule,
     fieldsToPick = [], // If fieldsToPick.length === 0, it means the current object handles all resolvers
     pickReferenceResolver,
   },
@@ -78,6 +79,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     mainImportIdentifier: resolverName,
     meta: {
       moduleName,
+      relativePathFromBaseToModule,
       normalizedResolverName,
       variableStatement,
       resolverTypeString: typeString,

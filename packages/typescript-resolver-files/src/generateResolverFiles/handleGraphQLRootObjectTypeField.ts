@@ -11,6 +11,7 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
     normalizedResolverName,
     resolversTypeMeta,
     moduleName,
+    relativePathFromBaseToModule,
   },
   { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
 ) => {
@@ -47,6 +48,7 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
     mainImportIdentifier: resolverName,
     meta: {
       moduleName,
+      relativePathFromBaseToModule,
       belongsToRootObject,
       variableStatement,
       resolverTypeString,

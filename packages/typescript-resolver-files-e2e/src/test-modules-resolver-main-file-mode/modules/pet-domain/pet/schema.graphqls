@@ -1,0 +1,37 @@
+extend type Query {
+  pet(id: ID!): PetResult!
+}
+
+extend type Mutation {
+  addPet(id: ID!): Pet!
+}
+
+interface Pet {
+  id: ID!
+  code: PetCode!
+}
+
+type Cat implements Pet {
+  id: ID!
+  code: PetCode!
+  scratchy: Boolean!
+}
+
+type Dog implements Pet {
+  id: ID!
+  code: PetCode!
+  barky: Boolean!
+}
+
+type PetOk {
+  result: Pet
+}
+
+type PetError implements Error {
+  error: ErrorType!
+  code: String!
+}
+
+union PetResult = PetOk | PetError
+
+scalar PetCode
