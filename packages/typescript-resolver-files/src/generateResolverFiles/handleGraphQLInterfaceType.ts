@@ -1,4 +1,4 @@
-import { printImportLine } from '../utils';
+import { printImportLine, isMatchResolverNamePattern, logger } from '../utils';
 import type { GraphQLTypeHandler } from './types';
 
 export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
@@ -12,7 +12,15 @@ export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
   },
   { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
 ) => {
-  if (!resolverGeneration.interface) {
+  if (
+    !isMatchResolverNamePattern({
+      pattern: resolverGeneration.interface,
+      value: normalizedResolverName.withModule,
+    })
+  ) {
+    logger.debug(
+      `Skipped Interface resolver generation: "${normalizedResolverName.withModule}". Pattern: "${resolverGeneration.interface}".`
+    );
     return;
   }
 

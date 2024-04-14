@@ -16,13 +16,13 @@ const defaultExpected: ParsedPresetConfig = {
   resolverRelativeTargetDir: 'resolvers',
   resolverTypesPath: './types.generated.ts',
   resolverGeneration: {
-    query: true,
-    mutation: true,
-    subscription: true,
-    scalar: true,
-    object: true,
-    union: false,
-    interface: false,
+    query: '*',
+    mutation: '*',
+    subscription: '*',
+    scalar: '*',
+    object: '*',
+    union: '',
+    interface: '',
   },
   typeDefsFilePath: './typeDefs.generated.ts',
   typeDefsFileMode: 'merged',
@@ -49,10 +49,8 @@ describe('validatePresetConfig - general', () => {
   });
 
   it('throws if wrong mode is provided', () => {
-    expect(() =>
-      validatePresetConfig({ mode: 'this_will_never_be' })
-    ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.mode must be "merged" or "modules" (default is "modules")'
+    expect(() => validatePresetConfig({ mode: 'this_will_never_be' })).toThrow(
+      'Validation - presetConfig.mode must be "merged" or "modules" (default is "modules")'
     );
   });
 
@@ -86,8 +84,8 @@ describe('validatePresetConfig - general', () => {
   it('throws if result.resolverMainFileMode is not expected', () => {
     expect(() =>
       validatePresetConfig({ resolverMainFileMode: 'not_valid_value' })
-    ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.resolverMainFileMode must be "merged" or "modules" (default is "merged")'
+    ).toThrow(
+      'Validation - presetConfig.resolverMainFileMode must be "merged" or "modules" (default is "merged")'
     );
   });
 
@@ -103,8 +101,8 @@ describe('validatePresetConfig - general', () => {
   });
 
   it('throws if result.typeDefsFileMode is not expected', () => {
-    expect(() => validatePresetConfig({ typeDefsFileMode: '' })).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typeDefsFileMode must be "merged", "mergedWhitelisted" or "modules" (default is "merged")'
+    expect(() => validatePresetConfig({ typeDefsFileMode: '' })).toThrow(
+      'presetConfig.typeDefsFileMode must be "merged", "mergedWhitelisted" or "modules" (default is "merged")'
     );
   });
 
@@ -144,8 +142,8 @@ describe('validatePresetConfig - general', () => {
     });
   });
   it('throws if if config.resolverTypesPath is falsy', () => {
-    expect(() => validatePresetConfig({ resolverTypesPath: '' })).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.resolverTypesPath is required'
+    expect(() => validatePresetConfig({ resolverTypesPath: '' })).toThrow(
+      'Validation - presetConfig.resolverTypesPath is required'
     );
   });
 
@@ -169,10 +167,8 @@ describe('validatePresetConfig - general', () => {
     });
   });
   it('throws if config.resolverMainFile is not a valid filename', () => {
-    expect(() =>
-      validatePresetConfig({ resolverMainFile: 'aaa' })
-    ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.mainFile must be a valid file name'
+    expect(() => validatePresetConfig({ resolverMainFile: 'aaa' })).toThrow(
+      'presetConfig.mainFile must be a valid file name'
     );
   });
 
@@ -228,8 +224,8 @@ describe('validatePresetConfig - general', () => {
           emitLegacyCommonJSImports: false,
         },
       })
-    ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typesPluginsConfig.emitLegacyCommonJSImports is not supported. Use presetConfig.emitLegacyCommonJSImports instead.'
+    ).toThrow(
+      'Validation - presetConfig.typesPluginsConfig.emitLegacyCommonJSImports is not supported. Use presetConfig.emitLegacyCommonJSImports instead.'
     );
   });
 
@@ -245,7 +241,9 @@ describe('validatePresetConfig - general', () => {
     });
     expect(warnMock).toHaveBeenNthCalledWith(
       1,
-      `[@eddeee888/gcg-typescript-resolver-files] WARN: presetConfig.typesPluginsConfig.namingConvention is not fully supported. The default is \`namingConvention: 'keep'\`. Change at your own risk.`
+      expect.stringContaining(
+        `presetConfig.typesPluginsConfig.namingConvention is not fully supported. The default is \`namingConvention: 'keep'\`. Change at your own risk.`
+      )
     );
     expect(parsed).toEqual({
       ...defaultExpected,
@@ -265,7 +263,9 @@ describe('validatePresetConfig - general', () => {
     });
     expect(warnMock).toHaveBeenNthCalledWith(
       1,
-      `[@eddeee888/gcg-typescript-resolver-files] WARN: presetConfig.typesPluginsConfig.namingConvention is not fully supported. The default is \`namingConvention: 'keep'\`. Change at your own risk.`
+      expect.stringContaining(
+        `presetConfig.typesPluginsConfig.namingConvention is not fully supported. The default is \`namingConvention: 'keep'\`. Change at your own risk.`
+      )
     );
     expect(parsed).toEqual({
       ...defaultExpected,
@@ -276,16 +276,16 @@ describe('validatePresetConfig - general', () => {
   it('throws if result.fixObjectTypeResolvers is not valid', () => {
     expect(() =>
       validatePresetConfig({ fixObjectTypeResolvers: 'not-valid-for-sure' })
-    ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")'
+    ).toThrow(
+      'Validation - presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")'
     );
   });
 
   it('throws if config.typesPluginsConfig.scalars is used', () => {
     expect(() =>
       validatePresetConfig({ typesPluginsConfig: { scalars: 'asdas' } })
-    ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.typesPluginsConfig.scalars is not supported. Use presetConfig.scalarsOverrides instead.'
+    ).toThrow(
+      'presetConfig.typesPluginsConfig.scalars is not supported. Use presetConfig.scalarsOverrides instead.'
     );
   });
 
@@ -356,8 +356,8 @@ describe('validatePresetConfig - mode: modules', () => {
   it('throws if config.whitelistedModules is truthy but not an array', () => {
     expect(() =>
       validatePresetConfig({ whitelistedModules: true } as never)
-    ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.whitelistedModules must be an array if provided'
+    ).toThrow(
+      'Validation - presetConfig.whitelistedModules must be an array if provided'
     );
   });
 
@@ -380,8 +380,8 @@ describe('validatePresetConfig - mode: modules', () => {
   it('throws if config.blacklistedModules is truthy but not an array', () => {
     expect(() =>
       validatePresetConfig({ blacklistedModules: true } as never)
-    ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.blacklistedModules must be an array if provided'
+    ).toThrow(
+      'Validation - presetConfig.blacklistedModules must be an array if provided'
     );
   });
 });
@@ -402,8 +402,8 @@ describe('validatePresetConfig - mode: merged', () => {
         mode: 'merged',
         whitelistedModules: ['moduleA'],
       })
-    ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.whitelistedModules can only be used with presetConfig.mode == "modules"'
+    ).toThrow(
+      'Validation - presetConfig.whitelistedModules can only be used with presetConfig.mode == "modules"'
     );
   });
   it('throws if config.blacklistedModules is provided', () => {
@@ -412,8 +412,8 @@ describe('validatePresetConfig - mode: merged', () => {
         mode: 'merged',
         blacklistedModules: ['moduleA'],
       })
-    ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.blacklistedModules can only be used with presetConfig.mode == "modules"'
+    ).toThrow(
+      'Validation - presetConfig.blacklistedModules can only be used with presetConfig.mode == "modules"'
     );
   });
 });
@@ -426,37 +426,37 @@ describe('validatePresetConfig - resolverGeneration', () => {
     {
       input: 'disabled',
       expected: {
-        query: false,
-        mutation: false,
-        subscription: false,
-        scalar: false,
-        object: false,
-        union: false,
-        interface: false,
+        query: '',
+        mutation: '',
+        subscription: '',
+        scalar: '',
+        object: '',
+        union: '',
+        interface: '',
       },
     },
     {
       input: 'recommended',
       expected: {
-        query: true,
-        mutation: true,
-        subscription: true,
-        scalar: true,
-        object: true,
-        union: false,
-        interface: false,
+        query: '*',
+        mutation: '*',
+        subscription: '*',
+        scalar: '*',
+        object: '*',
+        union: '',
+        interface: '',
       },
     },
     {
       input: 'all',
       expected: {
-        query: true,
-        mutation: true,
-        subscription: true,
-        scalar: true,
-        object: true,
-        union: true,
-        interface: true,
+        query: '*',
+        mutation: '*',
+        subscription: '*',
+        scalar: '*',
+        object: '*',
+        union: '*',
+        interface: '*',
       },
     },
   ])(
@@ -468,11 +468,30 @@ describe('validatePresetConfig - resolverGeneration', () => {
     }
   );
 
+  it('correctly returns provided resolverGeneration object', () => {
+    const result = validatePresetConfig({
+      resolverGeneration: {
+        query: '*.Query.*',
+        mutation: '!*.Mutation.*',
+      },
+    });
+
+    expect(result.resolverGeneration).toEqual({
+      query: '*.Query.*',
+      mutation: '!*.Mutation.*',
+      subscription: '',
+      scalar: '',
+      object: '',
+      union: '',
+      interface: '',
+    });
+  });
+
   it('throws if invalid resolverGeneration is provided', () => {
     expect(() =>
       validatePresetConfig({ resolverGeneration: 'omg_what_is_this' })
-    ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.resolverGeneration must be "disabled", "recommended" or "all" (default is "recommended")'
+    ).toThrow(
+      'Validation - presetConfig.resolverGeneration must be an object, "disabled", "recommended" or "all" (default is "recommended")'
     );
   });
 });

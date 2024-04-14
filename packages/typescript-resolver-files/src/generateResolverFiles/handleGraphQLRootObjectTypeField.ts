@@ -1,4 +1,9 @@
-import { printImportLine, type RootObjectType } from '../utils';
+import {
+  printImportLine,
+  isMatchResolverNamePattern,
+  logger,
+  type RootObjectType,
+} from '../utils';
 import type { GraphQLTypeHandler } from './types';
 
 export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
@@ -16,10 +21,33 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
   { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
 ) => {
   if (
-    (belongsToRootObject === 'Query' && !resolverGeneration.query) ||
-    (belongsToRootObject === 'Mutation' && !resolverGeneration.mutation) ||
-    (belongsToRootObject === 'Subscription' && !resolverGeneration.subscription)
+    (belongsToRootObject === 'Query' &&
+      !isMatchResolverNamePattern({
+        pattern: resolverGeneration.query,
+        value: normalizedResolverName.withModule,
+      })) ||
+    (belongsToRootObject === 'Mutation' &&
+      !isMatchResolverNamePattern({
+        pattern: resolverGeneration.mutation,
+        value: normalizedResolverName.withModule,
+      })) ||
+    (belongsToRootObject === 'Subscription' &&
+      !isMatchResolverNamePattern({
+        pattern: resolverGeneration.subscription,
+        value: normalizedResolverName.withModule,
+      }))
   ) {
+    const resolverGenerationPattern =
+      belongsToRootObject === 'Query'
+        ? resolverGeneration.query
+        : belongsToRootObject === 'Mutation'
+        ? resolverGeneration.mutation
+        : belongsToRootObject === 'Subscription'
+        ? resolverGeneration.subscription
+        : 'Unknown';
+    logger.debug(
+      `Skipped ${belongsToRootObject} resolver generation: "${normalizedResolverName.withModule}". Pattern: "${resolverGenerationPattern}".`
+    );
     return;
   }
 

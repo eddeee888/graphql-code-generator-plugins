@@ -1,5 +1,5 @@
 import type { GraphQLTypeHandler } from './types';
-import { printImportLine } from '../utils';
+import { printImportLine, isMatchResolverNamePattern, logger } from '../utils';
 
 export const handleGraphQLObjectType: GraphQLTypeHandler<
   null,
@@ -27,7 +27,15 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     },
   }
 ) => {
-  if (!resolverGeneration.object) {
+  if (
+    !isMatchResolverNamePattern({
+      pattern: resolverGeneration.object,
+      value: normalizedResolverName.withModule,
+    })
+  ) {
+    logger.debug(
+      `Skipped Object resolver generation: "${normalizedResolverName.withModule}". "Pattern: ${resolverGeneration.object}".`
+    );
     return;
   }
 

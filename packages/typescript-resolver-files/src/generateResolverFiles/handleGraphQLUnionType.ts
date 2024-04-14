@@ -1,4 +1,4 @@
-import { printImportLine } from '../utils';
+import { printImportLine, isMatchResolverNamePattern, logger } from '../utils';
 import type { GraphQLTypeHandler } from './types';
 
 export const handleGraphQLUnionType: GraphQLTypeHandler = (
@@ -12,7 +12,15 @@ export const handleGraphQLUnionType: GraphQLTypeHandler = (
   },
   { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
 ) => {
-  if (!resolverGeneration.union) {
+  if (
+    !isMatchResolverNamePattern({
+      pattern: resolverGeneration.union,
+      value: normalizedResolverName.withModule,
+    })
+  ) {
+    logger.debug(
+      `Skipped Union resolver generation: "${normalizedResolverName.withModule}". Pattern: "${resolverGeneration.union}".`
+    );
     return;
   }
 

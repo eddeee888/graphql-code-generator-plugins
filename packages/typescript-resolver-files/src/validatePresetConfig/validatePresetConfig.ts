@@ -4,7 +4,7 @@ import type { AddPluginConfig } from '@graphql-codegen/add/typings/config';
 import type * as typeScriptPlugin from '@graphql-codegen/typescript';
 import type * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import type { ProjectOptions } from 'ts-morph';
-import { cwd, fmt } from '../utils';
+import { cwd, fmt, logger } from '../utils';
 
 const defaultResolverRelativeTargetDirMap: Record<
   ParsedPresetConfig['mode'],
@@ -25,7 +25,16 @@ type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
 export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
 type FixObjectTypeResolvers = 'smart' | 'disabled';
-type ResolverGeneration = 'disabled' | 'recommended' | 'all'; // TODO: also take object in the future
+type StringResolverGeneration = 'disabled' | 'recommended' | 'all';
+type NormalizedResolverGeneration = {
+  query: string | string[];
+  mutation: string | string[];
+  subscription: string | string[];
+  scalar: string | string[];
+  object: string | string[];
+  union: string | string[];
+  interface: string | string[];
+};
 
 export type ScalarsOverridesType = string | { input: string; output: string };
 
@@ -35,15 +44,7 @@ export interface ParsedPresetConfig {
   resolverRelativeTargetDir: string;
   resolverMainFile: string;
   resolverMainFileMode: ResolverMainFileMode;
-  resolverGeneration: {
-    query: boolean;
-    mutation: boolean;
-    subscription: boolean;
-    scalar: boolean;
-    object: boolean;
-    union: boolean;
-    interface: boolean;
-  };
+  resolverGeneration: NormalizedResolverGeneration;
   typeDefsFilePath: string | false;
   typeDefsFileMode: TypeDefsFileMode;
   mappersFileExtension: string;
@@ -69,7 +70,7 @@ export interface RawPresetConfig {
   resolverRelativeTargetDir?: string;
   resolverMainFile?: string;
   resolverMainFileMode?: string;
-  resolverGeneration?: string;
+  resolverGeneration?: string | Record<string, string | string[]>;
   typeDefsFilePath?: string | boolean;
   typeDefsFileMode?: string;
   mappersFileExtension?: string;
@@ -97,7 +98,7 @@ export interface TypedPresetConfig extends RawPresetConfig {
   typeDefsFileMode?: TypeDefsFileMode;
   fixObjectTypeResolvers?: FixObjectTypeResolvers;
   typesPluginsConfig?: ParsedTypesPluginsConfig;
-  resolverGeneration?: ResolverGeneration;
+  resolverGeneration?: StringResolverGeneration | NormalizedResolverGeneration;
 }
 
 export const validatePresetConfig = ({
@@ -144,13 +145,14 @@ export const validatePresetConfig = ({
   }
 
   if (
+    typeof resolverGeneration !== 'object' &&
     resolverGeneration !== 'disabled' &&
     resolverGeneration !== 'recommended' &&
     resolverGeneration !== 'all'
   ) {
     throw new Error(
       fmt.error(
-        'presetConfig.resolverGeneration must be "disabled", "recommended" or "all" (default is "recommended")',
+        'presetConfig.resolverGeneration must be an object, "disabled", "recommended" or "all" (default is "recommended")',
         'Validation'
       )
     );
@@ -169,10 +171,8 @@ export const validatePresetConfig = ({
   if (mode === 'merged') {
     // If mode is `merged`, `typeDefsFileMode` is also `merged` because there's no whitelisted or modules concepts
     typeDefsFileMode = 'merged';
-    console.warn(
-      fmt.warn(
-        `presetConfig.typeDefsFileMode has automatically been set to "merged" because presetConfig.mode is "merged"`
-      )
+    logger.warn(
+      `presetConfig.typeDefsFileMode has automatically been set to "merged" because presetConfig.mode is "merged"`
     );
   }
   if (
@@ -267,10 +267,8 @@ export const validatePresetConfig = ({
     if (fs.existsSync(absoluteTsConfigFilePath)) {
       tsMorphProjectOptions.tsConfigFilePath = absoluteTsConfigFilePath;
     } else {
-      console.warn(
-        fmt.warn(
-          `Unable to find TypeScript config at ${absoluteTsConfigFilePath}. Use presetConfig.tsConfigFilePath to set a custom value. Otherwise, type analysis may not work correctly.`
-        )
+      logger.warn(
+        `Unable to find TypeScript config at ${absoluteTsConfigFilePath}. Use presetConfig.tsConfigFilePath to set a custom value. Otherwise, type analysis may not work correctly.`
       );
     }
   }
@@ -336,38 +334,50 @@ const validateTypesPluginsConfig = (
 };
 
 const parseResolverGeneration = (
-  resolverGeneration: ResolverGeneration
+  resolverGeneration:
+    | StringResolverGeneration
+    | Record<string, string | string[]>
 ): ParsedPresetConfig['resolverGeneration'] => {
   if (resolverGeneration === 'all') {
     return {
-      query: true,
-      mutation: true,
-      subscription: true,
-      scalar: true,
-      object: true,
-      union: true,
-      interface: true,
+      query: '*',
+      mutation: '*',
+      subscription: '*',
+      scalar: '*',
+      object: '*',
+      union: '*',
+      interface: '*',
     };
   } else if (resolverGeneration === 'recommended') {
     return {
-      query: true,
-      mutation: true,
-      subscription: true,
-      scalar: true,
-      object: true,
-      union: false,
-      interface: false,
+      query: '*',
+      mutation: '*',
+      subscription: '*',
+      scalar: '*',
+      object: '*',
+      union: '',
+      interface: '',
+    };
+  } else if (resolverGeneration === 'disabled') {
+    return {
+      query: '',
+      mutation: '',
+      subscription: '',
+      scalar: '',
+      object: '',
+      union: '',
+      interface: '',
     };
   }
 
   return {
-    query: false,
-    mutation: false,
-    subscription: false,
-    scalar: false,
-    object: false,
-    union: false,
-    interface: false,
+    query: resolverGeneration.query || '',
+    mutation: resolverGeneration.mutation || '',
+    subscription: resolverGeneration.subscription || '',
+    scalar: resolverGeneration.scalar || '',
+    object: resolverGeneration.object || '',
+    union: resolverGeneration.union || '',
+    interface: resolverGeneration.interface || '',
   };
 };
 
