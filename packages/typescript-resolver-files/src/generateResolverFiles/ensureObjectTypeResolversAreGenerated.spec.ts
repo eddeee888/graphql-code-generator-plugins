@@ -134,6 +134,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
       mainImportIdentifier: 'User',
       meta: {
         moduleName: 'user',
+        relativePathFromBaseToModule: ['user'],
         normalizedResolverName: {
           base: 'User',
           withModule: 'user.User',
@@ -309,6 +310,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
       mainImportIdentifier: 'User',
       meta: {
         moduleName: 'user',
+        relativePathFromBaseToModule: ['user'],
         normalizedResolverName: {
           base: 'User',
           withModule: 'user.User',

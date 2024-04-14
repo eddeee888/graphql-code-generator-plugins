@@ -48,6 +48,7 @@ export const parseTypeMappers = ({
 
       collectTypeMappersFromSourceFile(
         {
+          tsMorphProject,
           typeMappersSourceFile,
           typeMappersSuffix,
           resolverTypesPath,

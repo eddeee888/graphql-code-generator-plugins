@@ -4,6 +4,7 @@ import {
   type Identifier,
   type TypeAliasDeclaration,
   type InterfaceDeclaration,
+  type Project,
   Node,
   SyntaxKind,
 } from 'ts-morph';
@@ -12,12 +13,14 @@ import type { TypeMappersMap } from './parseTypeMappers';
 
 export const collectTypeMappersFromSourceFile = (
   {
+    tsMorphProject,
     typeMappersSourceFile,
     typeMappersSuffix,
     resolverTypesPath,
     shouldCollectPropertyMap,
     emitLegacyCommonJSImports,
   }: {
+    tsMorphProject: Project;
     typeMappersSourceFile: SourceFile;
     typeMappersSuffix: string;
     resolverTypesPath: string;
@@ -34,6 +37,7 @@ export const collectTypeMappersFromSourceFile = (
 
     addTypeMapperDetailsIfValid(
       {
+        tsMorphProject,
         declarationNode: interfaceDeclaration,
         identifierNode: interfaceDeclaration.getNameNode(),
         typeMappersSuffix,
@@ -56,6 +60,7 @@ export const collectTypeMappersFromSourceFile = (
 
     addTypeMapperDetailsIfValid(
       {
+        tsMorphProject,
         declarationNode: typeAlias,
         identifierNode,
         typeMappersSuffix,
@@ -83,6 +88,7 @@ export const collectTypeMappersFromSourceFile = (
 
       addTypeMapperDetailsIfValid(
         {
+          tsMorphProject,
           declarationNode: null,
           identifierNode,
           typeMappersSuffix,
@@ -108,6 +114,7 @@ export const collectTypeMappersFromSourceFile = (
 
     addTypeMapperDetailsIfValid(
       {
+        tsMorphProject,
         declarationNode: null,
         identifierNode,
         typeMappersSuffix,
@@ -123,6 +130,7 @@ export const collectTypeMappersFromSourceFile = (
 
 const addTypeMapperDetailsIfValid = (
   {
+    tsMorphProject,
     declarationNode,
     identifierNode,
     typeMappersSuffix,
@@ -131,6 +139,7 @@ const addTypeMapperDetailsIfValid = (
     shouldCollectPropertyMap,
     emitLegacyCommonJSImports,
   }: {
+    tsMorphProject: Project;
     declarationNode: InterfaceDeclaration | TypeAliasDeclaration | null;
     identifierNode: Identifier;
     typeMappersSuffix: string;
@@ -187,7 +196,10 @@ const addTypeMapperDetailsIfValid = (
       declarationNode,
       identifierNode
     );
-    typeMapperPropertyMap = getNodePropertyMap(originalDeclarationNode);
+    typeMapperPropertyMap = getNodePropertyMap({
+      node: originalDeclarationNode,
+      tsMorphProject,
+    });
   }
 
   result[schemaType] = {
