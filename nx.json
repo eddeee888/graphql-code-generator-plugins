@@ -10,8 +10,10 @@
     "@nx/jest:jest": {
       "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
       "cache": true,
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "jestConfig": "{projectRoot}/jest.config.ts"
       },
       "configurations": {
         "ci": {
@@ -23,6 +25,7 @@
     "@nx/eslint:lint": {
       "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
       "cache": true,
+      "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
           "{projectRoot}/src/**/*.ts*",
