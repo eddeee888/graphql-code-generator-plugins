@@ -24,6 +24,7 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
       mainImportIdentifier: 'User',
       meta: {
         moduleName: 'user',
+        relativePathFromBaseToModule: ['user'],
         variableStatement: '',
         resolverTypeString: 'UserResolvers',
         normalizedResolverName: {
@@ -63,6 +64,7 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
       mainImportIdentifier: 'User',
       meta: {
         moduleName: 'user',
+        relativePathFromBaseToModule: ['user'],
         variableStatement: '',
         resolverTypeString: 'UserResolvers',
         normalizedResolverName: {
@@ -98,6 +100,7 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
       mainImportIdentifier: 'User',
       meta: {
         moduleName: 'user',
+        relativePathFromBaseToModule: ['user'],
         variableStatement: '',
         resolverTypeString: 'UserResolvers',
         normalizedResolverName: {
