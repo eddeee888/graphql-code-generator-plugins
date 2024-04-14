@@ -82,6 +82,7 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
+        tsMorphProject: project,
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
@@ -226,6 +227,7 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
+        tsMorphProject: project,
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
@@ -365,6 +367,7 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
+        tsMorphProject: project,
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
@@ -477,6 +480,7 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
+        tsMorphProject: project,
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
@@ -571,6 +575,7 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
+        tsMorphProject: project,
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
@@ -728,6 +733,7 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
+        tsMorphProject: project,
         typeMappersSourceFile: billingMapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
@@ -743,6 +749,7 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
+        tsMorphProject: project,
         typeMappersSourceFile: addressMapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
@@ -760,6 +767,7 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
+        tsMorphProject: project,
         typeMappersSourceFile: preferenceMapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
@@ -824,6 +832,7 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
+        tsMorphProject: project,
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'Mapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
@@ -877,6 +886,7 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
+        tsMorphProject: project,
         typeMappersSourceFile: project.getSourceFiles()[0],
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
@@ -889,6 +899,7 @@ describe('collectTypeMappersFromSourceFile', () => {
     expect(() =>
       collectTypeMappersFromSourceFile(
         {
+          tsMorphProject: project,
           typeMappersSourceFile: project.getSourceFiles()[1],
           typeMappersSuffix: 'TypeMapper',
           resolverTypesPath: '/path/to/schemas/types.generated.ts',

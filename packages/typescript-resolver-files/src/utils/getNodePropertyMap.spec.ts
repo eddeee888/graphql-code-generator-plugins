@@ -32,7 +32,9 @@ describe('getNodePropertyMap', () => {
       (node) => Node.isTypeAliasDeclaration(node) && node.getName() === 'User'
     );
 
-    expect(getNodePropertyMap(userDeclarationNode)).toEqual({
+    expect(
+      getNodePropertyMap({ tsMorphProject: project, node: userDeclarationNode })
+    ).toEqual({
       __typename: {
         name: '__typename',
       },

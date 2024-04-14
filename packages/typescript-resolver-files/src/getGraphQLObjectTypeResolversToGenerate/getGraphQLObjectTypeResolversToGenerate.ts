@@ -2,6 +2,7 @@ import {
   type InterfaceDeclaration,
   type TypeAliasDeclaration,
   type SourceFile,
+  type Project,
   SyntaxKind,
 } from 'ts-morph';
 import type { TypeMappersMap } from '../parseTypeMappers';
@@ -13,10 +14,12 @@ export type GraphQLObjectTypeResolversToGenerate = Record<
 >;
 
 export const getGraphQLObjectTypeResolversToGenerate = ({
+  tsMorphProject,
   typesSourceFile,
   userDefinedSchemaObjectTypeMap,
   typeMappersMap,
 }: {
+  tsMorphProject: Project;
   typesSourceFile: SourceFile;
   typeMappersMap: TypeMappersMap;
   userDefinedSchemaObjectTypeMap: Record<string, true>;
@@ -35,7 +38,10 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
     const identifier = node.getNameNode();
     const identifierName = identifier.getText();
     if (userDefinedSchemaObjectTypeMap[identifierName]) {
-      schemaTypePropertyMap[identifierName] = getNodePropertyMap(node);
+      schemaTypePropertyMap[identifierName] = getNodePropertyMap({
+        tsMorphProject,
+        node,
+      });
     }
   };
   typesSourceFile

@@ -472,7 +472,7 @@ describe('validatePresetConfig - resolverGeneration', () => {
     expect(() =>
       validatePresetConfig({ resolverGeneration: 'omg_what_is_this' })
     ).toThrowError(
-      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.resolverGeneration must be "disabled", "recommended" or "full" (default is "recommended")'
+      '[@eddeee888/gcg-typescript-resolver-files] ERROR: Validation - presetConfig.resolverGeneration must be "disabled", "recommended" or "all" (default is "recommended")'
     );
   });
 });
