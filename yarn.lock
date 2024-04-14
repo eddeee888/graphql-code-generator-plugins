@@ -6215,10 +6215,10 @@ graphql-request@^6.0.0:
     "@graphql-typed-document-node/core" "^3.2.0"
     cross-fetch "^3.1.5"
 
-graphql-scalars@1.22.0:
-  version "1.22.0"
-  resolved "https://registry.yarnpkg.com/graphql-scalars/-/graphql-scalars-1.22.0.tgz#075bed5753f03318120c0630e538aa3df2bde6cb"
-  integrity sha512-t3r6c/cMF6OP64oN+YYVwempyMA4tbI/JdWWDdPN1U45IgpIfPZmJdO+wvPPoptxL9Lr/7jmgRFRsAUg66DFmA==
+graphql-scalars@1.23.0:
+  version "1.23.0"
+  resolved "https://registry.yarnpkg.com/graphql-scalars/-/graphql-scalars-1.23.0.tgz#486785d1a6f9449277054a92afc7e1fb73f459d6"
+  integrity sha512-YTRNcwitkn8CqYcleKOx9IvedA8JIERn8BRq21nlKgOr4NEcTaWEG0sT+H92eF3ALTFbPgsqfft4cw+MGgv0Gg==
   dependencies:
     tslib "^2.5.0"
 
