@@ -3,11 +3,6 @@ import { type ServerConfig, defineConfig } from './defineConfig';
 const defaultServerConfig: ServerConfig = {
   enumsAsTypes: true,
   maybeValue: 'T | null | undefined',
-  optionalResolveType: true,
-  resolversNonOptionalTypename: {
-    interfaceImplementingType: true,
-    unionMember: true,
-  },
   scalars: {
     ID: {
       input: 'string',

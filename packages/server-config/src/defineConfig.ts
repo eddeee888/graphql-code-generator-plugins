@@ -14,11 +14,6 @@ export const defineConfig = (config: ServerConfig = {}): ServerConfig => {
   return {
     enumsAsTypes: true,
     maybeValue: 'T | null | undefined',
-    optionalResolveType: true,
-    resolversNonOptionalTypename: {
-      unionMember: true,
-      interfaceImplementingType: true,
-    },
     ...config,
     scalars:
       typeof configScalars === 'string'
