@@ -115,6 +115,11 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
 
     // typescript and typescript-resolvers plugins config
     const resolverTypesConfig = defineServerConfig({
+      optionalResolveType: true,
+      resolversNonOptionalTypename: {
+        unionMember: true,
+        interfaceImplementingType: true,
+      },
       namingConvention: 'keep',
       emitLegacyCommonJSImports,
       ...typesPluginsConfig,
