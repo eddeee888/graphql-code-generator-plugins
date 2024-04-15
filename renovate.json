@@ -2,6 +2,9 @@
   "extends": ["config:base", "github>whitesource/merge-confidence:beta"],
   "branchConcurrentLimit": 3,
   "ignoreDeps": [
+    "@swc-node/register",
+    "@swc/core",
+    "@swc/helpers",
     "@types/jest",
     "@types/node",
     "@typescript-eslint/eslint-plugin",
