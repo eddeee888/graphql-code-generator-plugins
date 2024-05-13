@@ -22,22 +22,42 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     result,
     config: {
       resolverGeneration,
+      typeMappersMap,
       graphQLObjectTypeResolversToGenerate,
       emitLegacyCommonJSImports,
     },
   }
 ) => {
-  if (
-    !isMatchResolverNamePattern({
-      pattern: resolverGeneration.object,
-      value: normalizedResolverName.withModule,
-    })
-  ) {
+  const matchedPatternToGenerate = isMatchResolverNamePattern({
+    pattern: resolverGeneration.object,
+    value: normalizedResolverName.withModule,
+  });
+  const mapperDetails = typeMappersMap[normalizedResolverName.base];
+
+  if (!matchedPatternToGenerate && !mapperDetails) {
     logger.debug(
       `Skipped Object resolver generation: "${normalizedResolverName.withModule}". "Pattern: ${resolverGeneration.object}".`
     );
     return;
   }
+
+  const forcedGenerationWarning = (() => {
+    if (!matchedPatternToGenerate && mapperDetails) {
+      logger.warn(
+        `Object resolver generation was NOT skipped because there is a associated mapper: "${normalizedResolverName.withModule}". "Pattern: ${resolverGeneration.object}". Mapper: ${mapperDetails.typeMapperName}`
+      );
+      return `/*
+    * WARNING
+    * This object type is NOT supposed to be generated because it is in the "${resolverGeneration.object}" ignore pattern.
+    *
+    * However, it is generated because "${mapperDetails.typeMapperName}" is declared. This is to ensure runtime safety.
+    * When a mapper is used, it is possible to hit runtime errors if a mapper's field does not match the schema's field type.
+    *
+    * If you want to skip this generation, remove the mapper or update the ignore pattern in the config.
+    */\n`;
+    }
+    return '';
+  })();
 
   if (fieldsToPick.length > 0 && pickReferenceResolver) {
     fieldsToPick.push('__resolveReference');
@@ -69,7 +89,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
         )
       : allResolversToGenerate;
 
-  const variableStatement = `export const ${resolverName}: ${typeString} = {
+  const variableStatement = `${forcedGenerationWarning}export const ${resolverName}: ${typeString} = {
     /* Implement ${resolverName} resolver logic here */
   };`;
 

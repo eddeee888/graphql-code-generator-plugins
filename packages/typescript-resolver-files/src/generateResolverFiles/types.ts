@@ -1,6 +1,7 @@
 import type { GraphQLSchema } from 'graphql';
 import type { SourceFile, Project } from 'ts-morph';
 import type { GraphQLObjectTypeResolversToGenerate } from '../getGraphQLObjectTypeResolversToGenerate';
+import type { TypeMappersMap } from '../parseTypeMappers';
 import type { ParseSourcesResult } from '../parseSources';
 import type { ImportLineMeta, RootObjectType } from '../utils';
 import type { ParsedPresetConfig } from '../validatePresetConfig';
@@ -74,6 +75,7 @@ export interface GenerateResolverFilesContext {
       project: Project;
       typesSourceFile: SourceFile;
     };
+    typeMappersMap: TypeMappersMap;
     graphQLObjectTypeResolversToGenerate: GraphQLObjectTypeResolversToGenerate;
     fixObjectTypeResolvers: ParsedPresetConfig['fixObjectTypeResolvers'];
     emitLegacyCommonJSImports: boolean;
