@@ -4,6 +4,7 @@ export const userTypeDefs = gql`
   extend type Query {
     me: UserPayload!
     userByAccountName(accountName: String!): UserPayload!
+    featuredUserNames: FeaturedUsersPayload!
   }
 
   type User {
@@ -22,4 +23,11 @@ export const userTypeDefs = gql`
   }
 
   union UserPayload = UserResult | PayloadError
+
+  type FeaturedUsersResult {
+    names: [String!]!
+    reason: String!
+  }
+
+  union FeaturedUsersPayload = FeaturedUsersResult | PayloadError
 `;

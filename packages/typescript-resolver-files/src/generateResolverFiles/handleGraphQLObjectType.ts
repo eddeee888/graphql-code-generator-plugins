@@ -48,10 +48,12 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
       );
       return `/*
     * WARNING
-    * This object type is NOT supposed to be generated because it is in the "${resolverGeneration.object}" ignore pattern.
+    * This object type is NOT supposed to be generated because it is in the \`resolverGeneration.object: "${resolverGeneration.object}"\` ignore pattern.
     *
     * However, it is generated because "${mapperDetails.typeMapperName}" is declared. This is to ensure runtime safety.
-    * When a mapper is used, it is possible to hit runtime errors if a mapper's field does not match the schema's field type.
+    * When a mapper is used, it is possible to hit runtime errors in some senarios:
+    * - given a field name, the schema type's field type does not match mapper's field type
+    * - a schema type's field does not exist in the mapper's fields
     *
     * If you want to skip this generation, remove the mapper or update the ignore pattern in the config.
     */\n`;
