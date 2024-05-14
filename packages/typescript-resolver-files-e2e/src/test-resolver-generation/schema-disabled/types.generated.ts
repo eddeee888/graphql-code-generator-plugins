@@ -4,6 +4,7 @@ import {
   GraphQLScalarTypeConfig,
 } from 'graphql';
 import { TopicMapper } from './topic/topic.mappers';
+import { UserMapper } from './user/user.graphqls.mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -175,6 +176,7 @@ export type User = {
   avatar?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   name?: Maybe<Scalars['String']['output']>;
+  topics: Array<Topic>;
 };
 
 export type UserPayload = PayloadError | UserResult;
@@ -313,7 +315,9 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
       } & { __typename: 'TopicsCreatedByUserResult' });
   UserPayload:
     | (PayloadError & { __typename: 'PayloadError' })
-    | (UserResult & { __typename: 'UserResult' });
+    | (Omit<UserResult, 'result'> & { result?: Maybe<RefType['User']> } & {
+        __typename: 'UserResult';
+      });
 };
 
 /** Mapping of interface types */
@@ -331,7 +335,9 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PaginationResult: ResolverTypeWrapper<PaginationResult>;
   PayloadError: ResolverTypeWrapper<PayloadError>;
-  Profile: ResolverTypeWrapper<Profile>;
+  Profile: ResolverTypeWrapper<
+    Omit<Profile, 'user'> & { user: ResolversTypes['User'] }
+  >;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -369,11 +375,13 @@ export type ResolversTypes = {
       result: Array<ResolversTypes['Topic']>;
     }
   >;
-  User: ResolverTypeWrapper<User>;
+  User: ResolverTypeWrapper<UserMapper>;
   UserPayload: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>['UserPayload']
   >;
-  UserResult: ResolverTypeWrapper<UserResult>;
+  UserResult: ResolverTypeWrapper<
+    Omit<UserResult, 'result'> & { result?: Maybe<ResolversTypes['User']> }
+  >;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
@@ -386,7 +394,7 @@ export type ResolversParentTypes = {
   Int: Scalars['Int']['output'];
   PaginationResult: PaginationResult;
   PayloadError: PayloadError;
-  Profile: Profile;
+  Profile: Omit<Profile, 'user'> & { user: ResolversParentTypes['User'] };
   ID: Scalars['ID']['output'];
   Query: {};
   String: Scalars['String']['output'];
@@ -412,9 +420,11 @@ export type ResolversParentTypes = {
   TopicsCreatedByUserResult: Omit<TopicsCreatedByUserResult, 'result'> & {
     result: Array<ResolversParentTypes['Topic']>;
   };
-  User: User;
+  User: UserMapper;
   UserPayload: ResolversUnionTypes<ResolversParentTypes>['UserPayload'];
-  UserResult: UserResult;
+  UserResult: Omit<UserResult, 'result'> & {
+    result?: Maybe<ResolversParentTypes['User']>;
+  };
   Boolean: Scalars['Boolean']['output'];
 };
 
@@ -634,6 +644,7 @@ export type UserResolvers<
   avatar?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  topics?: Resolver<Array<ResolversTypes['Topic']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
