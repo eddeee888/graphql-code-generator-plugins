@@ -223,6 +223,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
             resolverMainFile,
             resolverMainFileMode,
             resolverGeneration,
+            typeMappersMap,
             graphQLObjectTypeResolversToGenerate,
             tsMorph: {
               project: tsMorphProject,
