@@ -1,8 +1,11 @@
+import * as path from 'path';
 import {
+  type GraphQLField,
+  type GraphQLScalarType,
   type GraphQLSchema,
+  type Location,
   isObjectType,
   isScalarType,
-  type GraphQLScalarType,
   isSpecifiedScalarType,
 } from 'graphql';
 import type { ParseSourcesResult } from '../parseSources';
@@ -17,6 +20,8 @@ import {
   isRootObjectType,
   parseLocationForWhitelistedModule,
 } from '../utils';
+import { parseLocationForOutputDir } from '../utils/parseLocationForOutputDir';
+import { normalizeResolverName } from '../utils/normalizeResolverName';
 
 interface ParseGraphQLSchemaParams {
   schemaAst: GraphQLSchema;
@@ -24,13 +29,30 @@ interface ParseGraphQLSchemaParams {
   typeMappersMap: TypeMappersMap;
   scalarsModule: ParsedPresetConfig['scalarsModule'];
   scalarsOverrides: ParsedPresetConfig['scalarsOverrides'];
+  mode: ParsedPresetConfig['mode'];
+  baseOutputDir: string;
+  resolverRelativeTargetDir: string;
   whitelistedModules: ParsedPresetConfig['whitelistedModules'];
   blacklistedModules: ParsedPresetConfig['blacklistedModules'];
 }
 
 export interface ParsedGraphQLSchemaMeta {
   userDefinedSchemaTypeMap: {
-    object: Record<string, true>;
+    object: Record<
+      string, // schema name e.g. `User`, `Job`, etc.
+      Record<
+        string, // normalized name e.g. `user.User` (modules) or `.User` (merged)
+        {
+          schemaType: string;
+          moduleName: string;
+          resolversOutputDir: string;
+          resolverFilename: string;
+          fieldsToPick: string[];
+          relativePathFromBaseToModule: string[];
+          normalizedResolverName: ReturnType<typeof normalizeResolverName>;
+        }
+      >
+    >;
     scalar: Record<string, true>;
   };
   pluginsConfig: {
@@ -46,6 +68,9 @@ export const parseGraphQLSchema = async ({
   typeMappersMap,
   scalarsModule,
   scalarsOverrides,
+  mode,
+  baseOutputDir,
+  resolverRelativeTargetDir,
   whitelistedModules,
   blacklistedModules,
 }: ParseGraphQLSchemaParams): Promise<ParsedGraphQLSchemaMeta> => {
@@ -84,7 +109,95 @@ export const parseGraphQLSchema = async ({
       }
 
       if (!isRootObjectType(schemaType) && isObjectType(namedType)) {
-        res.userDefinedSchemaTypeMap.object[schemaType] = true;
+        const fieldsByGraphQLModule = Object.entries(
+          namedType.getFields()
+        ).reduce<
+          Record<
+            string,
+            {
+              fieldNodes: GraphQLField<unknown, unknown>[];
+              firstFieldLocation: Location | undefined;
+            }
+          >
+        >((result, [_, fieldNode]) => {
+          const fieldLocation = fieldNode.astNode?.loc;
+          const modulePath = path.dirname(fieldLocation?.source.name || '');
+
+          if (!result[modulePath]) {
+            result[modulePath] = {
+              fieldNodes: [],
+              // Note: fieldLocation here is the location of the first field found in a GraphQL Module.
+              // The reason we use field's location instead of the object type's location is because when `extend type ObjectType` is used, the location of object type is the last found location.
+              // i.e. we cannot rely on object's location if `extend type` is used.
+              firstFieldLocation: fieldLocation,
+            };
+          }
+
+          result[modulePath].fieldNodes.push(fieldNode);
+
+          return result;
+        }, {});
+
+        res.userDefinedSchemaTypeMap.object[schemaType] =
+          res.userDefinedSchemaTypeMap.object[schemaType] || {};
+
+        Object.entries(fieldsByGraphQLModule).forEach(
+          (
+            [modulePath, { firstFieldLocation, fieldNodes }],
+            _index,
+            graphQLModules
+          ) => {
+            const outputDir = parseLocationForOutputDir({
+              nestedDirs: [],
+              location: firstFieldLocation,
+              mode,
+              sourceMap,
+              resolverRelativeTargetDir,
+              baseOutputDir,
+              blacklistedModules,
+              whitelistedModules,
+            });
+
+            if (!outputDir) {
+              return;
+            }
+
+            const {
+              moduleName,
+              resolversOutputDir,
+              relativePathFromBaseToModule,
+            } = outputDir;
+
+            const normalizedResolverName = normalizeResolverName(
+              moduleName,
+              namedType.name,
+              null
+            );
+
+            // If there are multiple object type files to generate
+            // e.g. `extend type ObjectType` is used across multiple modules
+            // We create an array of fields to pick for each module
+            //
+            // If there's only one module, we return an empty array i.e. pick all fields
+            const fieldsToPick =
+              graphQLModules.length > 1
+                ? fieldNodes.map((field) => field.name)
+                : [];
+
+            res.userDefinedSchemaTypeMap.object[schemaType][modulePath] = {
+              schemaType,
+              moduleName,
+              resolversOutputDir,
+              resolverFilename: path.posix.join(
+                resolversOutputDir,
+                `${namedType.name}.ts`
+              ),
+              fieldsToPick,
+              relativePathFromBaseToModule,
+              normalizedResolverName,
+            };
+          }
+        );
 
         // Wire up `mappers` config
         const typeMapperDetails = typeMappersMap[schemaType];

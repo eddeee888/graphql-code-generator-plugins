@@ -115,7 +115,11 @@ export const generateResolverFiles = (
         }
       }
 
-      // Other types e.g. Union, Scalar, Interface
+      // Other types:
+      // - Union
+      // - Scalar
+      // - Interface
+      // - single-module Object type
       visitNamedType(
         {
           namedType,

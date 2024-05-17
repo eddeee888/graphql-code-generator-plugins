@@ -7,17 +7,18 @@ import {
   isUnionType,
   type Location,
 } from 'graphql';
-import {
-  relativeModulePath,
-  parseLocationForWhitelistedModule,
-  type RootObjectType,
-} from '../utils';
+import { relativeModulePath, type RootObjectType } from '../utils';
 import type {
   GraphQLTypeHandler,
   GraphQLTypeHandlerParams,
   GenerateResolverFilesContext,
 } from './types';
 import { addExternalResolverImport } from './addExternalResolverImport';
+import { parseLocationForOutputDir } from '../utils/parseLocationForOutputDir';
+import {
+  normalizeResolverName,
+  type NormalizedResolverName,
+} from '../utils/normalizeResolverName';
 
 export interface VisitNamedTypeParams {
   namedType: GraphQLNamedType;
@@ -45,11 +46,16 @@ export const visitNamedType = <P extends Record<string, unknown>>(
   ctx: GenerateResolverFilesContext
 ): void => {
   // Check to see if need to generate resolver files
-  const parsedDetails = parseLocationForOutputDir(
-    belongsToRootObject ? [belongsToRootObject] : [],
-    ctx,
-    location
-  );
+  const parsedDetails = parseLocationForOutputDir({
+    nestedDirs: belongsToRootObject ? [belongsToRootObject] : [],
+    location,
+    mode: ctx.config.mode,
+    sourceMap: ctx.config.sourceMap,
+    resolverRelativeTargetDir: ctx.config.resolverRelativeTargetDir,
+    baseOutputDir: ctx.config.baseOutputDir,
+    blacklistedModules: ctx.config.blacklistedModules,
+    whitelistedModules: ctx.config.whitelistedModules,
+  });
   if (!parsedDetails) {
     // No `parsedDetails` means the location is NOT whitelisted, ignore.
     return;
@@ -113,70 +119,6 @@ export const visitNamedType = <P extends Record<string, unknown>>(
   }
 };
 
-type OutputDirResult =
-  | {
-      resolversOutputDir: string;
-      moduleName: string;
-      relativePathFromBaseToModule: string[];
-    }
-  | undefined;
-/**
- * Parse location to see which module it belongs to.
- * Also check against whitelisted and blacklisted to see if need to generate file.
- */
-const parseLocationForOutputDir = (
-  nestedDirs: string[],
-  {
-    config: {
-      mode,
-      sourceMap,
-      whitelistedModules,
-      blacklistedModules,
-      baseOutputDir,
-      resolverRelativeTargetDir,
-    },
-  }: GenerateResolverFilesContext,
-  location?: Location
-): OutputDirResult => {
-  // If mode is "merged", there's only one module:
-  //   - always generate a.k.a  it's always whitelisted
-  //   - put them together at designated relativeTargetDir
-  //   - moduleName='' i.e. no module
-  if (mode === 'merged') {
-    return {
-      resolversOutputDir: path.posix.join(
-        baseOutputDir,
-        resolverRelativeTargetDir,
-        ...nestedDirs
-      ),
-      moduleName: '',
-      relativePathFromBaseToModule: [],
-    };
-  }
-
-  // 2. mode is "modules", each module is the folder containing the schema files
-  // This means one or multiple schema files can add up to one module
-  const parsedSource = parseLocationForWhitelistedModule({
-    location,
-    sourceMap,
-    whitelistedModules,
-    blacklistedModules,
-  });
-
-  return parsedSource
-    ? {
-        resolversOutputDir: path.posix.join(
-          baseOutputDir,
-          ...parsedSource.relativePathFromBaseToModule,
-          resolverRelativeTargetDir,
-          ...nestedDirs
-        ),
-        moduleName: parsedSource.moduleName,
-        relativePathFromBaseToModule: parsedSource.relativePathFromBaseToModule,
-      }
-    : undefined;
-};
-
 interface ValidateAndPrepareForGraphQLTypeParams {
   resolverName: string;
   normalizedResolverName: NormalizedResolverName;
@@ -234,32 +176,5 @@ const validateAndPrepareForGraphQLTypeHandler = (
     resolversTypeMeta,
     moduleName,
     relativePathFromBaseToModule,
-  };
-};
-
-export interface NormalizedResolverName {
-  base: string;
-  withModule: string;
-}
-
-/**
- * Function to get format resolver name based on its definition in the schema
- * - Root object type resolver e.g Query.me, Mutation.updateUser
- * - Object type e.g. User, Profile
- *
- * Returns an object with 2 key/value pairs:
- *   - base: resolver name without module. This is used by to match up with config.externalResolvers.
- *   - withModule: resolver name with module. This is used to identify the resolver INTERNAL unique path used in main resolver files.
- */
-const normalizeResolverName = (
-  moduleName: string,
-  name: string,
-  rootObject: RootObjectType | null
-): NormalizedResolverName => {
-  const baseResolverName = !rootObject ? name : `${rootObject}.${name}`;
-
-  return {
-    base: baseResolverName,
-    withModule: `${moduleName}.${baseResolverName}`,
   };
 };

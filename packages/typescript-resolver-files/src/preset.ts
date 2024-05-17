@@ -104,6 +104,9 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       scalarsModule,
       scalarsOverrides,
       typeMappersMap,
+      mode,
+      baseOutputDir,
+      resolverRelativeTargetDir,
       whitelistedModules,
       blacklistedModules,
     });

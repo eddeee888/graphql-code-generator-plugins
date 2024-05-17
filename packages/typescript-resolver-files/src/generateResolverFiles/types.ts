@@ -5,7 +5,7 @@ import type { TypeMappersMap } from '../parseTypeMappers';
 import type { ParseSourcesResult } from '../parseSources';
 import type { ImportLineMeta, RootObjectType } from '../utils';
 import type { ParsedPresetConfig } from '../validatePresetConfig';
-import type { NormalizedResolverName } from './visitNamedType';
+import type { NormalizedResolverName } from '../utils/normalizeResolverName';
 
 interface BaseVirtualFile {
   __filetype: string;
