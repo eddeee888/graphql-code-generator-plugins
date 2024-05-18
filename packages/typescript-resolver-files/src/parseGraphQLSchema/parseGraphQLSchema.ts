@@ -19,6 +19,7 @@ import {
   isNativeNamedType,
   isRootObjectType,
   parseLocationForWhitelistedModule,
+  relativeModulePath,
 } from '../utils';
 import { parseLocationForOutputDir } from '../utils/parseLocationForOutputDir';
 import { normalizeResolverName } from '../utils/normalizeResolverName';
@@ -26,6 +27,7 @@ import { normalizeResolverName } from '../utils/normalizeResolverName';
 interface ParseGraphQLSchemaParams {
   schemaAst: GraphQLSchema;
   sourceMap: ParseSourcesResult['sourceMap'];
+  resolverTypesPath: string;
   typeMappersMap: TypeMappersMap;
   scalarsModule: ParsedPresetConfig['scalarsModule'];
   scalarsOverrides: ParsedPresetConfig['scalarsOverrides'];
@@ -50,6 +52,10 @@ export interface ParsedGraphQLSchemaMeta {
           fieldsToPick: string[];
           relativePathFromBaseToModule: string[];
           normalizedResolverName: ReturnType<typeof normalizeResolverName>;
+          typeNamedImport: string;
+          typeString: string;
+          relativePathToResolverTypesFile: string;
+          moduleType: 'file';
         }
       >
     >;
@@ -65,6 +71,7 @@ export interface ParsedGraphQLSchemaMeta {
 export const parseGraphQLSchema = async ({
   schemaAst,
   sourceMap,
+  resolverTypesPath,
   typeMappersMap,
   scalarsModule,
   scalarsOverrides,
@@ -195,6 +202,13 @@ export const parseGraphQLSchema = async ({
               fieldsToPick,
               relativePathFromBaseToModule,
               normalizedResolverName,
+              typeNamedImport: `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
+              typeString: `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
+              relativePathToResolverTypesFile: relativeModulePath(
+                resolversOutputDir,
+                resolverTypesPath
+              ),
+              moduleType: 'file',
             };
           }
         );

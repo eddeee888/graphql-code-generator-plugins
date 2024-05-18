@@ -101,6 +101,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     const parsedGraphQLSchemaMeta = await parseGraphQLSchema({
       schemaAst,
       sourceMap,
+      resolverTypesPath,
       scalarsModule,
       scalarsOverrides,
       typeMappersMap,
