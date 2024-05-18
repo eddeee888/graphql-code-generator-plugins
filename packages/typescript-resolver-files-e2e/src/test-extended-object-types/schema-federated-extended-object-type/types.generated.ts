@@ -315,26 +315,26 @@ export type DirectiveResolverFn<
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
-export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
+export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
   TopicByIdPayload:
     | (PayloadError & { __typename: 'PayloadError' })
     | (Omit<TopicByIdResult, 'result'> & {
-        result?: Maybe<RefType['Topic']>;
+        result?: Maybe<_RefType['Topic']>;
       } & { __typename: 'TopicByIdResult' });
   TopicCreatePayload:
     | (PayloadError & { __typename: 'PayloadError' })
-    | (Omit<TopicCreateResult, 'result'> & { result: RefType['Topic'] } & {
+    | (Omit<TopicCreateResult, 'result'> & { result: _RefType['Topic'] } & {
         __typename: 'TopicCreateResult';
       });
   TopicEditPayload:
     | (PayloadError & { __typename: 'PayloadError' })
-    | (Omit<TopicEditResult, 'result'> & { result: RefType['Topic'] } & {
+    | (Omit<TopicEditResult, 'result'> & { result: _RefType['Topic'] } & {
         __typename: 'TopicEditResult';
       });
   TopicsCreatedByUserPayload:
     | (PayloadError & { __typename: 'PayloadError' })
     | (Omit<TopicsCreatedByUserResult, 'result'> & {
-        result: Array<RefType['Topic']>;
+        result: Array<_RefType['Topic']>;
       } & { __typename: 'TopicsCreatedByUserResult' });
   UserPayload:
     | (PayloadError & { __typename: 'PayloadError' })
@@ -342,9 +342,10 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
 };
 
 /** Mapping of interface types */
-export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
-  Error: PayloadError & { __typename: 'PayloadError' };
-};
+export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
+  {
+    Error: PayloadError & { __typename: 'PayloadError' };
+  };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {

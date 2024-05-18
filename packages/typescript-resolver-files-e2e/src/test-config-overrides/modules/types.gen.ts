@@ -297,7 +297,7 @@ export type DirectiveResolverFn<
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
-export type RESOLVERSUNIONTYPES<RefType extends Record<string, unknown>> = {
+export type RESOLVERSUNIONTYPES<_RefType extends Record<string, unknown>> = {
   TopicByIdPayload:
     | (STANDARDERROR & { __typename: 'StandardError' })
     | (TOPICBYIDRESULT & { __typename: 'TopicByIdResult' });
@@ -316,9 +316,10 @@ export type RESOLVERSUNIONTYPES<RefType extends Record<string, unknown>> = {
 };
 
 /** Mapping of interface types */
-export type RESOLVERSINTERFACETYPES<RefType extends Record<string, unknown>> = {
-  Error: STANDARDERROR & { __typename: 'StandardError' };
-};
+export type RESOLVERSINTERFACETYPES<_RefType extends Record<string, unknown>> =
+  {
+    Error: STANDARDERROR & { __typename: 'StandardError' };
+  };
 
 /** Mapping between all available schema types and the resolvers types */
 export type RESOLVERSTYPES = {
