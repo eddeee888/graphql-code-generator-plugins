@@ -17,7 +17,7 @@
     "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/plugin-helpers": "5.0.1",
     "@graphql-codegen/typescript": "4.0.1",
-    "@graphql-codegen/typescript-resolvers": "4.0.1",
+    "@graphql-codegen/typescript-resolvers": "4.1.0",
     "@nx/devkit": "19.0.2",
     "@nx/eslint": "19.0.2",
     "@nx/eslint-plugin": "19.0.2",
