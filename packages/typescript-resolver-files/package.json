@@ -1,6 +1,6 @@
 {
   "name": "@eddeee888/gcg-typescript-resolver-files",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/eddeee888/graphql-code-generator-plugins.git",
@@ -27,7 +27,7 @@
     "graphql": "^15.0.0 || ^16.0.0"
   },
   "dependencies": {
-    "@eddeee888/gcg-server-config": "0.2.0",
+    "@eddeee888/gcg-server-config": "0.2.1",
     "@graphql-codegen/add": "^5.0.2",
     "@graphql-codegen/plugin-helpers": "^5.0.4",
     "@graphql-codegen/typescript": "^4.0.7",

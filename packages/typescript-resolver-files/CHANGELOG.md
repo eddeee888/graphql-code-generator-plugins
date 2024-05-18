@@ -1,5 +1,14 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.8.1
+
+### Patch Changes
+
+- 3213b73: Bump base codegen plugin to apply patches from upstream
+- d6df63c: Force generate object types with mappers to avoid runtime errors
+- Updated dependencies [3213b73]
+  - @eddeee888/gcg-server-config@0.2.1
+
 ## 0.8.0
 
 ### Minor Changes

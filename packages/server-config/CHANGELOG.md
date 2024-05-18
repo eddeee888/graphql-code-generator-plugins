@@ -1,5 +1,11 @@
 # @eddeee888/gcg-server-config
 
+## 0.2.1
+
+### Patch Changes
+
+- 3213b73: Bump base codegen plugin to apply patches from upstream
+
 ## 0.2.0
 
 ### Minor Changes
