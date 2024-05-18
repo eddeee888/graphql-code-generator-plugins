@@ -23,6 +23,7 @@ export type Incremental<T> =
   | {
       [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
     };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
@@ -341,10 +342,12 @@ export type DirectiveResolverFn<
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
-export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
+export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
   PetResult:
     | (PetError & { __typename: 'PetError' })
-    | (PetOk & { __typename: 'PetOk' });
+    | (Omit<PetOk, 'result'> & { result?: Maybe<_RefType['Pet']> } & {
+        __typename: 'PetOk';
+      });
   TopicByIdPayload:
     | (StandardError & { __typename: 'StandardError' })
     | (TopicByIdResult & { __typename: 'TopicByIdResult' });
@@ -363,12 +366,13 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
 };
 
 /** Mapping of interface types */
-export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
-  Error:
-    | (PetError & { __typename: 'PetError' })
-    | (StandardError & { __typename: 'StandardError' });
-  Pet: (Cat & { __typename: 'Cat' }) | (Dog & { __typename: 'Dog' });
-};
+export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
+  {
+    Error:
+      | (PetError & { __typename: 'PetError' })
+      | (StandardError & { __typename: 'StandardError' });
+    Pet: (Cat & { __typename: 'Cat' }) | (Dog & { __typename: 'Dog' });
+  };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
@@ -389,7 +393,9 @@ export type ResolversTypes = {
   PetError: ResolverTypeWrapper<PetError>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   PetHousing: ResolverTypeWrapper<PetHousing>;
-  PetOk: ResolverTypeWrapper<PetOk>;
+  PetOk: ResolverTypeWrapper<
+    Omit<PetOk, 'result'> & { result?: Maybe<ResolversTypes['Pet']> }
+  >;
   PetResult: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>['PetResult']
   >;
@@ -442,7 +448,9 @@ export type ResolversParentTypes = {
   PetError: PetError;
   String: Scalars['String']['output'];
   PetHousing: PetHousing;
-  PetOk: PetOk;
+  PetOk: Omit<PetOk, 'result'> & {
+    result?: Maybe<ResolversParentTypes['Pet']>;
+  };
   PetResult: ResolversUnionTypes<ResolversParentTypes>['PetResult'];
   Profile: Profile;
   Query: {};

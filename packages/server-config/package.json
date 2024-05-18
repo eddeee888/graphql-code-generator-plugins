@@ -24,8 +24,8 @@
   "author": "Eddy Nguyen <ch@eddeee888.me>",
   "license": "MIT",
   "dependencies": {
-    "@graphql-codegen/typescript": "^4.0.0",
-    "@graphql-codegen/typescript-resolvers": "^4.0.0",
+    "@graphql-codegen/typescript": "^4.0.7",
+    "@graphql-codegen/typescript-resolvers": "^4.1.0",
     "tslib": "^2.3.0"
   },
   "publishConfig": {

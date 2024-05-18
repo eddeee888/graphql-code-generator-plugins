@@ -314,40 +314,41 @@ export type DirectiveResolverFn<
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
-export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
+export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
   TopicByIdPayload:
     | (Error & { __typename: 'Error' })
     | (Omit<TopicByIdResult, 'result'> & {
-        result?: Maybe<RefType['Topic']>;
+        result?: Maybe<_RefType['Topic']>;
       } & { __typename: 'TopicByIdResult' });
   TopicCreatePayload:
     | (Error & { __typename: 'Error' })
-    | (Omit<TopicCreateResult, 'result'> & { result: RefType['Topic'] } & {
+    | (Omit<TopicCreateResult, 'result'> & { result: _RefType['Topic'] } & {
         __typename: 'TopicCreateResult';
       });
   TopicEditPayload:
     | (Error & { __typename: 'Error' })
-    | (Omit<TopicEditResult, 'result'> & { result: RefType['Topic'] } & {
+    | (Omit<TopicEditResult, 'result'> & { result: _RefType['Topic'] } & {
         __typename: 'TopicEditResult';
       });
   TopicsCreatedByUserPayload:
     | (Error & { __typename: 'Error' })
     | (Omit<TopicsCreatedByUserResult, 'result'> & {
-        result: Array<RefType['Topic']>;
+        result: Array<_RefType['Topic']>;
       } & { __typename: 'TopicsCreatedByUserResult' });
   UserPayload:
     | (Error & { __typename: 'Error' })
-    | (Omit<UserResult, 'result'> & { result?: Maybe<RefType['User']> } & {
+    | (Omit<UserResult, 'result'> & { result?: Maybe<_RefType['User']> } & {
         __typename: 'UserResult';
       });
 };
 
 /** Mapping of interface types */
-export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
-  Pet:
-    | (CatMapper & { __typename: 'Cat' })
-    | (DogMapper & { __typename: 'Dog' });
-};
+export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
+  {
+    Pet:
+      | (CatMapper & { __typename: 'Cat' })
+      | (DogMapper & { __typename: 'Dog' });
+  };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
