@@ -8,6 +8,8 @@ import {
   isObjectType,
   isScalarType,
   isSpecifiedScalarType,
+  isUnionType,
+  isInterfaceType,
 } from 'graphql';
 import type { ParseSourcesResult } from '../parseSources';
 import type { TypeMappersMap } from '../parseTypeMappers';
@@ -16,7 +18,6 @@ import type {
   ScalarsOverridesType,
 } from '../validatePresetConfig';
 import {
-  type RootObjectType,
   logger,
   isNativeNamedType,
   isRootObjectType,
@@ -40,7 +41,7 @@ interface ParseGraphQLSchemaParams {
   blacklistedModules: ParsedPresetConfig['blacklistedModules'];
 }
 
-interface RootResolverDetails {
+interface ResolverDetails {
   schemaType: string;
   moduleName: string;
   resolversOutputDir: string;
@@ -53,40 +54,32 @@ interface RootResolverDetails {
   moduleType: 'file';
 }
 
+type ObjectResolverDetails = ResolverDetails & { fieldsToPick: string[] };
+
 export interface ParsedGraphQLSchemaMeta {
   userDefinedSchemaTypeMap: {
     query: Record<
       string, // normalized resolver name
-      RootResolverDetails
+      ResolverDetails
     >;
     mutation: Record<
       string, // normalized resolver name
-      RootResolverDetails
+      ResolverDetails
     >;
     subscription: Record<
       string, // normalized resolver name
-      RootResolverDetails
+      ResolverDetails
     >;
     object: Record<
       string, // schema name e.g. `User`, `Job`, etc.
       Record<
         string, // normalized name e.g. `user.User` (modules) or `.User` (merged)
-        {
-          schemaType: string;
-          moduleName: string;
-          resolversOutputDir: string;
-          resolverFilename: string;
-          fieldsToPick: string[];
-          relativePathFromBaseToModule: string[];
-          normalizedResolverName: ReturnType<typeof normalizeResolverName>;
-          typeNamedImport: string;
-          typeString: string;
-          relativePathToResolverTypesFile: string;
-          moduleType: 'file';
-        }
+        ObjectResolverDetails
       >
     >;
-    scalar: Record<string, true>;
+    scalar: Record<string, ResolverDetails>;
+    interface: Record<string, ResolverDetails>;
+    union: Record<string, ResolverDetails>;
   };
   pluginsConfig: {
     defaultScalarTypesMap: Record<string, ScalarsOverridesType>;
@@ -131,35 +124,31 @@ export const parseGraphQLSchema = async ({
         return res;
       }
 
-      if (isScalarType(namedType)) {
-        res.userDefinedSchemaTypeMap.scalar[schemaType] = true;
-        handleScalarType({
-          scalarResolverMap,
-          schemaType,
-          scalarsModule,
-          scalarsOverrides,
-          result: res,
-        });
-        return res;
-      }
-
       // Root object types e.g. Query, Mutation, Subscription
       if (isRootObjectType(schemaType) && isObjectType(namedType)) {
         Object.entries(namedType.getFields()).forEach(
           ([fieldName, fieldNode]) => {
-            handleRootResolver({
+            const resolverDetails = createResolverDetails({
               mode,
               sourceMap,
-              resolverTypesPath,
               resolverRelativeTargetDir,
+              resolverTypesPath,
               baseOutputDir,
               blacklistedModules,
               whitelistedModules,
               schemaType,
-              fieldName,
-              fieldNode,
-              result: res,
+              nestedDirs: [schemaType],
+              location: fieldNode.astNode?.loc,
+              resolverName: fieldName,
             });
+            if (!resolverDetails) {
+              return;
+            }
+
+            res.userDefinedSchemaTypeMap[
+              schemaType.toLowerCase() as 'query' | 'mutation' | 'subscription'
+            ][resolverDetails.normalizedResolverName.withModule] =
+              resolverDetails;
           }
         );
         return res;
@@ -183,6 +172,45 @@ export const parseGraphQLSchema = async ({
         return res;
       }
 
+      // Handle scalar type wireups
+      if (isScalarType(namedType)) {
+        handleScalarType({
+          scalarResolverMap,
+          schemaType,
+          scalarsModule,
+          scalarsOverrides,
+          result: res,
+        });
+      }
+
+      // create resolver details for other types:
+      // - Scalar
+      // - Union
+      // - Interface
+      const resolverDetails = createResolverDetails({
+        mode,
+        sourceMap,
+        resolverRelativeTargetDir,
+        resolverTypesPath,
+        baseOutputDir,
+        blacklistedModules,
+        whitelistedModules,
+        schemaType,
+        nestedDirs: [],
+        location: namedType.astNode?.loc,
+        resolverName: namedType.name,
+      });
+
+      if (resolverDetails) {
+        if (isScalarType(namedType)) {
+          res.userDefinedSchemaTypeMap.scalar[schemaType] = resolverDetails;
+        } else if (isUnionType(namedType)) {
+          res.userDefinedSchemaTypeMap.union[schemaType] = resolverDetails;
+        } else if (isInterfaceType(namedType)) {
+          res.userDefinedSchemaTypeMap.interface[schemaType] = resolverDetails;
+        }
+      }
+
       return res;
     },
     {
@@ -192,6 +220,8 @@ export const parseGraphQLSchema = async ({
         subscription: {},
         object: {},
         scalar: {},
+        interface: {},
+        union: {},
       },
       pluginsConfig: {
         defaultScalarTypesMap: {},
@@ -287,73 +317,6 @@ const handleNativeScalarType = ({
   }
 };
 
-const handleRootResolver = ({
-  mode,
-  sourceMap,
-  resolverTypesPath,
-  resolverRelativeTargetDir,
-  baseOutputDir,
-  blacklistedModules,
-  whitelistedModules,
-  schemaType,
-  fieldName,
-  fieldNode,
-  result,
-}: {
-  mode: ParseGraphQLSchemaParams['mode'];
-  sourceMap: ParseGraphQLSchemaParams['sourceMap'];
-  resolverTypesPath: ParseGraphQLSchemaParams['resolverTypesPath'];
-  resolverRelativeTargetDir: ParseGraphQLSchemaParams['resolverRelativeTargetDir'];
-  baseOutputDir: ParseGraphQLSchemaParams['baseOutputDir'];
-  blacklistedModules: ParseGraphQLSchemaParams['blacklistedModules'];
-  whitelistedModules: ParseGraphQLSchemaParams['whitelistedModules'];
-  schemaType: RootObjectType;
-  fieldName: string;
-  fieldNode: GraphQLField<unknown, unknown>;
-  result: ParsedGraphQLSchemaMeta;
-}): void => {
-  const parsedDetails = parseLocationForOutputDir({
-    nestedDirs: [schemaType],
-    location: fieldNode.astNode?.loc,
-    mode,
-    sourceMap,
-    resolverRelativeTargetDir,
-    baseOutputDir,
-    blacklistedModules,
-    whitelistedModules,
-  });
-  if (!parsedDetails) {
-    return;
-  }
-
-  const { moduleName, resolversOutputDir, relativePathFromBaseToModule } =
-    parsedDetails;
-
-  const normalizedResolverName = normalizeResolverName(
-    moduleName,
-    fieldName,
-    schemaType
-  );
-
-  result.userDefinedSchemaTypeMap[
-    schemaType.toLowerCase() as 'query' | 'mutation' | 'subscription'
-  ][normalizedResolverName.withModule] = {
-    schemaType,
-    normalizedResolverName,
-    moduleName,
-    relativePathFromBaseToModule,
-    resolversOutputDir,
-    resolverFilename: path.posix.join(resolversOutputDir, `${fieldName}.ts`),
-    typeNamedImport: `${schemaType}Resolvers`,
-    typeString: `${schemaType}Resolvers['${fieldName}']`,
-    relativePathToResolverTypesFile: relativeModulePath(
-      resolversOutputDir,
-      resolverTypesPath
-    ),
-    moduleType: 'file',
-  };
-};
-
 const handleObjectType = ({
   mode,
   sourceMap,
@@ -379,6 +342,14 @@ const handleObjectType = ({
   schemaType: string;
   result: ParsedGraphQLSchemaMeta;
 }): void => {
+  // Wire up `mappers` config
+  const typeMapperDetails = typeMappersMap[schemaType];
+  if (typeMapperDetails) {
+    result.pluginsConfig.defaultTypeMappers[typeMapperDetails.schemaType] =
+      typeMapperDetails.configImportPath;
+  }
+
+  // parse for details
   const fieldsByGraphQLModule = Object.entries(namedType.getFields()).reduce<
     Record<
       string,
@@ -415,29 +386,23 @@ const handleObjectType = ({
       _index,
       graphQLModules
     ) => {
-      const outputDir = parseLocationForOutputDir({
-        nestedDirs: [],
-        location: firstFieldLocation,
+      const resolverDetails = createResolverDetails({
         mode,
         sourceMap,
         resolverRelativeTargetDir,
+        resolverTypesPath,
         baseOutputDir,
         blacklistedModules,
         whitelistedModules,
+        schemaType,
+        nestedDirs: [],
+        location: firstFieldLocation,
+        resolverName: namedType.name,
       });
 
-      if (!outputDir) {
+      if (!resolverDetails) {
         return;
       }
-
-      const { moduleName, resolversOutputDir, relativePathFromBaseToModule } =
-        outputDir;
-
-      const normalizedResolverName = normalizeResolverName(
-        moduleName,
-        namedType.name,
-        null
-      );
 
       // If there are multiple object type files to generate
       // e.g. `extend type ObjectType` is used across multiple modules
@@ -448,33 +413,76 @@ const handleObjectType = ({
         graphQLModules.length > 1 ? fieldNodes.map((field) => field.name) : [];
 
       result.userDefinedSchemaTypeMap.object[schemaType][
-        normalizedResolverName.withModule
+        resolverDetails.normalizedResolverName.withModule
       ] = {
-        schemaType,
-        moduleName,
-        resolversOutputDir,
-        resolverFilename: path.posix.join(
-          resolversOutputDir,
-          `${namedType.name}.ts`
-        ),
+        ...resolverDetails,
         fieldsToPick,
-        relativePathFromBaseToModule,
-        normalizedResolverName,
-        typeNamedImport: `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
-        typeString: `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
-        relativePathToResolverTypesFile: relativeModulePath(
-          resolversOutputDir,
-          resolverTypesPath
-        ),
-        moduleType: 'file',
       };
     }
   );
+};
 
-  // Wire up `mappers` config
-  const typeMapperDetails = typeMappersMap[schemaType];
-  if (typeMapperDetails) {
-    result.pluginsConfig.defaultTypeMappers[typeMapperDetails.schemaType] =
-      typeMapperDetails.configImportPath;
+const createResolverDetails = ({
+  mode,
+  sourceMap,
+  resolverRelativeTargetDir,
+  resolverTypesPath,
+  baseOutputDir,
+  blacklistedModules,
+  whitelistedModules,
+  schemaType,
+  nestedDirs,
+  location,
+  resolverName,
+}: {
+  mode: ParseGraphQLSchemaParams['mode'];
+  sourceMap: ParseGraphQLSchemaParams['sourceMap'];
+  resolverRelativeTargetDir: ParseGraphQLSchemaParams['resolverRelativeTargetDir'];
+  resolverTypesPath: ParseGraphQLSchemaParams['resolverTypesPath'];
+  baseOutputDir: ParseGraphQLSchemaParams['baseOutputDir'];
+  blacklistedModules: ParseGraphQLSchemaParams['blacklistedModules'];
+  whitelistedModules: ParseGraphQLSchemaParams['whitelistedModules'];
+  schemaType: string;
+  nestedDirs: string[];
+  location: Location | undefined;
+  resolverName: string;
+}): ResolverDetails | undefined => {
+  const parsedDetails = parseLocationForOutputDir({
+    nestedDirs,
+    location,
+    mode,
+    sourceMap,
+    resolverRelativeTargetDir,
+    baseOutputDir,
+    blacklistedModules,
+    whitelistedModules,
+  });
+  if (!parsedDetails) {
+    // No `parsedDetails` means the location is NOT whitelisted, ignore.
+    return;
   }
+  const { moduleName, resolversOutputDir, relativePathFromBaseToModule } =
+    parsedDetails;
+
+  const normalizedResolverName = normalizeResolverName(
+    moduleName,
+    resolverName,
+    null
+  );
+
+  return {
+    schemaType,
+    moduleName,
+    resolversOutputDir,
+    resolverFilename: path.posix.join(resolversOutputDir, `${resolverName}.ts`),
+    relativePathFromBaseToModule,
+    normalizedResolverName,
+    typeNamedImport: `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
+    typeString: `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
+    relativePathToResolverTypesFile: relativeModulePath(
+      resolversOutputDir,
+      resolverTypesPath
+    ),
+    moduleType: 'file',
+  };
 };
