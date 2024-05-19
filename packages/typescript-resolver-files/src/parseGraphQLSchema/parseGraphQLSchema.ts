@@ -3,6 +3,7 @@ import {
   type GraphQLField,
   type GraphQLScalarType,
   type GraphQLSchema,
+  type GraphQLObjectType,
   type Location,
   isObjectType,
   isScalarType,
@@ -15,6 +16,7 @@ import type {
   ScalarsOverridesType,
 } from '../validatePresetConfig';
 import {
+  type RootObjectType,
   logger,
   isNativeNamedType,
   isRootObjectType,
@@ -38,8 +40,33 @@ interface ParseGraphQLSchemaParams {
   blacklistedModules: ParsedPresetConfig['blacklistedModules'];
 }
 
+interface RootResolverDetails {
+  schemaType: string;
+  moduleName: string;
+  resolversOutputDir: string;
+  resolverFilename: string;
+  relativePathFromBaseToModule: string[];
+  normalizedResolverName: ReturnType<typeof normalizeResolverName>;
+  typeNamedImport: string;
+  typeString: string;
+  relativePathToResolverTypesFile: string;
+  moduleType: 'file';
+}
+
 export interface ParsedGraphQLSchemaMeta {
   userDefinedSchemaTypeMap: {
+    query: Record<
+      string, // normalized resolver name
+      RootResolverDetails
+    >;
+    mutation: Record<
+      string, // normalized resolver name
+      RootResolverDetails
+    >;
+    subscription: Record<
+      string, // normalized resolver name
+      RootResolverDetails
+    >;
     object: Record<
       string, // schema name e.g. `User`, `Job`, etc.
       Record<
@@ -113,118 +140,56 @@ export const parseGraphQLSchema = async ({
           scalarsOverrides,
           result: res,
         });
+        return res;
       }
 
-      if (!isRootObjectType(schemaType) && isObjectType(namedType)) {
-        const fieldsByGraphQLModule = Object.entries(
-          namedType.getFields()
-        ).reduce<
-          Record<
-            string,
-            {
-              fieldNodes: GraphQLField<unknown, unknown>[];
-              firstFieldLocation: Location | undefined;
-            }
-          >
-        >((result, [_, fieldNode]) => {
-          const fieldLocation = fieldNode.astNode?.loc;
-          const modulePath = path.dirname(fieldLocation?.source.name || '');
-
-          if (!result[modulePath]) {
-            result[modulePath] = {
-              fieldNodes: [],
-              // Note: fieldLocation here is the location of the first field found in a GraphQL Module.
-              // The reason we use field's location instead of the object type's location is because when `extend type ObjectType` is used, the location of object type is the last found location.
-              // i.e. we cannot rely on object's location if `extend type` is used.
-              firstFieldLocation: fieldLocation,
-            };
-          }
-
-          result[modulePath].fieldNodes.push(fieldNode);
-
-          return result;
-        }, {});
-
-        res.userDefinedSchemaTypeMap.object[schemaType] =
-          res.userDefinedSchemaTypeMap.object[schemaType] || {};
-
-        Object.entries(fieldsByGraphQLModule).forEach(
-          (
-            [modulePath, { firstFieldLocation, fieldNodes }],
-            _index,
-            graphQLModules
-          ) => {
-            const outputDir = parseLocationForOutputDir({
-              nestedDirs: [],
-              location: firstFieldLocation,
+      // Root object types e.g. Query, Mutation, Subscription
+      if (isRootObjectType(schemaType) && isObjectType(namedType)) {
+        Object.entries(namedType.getFields()).forEach(
+          ([fieldName, fieldNode]) => {
+            handleRootResolver({
               mode,
               sourceMap,
+              resolverTypesPath,
               resolverRelativeTargetDir,
               baseOutputDir,
               blacklistedModules,
               whitelistedModules,
-            });
-
-            if (!outputDir) {
-              return;
-            }
-
-            const {
-              moduleName,
-              resolversOutputDir,
-              relativePathFromBaseToModule,
-            } = outputDir;
-
-            const normalizedResolverName = normalizeResolverName(
-              moduleName,
-              namedType.name,
-              null
-            );
-
-            // If there are multiple object type files to generate
-            // e.g. `extend type ObjectType` is used across multiple modules
-            // We create an array of fields to pick for each module
-            //
-            // If there's only one module, we return an empty array i.e. pick all fields
-            const fieldsToPick =
-              graphQLModules.length > 1
-                ? fieldNodes.map((field) => field.name)
-                : [];
-
-            res.userDefinedSchemaTypeMap.object[schemaType][modulePath] = {
               schemaType,
-              moduleName,
-              resolversOutputDir,
-              resolverFilename: path.posix.join(
-                resolversOutputDir,
-                `${namedType.name}.ts`
-              ),
-              fieldsToPick,
-              relativePathFromBaseToModule,
-              normalizedResolverName,
-              typeNamedImport: `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
-              typeString: `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
-              relativePathToResolverTypesFile: relativeModulePath(
-                resolversOutputDir,
-                resolverTypesPath
-              ),
-              moduleType: 'file',
-            };
+              fieldName,
+              fieldNode,
+              result: res,
+            });
           }
         );
+        return res;
+      }
 
-        // Wire up `mappers` config
-        const typeMapperDetails = typeMappersMap[schemaType];
-        if (typeMapperDetails) {
-          res.pluginsConfig.defaultTypeMappers[typeMapperDetails.schemaType] =
-            typeMapperDetails.configImportPath;
-        }
+      // Other output object types
+      if (!isRootObjectType(schemaType) && isObjectType(namedType)) {
+        handleObjectType({
+          mode,
+          sourceMap,
+          resolverTypesPath,
+          resolverRelativeTargetDir,
+          baseOutputDir,
+          blacklistedModules,
+          whitelistedModules,
+          typeMappersMap,
+          namedType,
+          schemaType,
+          result: res,
+        });
+        return res;
       }
 
       return res;
     },
     {
       userDefinedSchemaTypeMap: {
+        query: {},
+        mutation: {},
+        subscription: {},
         object: {},
         scalar: {},
       },
@@ -319,5 +284,197 @@ const handleNativeScalarType = ({
   // I've never seen someone overriding native scalar's implementation so it's probably not a thing.
   if (override && override.type) {
     result.pluginsConfig.defaultScalarTypesMap[schemaType] = override.type;
+  }
+};
+
+const handleRootResolver = ({
+  mode,
+  sourceMap,
+  resolverTypesPath,
+  resolverRelativeTargetDir,
+  baseOutputDir,
+  blacklistedModules,
+  whitelistedModules,
+  schemaType,
+  fieldName,
+  fieldNode,
+  result,
+}: {
+  mode: ParseGraphQLSchemaParams['mode'];
+  sourceMap: ParseGraphQLSchemaParams['sourceMap'];
+  resolverTypesPath: ParseGraphQLSchemaParams['resolverTypesPath'];
+  resolverRelativeTargetDir: ParseGraphQLSchemaParams['resolverRelativeTargetDir'];
+  baseOutputDir: ParseGraphQLSchemaParams['baseOutputDir'];
+  blacklistedModules: ParseGraphQLSchemaParams['blacklistedModules'];
+  whitelistedModules: ParseGraphQLSchemaParams['whitelistedModules'];
+  schemaType: RootObjectType;
+  fieldName: string;
+  fieldNode: GraphQLField<unknown, unknown>;
+  result: ParsedGraphQLSchemaMeta;
+}): void => {
+  const parsedDetails = parseLocationForOutputDir({
+    nestedDirs: [schemaType],
+    location: fieldNode.astNode?.loc,
+    mode,
+    sourceMap,
+    resolverRelativeTargetDir,
+    baseOutputDir,
+    blacklistedModules,
+    whitelistedModules,
+  });
+  if (!parsedDetails) {
+    return;
+  }
+
+  const { moduleName, resolversOutputDir, relativePathFromBaseToModule } =
+    parsedDetails;
+
+  const normalizedResolverName = normalizeResolverName(
+    moduleName,
+    fieldName,
+    schemaType
+  );
+
+  result.userDefinedSchemaTypeMap[
+    schemaType.toLowerCase() as 'query' | 'mutation' | 'subscription'
+  ][normalizedResolverName.withModule] = {
+    schemaType,
+    normalizedResolverName,
+    moduleName,
+    relativePathFromBaseToModule,
+    resolversOutputDir,
+    resolverFilename: path.posix.join(resolversOutputDir, `${fieldName}.ts`),
+    typeNamedImport: `${schemaType}Resolvers`,
+    typeString: `${schemaType}Resolvers['${fieldName}']`,
+    relativePathToResolverTypesFile: relativeModulePath(
+      resolversOutputDir,
+      resolverTypesPath
+    ),
+    moduleType: 'file',
+  };
+};
+
+const handleObjectType = ({
+  mode,
+  sourceMap,
+  resolverTypesPath,
+  resolverRelativeTargetDir,
+  baseOutputDir,
+  blacklistedModules,
+  whitelistedModules,
+  typeMappersMap,
+  namedType,
+  schemaType,
+  result,
+}: {
+  mode: ParseGraphQLSchemaParams['mode'];
+  sourceMap: ParseGraphQLSchemaParams['sourceMap'];
+  resolverTypesPath: ParseGraphQLSchemaParams['resolverTypesPath'];
+  resolverRelativeTargetDir: ParseGraphQLSchemaParams['resolverRelativeTargetDir'];
+  baseOutputDir: ParseGraphQLSchemaParams['baseOutputDir'];
+  blacklistedModules: ParseGraphQLSchemaParams['blacklistedModules'];
+  whitelistedModules: ParseGraphQLSchemaParams['whitelistedModules'];
+  typeMappersMap: ParseGraphQLSchemaParams['typeMappersMap'];
+  namedType: GraphQLObjectType;
+  schemaType: string;
+  result: ParsedGraphQLSchemaMeta;
+}): void => {
+  const fieldsByGraphQLModule = Object.entries(namedType.getFields()).reduce<
+    Record<
+      string,
+      {
+        fieldNodes: GraphQLField<unknown, unknown>[];
+        firstFieldLocation: Location | undefined;
+      }
+    >
+  >((res, [_, fieldNode]) => {
+    const fieldLocation = fieldNode.astNode?.loc;
+    const modulePath = path.dirname(fieldLocation?.source.name || '');
+
+    if (!res[modulePath]) {
+      res[modulePath] = {
+        fieldNodes: [],
+        // Note: fieldLocation here is the location of the first field found in a GraphQL Module.
+        // The reason we use field's location instead of the object type's location is because when `extend type ObjectType` is used, the location of object type is the last found location.
+        // i.e. we cannot rely on object's location if `extend type` is used.
+        firstFieldLocation: fieldLocation,
+      };
+    }
+
+    res[modulePath].fieldNodes.push(fieldNode);
+
+    return res;
+  }, {});
+
+  result.userDefinedSchemaTypeMap.object[schemaType] =
+    result.userDefinedSchemaTypeMap.object[schemaType] || {};
+
+  Object.entries(fieldsByGraphQLModule).forEach(
+    (
+      [_modulePath, { firstFieldLocation, fieldNodes }],
+      _index,
+      graphQLModules
+    ) => {
+      const outputDir = parseLocationForOutputDir({
+        nestedDirs: [],
+        location: firstFieldLocation,
+        mode,
+        sourceMap,
+        resolverRelativeTargetDir,
+        baseOutputDir,
+        blacklistedModules,
+        whitelistedModules,
+      });
+
+      if (!outputDir) {
+        return;
+      }
+
+      const { moduleName, resolversOutputDir, relativePathFromBaseToModule } =
+        outputDir;
+
+      const normalizedResolverName = normalizeResolverName(
+        moduleName,
+        namedType.name,
+        null
+      );
+
+      // If there are multiple object type files to generate
+      // e.g. `extend type ObjectType` is used across multiple modules
+      // We create an array of fields to pick for each module
+      //
+      // If there's only one module, we return an empty array i.e. pick all fields
+      const fieldsToPick =
+        graphQLModules.length > 1 ? fieldNodes.map((field) => field.name) : [];
+
+      result.userDefinedSchemaTypeMap.object[schemaType][
+        normalizedResolverName.withModule
+      ] = {
+        schemaType,
+        moduleName,
+        resolversOutputDir,
+        resolverFilename: path.posix.join(
+          resolversOutputDir,
+          `${namedType.name}.ts`
+        ),
+        fieldsToPick,
+        relativePathFromBaseToModule,
+        normalizedResolverName,
+        typeNamedImport: `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
+        typeString: `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
+        relativePathToResolverTypesFile: relativeModulePath(
+          resolversOutputDir,
+          resolverTypesPath
+        ),
+        moduleType: 'file',
+      };
+    }
+  );
+
+  // Wire up `mappers` config
+  const typeMapperDetails = typeMappersMap[schemaType];
+  if (typeMapperDetails) {
+    result.pluginsConfig.defaultTypeMappers[typeMapperDetails.schemaType] =
+      typeMapperDetails.configImportPath;
   }
 };
