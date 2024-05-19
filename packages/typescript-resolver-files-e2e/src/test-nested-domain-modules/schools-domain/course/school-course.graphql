@@ -1,3 +1,7 @@
+extend type Mutation {
+  createSchoolCourse: SchoolCourse!
+}
+
 extend type School {
   courses: [SchoolCourse!]!
 }

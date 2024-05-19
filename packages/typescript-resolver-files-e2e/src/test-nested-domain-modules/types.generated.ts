@@ -34,11 +34,13 @@ export type Scalars = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createSchoolCourse: SchoolCourse;
 };
 
 export type Query = {
   __typename?: 'Query';
   school?: Maybe<School>;
+  schools: Array<School>;
   student?: Maybe<Student>;
   teacher?: Maybe<Teacher>;
 };
@@ -116,6 +118,11 @@ export type StudentProfile = {
   id: Scalars['ID']['output'];
   lastName: Scalars['String']['output'];
   phoneNumber?: Maybe<Scalars['String']['output']>;
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  profileChanges: StudentProfile;
 };
 
 export type Teacher = {
@@ -260,6 +267,7 @@ export type ResolversTypes = {
   StudentAvatar: ResolverTypeWrapper<StudentAvatar>;
   StudentGuardian: ResolverTypeWrapper<StudentGuardian>;
   StudentProfile: ResolverTypeWrapper<StudentProfile>;
+  Subscription: ResolverTypeWrapper<{}>;
   Teacher: ResolverTypeWrapper<Teacher>;
   TeacherAvatar: ResolverTypeWrapper<TeacherAvatar>;
   TeacherProfile: ResolverTypeWrapper<TeacherProfile>;
@@ -281,6 +289,7 @@ export type ResolversParentTypes = {
   StudentAvatar: StudentAvatar;
   StudentGuardian: StudentGuardian;
   StudentProfile: StudentProfile;
+  Subscription: {};
   Teacher: Teacher;
   TeacherAvatar: TeacherAvatar;
   TeacherProfile: TeacherProfile;
@@ -290,7 +299,13 @@ export type ResolversParentTypes = {
 export type MutationResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
-> = {};
+> = {
+  createSchoolCourse?: Resolver<
+    ResolversTypes['SchoolCourse'],
+    ParentType,
+    ContextType
+  >;
+};
 
 export type QueryResolvers<
   ContextType = any,
@@ -302,6 +317,7 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryschoolArgs, 'id'>
   >;
+  schools?: Resolver<Array<ResolversTypes['School']>, ParentType, ContextType>;
   student?: Resolver<
     Maybe<ResolversTypes['Student']>,
     ParentType,
@@ -448,6 +464,18 @@ export type StudentProfileResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type SubscriptionResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']
+> = {
+  profileChanges?: SubscriptionResolver<
+    ResolversTypes['StudentProfile'],
+    'profileChanges',
+    ParentType,
+    ContextType
+  >;
+};
+
 export type TeacherResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Teacher'] = ResolversParentTypes['Teacher']
@@ -501,6 +529,7 @@ export type Resolvers<ContextType = any> = {
   StudentAvatar?: StudentAvatarResolvers<ContextType>;
   StudentGuardian?: StudentGuardianResolvers<ContextType>;
   StudentProfile?: StudentProfileResolvers<ContextType>;
+  Subscription?: SubscriptionResolvers<ContextType>;
   Teacher?: TeacherResolvers<ContextType>;
   TeacherAvatar?: TeacherAvatarResolvers<ContextType>;
   TeacherProfile?: TeacherProfileResolvers<ContextType>;
