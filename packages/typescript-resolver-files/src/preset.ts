@@ -221,8 +221,6 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       async () =>
         generateResolverFiles({
           config: {
-            schema: schemaAst,
-            sourceMap,
             baseOutputDir,
             resolverTypesPath,
             resolverRelativeTargetDir,
@@ -237,14 +235,10 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
               typesSourceFile,
             },
             fixObjectTypeResolvers,
-            mode,
-            whitelistedModules,
-            blacklistedModules,
             externalResolvers: {
               ...mergedConfig.externalResolvers,
             },
             emitLegacyCommonJSImports,
-            federationEnabled,
           },
           result,
         }),

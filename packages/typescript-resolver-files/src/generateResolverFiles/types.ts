@@ -1,8 +1,6 @@
-import type { GraphQLSchema } from 'graphql';
 import type { SourceFile, Project } from 'ts-morph';
 import type { GraphQLObjectTypeResolversToGenerate } from '../getGraphQLObjectTypeResolversToGenerate';
 import type { TypeMappersMap } from '../parseTypeMappers';
-import type { ParseSourcesResult } from '../parseSources';
 import type { ImportLineMeta, RootObjectType } from '../utils';
 import type { ParsedPresetConfig } from '../validatePresetConfig';
 import type { NormalizedResolverName } from '../parseGraphQLSchema';
@@ -60,17 +58,12 @@ export type ResolverFile =
 
 export interface GenerateResolverFilesContext {
   config: {
-    schema: GraphQLSchema;
-    sourceMap: ParseSourcesResult['sourceMap'];
     baseOutputDir: string;
     resolverTypesPath: string;
     resolverRelativeTargetDir: string;
     resolverMainFile: string;
     resolverMainFileMode: ParsedPresetConfig['resolverMainFileMode'];
     resolverGeneration: ParsedPresetConfig['resolverGeneration'];
-    mode: ParsedPresetConfig['mode'];
-    whitelistedModules: string[];
-    blacklistedModules: string[];
     externalResolvers: Record<string, string>;
     tsMorph: {
       project: Project;
@@ -81,7 +74,6 @@ export interface GenerateResolverFilesContext {
     graphQLObjectTypeResolversToGenerate: GraphQLObjectTypeResolversToGenerate;
     fixObjectTypeResolvers: ParsedPresetConfig['fixObjectTypeResolvers'];
     emitLegacyCommonJSImports: boolean;
-    federationEnabled: boolean;
   };
   result: {
     files: Record<string, StandardFile | ResolverFile>;
