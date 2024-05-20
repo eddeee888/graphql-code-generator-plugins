@@ -11,6 +11,7 @@ import type { GenerateResolverFilesContext } from './types';
 export const generateResolverFiles = (
   ctx: GenerateResolverFilesContext
 ): void => {
+  // Query
   Object.values(
     ctx.config.parsedGraphQLSchemaMeta.userDefinedSchemaTypeMap.query
   ).forEach((details) => {
@@ -24,6 +25,7 @@ export const generateResolverFiles = (
     );
   });
 
+  // Mutation
   Object.values(
     ctx.config.parsedGraphQLSchemaMeta.userDefinedSchemaTypeMap.mutation
   ).forEach((details) => {
@@ -37,6 +39,7 @@ export const generateResolverFiles = (
     );
   });
 
+  // Subscription
   Object.values(
     ctx.config.parsedGraphQLSchemaMeta.userDefinedSchemaTypeMap.subscription
   ).forEach((details) => {
@@ -50,6 +53,7 @@ export const generateResolverFiles = (
     );
   });
 
+  // Object
   Object.values(
     ctx.config.parsedGraphQLSchemaMeta.userDefinedSchemaTypeMap.object
   ).forEach((objectsByModules) => {
@@ -73,6 +77,7 @@ export const generateResolverFiles = (
     });
   });
 
+  // Scalar
   Object.values(
     ctx.config.parsedGraphQLSchemaMeta.userDefinedSchemaTypeMap.scalar
   ).forEach((details) => {
@@ -86,6 +91,7 @@ export const generateResolverFiles = (
     );
   });
 
+  // Interface
   Object.values(
     ctx.config.parsedGraphQLSchemaMeta.userDefinedSchemaTypeMap.interface
   ).forEach((details) => {
@@ -99,6 +105,7 @@ export const generateResolverFiles = (
     );
   });
 
+  // Union
   Object.values(
     ctx.config.parsedGraphQLSchemaMeta.userDefinedSchemaTypeMap.union
   ).forEach((details) => {

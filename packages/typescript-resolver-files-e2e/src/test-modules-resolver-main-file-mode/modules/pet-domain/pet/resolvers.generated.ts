@@ -1,13 +1,13 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './../../types.generated';
+import { pet as Query_pet } from './resolvers/Query/pet';
 import { Cat } from './resolvers/Cat';
 import { Dog } from './resolvers/Dog';
-import { Pet } from './resolvers/Pet';
-import { PetCode } from './resolvers/PetCode';
 import { PetError } from './resolvers/PetError';
 import { PetOk } from './resolvers/PetOk';
+import { PetCode } from './resolvers/PetCode';
+import { Pet } from './resolvers/Pet';
 import { PetResult } from './resolvers/PetResult';
-import { pet as Query_pet } from './resolvers/Query/pet';
 import petResolver from './addPet';
 export const resolvers: Resolvers = {
   Query: { pet: Query_pet },
@@ -15,9 +15,9 @@ export const resolvers: Resolvers = {
 
   Cat: Cat,
   Dog: Dog,
-  Pet: Pet,
-  PetCode: PetCode,
   PetError: PetError,
   PetOk: PetOk,
+  PetCode: PetCode,
+  Pet: Pet,
   PetResult: PetResult,
 };

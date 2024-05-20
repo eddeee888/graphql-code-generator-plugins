@@ -1,18 +1,18 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './../types.generated';
-import { topicCreate as Mutation_topicCreate } from './resolvers/Mutation/topicCreate';
-import { topicEdit as Mutation_topicEdit } from './resolvers/Mutation/topicEdit';
 import { topicById as Query_topicById } from './resolvers/Query/topicById';
 import { topicsCreatedByUser as Query_topicsCreatedByUser } from './resolvers/Query/topicsCreatedByUser';
+import { topicCreate as Mutation_topicCreate } from './resolvers/Mutation/topicCreate';
+import { topicEdit as Mutation_topicEdit } from './resolvers/Mutation/topicEdit';
 import { Topic } from './resolvers/Topic';
-import { TopicByIdPayload } from './resolvers/TopicByIdPayload';
 import { TopicByIdResult } from './resolvers/TopicByIdResult';
-import { TopicCreatePayload } from './resolvers/TopicCreatePayload';
 import { TopicCreateResult } from './resolvers/TopicCreateResult';
-import { TopicEditPayload } from './resolvers/TopicEditPayload';
 import { TopicEditResult } from './resolvers/TopicEditResult';
-import { TopicsCreatedByUserPayload } from './resolvers/TopicsCreatedByUserPayload';
 import { TopicsCreatedByUserResult } from './resolvers/TopicsCreatedByUserResult';
+import { TopicByIdPayload } from './resolvers/TopicByIdPayload';
+import { TopicCreatePayload } from './resolvers/TopicCreatePayload';
+import { TopicEditPayload } from './resolvers/TopicEditPayload';
+import { TopicsCreatedByUserPayload } from './resolvers/TopicsCreatedByUserPayload';
 export const resolvers: Resolvers = {
   Query: {
     topicById: Query_topicById,
@@ -24,12 +24,12 @@ export const resolvers: Resolvers = {
   },
 
   Topic: Topic,
-  TopicByIdPayload: TopicByIdPayload,
   TopicByIdResult: TopicByIdResult,
-  TopicCreatePayload: TopicCreatePayload,
   TopicCreateResult: TopicCreateResult,
-  TopicEditPayload: TopicEditPayload,
   TopicEditResult: TopicEditResult,
-  TopicsCreatedByUserPayload: TopicsCreatedByUserPayload,
   TopicsCreatedByUserResult: TopicsCreatedByUserResult,
+  TopicByIdPayload: TopicByIdPayload,
+  TopicCreatePayload: TopicCreatePayload,
+  TopicEditPayload: TopicEditPayload,
+  TopicsCreatedByUserPayload: TopicsCreatedByUserPayload,
 };
