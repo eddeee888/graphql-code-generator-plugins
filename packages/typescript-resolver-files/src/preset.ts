@@ -99,20 +99,24 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     const generatesSection: Types.GenerateOptions[] = [];
     const federationEnabled = Boolean(typesPluginsConfig.federation);
 
-    const parsedGraphQLSchemaMeta = await parseGraphQLSchema({
-      schemaAst,
-      sourceMap,
-      resolverTypesPath,
-      scalarsModule,
-      scalarsOverrides,
-      typeMappersMap,
-      mode,
-      baseOutputDir,
-      resolverRelativeTargetDir,
-      whitelistedModules,
-      blacklistedModules,
-      federationEnabled,
-    });
+    const parsedGraphQLSchemaMeta = await profiler.run(
+      async () =>
+        parseGraphQLSchema({
+          schemaAst,
+          sourceMap,
+          resolverTypesPath,
+          scalarsModule,
+          scalarsOverrides,
+          typeMappersMap,
+          mode,
+          baseOutputDir,
+          resolverRelativeTargetDir,
+          whitelistedModules,
+          blacklistedModules,
+          federationEnabled,
+        }),
+      createProfilerRunName('parseGraphQLSchema')
+    );
 
     const mergedConfig = validateAndMergeParsedConfigs({
       externalResolvers,
