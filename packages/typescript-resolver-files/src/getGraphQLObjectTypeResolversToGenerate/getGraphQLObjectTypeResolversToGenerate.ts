@@ -7,6 +7,7 @@ import {
 } from 'ts-morph';
 import type { TypeMappersMap } from '../parseTypeMappers';
 import { type NodePropertyMap, getNodePropertyMap } from '../utils';
+import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
 
 export type GraphQLObjectTypeResolversToGenerate = Record<
   string,
@@ -22,7 +23,7 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
   tsMorphProject: Project;
   typesSourceFile: SourceFile;
   typeMappersMap: TypeMappersMap;
-  userDefinedSchemaObjectTypeMap: Record<string, true>;
+  userDefinedSchemaObjectTypeMap: ParsedGraphQLSchemaMeta['userDefinedSchemaTypeMap']['object'];
 }): GraphQLObjectTypeResolversToGenerate => {
   const typeMappersEntries = Object.entries(typeMappersMap);
   if (typeMappersEntries.length === 0) {

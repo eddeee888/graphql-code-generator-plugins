@@ -1,11 +1,10 @@
-import type { GraphQLSchema } from 'graphql';
 import type { SourceFile, Project } from 'ts-morph';
 import type { GraphQLObjectTypeResolversToGenerate } from '../getGraphQLObjectTypeResolversToGenerate';
 import type { TypeMappersMap } from '../parseTypeMappers';
-import type { ParseSourcesResult } from '../parseSources';
 import type { ImportLineMeta, RootObjectType } from '../utils';
 import type { ParsedPresetConfig } from '../validatePresetConfig';
-import type { NormalizedResolverName } from './visitNamedType';
+import type { NormalizedResolverName } from '../parseGraphQLSchema';
+import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
 
 interface BaseVirtualFile {
   __filetype: string;
@@ -59,27 +58,22 @@ export type ResolverFile =
 
 export interface GenerateResolverFilesContext {
   config: {
-    schema: GraphQLSchema;
-    sourceMap: ParseSourcesResult['sourceMap'];
     baseOutputDir: string;
     resolverTypesPath: string;
     resolverRelativeTargetDir: string;
     resolverMainFile: string;
     resolverMainFileMode: ParsedPresetConfig['resolverMainFileMode'];
     resolverGeneration: ParsedPresetConfig['resolverGeneration'];
-    mode: ParsedPresetConfig['mode'];
-    whitelistedModules: string[];
-    blacklistedModules: string[];
     externalResolvers: Record<string, string>;
     tsMorph: {
       project: Project;
       typesSourceFile: SourceFile;
     };
     typeMappersMap: TypeMappersMap;
+    parsedGraphQLSchemaMeta: ParsedGraphQLSchemaMeta;
     graphQLObjectTypeResolversToGenerate: GraphQLObjectTypeResolversToGenerate;
     fixObjectTypeResolvers: ParsedPresetConfig['fixObjectTypeResolvers'];
     emitLegacyCommonJSImports: boolean;
-    federationEnabled: boolean;
   };
   result: {
     files: Record<string, StandardFile | ResolverFile>;
@@ -109,7 +103,7 @@ export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
     // typeNamedImport: name of the type to be imported from `module`.
     // If it's a root object type field, this is the root type (e.g. Query, Mutation, Subscription).
     // Otherwise, it's the object type e.g. User, Profile, etc.
-    typeNamedImport: `${string}Resolvers`;
+    typeNamedImport: string;
     // path to typescript-resolvers file
     module: ImportLineMeta['module'];
     moduleType: ImportLineMeta['moduleType'];

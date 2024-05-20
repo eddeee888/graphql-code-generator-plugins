@@ -1,12 +1,12 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.generated';
-import { topicCreate as Mutation_topicCreate } from './Mutation/topicCreate';
-import { topicEdit as Mutation_topicEdit } from './Mutation/topicEdit';
-import { PaginationResult } from './PaginationResult';
 import { me as Query_me } from './Query/me';
 import { topicById as Query_topicById } from './Query/topicById';
 import { topicsCreatedByUser as Query_topicsCreatedByUser } from './Query/topicsCreatedByUser';
 import { userByAccountName as Query_userByAccountName } from './Query/userByAccountName';
+import { topicCreate as Mutation_topicCreate } from './Mutation/topicCreate';
+import { topicEdit as Mutation_topicEdit } from './Mutation/topicEdit';
+import { PaginationResult } from './PaginationResult';
 import { StandardError } from './StandardError';
 import { Topic } from './Topic';
 import { TopicByIdResult } from './TopicByIdResult';

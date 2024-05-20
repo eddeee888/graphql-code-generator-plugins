@@ -1,17 +1,16 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.generated';
-import { BookStore_New } from './book-store-v2_new_again-final_v3/resolvers/BookStore_New';
-import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/topicCreate';
-import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
-import { PaginationResult } from './base/resolvers/PaginationResult';
-import { PayloadError } from './base/resolvers/PayloadError';
-import { Profile } from './user/resolvers/Profile';
 import { me as Query_me } from './user/resolvers/Query/me';
 import { topicById as Query_topicById } from './topic/resolvers/Query/topicById';
 import { topicsCreatedByUser as Query_topicsCreatedByUser } from './topic/resolvers/Query/topicsCreatedByUser';
 import { userByAccountName as Query_userByAccountName } from './user/resolvers/Query/userByAccountName';
-import { SomeRandomScalar } from './base/resolvers/SomeRandomScalar';
+import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/topicCreate';
+import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
 import { profileChanges as Subscription_profileChanges } from './user/resolvers/Subscription/profileChanges';
+import { BookStore_New } from './book-store-v2_new_again-final_v3/resolvers/BookStore_New';
+import { PaginationResult } from './base/resolvers/PaginationResult';
+import { PayloadError } from './base/resolvers/PayloadError';
+import { Profile } from './user/resolvers/Profile';
 import { Topic as book_store_v2_new_again_final_v3_Topic } from './book-store-v2_new_again-final_v3/resolvers/Topic';
 import { Topic as topic_Topic } from './topic/resolvers/Topic';
 import { Topic as user_Topic } from './user/resolvers/Topic';
@@ -22,6 +21,7 @@ import { TopicsCreatedByUserResult } from './topic/resolvers/TopicsCreatedByUser
 import { User as user_User } from './user/resolvers/User';
 import { User as book_store_v2_new_again_final_v3_User } from './book-store-v2_new_again-final_v3/resolvers/User';
 import { UserResult } from './user/resolvers/UserResult';
+import { SomeRandomScalar } from './base/resolvers/SomeRandomScalar';
 import { DateTimeResolver } from 'graphql-scalars';
 export const resolvers: Resolvers = {
   Query: {
@@ -39,7 +39,6 @@ export const resolvers: Resolvers = {
   PaginationResult: PaginationResult,
   PayloadError: PayloadError,
   Profile: Profile,
-  SomeRandomScalar: SomeRandomScalar,
   Topic: {
     ...book_store_v2_new_again_final_v3_Topic,
     ...topic_Topic,
@@ -51,5 +50,6 @@ export const resolvers: Resolvers = {
   TopicsCreatedByUserResult: TopicsCreatedByUserResult,
   User: { ...user_User, ...book_store_v2_new_again_final_v3_User },
   UserResult: UserResult,
+  SomeRandomScalar: SomeRandomScalar,
   DateTime: DateTimeResolver,
 };

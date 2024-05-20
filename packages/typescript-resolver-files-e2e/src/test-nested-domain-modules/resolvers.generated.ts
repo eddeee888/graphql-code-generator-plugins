@@ -1,8 +1,11 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import type { Resolvers } from './types.generated';
 import { school as Query_school } from './schools-domain/school/resolvers/Query/school';
+import { schools as Query_schools } from './schools-domain/school/resolvers/Query/schools';
 import { student as Query_student } from './students-domain/student/resolvers/Query/student';
 import { teacher as Query_teacher } from './teachers-domain/teacher/resolvers/Query/teacher';
+import { createSchoolCourse as Mutation_createSchoolCourse } from './schools-domain/course/resolvers/Mutation/createSchoolCourse';
+import { profileChanges as Subscription_profileChanges } from './students-domain/profile/resolvers/Subscription/profileChanges';
 import { School as course_School } from './schools-domain/course/resolvers/School';
 import { School as demographics_School } from './schools-domain/demographics/resolvers/School';
 import { School as school_School } from './schools-domain/school/resolvers/School';
@@ -23,10 +26,12 @@ import { TeacherProfile as profile_TeacherProfile } from './teachers-domain/prof
 export const resolvers: Resolvers = {
   Query: {
     school: Query_school,
+    schools: Query_schools,
     student: Query_student,
     teacher: Query_teacher,
   },
-
+  Mutation: { createSchoolCourse: Mutation_createSchoolCourse },
+  Subscription: { profileChanges: Subscription_profileChanges },
   School: { ...course_School, ...demographics_School, ...school_School },
   SchoolCourse: SchoolCourse,
   SchoolDemographics: SchoolDemographics,

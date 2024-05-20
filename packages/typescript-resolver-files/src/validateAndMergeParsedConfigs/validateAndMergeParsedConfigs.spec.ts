@@ -8,11 +8,44 @@ describe('validateAndMergeParsedConfigs', () => {
       },
       parsedGraphQLSchemaMeta: {
         userDefinedSchemaTypeMap: {
+          query: {},
+          mutation: {},
+          subscription: {},
+          interface: {},
+          union: {},
           object: {
-            User: true,
+            User: {
+              'src/schema/user': {
+                moduleName: 'user',
+                schemaType: 'User',
+                normalizedResolverName: {
+                  base: 'User',
+                  withModule: 'user.User',
+                },
+                pickReferenceResolver: false,
+                fieldsToPick: [],
+                relativePathFromBaseToModule: ['user'],
+                relativePathToResolverTypesFile: '../types.generated.ts',
+                resolverFile: { name: 'User', path: 'user/User.ts' },
+                typeNamedImport: 'User',
+                typeString: 'UserResolver',
+              },
+            },
           },
           scalar: {
-            DateTime: true,
+            DateTime: {
+              moduleName: 'base',
+              schemaType: 'DateTime',
+              typeString: 'DateTimeResolver',
+              typeNamedImport: 'DateTimeResolver',
+              resolverFile: { name: 'DateTime', path: 'base/DateTime.ts' },
+              relativePathToResolverTypesFile: '../types.generated.ts',
+              relativePathFromBaseToModule: ['./DateTime'],
+              normalizedResolverName: {
+                base: 'DateTime',
+                withModule: 'base.DateTime',
+              },
+            },
           },
         },
         pluginsConfig: {
@@ -41,11 +74,44 @@ describe('validateAndMergeParsedConfigs', () => {
         User: './user/schema.mappers#UserMapper',
       },
       userDefinedSchemaTypeMap: {
+        query: {},
+        mutation: {},
+        subscription: {},
+        interface: {},
+        union: {},
         object: {
-          User: true,
+          User: {
+            'src/schema/user': {
+              moduleName: 'user',
+              schemaType: 'User',
+              normalizedResolverName: {
+                base: 'User',
+                withModule: 'user.User',
+              },
+              pickReferenceResolver: false,
+              fieldsToPick: [],
+              relativePathFromBaseToModule: ['user'],
+              relativePathToResolverTypesFile: '../types.generated.ts',
+              resolverFile: { name: 'User', path: 'user/User.ts' },
+              typeNamedImport: 'User',
+              typeString: 'UserResolver',
+            },
+          },
         },
         scalar: {
-          DateTime: true,
+          DateTime: {
+            moduleName: 'base',
+            schemaType: 'DateTime',
+            typeString: 'DateTimeResolver',
+            typeNamedImport: 'DateTimeResolver',
+            resolverFile: { name: 'DateTime', path: 'base/DateTime.ts' },
+            relativePathToResolverTypesFile: '../types.generated.ts',
+            relativePathFromBaseToModule: ['./DateTime'],
+            normalizedResolverName: {
+              base: 'DateTime',
+              withModule: 'base.DateTime',
+            },
+          },
         },
       },
     });
@@ -59,11 +125,44 @@ describe('validateAndMergeParsedConfigs', () => {
         },
         parsedGraphQLSchemaMeta: {
           userDefinedSchemaTypeMap: {
+            query: {},
+            mutation: {},
+            subscription: {},
+            interface: {},
+            union: {},
             object: {
-              User: true,
+              User: {
+                'src/schema/user': {
+                  moduleName: 'user',
+                  schemaType: 'User',
+                  normalizedResolverName: {
+                    base: 'User',
+                    withModule: 'user.User',
+                  },
+                  pickReferenceResolver: false,
+                  fieldsToPick: [],
+                  relativePathFromBaseToModule: ['user'],
+                  relativePathToResolverTypesFile: '../types.generated.ts',
+                  resolverFile: { name: 'User', path: 'user/User.ts' },
+                  typeNamedImport: 'User',
+                  typeString: 'UserResolver',
+                },
+              },
             },
             scalar: {
-              DateTime: true,
+              DateTime: {
+                moduleName: 'base',
+                schemaType: 'DateTime',
+                typeString: 'DateTimeResolver',
+                typeNamedImport: 'DateTimeResolver',
+                resolverFile: { name: 'DateTime', path: 'base/DateTime.ts' },
+                relativePathToResolverTypesFile: '../types.generated.ts',
+                relativePathFromBaseToModule: ['./DateTime'],
+                normalizedResolverName: {
+                  base: 'DateTime',
+                  withModule: 'base.DateTime',
+                },
+              },
             },
           },
           pluginsConfig: {

@@ -1,3 +1,7 @@
+extend type Subscription {
+  profileChanges: StudentProfile!
+}
+
 extend type Student {
   profile: StudentProfile
 }
