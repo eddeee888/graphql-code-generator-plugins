@@ -1,6 +1,6 @@
 import * as path from 'path';
 import type { Location } from 'graphql';
-import { parseLocationForWhitelistedModule } from './parseLocationForWhitelistedModule';
+import { parseLocationForWhitelistedModule } from '../utils';
 import type { ParsedPresetConfig } from '../validatePresetConfig';
 import type { ParseSourcesResult } from '../parseSources';
 

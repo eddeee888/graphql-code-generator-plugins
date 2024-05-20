@@ -5,7 +5,8 @@ import type { TypeMappersMap } from '../parseTypeMappers';
 import type { ParseSourcesResult } from '../parseSources';
 import type { ImportLineMeta, RootObjectType } from '../utils';
 import type { ParsedPresetConfig } from '../validatePresetConfig';
-import type { NormalizedResolverName } from '../utils/normalizeResolverName';
+import type { NormalizedResolverName } from '../parseGraphQLSchema';
+import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
 
 interface BaseVirtualFile {
   __filetype: string;
@@ -76,6 +77,7 @@ export interface GenerateResolverFilesContext {
       typesSourceFile: SourceFile;
     };
     typeMappersMap: TypeMappersMap;
+    parsedGraphQLSchemaMeta: ParsedGraphQLSchemaMeta;
     graphQLObjectTypeResolversToGenerate: GraphQLObjectTypeResolversToGenerate;
     fixObjectTypeResolvers: ParsedPresetConfig['fixObjectTypeResolvers'];
     emitLegacyCommonJSImports: boolean;
@@ -109,7 +111,7 @@ export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
     // typeNamedImport: name of the type to be imported from `module`.
     // If it's a root object type field, this is the root type (e.g. Query, Mutation, Subscription).
     // Otherwise, it's the object type e.g. User, Profile, etc.
-    typeNamedImport: `${string}Resolvers`;
+    typeNamedImport: string;
     // path to typescript-resolvers file
     module: ImportLineMeta['module'];
     moduleType: ImportLineMeta['moduleType'];

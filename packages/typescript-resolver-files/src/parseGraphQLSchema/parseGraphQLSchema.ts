@@ -23,9 +23,10 @@ import {
   isRootObjectType,
   parseLocationForWhitelistedModule,
   relativeModulePath,
+  type RootObjectType,
 } from '../utils';
-import { parseLocationForOutputDir } from '../utils/parseLocationForOutputDir';
-import { normalizeResolverName } from '../utils/normalizeResolverName';
+import { parseLocationForOutputDir } from './parseLocationForOutputDir';
+import { normalizeResolverName } from './normalizeResolverName';
 
 interface ParseGraphQLSchemaParams {
   schemaAst: GraphQLSchema;
@@ -39,22 +40,27 @@ interface ParseGraphQLSchemaParams {
   resolverRelativeTargetDir: string;
   whitelistedModules: ParsedPresetConfig['whitelistedModules'];
   blacklistedModules: ParsedPresetConfig['blacklistedModules'];
+  federationEnabled: boolean;
 }
 
-interface ResolverDetails {
+export interface ResolverDetails {
   schemaType: string;
   moduleName: string;
-  resolversOutputDir: string;
-  resolverFilename: string;
+  resolverFile: {
+    name: string;
+    path: string;
+  };
   relativePathFromBaseToModule: string[];
   normalizedResolverName: ReturnType<typeof normalizeResolverName>;
   typeNamedImport: string;
   typeString: string;
   relativePathToResolverTypesFile: string;
-  moduleType: 'file';
 }
 
-type ObjectResolverDetails = ResolverDetails & { fieldsToPick: string[] };
+type ObjectResolverDetails = ResolverDetails & {
+  fieldsToPick: string[];
+  pickReferenceResolver: boolean;
+};
 
 export interface ParsedGraphQLSchemaMeta {
   userDefinedSchemaTypeMap: {
@@ -100,6 +106,7 @@ export const parseGraphQLSchema = async ({
   resolverRelativeTargetDir,
   whitelistedModules,
   blacklistedModules,
+  federationEnabled,
 }: ParseGraphQLSchemaParams): Promise<ParsedGraphQLSchemaMeta> => {
   const scalarResolverMap = scalarsModule
     ? await getScalarResolverMapFromModule(scalarsModule)
@@ -129,6 +136,7 @@ export const parseGraphQLSchema = async ({
         Object.entries(namedType.getFields()).forEach(
           ([fieldName, fieldNode]) => {
             const resolverDetails = createResolverDetails({
+              belongsToRootObject: schemaType,
               mode,
               sourceMap,
               resolverRelativeTargetDir,
@@ -164,6 +172,7 @@ export const parseGraphQLSchema = async ({
           baseOutputDir,
           blacklistedModules,
           whitelistedModules,
+          federationEnabled,
           typeMappersMap,
           namedType,
           schemaType,
@@ -188,6 +197,7 @@ export const parseGraphQLSchema = async ({
       // - Union
       // - Interface
       const resolverDetails = createResolverDetails({
+        belongsToRootObject: null,
         mode,
         sourceMap,
         resolverRelativeTargetDir,
@@ -325,6 +335,7 @@ const handleObjectType = ({
   baseOutputDir,
   blacklistedModules,
   whitelistedModules,
+  federationEnabled,
   typeMappersMap,
   namedType,
   schemaType,
@@ -337,6 +348,7 @@ const handleObjectType = ({
   baseOutputDir: ParseGraphQLSchemaParams['baseOutputDir'];
   blacklistedModules: ParseGraphQLSchemaParams['blacklistedModules'];
   whitelistedModules: ParseGraphQLSchemaParams['whitelistedModules'];
+  federationEnabled: ParseGraphQLSchemaParams['federationEnabled'];
   typeMappersMap: ParseGraphQLSchemaParams['typeMappersMap'];
   namedType: GraphQLObjectType;
   schemaType: string;
@@ -377,6 +389,13 @@ const handleObjectType = ({
     return res;
   }, {});
 
+  let pickReferenceResolver = false;
+  if (federationEnabled && namedType.astNode?.directives) {
+    pickReferenceResolver = namedType.astNode.directives.some(
+      (d) => d.name.value === 'key'
+    );
+  }
+
   result.userDefinedSchemaTypeMap.object[schemaType] =
     result.userDefinedSchemaTypeMap.object[schemaType] || {};
 
@@ -387,6 +406,7 @@ const handleObjectType = ({
       graphQLModules
     ) => {
       const resolverDetails = createResolverDetails({
+        belongsToRootObject: null,
         mode,
         sourceMap,
         resolverRelativeTargetDir,
@@ -417,12 +437,14 @@ const handleObjectType = ({
       ] = {
         ...resolverDetails,
         fieldsToPick,
+        pickReferenceResolver,
       };
     }
   );
 };
 
 const createResolverDetails = ({
+  belongsToRootObject,
   mode,
   sourceMap,
   resolverRelativeTargetDir,
@@ -435,6 +457,7 @@ const createResolverDetails = ({
   location,
   resolverName,
 }: {
+  belongsToRootObject: RootObjectType | null;
   mode: ParseGraphQLSchemaParams['mode'];
   sourceMap: ParseGraphQLSchemaParams['sourceMap'];
   resolverRelativeTargetDir: ParseGraphQLSchemaParams['resolverRelativeTargetDir'];
@@ -467,22 +490,25 @@ const createResolverDetails = ({
   const normalizedResolverName = normalizeResolverName(
     moduleName,
     resolverName,
-    null
+    belongsToRootObject
   );
 
   return {
     schemaType,
     moduleName,
-    resolversOutputDir,
-    resolverFilename: path.posix.join(resolversOutputDir, `${resolverName}.ts`),
+    resolverFile: {
+      name: resolverName,
+      path: path.posix.join(resolversOutputDir, `${resolverName}.ts`),
+    },
     relativePathFromBaseToModule,
     normalizedResolverName,
     typeNamedImport: `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
-    typeString: `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
+    typeString: belongsToRootObject
+      ? `${schemaType}Resolvers['${resolverName}']`
+      : `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
     relativePathToResolverTypesFile: relativeModulePath(
       resolversOutputDir,
       resolverTypesPath
     ),
-    moduleType: 'file',
   };
 };

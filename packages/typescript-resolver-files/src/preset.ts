@@ -97,6 +97,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     );
 
     const generatesSection: Types.GenerateOptions[] = [];
+    const federationEnabled = Boolean(typesPluginsConfig.federation);
 
     const parsedGraphQLSchemaMeta = await parseGraphQLSchema({
       schemaAst,
@@ -110,6 +111,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       resolverRelativeTargetDir,
       whitelistedModules,
       blacklistedModules,
+      federationEnabled,
     });
 
     const mergedConfig = validateAndMergeParsedConfigs({
@@ -228,6 +230,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
             resolverMainFileMode,
             resolverGeneration,
             typeMappersMap,
+            parsedGraphQLSchemaMeta,
             graphQLObjectTypeResolversToGenerate,
             tsMorph: {
               project: tsMorphProject,
@@ -241,7 +244,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
               ...mergedConfig.externalResolvers,
             },
             emitLegacyCommonJSImports,
-            federationEnabled: Boolean(typesPluginsConfig.federation),
+            federationEnabled,
           },
           result,
         }),

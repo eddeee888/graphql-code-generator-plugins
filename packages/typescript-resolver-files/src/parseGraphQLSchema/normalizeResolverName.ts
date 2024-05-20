@@ -1,4 +1,4 @@
-import type { RootObjectType } from './isRootObjectType';
+import type { RootObjectType } from '../utils';
 
 export interface NormalizedResolverName {
   base: string;
