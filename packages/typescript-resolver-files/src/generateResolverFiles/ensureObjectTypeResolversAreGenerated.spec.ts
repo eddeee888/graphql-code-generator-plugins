@@ -139,8 +139,12 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
           base: 'User',
           withModule: 'user.User',
         },
+        resolverTypeImportDeclaration: '',
         variableStatement: '',
-        resolverTypeString: 'UserResolvers',
+        resolverType: {
+          baseImport: 'UserResolvers',
+          final: 'UserResolvers',
+        },
         resolversToGenerate: {
           id: {
             resolverName: 'id',
@@ -315,8 +319,12 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
           base: 'User',
           withModule: 'user.User',
         },
+        resolverTypeImportDeclaration: '',
         variableStatement: '',
-        resolverTypeString: 'UserResolvers',
+        resolverType: {
+          baseImport: 'UserResolvers',
+          final: 'UserResolvers',
+        },
         resolversToGenerate: {
           id: {
             resolverName: 'id',

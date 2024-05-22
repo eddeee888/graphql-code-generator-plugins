@@ -21,8 +21,12 @@ export interface GeneralResolverFile extends BaseVirtualFile {
   meta: {
     moduleName: string;
     relativePathFromBaseToModule: string[];
+    resolverTypeImportDeclaration: string;
     variableStatement: string;
-    resolverTypeString: string | null; // GraphQL Scalar's resolverTypeString is null
+    resolverType: {
+      baseImport: string; // e.g. `NodeResolvers`
+      final: string;
+    } | null; // GraphQL Scalar's resolverType is null
     normalizedResolverName: NormalizedResolverName;
   };
 }
@@ -33,8 +37,13 @@ export interface RootObjectTypeFieldResolverFile extends BaseVirtualFile {
     moduleName: string;
     relativePathFromBaseToModule: string[];
     belongsToRootObject: RootObjectType;
+    resolverTypeImportDeclaration: string;
     variableStatement: string;
-    resolverTypeString: string;
+    resolverType: {
+      baseImport: string; // e.g. `QueryResolvers`
+      resolver: string; // e.g. `QueryResolvers['user']`
+      final: string; // e.g. `NonNullable<<QueryResolvers['user']>`
+    };
     normalizedResolverName: NormalizedResolverName;
   };
 }
@@ -44,8 +53,12 @@ export interface ObjectTypeFile extends BaseVirtualFile {
   meta: {
     moduleName: string;
     relativePathFromBaseToModule: string[];
+    resolverTypeImportDeclaration: string;
     variableStatement: string;
-    resolverTypeString: string;
+    resolverType: {
+      baseImport: string; // e.g. `UserResolvers`
+      final: string; // e.g. `UserResolvers`, `Pick<UserResolvers, 'id'>`
+    };
     normalizedResolverName: NormalizedResolverName;
     resolversToGenerate?: GraphQLObjectTypeResolversToGenerate[number];
   };
@@ -97,6 +110,7 @@ export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
   relativePathFromBaseToModule: string[];
   fieldFilePath: string;
   resolverName: string;
+  isFileAlreadyOnFilesystem: boolean;
   belongsToRootObject: BelongsToRootObject;
   normalizedResolverName: NormalizedResolverName;
   resolversTypeMeta: {

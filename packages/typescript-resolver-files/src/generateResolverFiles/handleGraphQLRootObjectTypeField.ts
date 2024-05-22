@@ -11,6 +11,7 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
 > = (
   {
     fieldFilePath,
+    isFileAlreadyOnFilesystem,
     resolverName,
     belongsToRootObject,
     normalizedResolverName,
@@ -25,17 +26,20 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
       !isMatchResolverNamePattern({
         pattern: resolverGeneration.query,
         value: normalizedResolverName.withModule,
-      })) ||
+      }) &&
+      !isFileAlreadyOnFilesystem) ||
     (belongsToRootObject === 'Mutation' &&
       !isMatchResolverNamePattern({
         pattern: resolverGeneration.mutation,
         value: normalizedResolverName.withModule,
-      })) ||
+      }) &&
+      !isFileAlreadyOnFilesystem) ||
     (belongsToRootObject === 'Subscription' &&
       !isMatchResolverNamePattern({
         pattern: resolverGeneration.subscription,
         value: normalizedResolverName.withModule,
-      }))
+      }) &&
+      !isFileAlreadyOnFilesystem)
   ) {
     const resolverGenerationPattern =
       belongsToRootObject === 'Query'
@@ -62,24 +66,31 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
     }`;
   }
 
+  const resolverTypeImportDeclaration = printImportLine({
+    isTypeImport: true,
+    module: resolversTypeMeta.module,
+    moduleType: resolversTypeMeta.moduleType,
+    namedImports: [resolversTypeMeta.typeNamedImport],
+    emitLegacyCommonJSImports,
+  });
+
   result.files[fieldFilePath] = {
     __filetype: 'rootObjectTypeFieldResolver',
     content: `
-        ${printImportLine({
-          isTypeImport: true,
-          module: resolversTypeMeta.module,
-          moduleType: resolversTypeMeta.moduleType,
-          namedImports: [resolversTypeMeta.typeNamedImport],
-          emitLegacyCommonJSImports,
-        })}
+        ${resolverTypeImportDeclaration}
         ${variableStatement}`,
     mainImportIdentifier: resolverName,
     meta: {
       moduleName,
       relativePathFromBaseToModule,
       belongsToRootObject,
+      resolverTypeImportDeclaration,
       variableStatement,
-      resolverTypeString,
+      resolverType: {
+        baseImport: resolversTypeMeta.typeNamedImport,
+        resolver: resolversTypeMeta.typeString,
+        final: resolverTypeString,
+      },
       normalizedResolverName,
     },
   };

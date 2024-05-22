@@ -35,13 +35,13 @@ export const getVariableStatementWithExpectedIdentifier = (
    */
   if (
     variableStatementWithExpectedIdentifier &&
-    resolverFile.meta.resolverTypeString
+    resolverFile.meta.resolverType?.final
   ) {
     variableStatementWithExpectedIdentifier
       .getDeclarationList()
       .getDeclarations()[0]
       ?.getTypeNode()
-      ?.replaceWithText(resolverFile.meta.resolverTypeString);
+      ?.replaceWithText(resolverFile.meta.resolverType.final);
   }
 
   return {

@@ -6,6 +6,7 @@ const graphQLScalarType = 'GraphQLScalarType';
 export const handleGraphQLScalarType: GraphQLTypeHandler = (
   {
     fieldFilePath,
+    isFileAlreadyOnFilesystem,
     resolverName,
     normalizedResolverName,
     moduleName,
@@ -17,7 +18,8 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
     !isMatchResolverNamePattern({
       pattern: resolverGeneration.scalar,
       value: normalizedResolverName.withModule,
-    })
+    }) &&
+    !isFileAlreadyOnFilesystem
   ) {
     logger.debug(
       `Skipped Scalar resolver generation: "${normalizedResolverName.withModule}". Pattern: "${resolverGeneration.scalar}".`
@@ -25,6 +27,13 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
     return;
   }
 
+  const resolverTypeImportDeclaration = printImportLine({
+    isTypeImport: false,
+    module: 'graphql',
+    moduleType: 'module',
+    namedImports: [graphQLScalarType],
+    emitLegacyCommonJSImports,
+  });
   const variableStatement = `export const ${resolverName} = new GraphQLScalarType({
     name: '${resolverName}',
     description: '${resolverName} description',
@@ -42,21 +51,16 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
   result.files[fieldFilePath] = {
     __filetype: 'generalResolver',
     content: `
-    ${printImportLine({
-      isTypeImport: false,
-      module: 'graphql',
-      moduleType: 'module',
-      namedImports: [graphQLScalarType],
-      emitLegacyCommonJSImports,
-    })}
+    ${resolverTypeImportDeclaration}
     ${variableStatement}`,
     mainImportIdentifier: resolverName,
     meta: {
       moduleName,
       relativePathFromBaseToModule,
       normalizedResolverName,
+      resolverTypeImportDeclaration,
       variableStatement,
-      resolverTypeString: null,
+      resolverType: null,
     },
   };
 };

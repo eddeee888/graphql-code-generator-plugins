@@ -4,6 +4,7 @@ import type { GraphQLTypeHandler } from './types';
 export const handleGraphQLUnionType: GraphQLTypeHandler = (
   {
     fieldFilePath,
+    isFileAlreadyOnFilesystem,
     resolverName,
     normalizedResolverName,
     resolversTypeMeta,
@@ -16,7 +17,8 @@ export const handleGraphQLUnionType: GraphQLTypeHandler = (
     !isMatchResolverNamePattern({
       pattern: resolverGeneration.union,
       value: normalizedResolverName.withModule,
-    })
+    }) &&
+    !isFileAlreadyOnFilesystem
   ) {
     logger.debug(
       `Skipped Union resolver generation: "${normalizedResolverName.withModule}". Pattern: "${resolverGeneration.union}".`
@@ -24,25 +26,30 @@ export const handleGraphQLUnionType: GraphQLTypeHandler = (
     return;
   }
 
+  const resolverTypeImportDeclaration = printImportLine({
+    isTypeImport: true,
+    module: resolversTypeMeta.module,
+    moduleType: resolversTypeMeta.moduleType,
+    namedImports: [resolversTypeMeta.typeNamedImport],
+    emitLegacyCommonJSImports,
+  });
   const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { /* Implement ${resolverName} union logic here */ };`;
 
   result.files[fieldFilePath] = {
     __filetype: 'generalResolver',
     content: `
-    ${printImportLine({
-      isTypeImport: true,
-      module: resolversTypeMeta.module,
-      moduleType: resolversTypeMeta.moduleType,
-      namedImports: [resolversTypeMeta.typeNamedImport],
-      emitLegacyCommonJSImports,
-    })}
+    ${resolverTypeImportDeclaration}
     ${variableStatement}`,
     mainImportIdentifier: resolverName,
     meta: {
       moduleName,
       relativePathFromBaseToModule,
       normalizedResolverName,
-      resolverTypeString: resolversTypeMeta.typeString,
+      resolverType: {
+        baseImport: resolversTypeMeta.typeNamedImport,
+        final: resolversTypeMeta.typeString,
+      },
+      resolverTypeImportDeclaration,
       variableStatement,
     },
   };
