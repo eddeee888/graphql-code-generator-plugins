@@ -491,7 +491,7 @@ describe('validatePresetConfig - resolverGeneration', () => {
     expect(() =>
       validatePresetConfig({ resolverGeneration: 'omg_what_is_this' })
     ).toThrow(
-      'Validation - presetConfig.resolverGeneration must be an object, "disabled", "recommended" or "all" (default is "recommended")'
+      'Validation - presetConfig.resolverGeneration must be an object, "disabled", "recommended", "minimal" or "all" (default is "recommended")'
     );
   });
 });
