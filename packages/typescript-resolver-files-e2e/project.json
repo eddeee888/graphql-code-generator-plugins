@@ -23,7 +23,8 @@
           "rimraf -g 'packages/typescript-resolver-files-e2e/src/**/resolvers/'",
           "rimraf -g 'packages/typescript-resolver-files-e2e/src/**/rslvrs/'",
           "rimraf -g 'packages/typescript-resolver-files-e2e/src/**/*.generated.*'",
-          "rimraf -g 'packages/typescript-resolver-files-e2e/src/**/*.gen.*'"
+          "rimraf -g 'packages/typescript-resolver-files-e2e/src/**/*.gen.*'",
+          "node packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/test-setup.js"
         ],
         "parallel": false
       },
