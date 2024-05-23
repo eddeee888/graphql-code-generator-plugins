@@ -34,7 +34,7 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
     namedImports: [graphQLScalarType],
     emitLegacyCommonJSImports,
   });
-  const variableStatement = `export const ${resolverName} = new GraphQLScalarType({
+  const variableStatement = `export const ${resolverName} = new ${graphQLScalarType}({
     name: '${resolverName}',
     description: '${resolverName} description',
     serialize: (value) => {
@@ -60,7 +60,10 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
       normalizedResolverName,
       resolverTypeImportDeclaration,
       variableStatement,
-      resolverType: null,
+      resolverType: {
+        baseImport: graphQLScalarType,
+        final: graphQLScalarType,
+      },
     },
   };
 };

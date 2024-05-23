@@ -26,7 +26,7 @@ export interface GeneralResolverFile extends BaseVirtualFile {
     resolverType: {
       baseImport: string; // e.g. `NodeResolvers`
       final: string;
-    } | null; // GraphQL Scalar's resolverType is null
+    };
     normalizedResolverName: NormalizedResolverName;
   };
 }
