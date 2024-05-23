@@ -8,7 +8,10 @@ import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/
 import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
 import { profileChanges as Subscription_profileChanges } from './user/resolvers/Subscription/profileChanges';
 import { Topic } from './topic/resolvers/Topic';
+import { TopicCreateResult } from './topic/resolvers/TopicCreateResult';
 import { SomeRandomScalar } from './base/resolvers/SomeRandomScalar';
+import { Error } from './base/resolvers/Error';
+import { TopicCreatePayload } from './topic/resolvers/TopicCreatePayload';
 import { DateTimeResolver } from 'graphql-scalars';
 export const resolvers: Resolvers = {
   Query: {
@@ -23,6 +26,9 @@ export const resolvers: Resolvers = {
   },
   Subscription: { profileChanges: Subscription_profileChanges },
   Topic: Topic,
+  TopicCreateResult: TopicCreateResult,
   SomeRandomScalar: SomeRandomScalar,
+  Error: Error,
+  TopicCreatePayload: TopicCreatePayload,
   DateTime: DateTimeResolver,
 };

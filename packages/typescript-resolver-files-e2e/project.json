@@ -136,7 +136,8 @@
         "test-resolvers-auto-wireup": {
           "commands": [
             "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/**/resolvers/'",
-            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/**/*.generated.*'"
+            "rimraf -g 'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/**/*.generated.*'",
+            "node packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/test-setup.js"
           ],
           "parallel": false
         }
