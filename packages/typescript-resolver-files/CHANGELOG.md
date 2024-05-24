@@ -1,5 +1,31 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.9.0
+
+### Minor Changes
+
+- 454d1df: Add resolverGeneration 'minimal' mode
+
+  `minimal` is the equivalent of:
+
+  ```json
+  {
+    "query": "*",
+    "mutation": "*",
+    "subscription": "*",
+    "scalar": "*",
+    "object": "",
+    "union": "",
+    "interface": ""
+  }
+  ```
+
+- 454d1df: Implement file auto-wireup if detected at the right filesystem location
+
+### Patch Changes
+
+- c48e8c6: Update internals to avoid parsing schema twice
+
 ## 0.8.1
 
 ### Patch Changes
