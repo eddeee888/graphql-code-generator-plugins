@@ -11,6 +11,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
   {
     fieldFilePath,
     resolverName,
+    isFileAlreadyOnFilesystem,
     normalizedResolverName,
     resolversTypeMeta,
     moduleName,
@@ -34,7 +35,11 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
   });
   const mapperDetails = typeMappersMap[normalizedResolverName.base];
 
-  if (!matchedPatternToGenerate && !mapperDetails) {
+  if (
+    !matchedPatternToGenerate &&
+    !mapperDetails &&
+    !isFileAlreadyOnFilesystem
+  ) {
     logger.debug(
       `Skipped Object resolver generation: "${normalizedResolverName.withModule}". "Pattern: ${resolverGeneration.object}".`
     );
@@ -93,24 +98,30 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     /* Implement ${resolverName} resolver logic here */
   };`;
 
+  const resolverTypeImportDeclaration = printImportLine({
+    isTypeImport: true,
+    module: resolversTypeMeta.module,
+    moduleType: resolversTypeMeta.moduleType,
+    namedImports: [resolversTypeMeta.typeNamedImport],
+    emitLegacyCommonJSImports,
+  });
+
   result.files[fieldFilePath] = {
     __filetype: 'objectType',
     content: `
-    ${printImportLine({
-      isTypeImport: true,
-      module: resolversTypeMeta.module,
-      moduleType: resolversTypeMeta.moduleType,
-      namedImports: [resolversTypeMeta.typeNamedImport],
-      emitLegacyCommonJSImports,
-    })}
+    ${resolverTypeImportDeclaration}
     ${variableStatement}`,
     mainImportIdentifier: resolverName,
     meta: {
       moduleName,
       relativePathFromBaseToModule,
       normalizedResolverName,
+      resolverTypeImportDeclaration,
       variableStatement,
-      resolverTypeString: typeString,
+      resolverType: {
+        baseImport: resolversTypeMeta.typeNamedImport,
+        final: typeString,
+      },
       resolversToGenerate,
     },
   };

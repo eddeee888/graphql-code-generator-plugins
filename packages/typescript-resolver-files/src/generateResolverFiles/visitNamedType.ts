@@ -48,6 +48,7 @@ export const visitNamedType = <T = null>(
     {
       belongsToRootObject,
       fieldFilePath: resolverFile.path,
+      isFileAlreadyOnFilesystem: resolverFile.isOnFilesystem,
       moduleName,
       normalizedResolverName,
       relativePathFromBaseToModule,

@@ -25,7 +25,7 @@ type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
 export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
 type FixObjectTypeResolvers = 'smart' | 'disabled';
-type StringResolverGeneration = 'disabled' | 'recommended' | 'all';
+type StringResolverGeneration = 'disabled' | 'recommended' | 'minimal' | 'all';
 type NormalizedResolverGeneration = {
   query: string | string[];
   mutation: string | string[];
@@ -148,11 +148,12 @@ export const validatePresetConfig = ({
     typeof resolverGeneration !== 'object' &&
     resolverGeneration !== 'disabled' &&
     resolverGeneration !== 'recommended' &&
+    resolverGeneration !== 'minimal' &&
     resolverGeneration !== 'all'
   ) {
     throw new Error(
       fmt.error(
-        'presetConfig.resolverGeneration must be an object, "disabled", "recommended" or "all" (default is "recommended")',
+        'presetConfig.resolverGeneration must be an object, "disabled", "recommended", "minimal" or "all" (default is "recommended")',
         'Validation'
       )
     );
@@ -347,6 +348,16 @@ const parseResolverGeneration = (
       object: '*',
       union: '*',
       interface: '*',
+    };
+  } else if (resolverGeneration === 'minimal') {
+    return {
+      query: '*',
+      mutation: '*',
+      subscription: '*',
+      scalar: '*',
+      object: '',
+      union: '',
+      interface: '',
     };
   } else if (resolverGeneration === 'recommended') {
     return {

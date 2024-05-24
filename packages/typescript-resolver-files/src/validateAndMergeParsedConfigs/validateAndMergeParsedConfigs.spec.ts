@@ -26,7 +26,11 @@ describe('validateAndMergeParsedConfigs', () => {
                 fieldsToPick: [],
                 relativePathFromBaseToModule: ['user'],
                 relativePathToResolverTypesFile: '../types.generated.ts',
-                resolverFile: { name: 'User', path: 'user/User.ts' },
+                resolverFile: {
+                  name: 'User',
+                  path: 'user/User.ts',
+                  isOnFilesystem: false,
+                },
                 typeNamedImport: 'User',
                 typeString: 'UserResolver',
               },
@@ -38,7 +42,11 @@ describe('validateAndMergeParsedConfigs', () => {
               schemaType: 'DateTime',
               typeString: 'DateTimeResolver',
               typeNamedImport: 'DateTimeResolver',
-              resolverFile: { name: 'DateTime', path: 'base/DateTime.ts' },
+              resolverFile: {
+                name: 'DateTime',
+                path: 'base/DateTime.ts',
+                isOnFilesystem: false,
+              },
               relativePathToResolverTypesFile: '../types.generated.ts',
               relativePathFromBaseToModule: ['./DateTime'],
               normalizedResolverName: {
@@ -92,7 +100,11 @@ describe('validateAndMergeParsedConfigs', () => {
               fieldsToPick: [],
               relativePathFromBaseToModule: ['user'],
               relativePathToResolverTypesFile: '../types.generated.ts',
-              resolverFile: { name: 'User', path: 'user/User.ts' },
+              resolverFile: {
+                name: 'User',
+                path: 'user/User.ts',
+                isOnFilesystem: false,
+              },
               typeNamedImport: 'User',
               typeString: 'UserResolver',
             },
@@ -104,7 +116,11 @@ describe('validateAndMergeParsedConfigs', () => {
             schemaType: 'DateTime',
             typeString: 'DateTimeResolver',
             typeNamedImport: 'DateTimeResolver',
-            resolverFile: { name: 'DateTime', path: 'base/DateTime.ts' },
+            resolverFile: {
+              name: 'DateTime',
+              path: 'base/DateTime.ts',
+              isOnFilesystem: false,
+            },
             relativePathToResolverTypesFile: '../types.generated.ts',
             relativePathFromBaseToModule: ['./DateTime'],
             normalizedResolverName: {
@@ -143,7 +159,11 @@ describe('validateAndMergeParsedConfigs', () => {
                   fieldsToPick: [],
                   relativePathFromBaseToModule: ['user'],
                   relativePathToResolverTypesFile: '../types.generated.ts',
-                  resolverFile: { name: 'User', path: 'user/User.ts' },
+                  resolverFile: {
+                    name: 'User',
+                    path: 'user/User.ts',
+                    isOnFilesystem: false,
+                  },
                   typeNamedImport: 'User',
                   typeString: 'UserResolver',
                 },
@@ -155,7 +175,11 @@ describe('validateAndMergeParsedConfigs', () => {
                 schemaType: 'DateTime',
                 typeString: 'DateTimeResolver',
                 typeNamedImport: 'DateTimeResolver',
-                resolverFile: { name: 'DateTime', path: 'base/DateTime.ts' },
+                resolverFile: {
+                  name: 'DateTime',
+                  path: 'base/DateTime.ts',
+                  isOnFilesystem: false,
+                },
                 relativePathToResolverTypesFile: '../types.generated.ts',
                 relativePathFromBaseToModule: ['./DateTime'],
                 normalizedResolverName: {

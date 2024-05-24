@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as fs from 'fs';
 import {
   type GraphQLField,
   type GraphQLScalarType,
@@ -49,6 +50,7 @@ export interface ResolverDetails {
   resolverFile: {
     name: string;
     path: string;
+    isOnFilesystem: boolean;
   };
   relativePathFromBaseToModule: string[];
   normalizedResolverName: ReturnType<typeof normalizeResolverName>;
@@ -493,12 +495,18 @@ const createResolverDetails = ({
     belongsToRootObject
   );
 
+  const resolverFilePath = path.posix.join(
+    resolversOutputDir,
+    `${resolverName}.ts`
+  );
+
   return {
     schemaType,
     moduleName,
     resolverFile: {
       name: resolverName,
-      path: path.posix.join(resolversOutputDir, `${resolverName}.ts`),
+      path: resolverFilePath,
+      isOnFilesystem: fs.existsSync(resolverFilePath),
     },
     relativePathFromBaseToModule,
     normalizedResolverName,
