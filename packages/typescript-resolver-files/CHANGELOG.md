@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.9.1
+
+### Patch Changes
+
+- e999093: Add hooks to defineConfig context
+
 ## 0.9.0
 
 ### Minor Changes
