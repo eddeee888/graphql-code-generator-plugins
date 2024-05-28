@@ -8,12 +8,13 @@ export const defineConfig = (
   context: {
     baseOutputDir?: string;
     schema?: Types.ConfiguredOutput['schema'];
+    hooks?: Types.ConfiguredOutput['hooks'];
   } = {}
 ): Pick<
   Types.ConfiguredOutput,
-  'preset' | 'presetConfig' | 'watchPattern' | 'schema'
+  'preset' | 'presetConfig' | 'watchPattern' | 'schema' | 'hooks'
 > => {
-  const { schema, baseOutputDir = '' } = context;
+  const { schema, baseOutputDir = '', hooks } = context;
 
   const mappersFileExtension =
     presetConfig.mappersFileExtension || '.mappers.ts';
@@ -31,5 +32,6 @@ export const defineConfig = (
     presetConfig,
     watchPattern,
     schema,
+    hooks,
   };
 };

@@ -33,6 +33,20 @@ describe('defineConfig()', () => {
     });
   });
 
+  it('returns hooks value correctly when set', () => {
+    const result = defineConfig(
+      {},
+      { hooks: { afterAllFileWrite: ['prettier --write'] } }
+    );
+
+    expect(result).toEqual({
+      preset: defaultPreset,
+      presetConfig: {},
+      watchPattern: ['**/*.mappers.ts'],
+      hooks: { afterAllFileWrite: ['prettier --write'] },
+    });
+  });
+
   it('returns presetConfig with declared config', () => {
     const { presetConfig } = defineConfig({
       mode: 'merged',
