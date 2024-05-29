@@ -34,3 +34,7 @@ generates:
         Profile: '~modules/otherResolvers.js#Profile as ProfileResolver'
         User: 'otherResolvers#User as UserResolver'
         UserPayload: 'otherResolvers.js#UserPayload as UserPayloadResolver'
+        ErrorType: 'base/CustomErrorType#ErrorType'
+      typesPluginsConfig:
+        mappers:
+          ErrorType: './base/base.mappers#ErrorTypeMapper'
