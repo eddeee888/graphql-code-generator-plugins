@@ -8,7 +8,7 @@ const config: CodegenConfig = {
   generates: {
     'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema':
       defineConfig(
-        { resolverGeneration: 'minimal' },
+        { resolverGeneration: 'minimal', blacklistedModules: ['user'] },
         {
           schema: [
             'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/**/*.graphqls',

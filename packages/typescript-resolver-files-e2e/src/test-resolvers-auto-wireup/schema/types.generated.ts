@@ -80,10 +80,18 @@ export type PayloadError = Error & {
   error: ErrorType;
 };
 
+export type Pet = {
+  __typename?: 'Pet';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  primaryOwner: User;
+};
+
 export type Profile = {
   __typename?: 'Profile';
   id: Scalars['ID']['output'];
   user: User;
+  zoo: Zoo;
 };
 
 export type Query = {
@@ -175,6 +183,7 @@ export type User = {
   avatar?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   name?: Maybe<Scalars['String']['output']>;
+  pets: Array<Pet>;
 };
 
 export type UserPayload = PayloadError | UserResult;
@@ -182,6 +191,12 @@ export type UserPayload = PayloadError | UserResult;
 export type UserResult = {
   __typename?: 'UserResult';
   result?: Maybe<User>;
+};
+
+export type Zoo = {
+  __typename?: 'Zoo';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -332,10 +347,11 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PaginationResult: ResolverTypeWrapper<PaginationResult>;
   PayloadError: ResolverTypeWrapper<PayloadError>;
-  Profile: ResolverTypeWrapper<Profile>;
+  Pet: ResolverTypeWrapper<Pet>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
-  Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Profile: ResolverTypeWrapper<Profile>;
+  Query: ResolverTypeWrapper<{}>;
   SomeRandomScalar: ResolverTypeWrapper<Scalars['SomeRandomScalar']['output']>;
   Subscription: ResolverTypeWrapper<{}>;
   Topic: ResolverTypeWrapper<TopicMapper>;
@@ -375,6 +391,7 @@ export type ResolversTypes = {
     ResolversUnionTypes<ResolversTypes>['UserPayload']
   >;
   UserResult: ResolverTypeWrapper<UserResult>;
+  Zoo: ResolverTypeWrapper<Zoo>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
@@ -387,10 +404,11 @@ export type ResolversParentTypes = {
   Int: Scalars['Int']['output'];
   PaginationResult: PaginationResult;
   PayloadError: PayloadError;
-  Profile: Profile;
+  Pet: Pet;
   ID: Scalars['ID']['output'];
-  Query: {};
   String: Scalars['String']['output'];
+  Profile: Profile;
+  Query: {};
   SomeRandomScalar: Scalars['SomeRandomScalar']['output'];
   Subscription: {};
   Topic: TopicMapper;
@@ -416,6 +434,7 @@ export type ResolversParentTypes = {
   User: User;
   UserPayload: ResolversUnionTypes<ResolversParentTypes>['UserPayload'];
   UserResult: UserResult;
+  Zoo: Zoo;
   Boolean: Scalars['Boolean']['output'];
 };
 
@@ -468,12 +487,23 @@ export type PayloadErrorResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type PetResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Pet'] = ResolversParentTypes['Pet']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  primaryOwner?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ProfileResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  zoo?: Resolver<ResolversTypes['Zoo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -635,6 +665,7 @@ export type UserResolvers<
   avatar?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  pets?: Resolver<Array<ResolversTypes['Pet']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -657,12 +688,22 @@ export type UserResultResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ZooResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Zoo'] = ResolversParentTypes['Zoo']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
   DateTime?: GraphQLScalarType;
   Error?: ErrorResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   PaginationResult?: PaginationResultResolvers<ContextType>;
   PayloadError?: PayloadErrorResolvers<ContextType>;
+  Pet?: PetResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SomeRandomScalar?: GraphQLScalarType;
@@ -679,4 +720,5 @@ export type Resolvers<ContextType = any> = {
   User?: UserResolvers<ContextType>;
   UserPayload?: UserPayloadResolvers<ContextType>;
   UserResult?: UserResultResolvers<ContextType>;
+  Zoo?: ZooResolvers<ContextType>;
 };

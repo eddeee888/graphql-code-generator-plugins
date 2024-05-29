@@ -1,0 +1,9 @@
+type Pet {
+  id: ID!
+  name: String!
+  primaryOwner: User!
+}
+
+extend type User {
+  pets: [Pet!]!
+}
