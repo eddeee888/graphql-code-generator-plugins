@@ -22,7 +22,6 @@ import {
   logger,
   isNativeNamedType,
   isRootObjectType,
-  parseLocationForWhitelistedModule,
   relativeModulePath,
   type RootObjectType,
 } from '../utils';
@@ -120,16 +119,6 @@ export const parseGraphQLSchema = async ({
         if (isSpecifiedScalarType(namedType)) {
           handleNativeScalarType({ schemaType, result: res, scalarsOverrides });
         }
-        return res;
-      }
-
-      const parsedSource = parseLocationForWhitelistedModule({
-        location: namedType.astNode?.loc,
-        sourceMap,
-        whitelistedModules,
-        blacklistedModules,
-      });
-      if (!parsedSource) {
         return res;
       }
 
