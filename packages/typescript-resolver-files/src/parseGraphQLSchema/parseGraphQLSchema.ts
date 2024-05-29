@@ -11,6 +11,7 @@ import {
   isSpecifiedScalarType,
   isUnionType,
   isInterfaceType,
+  isEnumType,
 } from 'graphql';
 import type { ParseSourcesResult } from '../parseSources';
 import type { TypeMappersMap } from '../parseTypeMappers';
@@ -87,6 +88,7 @@ export interface ParsedGraphQLSchemaMeta {
     scalar: Record<string, ResolverDetails>;
     interface: Record<string, ResolverDetails>;
     union: Record<string, ResolverDetails>;
+    enum: Record<string, ResolverDetails>;
   };
   pluginsConfig: {
     defaultScalarTypesMap: Record<string, ScalarsOverridesType>;
@@ -209,6 +211,8 @@ export const parseGraphQLSchema = async ({
           res.userDefinedSchemaTypeMap.union[schemaType] = resolverDetails;
         } else if (isInterfaceType(namedType)) {
           res.userDefinedSchemaTypeMap.interface[schemaType] = resolverDetails;
+        } else if (isEnumType(namedType)) {
+          res.userDefinedSchemaTypeMap.enum[schemaType] = resolverDetails;
         }
       }
 
@@ -223,6 +227,7 @@ export const parseGraphQLSchema = async ({
         scalar: {},
         interface: {},
         union: {},
+        enum: {},
       },
       pluginsConfig: {
         defaultScalarTypesMap: {},
