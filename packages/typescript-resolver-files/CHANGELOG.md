@@ -1,5 +1,12 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.9.2
+
+### Patch Changes
+
+- 538eb24: Fix issue where whitelisted/blacklisted module can incorrectly detect extended resolvers to wire up to resolvers.generated.ts
+- 263604f: Fix externalResolvers config not working for enums
+
 ## 0.9.1
 
 ### Patch Changes
