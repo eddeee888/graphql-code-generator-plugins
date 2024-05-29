@@ -30,6 +30,7 @@ import {
   NamedImportResolver as NamedImportWithAliasResolver,
 } from './scalars/Scalars';
 import { UserPayload as UserPayloadResolver } from './otherResolvers.js';
+import { ErrorType } from './base/CustomErrorType';
 export const resolvers: Resolvers = {
   Query: {
     topicById: Query_topicById,
@@ -62,4 +63,5 @@ export const resolvers: Resolvers = {
   RelativeNamedImport: NamedImportResolver,
   RelativeNamedImportWithAlias: NamedImportWithAliasResolver,
   UserPayload: UserPayloadResolver,
+  ErrorType: ErrorType,
 };

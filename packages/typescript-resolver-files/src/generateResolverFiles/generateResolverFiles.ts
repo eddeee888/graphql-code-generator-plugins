@@ -119,6 +119,21 @@ export const generateResolverFiles = (
     );
   });
 
+  // Enum
+  Object.values(
+    ctx.config.parsedGraphQLSchemaMeta.userDefinedSchemaTypeMap.enum
+  ).forEach((details) => {
+    visitNamedType(
+      {
+        ...details,
+        belongsToRootObject: null,
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        visitor: () => {}, // FIXME: Enum are not being generated and should be if needed: (1) has mapper OR (2) in the right filesystem location. This is here to make sure externalResolver works for enums.
+      },
+      ctx
+    );
+  });
+
   // Post process generated files (could be existing files or files to be generated)
   postProcessFiles(ctx);
 

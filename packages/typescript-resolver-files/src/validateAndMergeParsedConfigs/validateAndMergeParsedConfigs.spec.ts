@@ -13,6 +13,7 @@ describe('validateAndMergeParsedConfigs', () => {
           subscription: {},
           interface: {},
           union: {},
+          enum: {},
           object: {
             User: {
               'src/schema/user': {
@@ -87,6 +88,7 @@ describe('validateAndMergeParsedConfigs', () => {
         subscription: {},
         interface: {},
         union: {},
+        enum: {},
         object: {
           User: {
             'src/schema/user': {
@@ -146,6 +148,7 @@ describe('validateAndMergeParsedConfigs', () => {
             subscription: {},
             interface: {},
             union: {},
+            enum: {},
             object: {
               User: {
                 'src/schema/user': {
