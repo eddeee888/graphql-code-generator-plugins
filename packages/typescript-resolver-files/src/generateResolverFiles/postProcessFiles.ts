@@ -56,8 +56,20 @@ export const postProcessFiles = ({
       sourceFile.getFilePath()
     );
 
-    ensureImportedType(sourceFile, resolverFile);
-    ensureExportedResolver(sourceFile, resolverFile);
+    const { addedVariableStatement } = ensureExportedResolver(
+      sourceFile,
+      resolverFile
+    );
+
+    if (
+      resolverFile.__filetype !== 'scalarResolver' ||
+      // For scalarResolver, only add `import { GraphQLScalarType } ...` if variable statement was added.
+      // This is because user could have used custom scalar. If so, we don't want to add unnecessary import
+      (resolverFile.__filetype === 'scalarResolver' && addedVariableStatement)
+    ) {
+      ensureImportedType(sourceFile, resolverFile);
+    }
+
     if (
       fixObjectTypeResolvers === 'smart' &&
       resolverFile.__filetype === 'objectType'
@@ -79,13 +91,16 @@ export const postProcessFiles = ({
 const ensureExportedResolver = (
   sourceFile: SourceFile,
   resolverFile: ResolverFile
-): void => {
+): { addedVariableStatement: boolean } => {
+  const result = { addedVariableStatement: false };
+
   const { variableStatement, isExported } =
     getVariableStatementWithExpectedIdentifier(sourceFile, resolverFile);
 
   if (!variableStatement) {
     // Did not find variable statement with expected identifier, add it to the end with a warning
     sourceFile.addStatements(resolverFile.meta.variableStatement);
+    result.addedVariableStatement = true;
   } else if (variableStatement && !isExported) {
     // If has identifier but not exported
     // Add export keyword to statement
@@ -99,6 +114,8 @@ const ensureExportedResolver = (
     }
     // else, if identifier's been exported do nothing
   }
+
+  return result;
 };
 
 /**
