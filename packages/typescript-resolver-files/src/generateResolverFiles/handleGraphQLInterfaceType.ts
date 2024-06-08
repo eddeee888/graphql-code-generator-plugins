@@ -38,7 +38,7 @@ export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
   const variableStatement = `export const ${resolverName}: ${resolverTypeString} = { /* Implement ${resolverName} interface logic here */ };`;
 
   result.files[fieldFilePath] = {
-    __filetype: 'generalResolver',
+    __filetype: 'interfaceResolver',
     content: `
     ${resolverTypeImportDeclaration}
     ${variableStatement}`,

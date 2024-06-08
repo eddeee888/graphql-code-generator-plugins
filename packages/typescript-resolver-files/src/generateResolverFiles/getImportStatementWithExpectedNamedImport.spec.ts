@@ -76,7 +76,7 @@ describe('getImportStatementWithExpectedNamedImport', () => {
     );
   });
 
-  it('returns import statement if found for generalResolver files', () => {
+  it('returns import statement if found for interfaceResolver files', () => {
     const project = new Project();
     const sourceFile = project.createSourceFile(
       '/pathto/User.ts',
@@ -88,7 +88,7 @@ describe('getImportStatementWithExpectedNamedImport', () => {
     );
 
     const result = getImportStatementWithExpectedNamedImport(sourceFile, {
-      __filetype: 'generalResolver',
+      __filetype: 'interfaceResolver',
       content: '',
       mainImportIdentifier: 'user',
       meta: {

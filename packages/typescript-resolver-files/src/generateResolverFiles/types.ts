@@ -16,8 +16,38 @@ export interface StandardFile extends BaseVirtualFile {
   __filetype: 'file';
 }
 
-export interface GeneralResolverFile extends BaseVirtualFile {
-  __filetype: 'generalResolver';
+export interface InterfacelResolverFile extends BaseVirtualFile {
+  __filetype: 'interfaceResolver';
+  meta: {
+    moduleName: string;
+    relativePathFromBaseToModule: string[];
+    resolverTypeImportDeclaration: string;
+    variableStatement: string;
+    resolverType: {
+      baseImport: string; // e.g. `NodeResolvers`
+      final: string;
+    };
+    normalizedResolverName: NormalizedResolverName;
+  };
+}
+
+export interface UnionResolverFile extends BaseVirtualFile {
+  __filetype: 'unionResolver';
+  meta: {
+    moduleName: string;
+    relativePathFromBaseToModule: string[];
+    resolverTypeImportDeclaration: string;
+    variableStatement: string;
+    resolverType: {
+      baseImport: string; // e.g. `NodeResolvers`
+      final: string;
+    };
+    normalizedResolverName: NormalizedResolverName;
+  };
+}
+
+export interface ScalarResolverFile extends BaseVirtualFile {
+  __filetype: 'scalarResolver';
   meta: {
     moduleName: string;
     relativePathFromBaseToModule: string[];
@@ -65,9 +95,11 @@ export interface ObjectTypeFile extends BaseVirtualFile {
 }
 
 export type ResolverFile =
-  | GeneralResolverFile
   | RootObjectTypeFieldResolverFile
-  | ObjectTypeFile;
+  | ObjectTypeFile
+  | InterfacelResolverFile
+  | UnionResolverFile
+  | ScalarResolverFile;
 
 export interface GenerateResolverFilesContext {
   config: {
