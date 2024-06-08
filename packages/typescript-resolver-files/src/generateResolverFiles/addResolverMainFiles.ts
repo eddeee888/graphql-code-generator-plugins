@@ -85,7 +85,9 @@ export const addResolverMainFiles = ({
     // Non Root Object fields that was generated
     if (
       file.__filetype === 'objectType' ||
-      file.__filetype === 'generalResolver'
+      file.__filetype === 'interfaceResolver' ||
+      file.__filetype === 'unionResolver' ||
+      file.__filetype === 'scalarResolver'
     ) {
       res[resolverMainFilename].importLines.push(
         printImportLine({

@@ -36,7 +36,7 @@ export const handleGraphQLUnionType: GraphQLTypeHandler = (
   const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { /* Implement ${resolverName} union logic here */ };`;
 
   result.files[fieldFilePath] = {
-    __filetype: 'generalResolver',
+    __filetype: 'unionResolver',
     content: `
     ${resolverTypeImportDeclaration}
     ${variableStatement}`,

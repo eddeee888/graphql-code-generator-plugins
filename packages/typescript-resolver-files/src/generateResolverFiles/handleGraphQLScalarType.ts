@@ -49,7 +49,7 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
   });`;
 
   result.files[fieldFilePath] = {
-    __filetype: 'generalResolver',
+    __filetype: 'scalarResolver',
     content: `
     ${resolverTypeImportDeclaration}
     ${variableStatement}`,
