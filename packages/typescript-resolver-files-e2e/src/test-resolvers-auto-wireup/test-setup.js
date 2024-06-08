@@ -21,7 +21,6 @@ try {
     {
       file: 'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/base/resolvers/JSON.ts',
       content: `import { JSONResolver} from 'graphql-scalars'
-      JSONResolver.description = undefined;
       export const JSON = JSONResolver;
       `,
     },
