@@ -8,6 +8,7 @@ import { Profile } from './zoo/resolvers/Profile';
 import { Topic } from './topic/resolvers/Topic';
 import { TopicCreateResult } from './topic/resolvers/TopicCreateResult';
 import { User } from './pet/resolvers/User';
+import { CustomLogicScalar } from './base/resolvers/CustomLogicScalar';
 import { SomeRandomScalar } from './base/resolvers/SomeRandomScalar';
 import { Error } from './base/resolvers/Error';
 import { TopicCreatePayload } from './topic/resolvers/TopicCreatePayload';
@@ -26,6 +27,7 @@ export const resolvers: Resolvers = {
   Topic: Topic,
   TopicCreateResult: TopicCreateResult,
   User: User,
+  CustomLogicScalar: CustomLogicScalar,
   SomeRandomScalar: SomeRandomScalar,
   Error: Error,
   TopicCreatePayload: TopicCreatePayload,

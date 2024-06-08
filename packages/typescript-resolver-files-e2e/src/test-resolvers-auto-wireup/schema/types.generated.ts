@@ -35,6 +35,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  CustomLogicScalar: { input: any; output: any };
   DateTime: { input: Date | string; output: Date | string };
   SomeRandomScalar: { input: any; output: any };
 };
@@ -339,6 +340,9 @@ export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  CustomLogicScalar: ResolverTypeWrapper<
+    Scalars['CustomLogicScalar']['output']
+  >;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Error']>;
   ErrorType: ErrorType;
@@ -397,6 +401,7 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  CustomLogicScalar: Scalars['CustomLogicScalar']['output'];
   DateTime: Scalars['DateTime']['output'];
   Error: ResolversInterfaceTypes<ResolversParentTypes>['Error'];
   Mutation: {};
@@ -437,6 +442,11 @@ export type ResolversParentTypes = {
   Zoo: Zoo;
   Boolean: Scalars['Boolean']['output'];
 };
+
+export interface CustomLogicScalarScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['CustomLogicScalar'], any> {
+  name: 'CustomLogicScalar';
+}
 
 export interface DateTimeScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
@@ -698,6 +708,7 @@ export type ZooResolvers<
 };
 
 export type Resolvers<ContextType = any> = {
+  CustomLogicScalar?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
   Error?: ErrorResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
