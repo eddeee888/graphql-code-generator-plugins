@@ -37,6 +37,7 @@ export type Scalars = {
   Float: { input: number; output: number };
   CustomLogicScalar: { input: any; output: any };
   DateTime: { input: Date | string; output: Date | string };
+  JSON: { input: any; output: any };
   SomeRandomScalar: { input: any; output: any };
 };
 
@@ -346,6 +347,7 @@ export type ResolversTypes = {
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Error']>;
   ErrorType: ErrorType;
+  JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   PaginationInput: PaginationInput;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
@@ -404,6 +406,7 @@ export type ResolversParentTypes = {
   CustomLogicScalar: Scalars['CustomLogicScalar']['output'];
   DateTime: Scalars['DateTime']['output'];
   Error: ResolversInterfaceTypes<ResolversParentTypes>['Error'];
+  JSON: Scalars['JSON']['output'];
   Mutation: {};
   PaginationInput: PaginationInput;
   Int: Scalars['Int']['output'];
@@ -460,6 +463,11 @@ export type ErrorResolvers<
   __resolveType?: TypeResolveFn<'PayloadError', ParentType, ContextType>;
   error?: Resolver<ResolversTypes['ErrorType'], ParentType, ContextType>;
 };
+
+export interface JSONScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
+  name: 'JSON';
+}
 
 export type MutationResolvers<
   ContextType = any,
@@ -711,6 +719,7 @@ export type Resolvers<ContextType = any> = {
   CustomLogicScalar?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
   Error?: ErrorResolvers<ContextType>;
+  JSON?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   PaginationResult?: PaginationResultResolvers<ContextType>;
   PayloadError?: PayloadErrorResolvers<ContextType>;

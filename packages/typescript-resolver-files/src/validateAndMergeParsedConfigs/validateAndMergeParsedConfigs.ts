@@ -31,6 +31,16 @@ export const validateAndMergeParsedConfigs = ({
   externalResolvers: ParsedPresetConfig['externalResolvers'];
   parsedGraphQLSchemaMeta: ParsedGraphQLSchemaMeta;
 }): MergedConfig => {
+  Object.keys(defaultScalarExternalResolvers).forEach((schemaType) => {
+    if (
+      // If the scalar is defined on the filesystem, it means user wants to use their custom definition.
+      // This means we should use it, instead of importing it from scalar module
+      userDefinedSchemaTypeMap.scalar[schemaType]?.resolverFile.isOnFilesystem
+    ) {
+      delete defaultScalarExternalResolvers[schemaType];
+    }
+  });
+
   Object.keys(externalResolvers).forEach((schemaType) => {
     if (userDefinedSchemaTypeMap.scalar[schemaType]) {
       throw new Error(

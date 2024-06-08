@@ -17,6 +17,13 @@ try {
       export const CustomLogicScalar = DateResolver;
       `,
     },
+    // If there's custom Scalar definition, use it instead of importing from scalars module (e.g. graphql-scalars)
+    {
+      file: 'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/base/resolvers/JSON.ts',
+      content: `import { JSONResolver} from 'graphql-scalars'
+      export const JSON = JSONResolver;
+      `,
+    },
 
     // Files in blacklisted modules should not be filled or added to resolvers.generated.ts
     'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/user/resolvers/User.ts',
