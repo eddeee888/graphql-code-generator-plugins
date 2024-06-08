@@ -31,3 +31,4 @@ type PaginationResult {
 scalar DateTime
 scalar SomeRandomScalar
 scalar CustomLogicScalar
+scalar JSON

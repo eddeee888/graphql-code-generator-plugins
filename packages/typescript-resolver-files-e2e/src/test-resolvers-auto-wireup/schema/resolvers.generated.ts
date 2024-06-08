@@ -9,6 +9,7 @@ import { Topic } from './topic/resolvers/Topic';
 import { TopicCreateResult } from './topic/resolvers/TopicCreateResult';
 import { User } from './pet/resolvers/User';
 import { CustomLogicScalar } from './base/resolvers/CustomLogicScalar';
+import { JSON } from './base/resolvers/JSON';
 import { SomeRandomScalar } from './base/resolvers/SomeRandomScalar';
 import { Error } from './base/resolvers/Error';
 import { TopicCreatePayload } from './topic/resolvers/TopicCreatePayload';
@@ -28,6 +29,7 @@ export const resolvers: Resolvers = {
   TopicCreateResult: TopicCreateResult,
   User: User,
   CustomLogicScalar: CustomLogicScalar,
+  JSON: JSON,
   SomeRandomScalar: SomeRandomScalar,
   Error: Error,
   TopicCreatePayload: TopicCreatePayload,
