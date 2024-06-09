@@ -19,6 +19,10 @@ export type Incremental<T> =
   | {
       [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
     };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type EnumResolverSignature<T, AllowedValues = any> = {
+  [key in keyof T]?: AllowedValues;
+};
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
@@ -157,11 +161,13 @@ export type DirectiveResolverFn<
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Cat: ResolverTypeWrapper<Cat>;
+  Cat: ResolverTypeWrapper<
+    Omit<Cat, 'isChipped'> & { isChipped: ResolversTypes['CatChipped'] }
+  >;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
-  CatChipped: CatChipped;
+  CatChipped: ResolverTypeWrapper<'YES' | 'NO'>;
   Query: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
@@ -187,6 +193,11 @@ export type CatResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CatChippedResolvers = EnumResolverSignature<
+  { NO?: any; YES?: any },
+  ResolversTypes['CatChipped']
+>;
+
 export type QueryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
@@ -201,5 +212,6 @@ export type QueryResolvers<
 
 export type Resolvers<ContextType = any> = {
   Cat?: CatResolvers<ContextType>;
+  CatChipped?: CatChippedResolvers;
   Query?: QueryResolvers<ContextType>;
 };

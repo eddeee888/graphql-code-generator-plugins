@@ -24,6 +24,10 @@ export type Incremental<T> =
   | {
       [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
     };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type EnumResolverSignature<T, AllowedValues = any> = {
+  [key in keyof T]?: AllowedValues;
+};
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
@@ -299,35 +303,52 @@ export type DirectiveResolverFn<
 /** Mapping of union types */
 export type RESOLVERSUNIONTYPES<_RefType extends Record<string, unknown>> = {
   TopicByIdPayload:
-    | (STANDARDERROR & { __typename: 'StandardError' })
+    | (Omit<STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'StandardError';
+      })
     | (TOPICBYIDRESULT & { __typename: 'TopicByIdResult' });
   TopicCreatePayload:
-    | (STANDARDERROR & { __typename: 'StandardError' })
+    | (Omit<STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'StandardError';
+      })
     | (TOPICCREATERESULT & { __typename: 'TopicCreateResult' });
   TopicEditPayload:
-    | (STANDARDERROR & { __typename: 'StandardError' })
+    | (Omit<STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'StandardError';
+      })
     | (TOPICEDITRESULT & { __typename: 'TopicEditResult' });
   TopicsCreatedByUserPayload:
-    | (STANDARDERROR & { __typename: 'StandardError' })
+    | (Omit<STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'StandardError';
+      })
     | (TOPICSCREATEDBYUSERRESULT & { __typename: 'TopicsCreatedByUserResult' });
   UserPayload:
-    | (STANDARDERROR & { __typename: 'StandardError' })
+    | (Omit<STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'StandardError';
+      })
     | (USERRESULT & { __typename: 'UserResult' });
 };
 
 /** Mapping of interface types */
 export type RESOLVERSINTERFACETYPES<_RefType extends Record<string, unknown>> =
   {
-    Error: STANDARDERROR & { __typename: 'StandardError' };
+    Error: Omit<STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
+      __typename: 'StandardError';
+    };
   };
 
 /** Mapping between all available schema types and the resolvers types */
 export type RESOLVERSTYPES = {
   BigInt: ResolverTypeWrapper<Scalars['BigInt']['output']>;
-  Currency: CURRENCY;
+  Currency: ResolverTypeWrapper<'USD' | 'AUD'>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Error: ResolverTypeWrapper<RESOLVERSINTERFACETYPES<RESOLVERSTYPES>['Error']>;
-  ErrorType: ERRORTYPE;
+  ErrorType: ResolverTypeWrapper<
+    | 'NOT_FOUND'
+    | 'INPUT_VALIDATION_ERROR'
+    | 'FORBIDDEN_ERROR'
+    | 'UNEXPECTED_ERROR'
+  >;
   Mutation: ResolverTypeWrapper<{}>;
   PaginationInput: PAGINATIONINPUT;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
@@ -337,7 +358,9 @@ export type RESOLVERSTYPES = {
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   SomeOtherScalars: ResolverTypeWrapper<Scalars['SomeOtherScalars']['output']>;
-  StandardError: ResolverTypeWrapper<STANDARDERROR>;
+  StandardError: ResolverTypeWrapper<
+    Omit<STANDARDERROR, 'error'> & { error: RESOLVERSTYPES['ErrorType'] }
+  >;
   Subscription: ResolverTypeWrapper<{}>;
   Topic: ResolverTypeWrapper<TOPIC>;
   TopicByIdPayload: ResolverTypeWrapper<
@@ -408,6 +431,11 @@ export interface BIGINTSCALARCONFIG
   name: 'BigInt';
 }
 
+export type CURRENCYRESOLVERS = EnumResolverSignature<
+  { AUD?: any; USD?: any },
+  RESOLVERSTYPES['Currency']
+>;
+
 export interface DATETIMESCALARCONFIG
   extends GraphQLScalarTypeConfig<RESOLVERSTYPES['DateTime'], any> {
   name: 'DateTime';
@@ -420,6 +448,16 @@ export type ERRORRESOLVERS<
   __resolveType?: TypeResolveFn<'StandardError', ParentType, ContextType>;
   error?: Resolver<RESOLVERSTYPES['ErrorType'], ParentType, ContextType>;
 };
+
+export type ERRORTYPERESOLVERS = EnumResolverSignature<
+  {
+    FORBIDDEN_ERROR?: any;
+    INPUT_VALIDATION_ERROR?: any;
+    NOT_FOUND?: any;
+    UNEXPECTED_ERROR?: any;
+  },
+  RESOLVERSTYPES['ErrorType']
+>;
 
 export type MUTATIONRESOLVERS<
   ContextType = ResolverContext,
@@ -653,8 +691,10 @@ export interface WITHINPUTOUTPUTSCALARCONFIG
 
 export type RESOLVERS<ContextType = ResolverContext> = {
   BigInt?: GraphQLScalarType;
+  Currency?: CURRENCYRESOLVERS;
   DateTime?: GraphQLScalarType;
   Error?: ERRORRESOLVERS<ContextType>;
+  ErrorType?: ERRORTYPERESOLVERS;
   Mutation?: MUTATIONRESOLVERS<ContextType>;
   PaginationResult?: PAGINATIONRESULTRESOLVERS<ContextType>;
   Profile?: PROFILERESOLVERS<ContextType>;

@@ -35,6 +35,9 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
+export type EnumResolverSignature<T, AllowedValues = any> = {
+  [key in keyof T]?: AllowedValues;
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string | number };
@@ -409,7 +412,7 @@ export type ResolversTypes = {
   UserResult: ResolverTypeWrapper<
     Omit<UserResult, 'result'> & { result?: Maybe<ResolversTypes['User']> }
   >;
-  UserRole: UserRole;
+  UserRole: ResolverTypeWrapper<'ADMIN' | 'USER'>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -723,6 +726,11 @@ export type UserResultResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserRoleResolvers = EnumResolverSignature<
+  { ADMIN?: any; USER?: any },
+  ResolversTypes['UserRole']
+>;
+
 export type Resolvers<ContextType = any> = {
   Account?: AccountResolvers<ContextType>;
   Cat?: CatResolvers<ContextType>;
@@ -748,4 +756,5 @@ export type Resolvers<ContextType = any> = {
   User?: UserResolvers<ContextType>;
   UserPayload?: UserPayloadResolvers<ContextType>;
   UserResult?: UserResultResolvers<ContextType>;
+  UserRole?: UserRoleResolvers;
 };
