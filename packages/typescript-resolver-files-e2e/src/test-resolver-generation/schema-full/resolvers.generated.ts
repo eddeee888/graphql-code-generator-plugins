@@ -24,6 +24,7 @@ import { TopicCreatePayload } from './topic/resolvers/TopicCreatePayload';
 import { TopicEditPayload } from './topic/resolvers/TopicEditPayload';
 import { TopicsCreatedByUserPayload } from './topic/resolvers/TopicsCreatedByUserPayload';
 import { UserPayload } from './user/resolvers/UserPayload';
+import { ErrorType } from './base/resolvers/ErrorType';
 import { DateTimeResolver } from 'graphql-scalars';
 export const resolvers: Resolvers = {
   Query: {
@@ -54,5 +55,6 @@ export const resolvers: Resolvers = {
   TopicEditPayload: TopicEditPayload,
   TopicsCreatedByUserPayload: TopicsCreatedByUserPayload,
   UserPayload: UserPayload,
+  ErrorType: ErrorType,
   DateTime: DateTimeResolver,
 };

@@ -17,6 +17,11 @@ enum ErrorType {
   UNEXPECTED_ERROR
 }
 
+enum SortOrder {
+  ASC
+  DESC
+}
+
 input PaginationInput {
   recordsPerPage: Int
   page: Int
