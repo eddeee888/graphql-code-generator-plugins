@@ -61,6 +61,21 @@ export interface ScalarResolverFile extends BaseVirtualFile {
   };
 }
 
+export interface EnumResolverFile extends BaseVirtualFile {
+  __filetype: 'enumResolver';
+  meta: {
+    moduleName: string;
+    relativePathFromBaseToModule: string[];
+    resolverTypeImportDeclaration: string;
+    variableStatement: string;
+    resolverType: {
+      baseImport: string; // e.g. `NodeResolvers`
+      final: string;
+    };
+    normalizedResolverName: NormalizedResolverName;
+  };
+}
+
 export interface RootObjectTypeFieldResolverFile extends BaseVirtualFile {
   __filetype: 'rootObjectTypeFieldResolver';
   meta: {
@@ -99,7 +114,8 @@ export type ResolverFile =
   | ObjectTypeFile
   | InterfacelResolverFile
   | UnionResolverFile
-  | ScalarResolverFile;
+  | ScalarResolverFile
+  | EnumResolverFile;
 
 export interface GenerateResolverFilesContext {
   config: {

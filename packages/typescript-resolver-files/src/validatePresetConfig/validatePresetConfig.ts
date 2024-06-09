@@ -34,6 +34,7 @@ type NormalizedResolverGeneration = {
   object: string | string[];
   union: string | string[];
   interface: string | string[];
+  enum: string | string[];
 };
 
 export type ScalarsOverridesType = string | { input: string; output: string };
@@ -348,6 +349,7 @@ const parseResolverGeneration = (
       object: '*',
       union: '*',
       interface: '*',
+      enum: '*',
     };
   } else if (resolverGeneration === 'minimal') {
     return {
@@ -358,6 +360,7 @@ const parseResolverGeneration = (
       object: '',
       union: '',
       interface: '',
+      enum: '',
     };
   } else if (resolverGeneration === 'recommended') {
     return {
@@ -368,6 +371,7 @@ const parseResolverGeneration = (
       object: '*',
       union: '',
       interface: '',
+      enum: '',
     };
   } else if (resolverGeneration === 'disabled') {
     return {
@@ -378,6 +382,7 @@ const parseResolverGeneration = (
       object: '',
       union: '',
       interface: '',
+      enum: '',
     };
   }
 
@@ -389,6 +394,7 @@ const parseResolverGeneration = (
     object: resolverGeneration.object || '',
     union: resolverGeneration.union || '',
     interface: resolverGeneration.interface || '',
+    enum: resolverGeneration.enum || '',
   };
 };
 

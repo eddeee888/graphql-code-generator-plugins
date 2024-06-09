@@ -5,6 +5,7 @@ import { handleGraphQLObjectType } from './handleGraphQLObjectType';
 import { handleGraphQLUnionType } from './handleGraphQLUnionType';
 import { handleGraphQLScalarType } from './handleGraphQLScalarType';
 import { handleGraphQLInterfaceType } from './handleGraphQLInterfaceType';
+import { handleGraphQLEnumType } from './handleGraphQLEnumType';
 import { visitNamedType } from './visitNamedType';
 import type { GenerateResolverFilesContext } from './types';
 
@@ -127,8 +128,14 @@ export const generateResolverFiles = (
       {
         ...details,
         belongsToRootObject: null,
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        visitor: () => {}, // FIXME: Enum are not being generated and should be if needed: (1) has mapper OR (2) in the right filesystem location. This is here to make sure externalResolver works for enums.
+        visitor: (baseParams, prev_ctx) =>
+          handleGraphQLEnumType(
+            {
+              ...baseParams,
+              allowedValues: details.allowedValues,
+            },
+            prev_ctx
+          ),
       },
       ctx
     );
