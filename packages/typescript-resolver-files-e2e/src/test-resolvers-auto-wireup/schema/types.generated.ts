@@ -89,6 +89,12 @@ export type Pet = {
   primaryOwner: User;
 };
 
+export type PetToy = {
+  __typename?: 'PetToy';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type Profile = {
   __typename?: 'Profile';
   id: Scalars['ID']['output'];
@@ -356,6 +362,7 @@ export type ResolversTypes = {
   Pet: ResolverTypeWrapper<Pet>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  PetToy: ResolverTypeWrapper<PetToy>;
   Profile: ResolverTypeWrapper<Profile>;
   Query: ResolverTypeWrapper<{}>;
   SomeRandomScalar: ResolverTypeWrapper<Scalars['SomeRandomScalar']['output']>;
@@ -415,6 +422,7 @@ export type ResolversParentTypes = {
   Pet: Pet;
   ID: Scalars['ID']['output'];
   String: Scalars['String']['output'];
+  PetToy: PetToy;
   Profile: Profile;
   Query: {};
   SomeRandomScalar: Scalars['SomeRandomScalar']['output'];
@@ -512,6 +520,15 @@ export type PetResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   primaryOwner?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PetToyResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['PetToy'] = ResolversParentTypes['PetToy']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -724,6 +741,7 @@ export type Resolvers<ContextType = any> = {
   PaginationResult?: PaginationResultResolvers<ContextType>;
   PayloadError?: PayloadErrorResolvers<ContextType>;
   Pet?: PetResolvers<ContextType>;
+  PetToy?: PetToyResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SomeRandomScalar?: GraphQLScalarType;

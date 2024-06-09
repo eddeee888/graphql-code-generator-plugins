@@ -1,4 +1,4 @@
-import type { SourceFile } from 'ts-morph';
+import type { SourceFile, VariableStatement } from 'ts-morph';
 import * as path from 'path';
 import { cwd } from '../utils';
 import type { ResolverFile, GenerateResolverFilesContext } from './types';
@@ -56,10 +56,22 @@ export const postProcessFiles = ({
       sourceFile.getFilePath()
     );
 
-    const { addedVariableStatement } = ensureExportedResolver(
-      sourceFile,
-      resolverFile
-    );
+    const {
+      variableStatement,
+      addedVariableStatement,
+      ensureCorrectResolverType,
+    } = ensureExportedResolver(sourceFile, resolverFile);
+
+    // For non-scalarResolver, ensure correct type is imported
+    // For scalarResolver, we don't need to add type to the variable statement for a few reasons:
+    // - For cases when we need to create a new GraphQLScalarType, it infer the type from `new GraphQLScalarType`
+    // - For cases when there's custom user logic, it's up to the user to import the correct type or call `new GraphQLScalarType` by themselves
+    if (
+      resolverFile.__filetype !== 'scalarResolver' &&
+      ensureCorrectResolverType
+    ) {
+      ensureCorrectResolverType();
+    }
 
     if (
       resolverFile.__filetype !== 'scalarResolver' ||
@@ -74,7 +86,11 @@ export const postProcessFiles = ({
       fixObjectTypeResolvers === 'smart' &&
       resolverFile.__filetype === 'objectType'
     ) {
-      ensureObjectTypeResolversAreGenerated(sourceFile, resolverFile);
+      ensureObjectTypeResolversAreGenerated(
+        sourceFile,
+        resolverFile,
+        variableStatement
+      );
     }
 
     // Overwrite existing files with fixes
@@ -91,16 +107,25 @@ export const postProcessFiles = ({
 const ensureExportedResolver = (
   sourceFile: SourceFile,
   resolverFile: ResolverFile
-): { addedVariableStatement: boolean } => {
-  const result = { addedVariableStatement: false };
-
-  const { variableStatement, isExported } =
+): {
+  variableStatement: VariableStatement;
+  addedVariableStatement: boolean;
+  ensureCorrectResolverType: (() => void) | undefined;
+} => {
+  const { variableStatement, isExported, ensureCorrectResolverType } =
     getVariableStatementWithExpectedIdentifier(sourceFile, resolverFile);
 
   if (!variableStatement) {
     // Did not find variable statement with expected identifier, add it to the end with a warning
-    sourceFile.addStatements(resolverFile.meta.variableStatement);
-    result.addedVariableStatement = true;
+    const addedVariableStatement = sourceFile.addStatements(
+      resolverFile.meta.variableStatement
+    );
+
+    return {
+      variableStatement: addedVariableStatement as unknown as VariableStatement, // We know it's a variable statement because we just added it.
+      addedVariableStatement: true,
+      ensureCorrectResolverType,
+    };
   } else if (variableStatement && !isExported) {
     // If has identifier but not exported
     // Add export keyword to statement
@@ -113,9 +138,18 @@ const ensureExportedResolver = (
       variableStatement.setIsExported(true);
     }
     // else, if identifier's been exported do nothing
+    return {
+      variableStatement,
+      addedVariableStatement: false,
+      ensureCorrectResolverType,
+    };
   }
 
-  return result;
+  return {
+    variableStatement,
+    addedVariableStatement: false,
+    ensureCorrectResolverType,
+  };
 };
 
 /**

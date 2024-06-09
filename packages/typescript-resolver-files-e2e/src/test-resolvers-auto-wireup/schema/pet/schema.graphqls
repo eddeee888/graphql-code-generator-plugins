@@ -4,6 +4,11 @@ type Pet {
   primaryOwner: User!
 }
 
+type PetToy {
+  id: ID!
+  name: String!
+}
+
 extend type User {
   pets: [Pet!]!
 }

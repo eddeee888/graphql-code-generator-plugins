@@ -7,8 +7,11 @@ export const getVariableStatementWithExpectedIdentifier = (
 ): {
   variableStatement: VariableStatement | undefined;
   isExported: boolean;
+  ensureCorrectResolverType: (() => void) | undefined;
 } => {
   let isExported = false;
+  let ensureCorrectResolverType: (() => void) | undefined = undefined;
+
   const variableStatementWithExpectedIdentifier =
     sourceFile.getVariableStatement((statement) => {
       let hasExpectedIdentifier = false;
@@ -37,15 +40,19 @@ export const getVariableStatementWithExpectedIdentifier = (
     variableStatementWithExpectedIdentifier &&
     resolverFile.meta.resolverType?.final
   ) {
-    variableStatementWithExpectedIdentifier
+    const variableDeclaration = variableStatementWithExpectedIdentifier
       .getDeclarationList()
-      .getDeclarations()[0]
-      ?.getTypeNode()
-      ?.replaceWithText(resolverFile.meta.resolverType.final);
+      .getDeclarations()[0];
+    const typeNode = variableDeclaration?.getTypeNode();
+
+    ensureCorrectResolverType = typeNode
+      ? () => typeNode.replaceWithText(resolverFile.meta.resolverType.final)
+      : () => variableDeclaration.setType(resolverFile.meta.resolverType.final);
   }
 
   return {
     variableStatement: variableStatementWithExpectedIdentifier,
     isExported,
+    ensureCorrectResolverType,
   };
 };
