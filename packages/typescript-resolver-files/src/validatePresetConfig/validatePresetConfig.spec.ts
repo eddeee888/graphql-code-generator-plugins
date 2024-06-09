@@ -23,6 +23,7 @@ const defaultExpected: ParsedPresetConfig = {
     object: '*',
     union: '',
     interface: '',
+    enum: '',
   },
   typeDefsFilePath: './typeDefs.generated.ts',
   typeDefsFileMode: 'merged',
@@ -420,7 +421,7 @@ describe('validatePresetConfig - mode: merged', () => {
 
 describe('validatePresetConfig - resolverGeneration', () => {
   it.each<{
-    input: 'disabled' | 'recommended' | 'all';
+    input: 'disabled' | 'recommended' | 'all' | 'minimal';
     expected: ParsedPresetConfig['resolverGeneration'];
   }>([
     {
@@ -433,6 +434,20 @@ describe('validatePresetConfig - resolverGeneration', () => {
         object: '',
         union: '',
         interface: '',
+        enum: '',
+      },
+    },
+    {
+      input: 'minimal',
+      expected: {
+        query: '*',
+        mutation: '*',
+        subscription: '*',
+        scalar: '*',
+        object: '',
+        union: '',
+        interface: '',
+        enum: '',
       },
     },
     {
@@ -445,6 +460,7 @@ describe('validatePresetConfig - resolverGeneration', () => {
         object: '*',
         union: '',
         interface: '',
+        enum: '',
       },
     },
     {
@@ -457,6 +473,7 @@ describe('validatePresetConfig - resolverGeneration', () => {
         object: '*',
         union: '*',
         interface: '*',
+        enum: '*',
       },
     },
   ])(
@@ -484,6 +501,7 @@ describe('validatePresetConfig - resolverGeneration', () => {
       object: '',
       union: '',
       interface: '',
+      enum: '',
     });
   });
 
