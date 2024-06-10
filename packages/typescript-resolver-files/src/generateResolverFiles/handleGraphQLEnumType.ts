@@ -20,11 +20,15 @@ export const handleGraphQLEnumType: GraphQLTypeHandler<
     config: { typeMappersMap, resolverGeneration, emitLegacyCommonJSImports },
   }
 ) => {
+  const matchedPatternToGenerate = isMatchResolverNamePattern({
+    pattern: resolverGeneration.enum,
+    value: normalizedResolverName.withModule,
+  });
+  const mapperDetails = typeMappersMap[normalizedResolverName.base];
+
   if (
-    !isMatchResolverNamePattern({
-      pattern: resolverGeneration.enum,
-      value: normalizedResolverName.withModule,
-    }) &&
+    !matchedPatternToGenerate &&
+    !mapperDetails &&
     !isFileAlreadyOnFilesystem
   ) {
     logger.debug(
@@ -33,12 +37,18 @@ export const handleGraphQLEnumType: GraphQLTypeHandler<
     return;
   }
 
-  const mapperDetails = typeMappersMap[normalizedResolverName.base];
-  if (!mapperDetails) {
-    logger.warn(
-      `No mapper found for enum type: "${normalizedResolverName.withModule}". Add a mapper to ensure no runtime error. Note: typesPluginsConfig.enumValues is not supported currently.`
-    );
-  }
+  const forcedGenerationWarning = (() => {
+    if (!matchedPatternToGenerate && mapperDetails) {
+      logger.debug(
+        `Enum resolver generation was NOT skipped because there is a associated mapper: "${normalizedResolverName.withModule}". "Pattern: ${resolverGeneration.enum}". Mapper: ${mapperDetails.typeMapperName}`
+      );
+      return `/*
+    * Note: This enum file is generated because "${mapperDetails.typeMapperName}" is declared. This is to ensure runtime safety.
+    * If you want to skip this file generation, remove the mapper or update the pattern in the \`resolverGeneration.object\` config.
+    */\n`;
+    }
+    return '';
+  })();
 
   const resolverTypeImportDeclaration = printImportLine({
     isTypeImport: true,
@@ -48,7 +58,7 @@ export const handleGraphQLEnumType: GraphQLTypeHandler<
     emitLegacyCommonJSImports,
   });
 
-  const variableStatement = `export const ${resolverName}: ${
+  const variableStatement = `${forcedGenerationWarning}export const ${resolverName}: ${
     resolversTypeMeta.typeString
   } = {
     ${allowedValues.map((value) => `${value}: '${value}'`).join(',\n')}
