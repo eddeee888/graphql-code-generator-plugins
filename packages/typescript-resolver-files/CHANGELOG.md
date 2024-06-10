@@ -1,5 +1,13 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.9.3
+
+### Patch Changes
+
+- 386bb30: Fix issue where variable statements without type node does not get type node added
+- 6715a49: Prefer detected scalar file on filesystem over scalar modules when wiring up resolvers map
+- 86babc6: Fix issue where GraphQLScalarType is imported all the time, regardless of whether it's used
+
 ## 0.9.2
 
 ### Patch Changes
