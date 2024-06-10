@@ -22,6 +22,12 @@ enum SortOrder {
   DESC
 }
 
+enum Country {
+  AU
+  US
+  NZ
+}
+
 input PaginationInput {
   recordsPerPage: Int
   page: Int

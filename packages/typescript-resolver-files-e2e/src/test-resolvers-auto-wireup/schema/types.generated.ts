@@ -3,7 +3,11 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from 'graphql';
-import { ErrorTypeMapper, SortOrderMapper } from './base/base.mappers';
+import {
+  CountryMapper,
+  ErrorTypeMapper,
+  SortOrderMapper,
+} from './base/base.mappers';
 import { TopicMapper } from './topic/topic.mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
@@ -44,6 +48,8 @@ export type Scalars = {
   JSON: { input: any; output: any };
   SomeRandomScalar: { input: any; output: any };
 };
+
+export type Country = 'AU' | 'NZ' | 'US';
 
 export type Error = {
   error: ErrorType;
@@ -365,6 +371,7 @@ export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Country: ResolverTypeWrapper<CountryMapper>;
   CustomLogicScalar: ResolverTypeWrapper<
     Scalars['CustomLogicScalar']['output']
   >;
@@ -474,6 +481,11 @@ export type ResolversParentTypes = {
   Zoo: Zoo;
   Boolean: Scalars['Boolean']['output'];
 };
+
+export type CountryResolvers = EnumResolverSignature<
+  { AU?: any; NZ?: any; US?: any },
+  ResolversTypes['Country']
+>;
 
 export interface CustomLogicScalarScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['CustomLogicScalar'], any> {
@@ -769,6 +781,7 @@ export type ZooResolvers<
 };
 
 export type Resolvers<ContextType = any> = {
+  Country?: CountryResolvers;
   CustomLogicScalar?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
   Error?: ErrorResolvers<ContextType>;
