@@ -4,6 +4,8 @@ import { topicById as Query_topicById } from './topic/resolvers/Query/topicById'
 import { topicsCreatedByUser as Query_topicsCreatedByUser } from './topic/resolvers/Query/topicsCreatedByUser';
 import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/topicCreate';
 import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
+import { Pet } from './pet/resolvers/Pet';
+import { PetToy } from './pet/resolvers/PetToy';
 import { Profile } from './zoo/resolvers/Profile';
 import { Topic } from './topic/resolvers/Topic';
 import { TopicCreateResult } from './topic/resolvers/TopicCreateResult';
@@ -24,6 +26,8 @@ export const resolvers: Resolvers = {
     topicEdit: Mutation_topicEdit,
   },
 
+  Pet: Pet,
+  PetToy: PetToy,
   Profile: Profile,
   Topic: Topic,
   TopicCreateResult: TopicCreateResult,

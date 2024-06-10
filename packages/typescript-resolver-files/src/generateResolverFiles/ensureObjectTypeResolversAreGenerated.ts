@@ -1,28 +1,22 @@
-import { type SourceFile, SyntaxKind, type PropertyAssignment } from 'ts-morph';
+import {
+  type SourceFile,
+  SyntaxKind,
+  type PropertyAssignment,
+  type VariableStatement,
+} from 'ts-morph';
 import type { ObjectTypeFile } from './types';
-import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier';
 
 /**
  * Ensure objectTypeResolver files have all the resolvers due to mismatched types
  */
 export const ensureObjectTypeResolversAreGenerated = (
   sourceFile: SourceFile,
-  resolverFile: ObjectTypeFile
+  resolverFile: ObjectTypeFile,
+  variableStatement: VariableStatement
 ): void => {
   const resolversToGenerate = resolverFile.meta.resolversToGenerate || {};
   if (!Object.keys(resolversToGenerate).length) {
     return;
-  }
-
-  const { variableStatement } = getVariableStatementWithExpectedIdentifier(
-    sourceFile,
-    resolverFile
-  );
-
-  if (!variableStatement) {
-    throw new Error(
-      'Missing variableStatement in ensureObjectTypeResolversAreGenerated.'
-    );
   }
 
   /**

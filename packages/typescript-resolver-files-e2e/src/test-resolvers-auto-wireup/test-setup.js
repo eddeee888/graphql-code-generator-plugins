@@ -9,6 +9,18 @@ try {
     'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/topic/resolvers/TopicCreateResult.ts',
     'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/pet/resolvers/User.ts',
 
+    // Existing object type file with wrong type and no type import, should import type and replace wrong type
+    {
+      file: 'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/pet/resolvers/Pet.ts',
+      content: `export const Pet: Record<string,never> = {};`,
+    },
+
+    // Existing object type file with no type and no type import, should import type and add type
+    {
+      file: 'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/pet/resolvers/PetToy.ts',
+      content: `export const PetToy = {};`,
+    },
+
     // Existing Scalar file, must not re-import GraphQLScalarType
     {
       file: 'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/base/resolvers/CustomLogicScalar.ts',
