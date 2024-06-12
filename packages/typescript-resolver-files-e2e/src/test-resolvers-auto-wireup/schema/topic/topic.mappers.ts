@@ -5,3 +5,7 @@ export type TopicMapper = {
   creatorUserId: string;
   createdAt: Date;
 };
+
+export type TopicEditResultMapper = {
+  result: { id: string }[];
+};

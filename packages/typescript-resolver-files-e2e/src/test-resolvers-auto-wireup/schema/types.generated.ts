@@ -3,7 +3,7 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from 'graphql';
-import { TopicMapper } from './topic/topic.mappers';
+import { TopicMapper, TopicEditResultMapper } from './topic/topic.mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -326,9 +326,7 @@ export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
       });
   TopicEditPayload:
     | (PayloadError & { __typename: 'PayloadError' })
-    | (Omit<TopicEditResult, 'result'> & { result: _RefType['Topic'] } & {
-        __typename: 'TopicEditResult';
-      });
+    | (TopicEditResultMapper & { __typename: 'TopicEditResult' });
   TopicsCreatedByUserPayload:
     | (PayloadError & { __typename: 'PayloadError' })
     | (Omit<TopicsCreatedByUserResult, 'result'> & {
@@ -387,9 +385,7 @@ export type ResolversTypes = {
   TopicEditPayload: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>['TopicEditPayload']
   >;
-  TopicEditResult: ResolverTypeWrapper<
-    Omit<TopicEditResult, 'result'> & { result: ResolversTypes['Topic'] }
-  >;
+  TopicEditResult: ResolverTypeWrapper<TopicEditResultMapper>;
   TopicsCreatedByUserInput: TopicsCreatedByUserInput;
   TopicsCreatedByUserPayload: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>['TopicsCreatedByUserPayload']
@@ -439,9 +435,7 @@ export type ResolversParentTypes = {
   };
   TopicEditInput: TopicEditInput;
   TopicEditPayload: ResolversUnionTypes<ResolversParentTypes>['TopicEditPayload'];
-  TopicEditResult: Omit<TopicEditResult, 'result'> & {
-    result: ResolversParentTypes['Topic'];
-  };
+  TopicEditResult: TopicEditResultMapper;
   TopicsCreatedByUserInput: TopicsCreatedByUserInput;
   TopicsCreatedByUserPayload: ResolversUnionTypes<ResolversParentTypes>['TopicsCreatedByUserPayload'];
   TopicsCreatedByUserResult: Omit<TopicsCreatedByUserResult, 'result'> & {

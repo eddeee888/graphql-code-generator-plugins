@@ -9,6 +9,10 @@ try {
     'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/topic/resolvers/TopicCreateResult.ts',
     'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/pet/resolvers/User.ts',
 
+    // Exisiting empty object type file and mapper causing comment + variable to be added, should successfully fill with content
+    // https://github.com/eddeee888/graphql-code-generator-plugins/pull/297
+    'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/topic/resolvers/TopicEditResult.ts',
+
     // Existing object type file with wrong type and no type import, should import type and replace wrong type
     {
       file: 'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/pet/resolvers/Pet.ts',
