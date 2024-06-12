@@ -1,4 +1,4 @@
-import type { SourceFile, VariableStatement } from 'ts-morph';
+import type { SourceFile } from 'ts-morph';
 import * as path from 'path';
 import { cwd } from '../utils';
 import type { ResolverFile, GenerateResolverFilesContext } from './types';
