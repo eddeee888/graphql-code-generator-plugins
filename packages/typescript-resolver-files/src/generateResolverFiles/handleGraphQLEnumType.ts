@@ -80,6 +80,7 @@ export const handleGraphQLEnumType: GraphQLTypeHandler<
         final: resolversTypeMeta.typeString,
       },
       normalizedResolverName,
+      allowedValues,
     },
   };
 };

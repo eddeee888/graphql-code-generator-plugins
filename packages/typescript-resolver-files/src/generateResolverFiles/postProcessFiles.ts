@@ -4,6 +4,7 @@ import { cwd } from '../utils';
 import type { ResolverFile, GenerateResolverFilesContext } from './types';
 import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier';
 import { ensureObjectTypeResolversAreGenerated } from './ensureObjectTypeResolversAreGenerated';
+import { ensureEnumTypeResolversAreGenerated } from './ensureEnumTypeResolversAreGenerated';
 import { getImportStatementWithExpectedNamedImport } from './getImportStatementWithExpectedNamedImport';
 
 /**
@@ -80,10 +81,17 @@ export const postProcessFiles = ({
     }
 
     if (
-      fixObjectTypeResolvers === 'smart' &&
+      fixObjectTypeResolvers.object === 'smart' &&
       resolverFile.__filetype === 'objectType'
     ) {
       ensureObjectTypeResolversAreGenerated(sourceFile, resolverFile);
+    }
+
+    if (
+      fixObjectTypeResolvers.enum === 'smart' &&
+      resolverFile.__filetype === 'enumResolver'
+    ) {
+      ensureEnumTypeResolversAreGenerated(sourceFile, resolverFile);
     }
 
     // Overwrite existing files with fixes
