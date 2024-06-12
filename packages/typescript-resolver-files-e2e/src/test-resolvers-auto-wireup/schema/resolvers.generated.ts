@@ -16,6 +16,9 @@ import { JSON } from './base/resolvers/JSON';
 import { SomeRandomScalar } from './base/resolvers/SomeRandomScalar';
 import { Error } from './base/resolvers/Error';
 import { TopicCreatePayload } from './topic/resolvers/TopicCreatePayload';
+import { Country } from './base/resolvers/Country';
+import { ErrorType } from './base/resolvers/ErrorType';
+import { SortOrder } from './base/resolvers/SortOrder';
 import { DateTimeResolver } from 'graphql-scalars';
 export const resolvers: Resolvers = {
   Query: {
@@ -39,5 +42,8 @@ export const resolvers: Resolvers = {
   SomeRandomScalar: SomeRandomScalar,
   Error: Error,
   TopicCreatePayload: TopicCreatePayload,
+  Country: Country,
+  ErrorType: ErrorType,
+  SortOrder: SortOrder,
   DateTime: DateTimeResolver,
 };

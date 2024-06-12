@@ -26,6 +26,9 @@ export type Incremental<T> =
       [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
     };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type EnumResolverSignature<T, AllowedValues = any> = {
+  [key in keyof T]?: AllowedValues;
+};
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
@@ -281,27 +284,37 @@ export type DirectiveResolverFn<
 /** Mapping of union types */
 export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
   TopicByIdPayload:
-    | (StandardError & { __typename: 'StandardError' })
+    | (Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'StandardError';
+      })
     | (Omit<TopicByIdResult, 'result'> & {
         result?: Maybe<_RefType['Topic']>;
       } & { __typename: 'TopicByIdResult' });
   TopicCreatePayload:
-    | (StandardError & { __typename: 'StandardError' })
+    | (Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'StandardError';
+      })
     | (Omit<TopicCreateResult, 'result'> & { result: _RefType['Topic'] } & {
         __typename: 'TopicCreateResult';
       });
   TopicEditPayload:
-    | (StandardError & { __typename: 'StandardError' })
+    | (Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'StandardError';
+      })
     | (Omit<TopicEditResult, 'result'> & { result: _RefType['Topic'] } & {
         __typename: 'TopicEditResult';
       });
   TopicsCreatedByUserPayload:
-    | (StandardError & { __typename: 'StandardError' })
+    | (Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'StandardError';
+      })
     | (Omit<TopicsCreatedByUserResult, 'result'> & {
         result: Array<_RefType['Topic']>;
       } & { __typename: 'TopicsCreatedByUserResult' });
   UserPayload:
-    | (StandardError & { __typename: 'StandardError' })
+    | (Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'StandardError';
+      })
     | (Omit<UserResult, 'result'> & { result?: Maybe<_RefType['User']> } & {
         __typename: 'UserResult';
       });
@@ -310,14 +323,21 @@ export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
   {
-    Error: StandardError & { __typename: 'StandardError' };
+    Error: Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & {
+      __typename: 'StandardError';
+    };
   };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Error']>;
-  ErrorType: ErrorType;
+  ErrorType: ResolverTypeWrapper<
+    | 'NOT_FOUND'
+    | 'INPUT_VALIDATION_ERROR'
+    | 'FORBIDDEN_ERROR'
+    | 'UNEXPECTED_ERROR'
+  >;
   Mutation: ResolverTypeWrapper<{}>;
   PaginationInput: PaginationInput;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
@@ -325,7 +345,9 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
-  StandardError: ResolverTypeWrapper<StandardError>;
+  StandardError: ResolverTypeWrapper<
+    Omit<StandardError, 'error'> & { error: ResolversTypes['ErrorType'] }
+  >;
   Topic: ResolverTypeWrapper<TopicMapper>;
   TopicByIdPayload: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>['TopicByIdPayload']
@@ -420,6 +442,16 @@ export type ErrorResolvers<
   __resolveType?: TypeResolveFn<'StandardError', ParentType, ContextType>;
   error?: Resolver<ResolversTypes['ErrorType'], ParentType, ContextType>;
 };
+
+export type ErrorTypeResolvers = EnumResolverSignature<
+  {
+    FORBIDDEN_ERROR?: any;
+    INPUT_VALIDATION_ERROR?: any;
+    NOT_FOUND?: any;
+    UNEXPECTED_ERROR?: any;
+  },
+  ResolversTypes['ErrorType']
+>;
 
 export type MutationResolvers<
   ContextType = any,
@@ -623,6 +655,7 @@ export type UserResultResolvers<
 export type Resolvers<ContextType = any> = {
   DateTime?: GraphQLScalarType;
   Error?: ErrorResolvers<ContextType>;
+  ErrorType?: ErrorTypeResolvers;
   Mutation?: MutationResolvers<ContextType>;
   PaginationResult?: PaginationResultResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

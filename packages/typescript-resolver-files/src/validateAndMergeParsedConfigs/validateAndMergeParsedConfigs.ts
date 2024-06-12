@@ -41,6 +41,20 @@ export const validateAndMergeParsedConfigs = ({
     }
   });
 
+  // By default, codegen doesn't generate types for enums
+  // This is great for the default codegen setup but it's not great for server preset - where we need to be able to import
+  // generated resolver types to fill in content for resolver files without needing to manually set up mappers/enumValues
+  // `schemaEnumTypeMappers` is the schema mappers for enums, which can be overriden by user's provided mapper types
+  const schemaEnumTypeMappers = Object.entries(
+    userDefinedSchemaTypeMap.enum
+  ).reduce<Record<string, string>>(
+    (result, [enumTypename, { allowedValues }]) => {
+      result[enumTypename] = allowedValues.map((v) => `'${v}'`).join(' | ');
+      return result;
+    },
+    {}
+  );
+
   Object.keys(externalResolvers).forEach((schemaType) => {
     if (userDefinedSchemaTypeMap.scalar[schemaType]) {
       throw new Error(
@@ -61,6 +75,9 @@ export const validateAndMergeParsedConfigs = ({
     scalarTypes: {
       ...defaultScalarTypesMap,
     },
-    typeMappers: defaultTypeMappers,
+    typeMappers: {
+      ...schemaEnumTypeMappers,
+      ...defaultTypeMappers,
+    },
   };
 };
