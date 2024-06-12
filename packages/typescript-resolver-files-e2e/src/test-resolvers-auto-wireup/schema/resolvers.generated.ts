@@ -9,6 +9,7 @@ import { PetToy } from './pet/resolvers/PetToy';
 import { Profile } from './zoo/resolvers/Profile';
 import { Topic } from './topic/resolvers/Topic';
 import { TopicCreateResult } from './topic/resolvers/TopicCreateResult';
+import { TopicEditResult } from './topic/resolvers/TopicEditResult';
 import { User } from './pet/resolvers/User';
 import { CustomLogicScalar } from './base/resolvers/CustomLogicScalar';
 import { JSON } from './base/resolvers/JSON';
@@ -31,6 +32,7 @@ export const resolvers: Resolvers = {
   Profile: Profile,
   Topic: Topic,
   TopicCreateResult: TopicCreateResult,
+  TopicEditResult: TopicEditResult,
   User: User,
   CustomLogicScalar: CustomLogicScalar,
   JSON: JSON,
