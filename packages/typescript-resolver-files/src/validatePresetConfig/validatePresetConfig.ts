@@ -428,8 +428,8 @@ const parseFixObjectTypeResolvers = (
   };
 
   return {
-    object: allowedOptions[fixObjectTypeResolvers.object],
-    enum: allowedOptions[fixObjectTypeResolvers.enum],
+    object: allowedOptions[fixObjectTypeResolvers.object] || 'disabled',
+    enum: allowedOptions[fixObjectTypeResolvers.enum] || 'disabled',
   };
 };
 
