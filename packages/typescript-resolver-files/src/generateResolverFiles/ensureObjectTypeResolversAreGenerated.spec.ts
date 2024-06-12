@@ -128,71 +128,51 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
       };`
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- We know User variable is in the sourceFile
-    const userVariableStatement = sourceFile.getVariableStatement(
-      (statement) => {
-        let hasExpectedIdentifier = false;
-        statement
-          .getDeclarationList()
-          .getDeclarations()
-          .forEach((declarationNode) => {
-            if (declarationNode.getName() === 'User') {
-              hasExpectedIdentifier = true;
-            }
-          });
-        return hasExpectedIdentifier;
-      }
-    )!;
-
-    ensureObjectTypeResolversAreGenerated(
-      sourceFile,
-      {
-        __filetype: 'objectType',
-        content: '',
-        mainImportIdentifier: 'User',
-        meta: {
-          moduleName: 'user',
-          relativePathFromBaseToModule: ['user'],
-          normalizedResolverName: {
-            base: 'User',
-            withModule: 'user.User',
+    ensureObjectTypeResolversAreGenerated(sourceFile, {
+      __filetype: 'objectType',
+      content: '',
+      mainImportIdentifier: 'User',
+      meta: {
+        moduleName: 'user',
+        relativePathFromBaseToModule: ['user'],
+        normalizedResolverName: {
+          base: 'User',
+          withModule: 'user.User',
+        },
+        resolverTypeImportDeclaration: '',
+        variableStatement: '',
+        resolverType: {
+          baseImport: 'UserResolvers',
+          final: 'UserResolvers',
+        },
+        resolversToGenerate: {
+          id: {
+            resolverName: 'id',
+            resolverDeclaration: `({ id }) => id`,
           },
-          resolverTypeImportDeclaration: '',
-          variableStatement: '',
-          resolverType: {
-            baseImport: 'UserResolvers',
-            final: 'UserResolvers',
+          createdAt: {
+            resolverName: 'createdAt',
+            resolverDeclaration: `({ createdAt }) => createdAt`,
           },
-          resolversToGenerate: {
-            id: {
-              resolverName: 'id',
-              resolverDeclaration: `({ id }) => id`,
-            },
-            createdAt: {
-              resolverName: 'createdAt',
-              resolverDeclaration: `({ createdAt }) => createdAt`,
-            },
-            accountGitHub: {
-              resolverName: 'accountGitHub',
-              resolverDeclaration: `({ accountGitHub }) => accountGitHub`,
-            },
-            accountGoogle: {
-              resolverName: 'accountGoogle',
-              resolverDeclaration: `({ accountGoogle }) => accountGoogle`,
-            },
-            fullName: {
-              resolverName: 'fullName',
-              resolverDeclaration: `({ fullName }) => fullName`,
-            },
-            role: {
-              resolverName: 'role',
-              resolverDeclaration: `({ role }) => role`,
-            },
+          accountGitHub: {
+            resolverName: 'accountGitHub',
+            resolverDeclaration: `({ accountGitHub }) => accountGitHub`,
+          },
+          accountGoogle: {
+            resolverName: 'accountGoogle',
+            resolverDeclaration: `({ accountGoogle }) => accountGoogle`,
+          },
+          fullName: {
+            resolverName: 'fullName',
+            resolverDeclaration: `({ fullName }) => fullName`,
+          },
+          role: {
+            resolverName: 'role',
+            resolverDeclaration: `({ role }) => role`,
           },
         },
       },
-      userVariableStatement
-    );
+    });
 
     expect(sourceFile.getText()).toMatchInlineSnapshot(`
       "import type { UserResolvers } from './types.generated';
@@ -328,71 +308,51 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
       };`
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- We know User variable is in the sourceFile
-    const userVariableStatement = sourceFile.getVariableStatement(
-      (statement) => {
-        let hasExpectedIdentifier = false;
-        statement
-          .getDeclarationList()
-          .getDeclarations()
-          .forEach((declarationNode) => {
-            if (declarationNode.getName() === 'User') {
-              hasExpectedIdentifier = true;
-            }
-          });
-        return hasExpectedIdentifier;
-      }
-    )!;
-
-    ensureObjectTypeResolversAreGenerated(
-      sourceFile,
-      {
-        __filetype: 'objectType',
-        content: '',
-        mainImportIdentifier: 'User',
-        meta: {
-          moduleName: 'user',
-          relativePathFromBaseToModule: ['user'],
-          normalizedResolverName: {
-            base: 'User',
-            withModule: 'user.User',
+    ensureObjectTypeResolversAreGenerated(sourceFile, {
+      __filetype: 'objectType',
+      content: '',
+      mainImportIdentifier: 'User',
+      meta: {
+        moduleName: 'user',
+        relativePathFromBaseToModule: ['user'],
+        normalizedResolverName: {
+          base: 'User',
+          withModule: 'user.User',
+        },
+        resolverTypeImportDeclaration: '',
+        variableStatement: '',
+        resolverType: {
+          baseImport: 'UserResolvers',
+          final: 'UserResolvers',
+        },
+        resolversToGenerate: {
+          id: {
+            resolverName: 'id',
+            resolverDeclaration: `({ id }) => id`,
           },
-          resolverTypeImportDeclaration: '',
-          variableStatement: '',
-          resolverType: {
-            baseImport: 'UserResolvers',
-            final: 'UserResolvers',
+          createdAt: {
+            resolverName: 'createdAt',
+            resolverDeclaration: `({ createdAt }) => createdAt`,
           },
-          resolversToGenerate: {
-            id: {
-              resolverName: 'id',
-              resolverDeclaration: `({ id }) => id`,
-            },
-            createdAt: {
-              resolverName: 'createdAt',
-              resolverDeclaration: `({ createdAt }) => createdAt`,
-            },
-            accountGitHub: {
-              resolverName: 'accountGitHub',
-              resolverDeclaration: `({ accountGitHub }) => accountGitHub`,
-            },
-            accountGoogle: {
-              resolverName: 'accountGoogle',
-              resolverDeclaration: `({ accountGoogle }) => accountGoogle`,
-            },
-            fullName: {
-              resolverName: 'fullName',
-              resolverDeclaration: `({ fullName }) => fullName`,
-            },
-            role: {
-              resolverName: 'role',
-              resolverDeclaration: `({ role }) => role`,
-            },
+          accountGitHub: {
+            resolverName: 'accountGitHub',
+            resolverDeclaration: `({ accountGitHub }) => accountGitHub`,
+          },
+          accountGoogle: {
+            resolverName: 'accountGoogle',
+            resolverDeclaration: `({ accountGoogle }) => accountGoogle`,
+          },
+          fullName: {
+            resolverName: 'fullName',
+            resolverDeclaration: `({ fullName }) => fullName`,
+          },
+          role: {
+            resolverName: 'role',
+            resolverDeclaration: `({ role }) => role`,
           },
         },
       },
-      userVariableStatement
-    );
+    });
 
     expect(sourceFile.getText()).toMatchInlineSnapshot(`
       "import type { UserResolvers } from './types.generated';

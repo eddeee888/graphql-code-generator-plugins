@@ -56,11 +56,8 @@ export const postProcessFiles = ({
       sourceFile.getFilePath()
     );
 
-    const {
-      variableStatement,
-      addedVariableStatement,
-      ensureCorrectResolverType,
-    } = ensureExportedResolver(sourceFile, resolverFile);
+    const { addedVariableStatement, ensureCorrectResolverType } =
+      ensureExportedResolver(sourceFile, resolverFile);
 
     // For non-scalarResolver, ensure correct type is imported
     // For scalarResolver, we don't need to add type to the variable statement for a few reasons:
@@ -86,11 +83,7 @@ export const postProcessFiles = ({
       fixObjectTypeResolvers === 'smart' &&
       resolverFile.__filetype === 'objectType'
     ) {
-      ensureObjectTypeResolversAreGenerated(
-        sourceFile,
-        resolverFile,
-        variableStatement
-      );
+      ensureObjectTypeResolversAreGenerated(sourceFile, resolverFile);
     }
 
     // Overwrite existing files with fixes
@@ -108,7 +101,6 @@ const ensureExportedResolver = (
   sourceFile: SourceFile,
   resolverFile: ResolverFile
 ): {
-  variableStatement: VariableStatement;
   addedVariableStatement: boolean;
   ensureCorrectResolverType: (() => void) | undefined;
 } => {
@@ -117,12 +109,9 @@ const ensureExportedResolver = (
 
   if (!variableStatement) {
     // Did not find variable statement with expected identifier, add it to the end with a warning
-    const addedVariableStatement = sourceFile.addStatements(
-      resolverFile.meta.variableStatement
-    );
+    sourceFile.addStatements(resolverFile.meta.variableStatement);
 
     return {
-      variableStatement: addedVariableStatement as unknown as VariableStatement, // We know it's a variable statement because we just added it.
       addedVariableStatement: true,
       ensureCorrectResolverType,
     };
@@ -139,14 +128,12 @@ const ensureExportedResolver = (
     }
     // else, if identifier's been exported do nothing
     return {
-      variableStatement,
       addedVariableStatement: false,
       ensureCorrectResolverType,
     };
   }
 
   return {
-    variableStatement,
     addedVariableStatement: false,
     ensureCorrectResolverType,
   };
