@@ -38,7 +38,10 @@ const defaultExpected: ParsedPresetConfig = {
   tsMorphProjectOptions: {
     skipAddingFilesFromTsConfig: true,
   },
-  fixObjectTypeResolvers: 'smart',
+  fixObjectTypeResolvers: {
+    object: 'smart',
+    enum: 'smart',
+  },
   emitLegacyCommonJSImports: true,
 };
 
@@ -191,21 +194,62 @@ describe('validatePresetConfig - general', () => {
     });
   });
 
-  it('returns result.fixObjectTypeResolvers = "smart" if set as "smart"', () => {
+  it('returns result.fixObjectTypeResolvers object with every key set as "smart" if input is set as "smart"', () => {
     const parsed = validatePresetConfig({ fixObjectTypeResolvers: 'smart' });
 
     expect(parsed).toEqual({
       ...defaultExpected,
-      fixObjectTypeResolvers: 'smart',
+      fixObjectTypeResolvers: {
+        object: 'smart',
+        enum: 'smart',
+      },
     });
   });
 
-  it('returns result.fixObjectTypeResolvers = "disabled" if set as "disabled"', () => {
+  it('returns result.fixObjectTypeResolvers object with every key set as "disabled" if input is set as "disabled"', () => {
     const parsed = validatePresetConfig({ fixObjectTypeResolvers: 'disabled' });
 
     expect(parsed).toEqual({
       ...defaultExpected,
-      fixObjectTypeResolvers: 'disabled',
+      fixObjectTypeResolvers: {
+        object: 'disabled',
+        enum: 'disabled',
+      },
+    });
+  });
+
+  it('returns result.fixObjectTypeResolvers object when input is an object', () => {
+    const parsed = validatePresetConfig({
+      fixObjectTypeResolvers: {
+        object: 'smart',
+        enum: 'disabled',
+      },
+    });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      fixObjectTypeResolvers: {
+        object: 'smart',
+        enum: 'disabled',
+      },
+    });
+  });
+
+  it('returns result.fixObjectTypeResolvers fields as "disabled" if the input object fields are not "smart" or "disabled"', () => {
+    const parsed = validatePresetConfig({
+      fixObjectTypeResolvers: {
+        object: 'never_an_option',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        enum: undefined as any,
+      },
+    });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      fixObjectTypeResolvers: {
+        object: 'disabled',
+        enum: 'disabled',
+      },
     });
   });
 
@@ -278,7 +322,7 @@ describe('validatePresetConfig - general', () => {
     expect(() =>
       validatePresetConfig({ fixObjectTypeResolvers: 'not-valid-for-sure' })
     ).toThrow(
-      'Validation - presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")'
+      'Validation - presetConfig.fixObjectTypeResolvers must be an object, "smart" or "disabled" (default is "smart")'
     );
   });
 

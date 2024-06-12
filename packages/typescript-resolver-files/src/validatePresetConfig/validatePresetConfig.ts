@@ -24,7 +24,11 @@ type ParsedTypesPluginsConfig = Omit<
 type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
 export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
-type FixObjectTypeResolvers = 'smart' | 'disabled';
+type StringFixObjectTypeResolvers = 'smart' | 'disabled';
+type NormalizedFixObjectTypeResolvers = {
+  object: 'smart' | 'disabled';
+  enum: 'smart' | 'disabled';
+};
 type StringResolverGeneration = 'disabled' | 'recommended' | 'minimal' | 'all';
 type NormalizedResolverGeneration = {
   query: string | string[];
@@ -61,7 +65,7 @@ export interface ParsedPresetConfig {
   externalResolvers: Record<string, string>;
   typesPluginsConfig: ParsedTypesPluginsConfig;
   tsMorphProjectOptions: ProjectOptions;
-  fixObjectTypeResolvers: FixObjectTypeResolvers;
+  fixObjectTypeResolvers: NormalizedFixObjectTypeResolvers;
   emitLegacyCommonJSImports: boolean;
 }
 
@@ -88,7 +92,7 @@ export interface RawPresetConfig {
   typesPluginsConfig?: typeScriptPlugin.TypeScriptPluginConfig &
     typeScriptResolversPlugin.TypeScriptResolversPluginConfig;
   tsConfigFilePath?: string;
-  fixObjectTypeResolvers?: string;
+  fixObjectTypeResolvers?: string | Record<string, string>;
   emitLegacyCommonJSImports?: boolean;
 }
 
@@ -97,7 +101,9 @@ export interface TypedPresetConfig extends RawPresetConfig {
   mode?: ConfigMode;
   resolverMainFileMode?: ResolverMainFileMode;
   typeDefsFileMode?: TypeDefsFileMode;
-  fixObjectTypeResolvers?: FixObjectTypeResolvers;
+  fixObjectTypeResolvers?:
+    | StringFixObjectTypeResolvers
+    | NormalizedFixObjectTypeResolvers;
   typesPluginsConfig?: ParsedTypesPluginsConfig;
   resolverGeneration?: StringResolverGeneration | NormalizedResolverGeneration;
 }
@@ -134,12 +140,13 @@ export const validatePresetConfig = ({
   }
 
   if (
+    typeof fixObjectTypeResolvers !== 'object' &&
     fixObjectTypeResolvers !== 'smart' &&
     fixObjectTypeResolvers !== 'disabled'
   ) {
     throw new Error(
       fmt.error(
-        'presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")',
+        'presetConfig.fixObjectTypeResolvers must be an object, "smart" or "disabled" (default is "smart")',
         'Validation'
       )
     );
@@ -296,7 +303,7 @@ export const validatePresetConfig = ({
     externalResolvers,
     typesPluginsConfig: validatedTypesPluginsConfig,
     tsMorphProjectOptions,
-    fixObjectTypeResolvers,
+    fixObjectTypeResolvers: parseFixObjectTypeResolvers(fixObjectTypeResolvers),
     emitLegacyCommonJSImports,
   };
 };
@@ -395,6 +402,34 @@ const parseResolverGeneration = (
     union: resolverGeneration.union || '',
     interface: resolverGeneration.interface || '',
     enum: resolverGeneration.enum || '',
+  };
+};
+
+const parseFixObjectTypeResolvers = (
+  fixObjectTypeResolvers: StringFixObjectTypeResolvers | Record<string, string>
+): NormalizedFixObjectTypeResolvers => {
+  if (fixObjectTypeResolvers === 'smart') {
+    return {
+      object: 'smart',
+      enum: 'smart',
+    };
+  }
+
+  if (fixObjectTypeResolvers === 'disabled') {
+    return {
+      object: 'disabled',
+      enum: 'disabled',
+    };
+  }
+
+  const allowedOptions: Record<string, 'smart' | 'disabled'> = {
+    smart: 'smart',
+    disabled: 'disabled',
+  };
+
+  return {
+    object: allowedOptions[fixObjectTypeResolvers.object] || 'disabled',
+    enum: allowedOptions[fixObjectTypeResolvers.enum] || 'disabled',
   };
 };
 

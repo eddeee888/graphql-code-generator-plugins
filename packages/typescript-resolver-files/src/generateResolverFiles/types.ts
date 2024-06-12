@@ -73,6 +73,7 @@ export interface EnumResolverFile extends BaseVirtualFile {
       final: string;
     };
     normalizedResolverName: NormalizedResolverName;
+    allowedValues: string[];
   };
 }
 
