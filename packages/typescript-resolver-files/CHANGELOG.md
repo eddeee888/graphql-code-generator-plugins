@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.9.4
+
+### Patch Changes
+
+- b734d8b: Revert VariableStatement assumption that can cause runtime errors
+
 ## 0.9.3
 
 ### Patch Changes
