@@ -2,4 +2,4 @@
 '@eddeee888/gcg-typescript-resolver-files': minor
 ---
 
-Add functionalality to ensure all allowedValues are generated
+Add `fixObjectTypeResolvers.enum = smart` option to ensure all allowedValues are generated
