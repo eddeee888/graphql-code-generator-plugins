@@ -38,7 +38,10 @@ const defaultExpected: ParsedPresetConfig = {
   tsMorphProjectOptions: {
     skipAddingFilesFromTsConfig: true,
   },
-  fixObjectTypeResolvers: 'smart',
+  fixObjectTypeResolvers: {
+    object: 'smart',
+    enum: 'smart',
+  },
   emitLegacyCommonJSImports: true,
 };
 
