@@ -37,7 +37,6 @@ export const addResolverMainFiles = ({
     resolverMainFile,
     resolverMainFileMode,
     emitLegacyCommonJSImports,
-    generatedTypesFileMeta,
   },
   result,
 }: GenerateResolverFilesContext): void => {
