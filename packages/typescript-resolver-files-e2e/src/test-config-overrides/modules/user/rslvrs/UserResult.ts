@@ -1,4 +1,4 @@
-import type { UserResultResolvers } from './../../types.gen';
-export const UserResult: UserResultResolvers = {
+import type { USERRESULTRESOLVERS } from './../../types.gen';
+export const UserResult: USERRESULTRESOLVERS = {
   /* Implement UserResult resolver logic here */
 };

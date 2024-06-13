@@ -1,4 +1,4 @@
-import type { TopicsCreatedByUserResultResolvers } from './../../types.gen';
-export const TopicsCreatedByUserResult: TopicsCreatedByUserResultResolvers = {
+import type { TOPICSCREATEDBYUSERRESULTRESOLVERS } from './../../types.gen';
+export const TopicsCreatedByUserResult: TOPICSCREATEDBYUSERRESULTRESOLVERS = {
   /* Implement TopicsCreatedByUserResult resolver logic here */
 };

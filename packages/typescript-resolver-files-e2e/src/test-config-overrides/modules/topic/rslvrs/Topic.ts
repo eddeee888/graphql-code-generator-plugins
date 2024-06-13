@@ -1,4 +1,4 @@
-import type { TopicResolvers } from './../../types.gen';
-export const Topic: TopicResolvers = {
+import type { TOPICRESOLVERS } from './../../types.gen';
+export const Topic: TOPICRESOLVERS = {
   /* Implement Topic resolver logic here */
 };

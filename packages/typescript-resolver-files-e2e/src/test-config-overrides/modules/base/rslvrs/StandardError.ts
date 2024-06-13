@@ -1,4 +1,4 @@
-import type { StandardErrorResolvers } from './../../types.gen';
-export const StandardError: StandardErrorResolvers = {
+import type { STANDARDERRORRESOLVERS } from './../../types.gen';
+export const StandardError: STANDARDERRORRESOLVERS = {
   /* Implement StandardError resolver logic here */
 };
