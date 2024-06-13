@@ -19,6 +19,14 @@ import { User } from './user/rslvrs/User';
 import { UserResult } from './user/rslvrs/UserResult';
 import { SomeOtherScalars } from './base/rslvrs/SomeOtherScalars';
 import { WithInputOutput } from './base/rslvrs/WithInputOutput';
+import { Error } from './base/rslvrs/Error';
+import { TopicByIdPayload } from './topic/rslvrs/TopicByIdPayload';
+import { TopicCreatePayload } from './topic/rslvrs/TopicCreatePayload';
+import { TopicEditPayload } from './topic/rslvrs/TopicEditPayload';
+import { TopicsCreatedByUserPayload } from './topic/rslvrs/TopicsCreatedByUserPayload';
+import { UserPayload } from './user/rslvrs/UserPayload';
+import { Currency } from './base/rslvrs/Currency';
+import { ErrorType } from './base/rslvrs/ErrorType';
 import CustomBigIntResolver from './base/CustomBigIntResolver';
 import { DateTimeResolver } from 'graphql-scalars';
 export const resolvers: Resolvers = {
@@ -45,6 +53,14 @@ export const resolvers: Resolvers = {
   UserResult: UserResult,
   SomeOtherScalars: SomeOtherScalars,
   WithInputOutput: WithInputOutput,
+  Error: Error,
+  TopicByIdPayload: TopicByIdPayload,
+  TopicCreatePayload: TopicCreatePayload,
+  TopicEditPayload: TopicEditPayload,
+  TopicsCreatedByUserPayload: TopicsCreatedByUserPayload,
+  UserPayload: UserPayload,
+  Currency: Currency,
+  ErrorType: ErrorType,
   BigInt: CustomBigIntResolver,
   DateTime: DateTimeResolver,
 };

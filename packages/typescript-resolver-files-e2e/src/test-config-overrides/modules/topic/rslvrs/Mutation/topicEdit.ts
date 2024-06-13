@@ -1,5 +1,5 @@
-import type { MutationResolvers } from './../../../types.gen';
-export const topicEdit: NonNullable<MutationResolvers['topicEdit']> = async (
+import type { MUTATIONRESOLVERS } from './../../../types.gen';
+export const topicEdit: NonNullable<MUTATIONRESOLVERS['topicEdit']> = async (
   _parent,
   _arg,
   _ctx

@@ -14,6 +14,7 @@ const config: CodegenConfig = {
         resolverRelativeTargetDir: 'rslvrs',
         resolverMainFile: 'resolvers.gen.ts',
         typeDefsFilePath: false,
+        resolverGeneration: 'all',
         scalarsOverrides: {
           BigInt: {
             resolver:

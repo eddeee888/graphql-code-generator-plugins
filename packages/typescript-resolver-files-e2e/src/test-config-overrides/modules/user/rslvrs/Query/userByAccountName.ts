@@ -1,6 +1,6 @@
-import type { QueryResolvers } from './../../../types.gen';
+import type { QUERYRESOLVERS } from './../../../types.gen';
 export const userByAccountName: NonNullable<
-  QueryResolvers['userByAccountName']
+  QUERYRESOLVERS['userByAccountName']
 > = async (_parent, _arg, _ctx) => {
   /* Implement Query.userByAccountName resolver logic here */
 };

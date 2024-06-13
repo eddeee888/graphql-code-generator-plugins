@@ -6,6 +6,7 @@ import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolver
 import type { GraphQLSchema } from 'graphql';
 import type { SourceFile, Project } from 'ts-morph';
 import type { ServerConfig } from '@eddeee888/gcg-server-config';
+import type { GeneratedTypesFileMeta } from '../generateResolverFiles';
 
 export const addVirtualTypesFileToTsMorphProject = async ({
   tsMorphProject,
@@ -19,7 +20,10 @@ export const addVirtualTypesFileToTsMorphProject = async ({
   resolverTypesPath: string;
   resolverTypesConfig: ServerConfig;
   addConfig?: AddPluginConfig;
-}): Promise<SourceFile> => {
+}): Promise<{
+  typesSourceFile: SourceFile;
+  meta: GeneratedTypesFileMeta;
+}> => {
   const typesFile = await generateVirtualTypesFile({
     schemaAst,
     resolverTypesPath,
@@ -33,7 +37,7 @@ export const addVirtualTypesFileToTsMorphProject = async ({
     { overwrite: true }
   );
 
-  return typesSourceFile;
+  return { typesSourceFile, meta: typesFile.meta };
 };
 
 /**
@@ -53,6 +57,7 @@ const generateVirtualTypesFile = async ({
 }): Promise<{
   filePath: string;
   content: string;
+  meta: GeneratedTypesFileMeta;
 }> => {
   const [typescriptResult, typescriptResolversResult, addResult] =
     await Promise.all([
@@ -75,6 +80,10 @@ const generateVirtualTypesFile = async ({
     ${addResultAsComplextOutput.content}
     ${addResultAsComplextOutput.append?.join('\n')}
     `,
+    meta: {
+      generatedResolverTypes:
+        typescriptResolversResult.meta?.generatedResolverTypes || {},
+    },
   };
 };
 
