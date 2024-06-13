@@ -28,6 +28,7 @@ import {
 } from '../utils';
 import { parseLocationForOutputDir } from './parseLocationForOutputDir';
 import { normalizeResolverName } from './normalizeResolverName';
+import type { GeneratedTypesFileMeta } from '../generateResolverFiles';
 
 interface ParseGraphQLSchemaParams {
   schemaAst: GraphQLSchema;
@@ -54,8 +55,8 @@ export interface ResolverDetails {
   };
   relativePathFromBaseToModule: string[];
   normalizedResolverName: ReturnType<typeof normalizeResolverName>;
-  typeNamedImport: string;
-  typeString: string;
+  typeNamedImport: (generatedTypesFileMeta: GeneratedTypesFileMeta) => string;
+  typeString: (generatedTypesFileMeta: GeneratedTypesFileMeta) => string;
   relativePathToResolverTypesFile: string;
 }
 
@@ -517,10 +518,18 @@ const createResolverDetails = ({
     },
     relativePathFromBaseToModule,
     normalizedResolverName,
-    typeNamedImport: `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
-    typeString: belongsToRootObject
-      ? `${schemaType}Resolvers['${resolverName}']`
-      : `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
+    typeNamedImport: ({ generatedResolverTypes }) =>
+      generatedResolverTypes[schemaType]?.name || `${schemaType}Resolvers`,
+    typeString: ({ generatedResolverTypes }) => {
+      if (belongsToRootObject) {
+        return generatedResolverTypes[schemaType]
+          ? `${generatedResolverTypes[schemaType].name}['${resolverName}']`
+          : `${schemaType}Resolvers['${resolverName}']`;
+      }
+      return (
+        generatedResolverTypes[schemaType]?.name || `${schemaType}Resolvers`
+      );
+    },
     relativePathToResolverTypesFile: relativeModulePath(
       resolversOutputDir,
       resolverTypesPath

@@ -56,8 +56,8 @@ export const visitNamedType = <T = null>(
       resolversTypeMeta: {
         module: relativePathToResolverTypesFile,
         moduleType: 'file',
-        typeNamedImport,
-        typeString,
+        typeNamedImport: typeNamedImport(ctx.config.generatedTypesFileMeta),
+        typeString: typeString(ctx.config.generatedTypesFileMeta),
       },
     },
     ctx

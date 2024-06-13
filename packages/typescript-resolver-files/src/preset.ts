@@ -144,17 +144,18 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     // typesSourceFile is the virtual `types.generated.ts`
     // This is useful when we need to do static analysis as most types come from this file
     // e.g. comparing mappers field type vs schema object field type
-    const typesSourceFile = await profiler.run(
-      () =>
-        addVirtualTypesFileToTsMorphProject({
-          tsMorphProject,
-          schemaAst,
-          resolverTypesConfig,
-          resolverTypesPath,
-          addConfig: normalizedAdd?.[resolverTypesPath],
-        }),
-      createProfilerRunName('addVirtualTypesFileToTsMorphProject')
-    );
+    const { typesSourceFile, meta: generatedTypesFileMeta } =
+      await profiler.run(
+        () =>
+          addVirtualTypesFileToTsMorphProject({
+            tsMorphProject,
+            schemaAst,
+            resolverTypesConfig,
+            resolverTypesPath,
+            addConfig: normalizedAdd?.[resolverTypesPath],
+          }),
+        createProfilerRunName('addVirtualTypesFileToTsMorphProject')
+      );
 
     const graphQLObjectTypeResolversToGenerate = await profiler.run(
       async () =>
@@ -244,6 +245,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
               ...mergedConfig.externalResolvers,
             },
             emitLegacyCommonJSImports,
+            generatedTypesFileMeta,
           },
           result,
         }),

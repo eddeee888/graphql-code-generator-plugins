@@ -1,10 +1,17 @@
 import type { SourceFile, Project } from 'ts-morph';
+import type * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import type { GraphQLObjectTypeResolversToGenerate } from '../getGraphQLObjectTypeResolversToGenerate';
 import type { TypeMappersMap } from '../parseTypeMappers';
 import type { ImportLineMeta, RootObjectType } from '../utils';
 import type { ParsedPresetConfig } from '../validatePresetConfig';
 import type { NormalizedResolverName } from '../parseGraphQLSchema';
 import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
+
+export type GeneratedTypesFileMeta = {
+  generatedResolverTypes: NonNullable<
+    Awaited<ReturnType<typeof typeScriptResolversPlugin.plugin>>['meta']
+  >['generatedResolverTypes'];
+};
 
 interface BaseVirtualFile {
   __filetype: string;
@@ -136,6 +143,7 @@ export interface GenerateResolverFilesContext {
     graphQLObjectTypeResolversToGenerate: GraphQLObjectTypeResolversToGenerate;
     fixObjectTypeResolvers: ParsedPresetConfig['fixObjectTypeResolvers'];
     emitLegacyCommonJSImports: boolean;
+    generatedTypesFileMeta: GeneratedTypesFileMeta;
   };
   result: {
     files: Record<string, StandardFile | ResolverFile>;
