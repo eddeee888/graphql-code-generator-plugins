@@ -1,5 +1,5 @@
-import type { QUERYRESOLVERS } from './../../../types.gen';
-export const me: NonNullable<QUERYRESOLVERS['me']> = async (
+import type { I_QUERYRESOLVERS } from './../../../types.gen';
+export const me: NonNullable<I_QUERYRESOLVERS['me']> = async (
   _parent,
   _arg,
   _ctx

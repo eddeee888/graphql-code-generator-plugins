@@ -29,6 +29,7 @@ const config: CodegenConfig = {
           },
         },
         typesPluginsConfig: {
+          typesPrefix: 'I_',
           namingConvention: {
             typeNames: 'change-case#upperCase',
             enumValues: 'change-case#lowerCase',

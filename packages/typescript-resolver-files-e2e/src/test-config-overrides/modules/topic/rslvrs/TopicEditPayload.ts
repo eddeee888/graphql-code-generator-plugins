@@ -1,4 +1,4 @@
-import type { TOPICEDITPAYLOADRESOLVERS } from './../../types.gen';
-export const TopicEditPayload: TOPICEDITPAYLOADRESOLVERS = {
+import type { I_TOPICEDITPAYLOADRESOLVERS } from './../../types.gen';
+export const TopicEditPayload: I_TOPICEDITPAYLOADRESOLVERS = {
   /* Implement TopicEditPayload union logic here */
 };
