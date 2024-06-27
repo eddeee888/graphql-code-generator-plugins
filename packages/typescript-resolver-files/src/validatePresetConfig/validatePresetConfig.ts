@@ -128,7 +128,7 @@ export const validatePresetConfig = ({
   typeDefsFileMode: inputTypeDefsFileMode = 'merged',
   mappersFileExtension = '.mappers.ts',
   mappersSuffix = 'Mapper',
-  mergeSchema = 'schema.generated.graphql',
+  mergeSchema,
   scalarsModule = 'graphql-scalars',
   scalarsOverrides = {},
   mode = 'modules',
@@ -475,12 +475,14 @@ const validateAddOption = (
 const parseMergeSchema = (
   mergeSchema: RawPresetConfig['mergeSchema']
 ): ParsedPresetConfig['mergeSchema'] => {
-  if (!mergeSchema) {
+  const defaultPath = 'schema.generated.gql';
+
+  if (mergeSchema === false) {
     return false;
   }
 
-  if (mergeSchema === true) {
-    return { path: 'schema.generated.graphql', config: {} };
+  if (mergeSchema === true || mergeSchema === undefined) {
+    return { path: defaultPath, config: {} };
   }
 
   if (typeof mergeSchema === 'string') {
