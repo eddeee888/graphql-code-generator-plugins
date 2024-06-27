@@ -1,4 +1,5 @@
 import {
+  type RawPresetConfig,
   type ParsedPresetConfig,
   validatePresetConfig,
 } from './validatePresetConfig';
@@ -24,6 +25,10 @@ const defaultExpected: ParsedPresetConfig = {
     union: '',
     interface: '',
     enum: '',
+  },
+  mergeSchema: {
+    path: 'schema.generated.graphql',
+    config: {},
   },
   typeDefsFilePath: './typeDefs.generated.ts',
   typeDefsFileMode: 'merged',
@@ -554,6 +559,49 @@ describe('validatePresetConfig - resolverGeneration', () => {
       validatePresetConfig({ resolverGeneration: 'omg_what_is_this' })
     ).toThrow(
       'Validation - presetConfig.resolverGeneration must be an object, "disabled", "recommended", "minimal" or "all" (default is "recommended")'
+    );
+  });
+
+  describe('validatePresetConfig - mergeSchema', () => {
+    it.each<{
+      input: RawPresetConfig['mergeSchema'];
+      expected: ParsedPresetConfig['mergeSchema'];
+    }>([
+      {
+        input: false,
+        expected: false,
+      },
+      {
+        input: true,
+        expected: {
+          path: 'schema.generated.graphql',
+          config: {},
+        },
+      },
+      {
+        input: 'schema.gen.gql',
+        expected: {
+          path: 'schema.gen.gql',
+          config: {},
+        },
+      },
+      {
+        input: {
+          path: 'omg.graphql',
+          config: { sort: true },
+        },
+        expected: {
+          path: 'omg.graphql',
+          config: { sort: true },
+        },
+      },
+    ])(
+      'correctly returns the parsed "$input" resolverGeneration object',
+      ({ input, expected }) => {
+        const result = validatePresetConfig({ mergeSchema: input });
+
+        expect(result.mergeSchema).toEqual(expected);
+      }
     );
   });
 });
