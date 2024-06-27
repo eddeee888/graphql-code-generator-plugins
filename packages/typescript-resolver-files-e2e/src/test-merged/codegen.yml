@@ -11,3 +11,4 @@ generates:
     presetConfig:
       mode: merged
       resolverMainFile: index.ts
+      mergeSchema: false
