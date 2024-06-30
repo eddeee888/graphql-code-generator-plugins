@@ -1,5 +1,14 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.10.0
+
+### Minor Changes
+
+- 8ec553b: Handle enum resolverGeneration, autowireup and mapper. Enable enum resolvers generation by default.
+- 8ec553b: Use reported generated type names from @graphql-codegen/typescript-resolvers meta to support all naming convention
+- 8ec553b: Add `fixObjectTypeResolvers.enum = smart` option to ensure all allowedValues are generated
+- 8ec553b: Fully support namingConvention for resolvers map
+
 ## 0.9.4
 
 ### Patch Changes
