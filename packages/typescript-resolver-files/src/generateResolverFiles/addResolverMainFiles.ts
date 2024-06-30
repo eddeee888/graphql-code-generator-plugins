@@ -37,6 +37,7 @@ export const addResolverMainFiles = ({
     resolverMainFile,
     resolverMainFileMode,
     emitLegacyCommonJSImports,
+    generatedTypesFileMeta: { generatedResolverTypes },
   },
   result,
 }: GenerateResolverFilesContext): void => {
@@ -194,7 +195,7 @@ export const addResolverMainFiles = ({
   }, resolverMainFiles);
 
   const resolversIdentifier = 'resolvers';
-  const resolversTypeName = 'Resolvers'; // FIXME: use data from `typescript-resolvers`'s `meta`
+  const resolversTypeName = generatedResolverTypes.resolversMap.name;
 
   Object.entries(resolverMainFiles).forEach(([resolverMainFilename, file]) => {
     const outputDir = path.dirname(resolverMainFilename);

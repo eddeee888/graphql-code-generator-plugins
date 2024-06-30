@@ -519,15 +519,17 @@ const createResolverDetails = ({
     relativePathFromBaseToModule,
     normalizedResolverName,
     typeNamedImport: ({ generatedResolverTypes }) =>
-      generatedResolverTypes[schemaType]?.name || `${schemaType}Resolvers`,
+      generatedResolverTypes.userDefined[schemaType]?.name ||
+      `${schemaType}Resolvers`,
     typeString: ({ generatedResolverTypes }) => {
       if (belongsToRootObject) {
-        return generatedResolverTypes[schemaType]
-          ? `${generatedResolverTypes[schemaType].name}['${resolverName}']`
+        return generatedResolverTypes.userDefined[schemaType]
+          ? `${generatedResolverTypes.userDefined[schemaType].name}['${resolverName}']`
           : `${schemaType}Resolvers['${resolverName}']`;
       }
       return (
-        generatedResolverTypes[schemaType]?.name || `${schemaType}Resolvers`
+        generatedResolverTypes.userDefined[schemaType]?.name ||
+        `${schemaType}Resolvers`
       );
     },
     relativePathToResolverTypesFile: relativeModulePath(

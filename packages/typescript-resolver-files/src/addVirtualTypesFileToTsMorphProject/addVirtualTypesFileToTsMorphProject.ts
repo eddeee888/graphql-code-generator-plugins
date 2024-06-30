@@ -81,8 +81,11 @@ const generateVirtualTypesFile = async ({
     ${addResultAsComplextOutput.append?.join('\n')}
     `,
     meta: {
-      generatedResolverTypes:
-        typescriptResolversResult.meta?.generatedResolverTypes || {},
+      generatedResolverTypes: typescriptResolversResult.meta
+        ?.generatedResolverTypes || {
+        resolversMap: { name: 'Resolvers' },
+        userDefined: {},
+      },
     },
   };
 };
