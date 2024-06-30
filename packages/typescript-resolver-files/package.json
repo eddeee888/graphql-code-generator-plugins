@@ -30,7 +30,7 @@
     "@eddeee888/gcg-server-config": "0.2.1",
     "@graphql-codegen/add": "^5.0.2",
     "@graphql-codegen/plugin-helpers": "^5.0.4",
-    "@graphql-codegen/schema-ast": "^4.0.2",
+    "@graphql-codegen/schema-ast": "^4.1.0",
     "@graphql-codegen/typescript": "^4.0.7",
     "@graphql-codegen/typescript-resolvers": "^4.2.0",
     "@graphql-tools/utils": "^10.0.0",
