@@ -475,7 +475,7 @@ const validateAddOption = (
 const parseMergeSchema = (
   mergeSchema: RawPresetConfig['mergeSchema']
 ): ParsedPresetConfig['mergeSchema'] => {
-  const defaultPath = 'schema.generated.gql';
+  const defaultPath = 'schema.generated.graphqls';
 
   if (mergeSchema === false) {
     return false;

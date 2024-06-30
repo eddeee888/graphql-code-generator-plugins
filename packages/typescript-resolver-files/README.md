@@ -255,7 +255,7 @@ If `typeDefsFileMode=modules`, this path is relative from each module directory.
 
 ### mergeSchema
 
-`boolean`, `string` or `object` (Default:`./schema.generated.gql`)
+`boolean`, `string` or `object` (Default:`./schema.generated.graphqls`)
 
 Option to merge multiple schemas into one. Uses [schema-ast plugin](https://the-guild.dev/graphql/codegen/plugins/other/schema-ast) internally.
 
@@ -267,6 +267,8 @@ Unless `false` is used, the input is turned into the following object:
   config: `(@graphql-codegen/schema-ast).SchemaASTConfig`; // Full config options can be found here: https://the-guild.dev/graphql/codegen/plugins/other/schema-ast
 }
 ```
+
+Note: Make sure your Codegen config's `schema` field does not include the generated schema file, otherwise unexpected errors may occur.
 
 ### add
 
