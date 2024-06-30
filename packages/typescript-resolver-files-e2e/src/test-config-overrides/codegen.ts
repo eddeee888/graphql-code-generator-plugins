@@ -14,6 +14,7 @@ const config: CodegenConfig = {
         resolverRelativeTargetDir: 'rslvrs',
         resolverMainFile: 'resolvers.gen.ts',
         typeDefsFilePath: false,
+        resolverGeneration: 'all',
         scalarsOverrides: {
           BigInt: {
             resolver:
@@ -28,6 +29,7 @@ const config: CodegenConfig = {
           },
         },
         typesPluginsConfig: {
+          typesPrefix: 'I_',
           namingConvention: {
             typeNames: 'change-case#upperCase',
             enumValues: 'change-case#lowerCase',
@@ -35,6 +37,14 @@ const config: CodegenConfig = {
           },
           enumsAsTypes: false,
           contextType: './customTypes#ResolverContext',
+        },
+        mergeSchema: {
+          path: 'schema.gen.gql',
+          config: {
+            includeIntrospectionTypes: true,
+            commentDescriptions: true,
+            sort: true,
+          },
         },
       }),
   },

@@ -37,6 +37,7 @@ export const addResolverMainFiles = ({
     resolverMainFile,
     resolverMainFileMode,
     emitLegacyCommonJSImports,
+    generatedTypesFileMeta: { generatedResolverTypes },
   },
   result,
 }: GenerateResolverFilesContext): void => {
@@ -87,7 +88,8 @@ export const addResolverMainFiles = ({
       file.__filetype === 'objectType' ||
       file.__filetype === 'interfaceResolver' ||
       file.__filetype === 'unionResolver' ||
-      file.__filetype === 'scalarResolver'
+      file.__filetype === 'scalarResolver' ||
+      file.__filetype === 'enumResolver'
     ) {
       res[resolverMainFilename].importLines.push(
         printImportLine({
@@ -193,7 +195,7 @@ export const addResolverMainFiles = ({
   }, resolverMainFiles);
 
   const resolversIdentifier = 'resolvers';
-  const resolversTypeName = 'Resolvers'; // Generated type from typescript-resolvers plugin
+  const resolversTypeName = generatedResolverTypes.resolversMap.name;
 
   Object.entries(resolverMainFiles).forEach(([resolverMainFilename, file]) => {
     const outputDir = path.dirname(resolverMainFilename);

@@ -1,4 +1,4 @@
-import type { TopicCreateResultResolvers } from './../../types.gen';
-export const TopicCreateResult: TopicCreateResultResolvers = {
+import type { I_TOPICCREATERESULTRESOLVERS } from './../../types.gen';
+export const TopicCreateResult: I_TOPICCREATERESULTRESOLVERS = {
   /* Implement TopicCreateResult resolver logic here */
 };

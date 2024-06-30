@@ -28,6 +28,7 @@ import {
 } from '../utils';
 import { parseLocationForOutputDir } from './parseLocationForOutputDir';
 import { normalizeResolverName } from './normalizeResolverName';
+import type { GeneratedTypesFileMeta } from '../generateResolverFiles';
 
 interface ParseGraphQLSchemaParams {
   schemaAst: GraphQLSchema;
@@ -54,14 +55,18 @@ export interface ResolverDetails {
   };
   relativePathFromBaseToModule: string[];
   normalizedResolverName: ReturnType<typeof normalizeResolverName>;
-  typeNamedImport: string;
-  typeString: string;
+  typeNamedImport: (generatedTypesFileMeta: GeneratedTypesFileMeta) => string;
+  typeString: (generatedTypesFileMeta: GeneratedTypesFileMeta) => string;
   relativePathToResolverTypesFile: string;
 }
 
 type ObjectResolverDetails = ResolverDetails & {
   fieldsToPick: string[];
   pickReferenceResolver: boolean;
+};
+
+type EnumResolverDetails = ResolverDetails & {
+  allowedValues: string[];
 };
 
 export interface ParsedGraphQLSchemaMeta {
@@ -88,7 +93,7 @@ export interface ParsedGraphQLSchemaMeta {
     scalar: Record<string, ResolverDetails>;
     interface: Record<string, ResolverDetails>;
     union: Record<string, ResolverDetails>;
-    enum: Record<string, ResolverDetails>;
+    enum: Record<string, EnumResolverDetails>;
   };
   pluginsConfig: {
     defaultScalarTypesMap: Record<string, ScalarsOverridesType>;
@@ -155,6 +160,20 @@ export const parseGraphQLSchema = async ({
         return res;
       }
 
+      // Wire up `mappers` config:
+      // - Enum
+      // - Non-root object types
+      if (
+        isEnumType(namedType) ||
+        (!isRootObjectType(schemaType) && isObjectType(namedType))
+      ) {
+        const typeMapperDetails = typeMappersMap[schemaType];
+        if (typeMapperDetails) {
+          res.pluginsConfig.defaultTypeMappers[typeMapperDetails.schemaType] =
+            typeMapperDetails.configImportPath;
+        }
+      }
+
       // Other output object types
       if (!isRootObjectType(schemaType) && isObjectType(namedType)) {
         handleObjectType({
@@ -166,7 +185,6 @@ export const parseGraphQLSchema = async ({
           blacklistedModules,
           whitelistedModules,
           federationEnabled,
-          typeMappersMap,
           namedType,
           schemaType,
           result: res,
@@ -189,6 +207,7 @@ export const parseGraphQLSchema = async ({
       // - Scalar
       // - Union
       // - Interface
+      // - Enum
       const resolverDetails = createResolverDetails({
         belongsToRootObject: null,
         mode,
@@ -212,7 +231,11 @@ export const parseGraphQLSchema = async ({
         } else if (isInterfaceType(namedType)) {
           res.userDefinedSchemaTypeMap.interface[schemaType] = resolverDetails;
         } else if (isEnumType(namedType)) {
-          res.userDefinedSchemaTypeMap.enum[schemaType] = resolverDetails;
+          res.userDefinedSchemaTypeMap.enum[schemaType] = {
+            ...resolverDetails,
+            allowedValues:
+              namedType.astNode?.values?.map((v) => v.name.value) || [],
+          };
         }
       }
 
@@ -332,7 +355,6 @@ const handleObjectType = ({
   blacklistedModules,
   whitelistedModules,
   federationEnabled,
-  typeMappersMap,
   namedType,
   schemaType,
   result,
@@ -345,18 +367,10 @@ const handleObjectType = ({
   blacklistedModules: ParseGraphQLSchemaParams['blacklistedModules'];
   whitelistedModules: ParseGraphQLSchemaParams['whitelistedModules'];
   federationEnabled: ParseGraphQLSchemaParams['federationEnabled'];
-  typeMappersMap: ParseGraphQLSchemaParams['typeMappersMap'];
   namedType: GraphQLObjectType;
   schemaType: string;
   result: ParsedGraphQLSchemaMeta;
 }): void => {
-  // Wire up `mappers` config
-  const typeMapperDetails = typeMappersMap[schemaType];
-  if (typeMapperDetails) {
-    result.pluginsConfig.defaultTypeMappers[typeMapperDetails.schemaType] =
-      typeMapperDetails.configImportPath;
-  }
-
   // parse for details
   const fieldsByGraphQLModule = Object.entries(namedType.getFields()).reduce<
     Record<
@@ -504,10 +518,20 @@ const createResolverDetails = ({
     },
     relativePathFromBaseToModule,
     normalizedResolverName,
-    typeNamedImport: `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
-    typeString: belongsToRootObject
-      ? `${schemaType}Resolvers['${resolverName}']`
-      : `${schemaType}Resolvers`, // TODO: use from `typescript-resolvers`'s `meta`
+    typeNamedImport: ({ generatedResolverTypes }) =>
+      generatedResolverTypes.userDefined[schemaType]?.name ||
+      `${schemaType}Resolvers`,
+    typeString: ({ generatedResolverTypes }) => {
+      if (belongsToRootObject) {
+        return generatedResolverTypes.userDefined[schemaType]
+          ? `${generatedResolverTypes.userDefined[schemaType].name}['${resolverName}']`
+          : `${schemaType}Resolvers['${resolverName}']`;
+      }
+      return (
+        generatedResolverTypes.userDefined[schemaType]?.name ||
+        `${schemaType}Resolvers`
+      );
+    },
     relativePathToResolverTypesFile: relativeModulePath(
       resolversOutputDir,
       resolverTypesPath

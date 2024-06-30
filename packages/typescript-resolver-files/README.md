@@ -253,6 +253,23 @@ If `typeDefsFileMode=merged` or `typeDefsFileMode=mergedWhitelisted`, this path 
 
 If `typeDefsFileMode=modules`, this path is relative from each module directory.
 
+### mergeSchema
+
+`boolean`, `string` or `object` (Default:`./schema.generated.graphqls`)
+
+Option to merge multiple schemas into one. Uses [schema-ast plugin](https://the-guild.dev/graphql/codegen/plugins/other/schema-ast) internally.
+
+Unless `false` is used, the input is turned into the following object:
+
+```ts
+{
+  path: string; // path to the generated file
+  config: `(@graphql-codegen/schema-ast).SchemaASTConfig`; // Full config options can be found here: https://the-guild.dev/graphql/codegen/plugins/other/schema-ast
+}
+```
+
+Note: Make sure your Codegen config's `schema` field does not include the generated schema file, otherwise unexpected errors may occur.
+
 ### add
 
 `Record<string, (@graphql-codegen/add).AddPluginConfig>` (Default: `undefined`) (EXPERIMENTAL)
@@ -385,9 +402,19 @@ Project's TypeScript config, relative from project root. This helps type analysi
 
 ### fixObjectTypeResolvers
 
-`smart` or `disabled` (Default: `smart`) (Experimental)
+`smart` or `disabled` or object (Default: `smart`) (Experimental)
 
-Statically compares object type's mapper types' field against schema types' fields, creating resolvers if required
+`smart` option does static analysis and add fields to ensure no runtime errors. The default `smart` option is expanded to an object like this to target supported types:
+
+```ts
+{
+  object: 'smart',
+  enum: 'smart'
+}
+```
+
+- For objects types: statically compares object type's mapper types' field against schema types' fields, creating resolvers if required.
+- For enum types: ensure all allowed values are present.
 
 ### emitLegacyCommonJSImports
 

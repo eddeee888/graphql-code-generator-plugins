@@ -26,6 +26,9 @@ export type Incremental<T> =
       [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
     };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type EnumResolverSignature<T, AllowedValues = any> = {
+  [key in keyof T]?: AllowedValues;
+};
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
@@ -294,27 +297,37 @@ export type DirectiveResolverFn<
 /** Mapping of union types */
 export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
   TopicByIdPayload:
-    | (PayloadError & { __typename: 'PayloadError' })
+    | (Omit<PayloadError, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'PayloadError';
+      })
     | (Omit<TopicByIdResult, 'result'> & {
         result?: Maybe<_RefType['Topic']>;
       } & { __typename: 'TopicByIdResult' });
   TopicCreatePayload:
-    | (PayloadError & { __typename: 'PayloadError' })
+    | (Omit<PayloadError, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'PayloadError';
+      })
     | (Omit<TopicCreateResult, 'result'> & { result: _RefType['Topic'] } & {
         __typename: 'TopicCreateResult';
       });
   TopicEditPayload:
-    | (PayloadError & { __typename: 'PayloadError' })
+    | (Omit<PayloadError, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'PayloadError';
+      })
     | (Omit<TopicEditResult, 'result'> & { result: _RefType['Topic'] } & {
         __typename: 'TopicEditResult';
       });
   TopicsCreatedByUserPayload:
-    | (PayloadError & { __typename: 'PayloadError' })
+    | (Omit<PayloadError, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'PayloadError';
+      })
     | (Omit<TopicsCreatedByUserResult, 'result'> & {
         result: Array<_RefType['Topic']>;
       } & { __typename: 'TopicsCreatedByUserResult' });
   UserPayload:
-    | (PayloadError & { __typename: 'PayloadError' })
+    | (Omit<PayloadError, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'PayloadError';
+      })
     | (Omit<UserResult, 'result'> & { result?: Maybe<_RefType['User']> } & {
         __typename: 'UserResult';
       });
@@ -323,19 +336,28 @@ export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
   {
-    Error: PayloadError & { __typename: 'PayloadError' };
+    Error: Omit<PayloadError, 'error'> & { error: _RefType['ErrorType'] } & {
+      __typename: 'PayloadError';
+    };
   };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Error']>;
-  ErrorType: ErrorType;
+  ErrorType: ResolverTypeWrapper<
+    | 'NOT_FOUND'
+    | 'INPUT_VALIDATION_ERROR'
+    | 'FORBIDDEN_ERROR'
+    | 'UNEXPECTED_ERROR'
+  >;
   Mutation: ResolverTypeWrapper<{}>;
   PaginationInput: PaginationInput;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PaginationResult: ResolverTypeWrapper<PaginationResult>;
-  PayloadError: ResolverTypeWrapper<PayloadError>;
+  PayloadError: ResolverTypeWrapper<
+    Omit<PayloadError, 'error'> & { error: ResolversTypes['ErrorType'] }
+  >;
   Profile: ResolverTypeWrapper<
     Omit<Profile, 'user'> & { user: ResolversTypes['User'] }
   >;
@@ -441,6 +463,16 @@ export type ErrorResolvers<
   __resolveType?: TypeResolveFn<'PayloadError', ParentType, ContextType>;
   error?: Resolver<ResolversTypes['ErrorType'], ParentType, ContextType>;
 };
+
+export type ErrorTypeResolvers = EnumResolverSignature<
+  {
+    FORBIDDEN_ERROR?: any;
+    INPUT_VALIDATION_ERROR?: any;
+    NOT_FOUND?: any;
+    UNEXPECTED_ERROR?: any;
+  },
+  ResolversTypes['ErrorType']
+>;
 
 export type MutationResolvers<
   ContextType = any,
@@ -671,6 +703,7 @@ export type UserResultResolvers<
 export type Resolvers<ContextType = any> = {
   DateTime?: GraphQLScalarType;
   Error?: ErrorResolvers<ContextType>;
+  ErrorType?: ErrorTypeResolvers;
   Mutation?: MutationResolvers<ContextType>;
   PaginationResult?: PaginationResultResolvers<ContextType>;
   PayloadError?: PayloadErrorResolvers<ContextType>;

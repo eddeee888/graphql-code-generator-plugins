@@ -1,6 +1,6 @@
-import type { QueryResolvers } from './../../../types.gen';
+import type { I_QUERYRESOLVERS } from './../../../types.gen';
 export const topicsCreatedByUser: NonNullable<
-  QueryResolvers['topicsCreatedByUser']
+  I_QUERYRESOLVERS['topicsCreatedByUser']
 > = async (_parent, _arg, _ctx) => {
   /* Implement Query.topicsCreatedByUser resolver logic here */
 };

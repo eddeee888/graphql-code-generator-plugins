@@ -1,0 +1,11 @@
+type Query {
+  test: Test!
+}
+
+type Test {
+  boolean: Boolean!
+  float: Float!
+  id: ID!
+  int: Int!
+  string: String!
+}

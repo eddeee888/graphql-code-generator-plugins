@@ -3,6 +3,11 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from 'graphql';
+import {
+  CountryMapper,
+  ErrorTypeMapper,
+  SortOrderMapper,
+} from './base/base.mappers';
 import { TopicMapper, TopicEditResultMapper } from './topic/topic.mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
@@ -25,6 +30,9 @@ export type Incremental<T> =
       [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
     };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type EnumResolverSignature<T, AllowedValues = any> = {
+  [key in keyof T]?: AllowedValues;
+};
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
@@ -40,6 +48,8 @@ export type Scalars = {
   JSON: { input: any; output: any };
   SomeRandomScalar: { input: any; output: any };
 };
+
+export type Country = 'AU' | 'NZ' | 'US';
 
 export type Error = {
   error: ErrorType;
@@ -121,6 +131,8 @@ export type QuerytopicsCreatedByUserArgs = {
 export type QueryuserByAccountNameArgs = {
   accountName: Scalars['String']['input'];
 };
+
+export type SortOrder = 'ASC' | 'DESC';
 
 export type Subscription = {
   __typename?: 'Subscription';
@@ -315,48 +327,63 @@ export type DirectiveResolverFn<
 /** Mapping of union types */
 export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
   TopicByIdPayload:
-    | (PayloadError & { __typename: 'PayloadError' })
+    | (Omit<PayloadError, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'PayloadError';
+      })
     | (Omit<TopicByIdResult, 'result'> & {
         result?: Maybe<_RefType['Topic']>;
       } & { __typename: 'TopicByIdResult' });
   TopicCreatePayload:
-    | (PayloadError & { __typename: 'PayloadError' })
+    | (Omit<PayloadError, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'PayloadError';
+      })
     | (Omit<TopicCreateResult, 'result'> & { result: _RefType['Topic'] } & {
         __typename: 'TopicCreateResult';
       });
   TopicEditPayload:
-    | (PayloadError & { __typename: 'PayloadError' })
+    | (Omit<PayloadError, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'PayloadError';
+      })
     | (TopicEditResultMapper & { __typename: 'TopicEditResult' });
   TopicsCreatedByUserPayload:
-    | (PayloadError & { __typename: 'PayloadError' })
+    | (Omit<PayloadError, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'PayloadError';
+      })
     | (Omit<TopicsCreatedByUserResult, 'result'> & {
         result: Array<_RefType['Topic']>;
       } & { __typename: 'TopicsCreatedByUserResult' });
   UserPayload:
-    | (PayloadError & { __typename: 'PayloadError' })
+    | (Omit<PayloadError, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'PayloadError';
+      })
     | (UserResult & { __typename: 'UserResult' });
 };
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
   {
-    Error: PayloadError & { __typename: 'PayloadError' };
+    Error: Omit<PayloadError, 'error'> & { error: _RefType['ErrorType'] } & {
+      __typename: 'PayloadError';
+    };
   };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Country: ResolverTypeWrapper<CountryMapper>;
   CustomLogicScalar: ResolverTypeWrapper<
     Scalars['CustomLogicScalar']['output']
   >;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Error']>;
-  ErrorType: ErrorType;
+  ErrorType: ResolverTypeWrapper<ErrorTypeMapper>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   PaginationInput: PaginationInput;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PaginationResult: ResolverTypeWrapper<PaginationResult>;
-  PayloadError: ResolverTypeWrapper<PayloadError>;
+  PayloadError: ResolverTypeWrapper<
+    Omit<PayloadError, 'error'> & { error: ResolversTypes['ErrorType'] }
+  >;
   Pet: ResolverTypeWrapper<Pet>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -364,6 +391,7 @@ export type ResolversTypes = {
   Profile: ResolverTypeWrapper<Profile>;
   Query: ResolverTypeWrapper<{}>;
   SomeRandomScalar: ResolverTypeWrapper<Scalars['SomeRandomScalar']['output']>;
+  SortOrder: ResolverTypeWrapper<SortOrderMapper>;
   Subscription: ResolverTypeWrapper<{}>;
   Topic: ResolverTypeWrapper<TopicMapper>;
   TopicByIdPayload: ResolverTypeWrapper<
@@ -448,6 +476,11 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
 };
 
+export type CountryResolvers = EnumResolverSignature<
+  { AU?: any; NZ?: any; US?: any },
+  ResolversTypes['Country']
+>;
+
 export interface CustomLogicScalarScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['CustomLogicScalar'], any> {
   name: 'CustomLogicScalar';
@@ -465,6 +498,16 @@ export type ErrorResolvers<
   __resolveType?: TypeResolveFn<'PayloadError', ParentType, ContextType>;
   error?: Resolver<ResolversTypes['ErrorType'], ParentType, ContextType>;
 };
+
+export type ErrorTypeResolvers = EnumResolverSignature<
+  {
+    FORBIDDEN_ERROR?: any;
+    INPUT_VALIDATION_ERROR?: any;
+    NOT_FOUND?: any;
+    UNEXPECTED_ERROR?: any;
+  },
+  ResolversTypes['ErrorType']
+>;
 
 export interface JSONScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
@@ -565,6 +608,11 @@ export interface SomeRandomScalarScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['SomeRandomScalar'], any> {
   name: 'SomeRandomScalar';
 }
+
+export type SortOrderResolvers = EnumResolverSignature<
+  { ASC?: any; DESC?: any },
+  ResolversTypes['SortOrder']
+>;
 
 export type SubscriptionResolvers<
   ContextType = any,
@@ -727,9 +775,11 @@ export type ZooResolvers<
 };
 
 export type Resolvers<ContextType = any> = {
+  Country?: CountryResolvers;
   CustomLogicScalar?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
   Error?: ErrorResolvers<ContextType>;
+  ErrorType?: ErrorTypeResolvers;
   JSON?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   PaginationResult?: PaginationResultResolvers<ContextType>;
@@ -739,6 +789,7 @@ export type Resolvers<ContextType = any> = {
   Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SomeRandomScalar?: GraphQLScalarType;
+  SortOrder?: SortOrderResolvers;
   Subscription?: SubscriptionResolvers<ContextType>;
   Topic?: TopicResolvers<ContextType>;
   TopicByIdPayload?: TopicByIdPayloadResolvers<ContextType>;

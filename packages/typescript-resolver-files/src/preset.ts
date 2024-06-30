@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as addPlugin from '@graphql-codegen/add';
+import * as schemaAstPlugin from '@graphql-codegen/schema-ast';
 import * as typeScriptPlugin from '@graphql-codegen/typescript';
 import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import {
@@ -56,6 +57,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       resolverGeneration,
       typeDefsFilePath,
       typeDefsFileMode,
+      mergeSchema,
       scalarsModule,
       scalarsOverrides,
       mode,
@@ -90,7 +92,8 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           typeMappersFileExtension,
           typeMappersSuffix,
           tsMorphProject,
-          shouldCollectPropertyMap: fixObjectTypeResolvers !== 'disabled',
+          shouldCollectPropertyMap:
+            fixObjectTypeResolvers.object !== 'disabled',
           emitLegacyCommonJSImports,
         }),
       createProfilerRunName('parseTypeMappers')
@@ -143,17 +146,18 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     // typesSourceFile is the virtual `types.generated.ts`
     // This is useful when we need to do static analysis as most types come from this file
     // e.g. comparing mappers field type vs schema object field type
-    const typesSourceFile = await profiler.run(
-      () =>
-        addVirtualTypesFileToTsMorphProject({
-          tsMorphProject,
-          schemaAst,
-          resolverTypesConfig,
-          resolverTypesPath,
-          addConfig: normalizedAdd?.[resolverTypesPath],
-        }),
-      createProfilerRunName('addVirtualTypesFileToTsMorphProject')
-    );
+    const { typesSourceFile, meta: generatedTypesFileMeta } =
+      await profiler.run(
+        () =>
+          addVirtualTypesFileToTsMorphProject({
+            tsMorphProject,
+            schemaAst,
+            resolverTypesConfig,
+            resolverTypesPath,
+            addConfig: normalizedAdd?.[resolverTypesPath],
+          }),
+        createProfilerRunName('addVirtualTypesFileToTsMorphProject')
+      );
 
     const graphQLObjectTypeResolversToGenerate = await profiler.run(
       async () =>
@@ -216,6 +220,18 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       });
     }
 
+    // merge schema
+    if (mergeSchema) {
+      generatesSection.push({
+        filename: path.posix.join(baseOutputDir, mergeSchema.path),
+        pluginMap: { ['schema-ast']: schemaAstPlugin },
+        plugins: [{ ['schema-ast']: {} }],
+        schema,
+        documents: [],
+        config: mergeSchema.config,
+      });
+    }
+
     // resolver files
     const result: GenerateResolverFilesContext['result'] = {
       files: {},
@@ -243,6 +259,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
               ...mergedConfig.externalResolvers,
             },
             emitLegacyCommonJSImports,
+            generatedTypesFileMeta,
           },
           result,
         }),

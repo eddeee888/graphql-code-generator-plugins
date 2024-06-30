@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import type { AddPluginConfig } from '@graphql-codegen/add/typings/config';
 import type * as typeScriptPlugin from '@graphql-codegen/typescript';
 import type * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
+import type * as schemaAstPlugin from '@graphql-codegen/schema-ast';
 import type { ProjectOptions } from 'ts-morph';
 import { cwd, fmt, logger } from '../utils';
 
@@ -24,7 +25,11 @@ type ParsedTypesPluginsConfig = Omit<
 type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
 export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
-type FixObjectTypeResolvers = 'smart' | 'disabled';
+type StringFixObjectTypeResolvers = 'smart' | 'disabled';
+type NormalizedFixObjectTypeResolvers = {
+  object: 'smart' | 'disabled';
+  enum: 'smart' | 'disabled';
+};
 type StringResolverGeneration = 'disabled' | 'recommended' | 'minimal' | 'all';
 type NormalizedResolverGeneration = {
   query: string | string[];
@@ -34,6 +39,7 @@ type NormalizedResolverGeneration = {
   object: string | string[];
   union: string | string[];
   interface: string | string[];
+  enum: string | string[];
 };
 
 export type ScalarsOverridesType = string | { input: string; output: string };
@@ -54,13 +60,16 @@ export interface ParsedPresetConfig {
     string,
     { resolver?: string; type?: ScalarsOverridesType }
   >;
+  mergeSchema:
+    | { path: string; config: schemaAstPlugin.SchemaASTConfig }
+    | false;
   mode: ConfigMode;
   whitelistedModules: string[];
   blacklistedModules: string[];
   externalResolvers: Record<string, string>;
   typesPluginsConfig: ParsedTypesPluginsConfig;
   tsMorphProjectOptions: ProjectOptions;
-  fixObjectTypeResolvers: FixObjectTypeResolvers;
+  fixObjectTypeResolvers: NormalizedFixObjectTypeResolvers;
   emitLegacyCommonJSImports: boolean;
 }
 
@@ -80,6 +89,7 @@ export interface RawPresetConfig {
     string,
     { resolver?: string; type?: ScalarsOverridesType }
   >;
+  mergeSchema?: boolean | string | { path: string; config: unknown };
   mode?: string;
   whitelistedModules?: string[];
   blacklistedModules?: string[];
@@ -87,7 +97,7 @@ export interface RawPresetConfig {
   typesPluginsConfig?: typeScriptPlugin.TypeScriptPluginConfig &
     typeScriptResolversPlugin.TypeScriptResolversPluginConfig;
   tsConfigFilePath?: string;
-  fixObjectTypeResolvers?: string;
+  fixObjectTypeResolvers?: string | Record<string, string>;
   emitLegacyCommonJSImports?: boolean;
 }
 
@@ -96,9 +106,15 @@ export interface TypedPresetConfig extends RawPresetConfig {
   mode?: ConfigMode;
   resolverMainFileMode?: ResolverMainFileMode;
   typeDefsFileMode?: TypeDefsFileMode;
-  fixObjectTypeResolvers?: FixObjectTypeResolvers;
+  fixObjectTypeResolvers?:
+    | StringFixObjectTypeResolvers
+    | NormalizedFixObjectTypeResolvers;
   typesPluginsConfig?: ParsedTypesPluginsConfig;
   resolverGeneration?: StringResolverGeneration | NormalizedResolverGeneration;
+  mergeSchema?:
+    | boolean
+    | string
+    | { path: string; config: schemaAstPlugin.SchemaASTConfig };
 }
 
 export const validatePresetConfig = ({
@@ -112,6 +128,7 @@ export const validatePresetConfig = ({
   typeDefsFileMode: inputTypeDefsFileMode = 'merged',
   mappersFileExtension = '.mappers.ts',
   mappersSuffix = 'Mapper',
+  mergeSchema,
   scalarsModule = 'graphql-scalars',
   scalarsOverrides = {},
   mode = 'modules',
@@ -133,12 +150,13 @@ export const validatePresetConfig = ({
   }
 
   if (
+    typeof fixObjectTypeResolvers !== 'object' &&
     fixObjectTypeResolvers !== 'smart' &&
     fixObjectTypeResolvers !== 'disabled'
   ) {
     throw new Error(
       fmt.error(
-        'presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")',
+        'presetConfig.fixObjectTypeResolvers must be an object, "smart" or "disabled" (default is "smart")',
         'Validation'
       )
     );
@@ -285,6 +303,7 @@ export const validatePresetConfig = ({
     resolverGeneration: parseResolverGeneration(resolverGeneration),
     typeDefsFilePath: finalTypeDefsFilePath,
     typeDefsFileMode,
+    mergeSchema: parseMergeSchema(mergeSchema),
     mode,
     mappersFileExtension,
     mappersSuffix,
@@ -295,7 +314,7 @@ export const validatePresetConfig = ({
     externalResolvers,
     typesPluginsConfig: validatedTypesPluginsConfig,
     tsMorphProjectOptions,
-    fixObjectTypeResolvers,
+    fixObjectTypeResolvers: parseFixObjectTypeResolvers(fixObjectTypeResolvers),
     emitLegacyCommonJSImports,
   };
 };
@@ -348,6 +367,7 @@ const parseResolverGeneration = (
       object: '*',
       union: '*',
       interface: '*',
+      enum: '*',
     };
   } else if (resolverGeneration === 'minimal') {
     return {
@@ -358,6 +378,7 @@ const parseResolverGeneration = (
       object: '',
       union: '',
       interface: '',
+      enum: '',
     };
   } else if (resolverGeneration === 'recommended') {
     return {
@@ -368,6 +389,7 @@ const parseResolverGeneration = (
       object: '*',
       union: '',
       interface: '',
+      enum: '',
     };
   } else if (resolverGeneration === 'disabled') {
     return {
@@ -378,6 +400,7 @@ const parseResolverGeneration = (
       object: '',
       union: '',
       interface: '',
+      enum: '',
     };
   }
 
@@ -389,6 +412,35 @@ const parseResolverGeneration = (
     object: resolverGeneration.object || '',
     union: resolverGeneration.union || '',
     interface: resolverGeneration.interface || '',
+    enum: resolverGeneration.enum || '',
+  };
+};
+
+const parseFixObjectTypeResolvers = (
+  fixObjectTypeResolvers: StringFixObjectTypeResolvers | Record<string, string>
+): NormalizedFixObjectTypeResolvers => {
+  if (fixObjectTypeResolvers === 'smart') {
+    return {
+      object: 'smart',
+      enum: 'smart',
+    };
+  }
+
+  if (fixObjectTypeResolvers === 'disabled') {
+    return {
+      object: 'disabled',
+      enum: 'disabled',
+    };
+  }
+
+  const allowedOptions: Record<string, 'smart' | 'disabled'> = {
+    smart: 'smart',
+    disabled: 'disabled',
+  };
+
+  return {
+    object: allowedOptions[fixObjectTypeResolvers.object] || 'disabled',
+    enum: allowedOptions[fixObjectTypeResolvers.enum] || 'disabled',
   };
 };
 
@@ -418,4 +470,27 @@ const validateAddOption = (
 
   // TODO: a bit hacky here but what's a good way to coerce this type? 🤔
   return add as ParsedPresetConfig['add'];
+};
+
+const parseMergeSchema = (
+  mergeSchema: RawPresetConfig['mergeSchema']
+): ParsedPresetConfig['mergeSchema'] => {
+  const defaultPath = 'schema.generated.graphqls';
+
+  if (mergeSchema === false) {
+    return false;
+  }
+
+  if (mergeSchema === true || mergeSchema === undefined) {
+    return { path: defaultPath, config: {} };
+  }
+
+  if (typeof mergeSchema === 'string') {
+    return { path: mergeSchema, config: {} };
+  }
+
+  return {
+    path: mergeSchema.path,
+    config: mergeSchema.config as schemaAstPlugin.SchemaASTConfig,
+  };
 };

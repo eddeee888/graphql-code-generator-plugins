@@ -41,6 +41,21 @@ try {
       `,
     },
 
+    // Empty Enum file should be filled with content
+    'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/base/resolvers/ErrorType.ts',
+
+    // Existing Enum File should be edited:
+    // - Add missing import line
+    // - Add missing export
+    // - Do not add missing enum allowed values
+    {
+      file: 'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/base/resolvers/SortOrder.ts',
+      content: `const SortOrder = {
+        ASC: 'ASCENDING',
+      }
+      `,
+    },
+
     // Files in blacklisted modules should not be filled or added to resolvers.generated.ts
     'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/user/resolvers/User.ts',
 

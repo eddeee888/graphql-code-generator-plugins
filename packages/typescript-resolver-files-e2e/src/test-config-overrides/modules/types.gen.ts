@@ -24,6 +24,10 @@ export type Incremental<T> =
   | {
       [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
     };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type EnumResolverSignature<T, AllowedValues = any> = {
+  [key in keyof T]?: AllowedValues;
+};
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
@@ -40,139 +44,139 @@ export type Scalars = {
   WithInputOutput: { input: Date; output: string };
 };
 
-export enum CURRENCY {
+export enum I_CURRENCY {
   aud = 'AUD',
   usd = 'USD',
 }
 
-export type ERROR = {
-  error: ERRORTYPE;
+export type I_ERROR = {
+  error: I_ERRORTYPE;
 };
 
-export enum ERRORTYPE {
+export enum I_ERRORTYPE {
   forbidden_error = 'FORBIDDEN_ERROR',
   input_validation_error = 'INPUT_VALIDATION_ERROR',
   not_found = 'NOT_FOUND',
   unexpected_error = 'UNEXPECTED_ERROR',
 }
 
-export type MUTATION = {
+export type I_MUTATION = {
   __typename?: 'Mutation';
-  topicCreate: TOPICCREATEPAYLOAD;
-  topicEdit: TOPICEDITPAYLOAD;
+  topicCreate: I_TOPICCREATEPAYLOAD;
+  topicEdit: I_TOPICEDITPAYLOAD;
 };
 
-export type MUTATIONTOPICCREATEARGS = {
-  input: TOPICCREATEINPUT;
+export type I_MUTATIONTOPICCREATEARGS = {
+  input: I_TOPICCREATEINPUT;
 };
 
-export type MUTATIONTOPICEDITARGS = {
-  input: TOPICEDITINPUT;
+export type I_MUTATIONTOPICEDITARGS = {
+  input: I_TOPICEDITINPUT;
 };
 
-export type PAGINATIONINPUT = {
+export type I_PAGINATIONINPUT = {
   page?: InputMaybe<Scalars['Int']['input']>;
   recordsPerPage?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export type PAGINATIONRESULT = {
+export type I_PAGINATIONRESULT = {
   __typename?: 'PaginationResult';
   currentPage: Scalars['Int']['output'];
   recordsPerPage: Scalars['Int']['output'];
   totalPageCount: Scalars['Int']['output'];
 };
 
-export type PROFILE = {
+export type I_PROFILE = {
   __typename?: 'Profile';
   id: Scalars['ID']['output'];
-  user: USER;
+  user: I_USER;
 };
 
-export type QUERY = {
+export type I_QUERY = {
   __typename?: 'Query';
-  me: USERPAYLOAD;
-  topicById: TOPICBYIDPAYLOAD;
-  topicsCreatedByUser: TOPICSCREATEDBYUSERPAYLOAD;
-  userByAccountName: USERPAYLOAD;
+  me: I_USERPAYLOAD;
+  topicById: I_TOPICBYIDPAYLOAD;
+  topicsCreatedByUser: I_TOPICSCREATEDBYUSERPAYLOAD;
+  userByAccountName: I_USERPAYLOAD;
 };
 
-export type QUERYTOPICBYIDARGS = {
+export type I_QUERYTOPICBYIDARGS = {
   id: Scalars['ID']['input'];
 };
 
-export type QUERYTOPICSCREATEDBYUSERARGS = {
-  input: TOPICSCREATEDBYUSERINPUT;
+export type I_QUERYTOPICSCREATEDBYUSERARGS = {
+  input: I_TOPICSCREATEDBYUSERINPUT;
 };
 
-export type QUERYUSERBYACCOUNTNAMEARGS = {
+export type I_QUERYUSERBYACCOUNTNAMEARGS = {
   accountName: Scalars['String']['input'];
 };
 
-export type STANDARDERROR = ERROR & {
+export type I_STANDARDERROR = I_ERROR & {
   __typename?: 'StandardError';
-  error: ERRORTYPE;
+  error: I_ERRORTYPE;
 };
 
-export type SUBSCRIPTION = {
+export type I_SUBSCRIPTION = {
   __typename?: 'Subscription';
-  profileChanges: PROFILE;
+  profileChanges: I_PROFILE;
 };
 
-export type TOPIC = {
+export type I_TOPIC = {
   __typename?: 'Topic';
   createdAt: Scalars['DateTime']['output'];
-  creator: USER;
+  creator: I_USER;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   url?: Maybe<Scalars['String']['output']>;
 };
 
-export type TOPICBYIDPAYLOAD = STANDARDERROR | TOPICBYIDRESULT;
+export type I_TOPICBYIDPAYLOAD = I_STANDARDERROR | I_TOPICBYIDRESULT;
 
-export type TOPICBYIDRESULT = {
+export type I_TOPICBYIDRESULT = {
   __typename?: 'TopicByIdResult';
-  result?: Maybe<TOPIC>;
+  result?: Maybe<I_TOPIC>;
 };
 
-export type TOPICCREATEINPUT = {
+export type I_TOPICCREATEINPUT = {
   name: Scalars['String']['input'];
   url?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type TOPICCREATEPAYLOAD = STANDARDERROR | TOPICCREATERESULT;
+export type I_TOPICCREATEPAYLOAD = I_STANDARDERROR | I_TOPICCREATERESULT;
 
-export type TOPICCREATERESULT = {
+export type I_TOPICCREATERESULT = {
   __typename?: 'TopicCreateResult';
-  result: TOPIC;
+  result: I_TOPIC;
 };
 
-export type TOPICEDITINPUT = {
+export type I_TOPICEDITINPUT = {
   id: Scalars['ID']['input'];
   name: Scalars['String']['input'];
   url?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type TOPICEDITPAYLOAD = STANDARDERROR | TOPICEDITRESULT;
+export type I_TOPICEDITPAYLOAD = I_STANDARDERROR | I_TOPICEDITRESULT;
 
-export type TOPICEDITRESULT = {
+export type I_TOPICEDITRESULT = {
   __typename?: 'TopicEditResult';
-  result: TOPIC;
+  result: I_TOPIC;
 };
 
-export type TOPICSCREATEDBYUSERINPUT = {
+export type I_TOPICSCREATEDBYUSERINPUT = {
   userId: Scalars['ID']['input'];
 };
 
-export type TOPICSCREATEDBYUSERPAYLOAD =
-  | STANDARDERROR
-  | TOPICSCREATEDBYUSERRESULT;
+export type I_TOPICSCREATEDBYUSERPAYLOAD =
+  | I_STANDARDERROR
+  | I_TOPICSCREATEDBYUSERRESULT;
 
-export type TOPICSCREATEDBYUSERRESULT = {
+export type I_TOPICSCREATEDBYUSERRESULT = {
   __typename?: 'TopicsCreatedByUserResult';
-  result: Array<TOPIC>;
+  result: Array<I_TOPIC>;
 };
 
-export type USER = {
+export type I_USER = {
   __typename?: 'User';
   accountGitHub?: Maybe<Scalars['String']['output']>;
   accountLinkedIn?: Maybe<Scalars['String']['output']>;
@@ -184,11 +188,11 @@ export type USER = {
   name?: Maybe<Scalars['String']['output']>;
 };
 
-export type USERPAYLOAD = STANDARDERROR | USERRESULT;
+export type I_USERPAYLOAD = I_STANDARDERROR | I_USERRESULT;
 
-export type USERRESULT = {
+export type I_USERRESULT = {
   __typename?: 'UserResult';
-  result?: Maybe<USER>;
+  result?: Maybe<I_USER>;
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -297,232 +301,271 @@ export type DirectiveResolverFn<
 ) => TResult | Promise<TResult>;
 
 /** Mapping of union types */
-export type RESOLVERSUNIONTYPES<_RefType extends Record<string, unknown>> = {
+export type I_RESOLVERSUNIONTYPES<_RefType extends Record<string, unknown>> = {
   TopicByIdPayload:
-    | (STANDARDERROR & { __typename: 'StandardError' })
-    | (TOPICBYIDRESULT & { __typename: 'TopicByIdResult' });
+    | (Omit<I_STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'StandardError';
+      })
+    | (I_TOPICBYIDRESULT & { __typename: 'TopicByIdResult' });
   TopicCreatePayload:
-    | (STANDARDERROR & { __typename: 'StandardError' })
-    | (TOPICCREATERESULT & { __typename: 'TopicCreateResult' });
+    | (Omit<I_STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'StandardError';
+      })
+    | (I_TOPICCREATERESULT & { __typename: 'TopicCreateResult' });
   TopicEditPayload:
-    | (STANDARDERROR & { __typename: 'StandardError' })
-    | (TOPICEDITRESULT & { __typename: 'TopicEditResult' });
+    | (Omit<I_STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'StandardError';
+      })
+    | (I_TOPICEDITRESULT & { __typename: 'TopicEditResult' });
   TopicsCreatedByUserPayload:
-    | (STANDARDERROR & { __typename: 'StandardError' })
-    | (TOPICSCREATEDBYUSERRESULT & { __typename: 'TopicsCreatedByUserResult' });
+    | (Omit<I_STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'StandardError';
+      })
+    | (I_TOPICSCREATEDBYUSERRESULT & {
+        __typename: 'TopicsCreatedByUserResult';
+      });
   UserPayload:
-    | (STANDARDERROR & { __typename: 'StandardError' })
-    | (USERRESULT & { __typename: 'UserResult' });
+    | (Omit<I_STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
+        __typename: 'StandardError';
+      })
+    | (I_USERRESULT & { __typename: 'UserResult' });
 };
 
 /** Mapping of interface types */
-export type RESOLVERSINTERFACETYPES<_RefType extends Record<string, unknown>> =
-  {
-    Error: STANDARDERROR & { __typename: 'StandardError' };
+export type I_RESOLVERSINTERFACETYPES<
+  _RefType extends Record<string, unknown>
+> = {
+  Error: Omit<I_STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
+    __typename: 'StandardError';
   };
+};
 
 /** Mapping between all available schema types and the resolvers types */
-export type RESOLVERSTYPES = {
+export type I_RESOLVERSTYPES = {
   BigInt: ResolverTypeWrapper<Scalars['BigInt']['output']>;
-  Currency: CURRENCY;
+  Currency: ResolverTypeWrapper<'USD' | 'AUD'>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
-  Error: ResolverTypeWrapper<RESOLVERSINTERFACETYPES<RESOLVERSTYPES>['Error']>;
-  ErrorType: ERRORTYPE;
+  Error: ResolverTypeWrapper<
+    I_RESOLVERSINTERFACETYPES<I_RESOLVERSTYPES>['Error']
+  >;
+  ErrorType: ResolverTypeWrapper<
+    | 'NOT_FOUND'
+    | 'INPUT_VALIDATION_ERROR'
+    | 'FORBIDDEN_ERROR'
+    | 'UNEXPECTED_ERROR'
+  >;
   Mutation: ResolverTypeWrapper<{}>;
-  PaginationInput: PAGINATIONINPUT;
+  PaginationInput: I_PAGINATIONINPUT;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
-  PaginationResult: ResolverTypeWrapper<PAGINATIONRESULT>;
-  Profile: ResolverTypeWrapper<PROFILE>;
+  PaginationResult: ResolverTypeWrapper<I_PAGINATIONRESULT>;
+  Profile: ResolverTypeWrapper<I_PROFILE>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   SomeOtherScalars: ResolverTypeWrapper<Scalars['SomeOtherScalars']['output']>;
-  StandardError: ResolverTypeWrapper<STANDARDERROR>;
+  StandardError: ResolverTypeWrapper<
+    Omit<I_STANDARDERROR, 'error'> & { error: I_RESOLVERSTYPES['ErrorType'] }
+  >;
   Subscription: ResolverTypeWrapper<{}>;
-  Topic: ResolverTypeWrapper<TOPIC>;
+  Topic: ResolverTypeWrapper<I_TOPIC>;
   TopicByIdPayload: ResolverTypeWrapper<
-    RESOLVERSUNIONTYPES<RESOLVERSTYPES>['TopicByIdPayload']
+    I_RESOLVERSUNIONTYPES<I_RESOLVERSTYPES>['TopicByIdPayload']
   >;
-  TopicByIdResult: ResolverTypeWrapper<TOPICBYIDRESULT>;
-  TopicCreateInput: TOPICCREATEINPUT;
+  TopicByIdResult: ResolverTypeWrapper<I_TOPICBYIDRESULT>;
+  TopicCreateInput: I_TOPICCREATEINPUT;
   TopicCreatePayload: ResolverTypeWrapper<
-    RESOLVERSUNIONTYPES<RESOLVERSTYPES>['TopicCreatePayload']
+    I_RESOLVERSUNIONTYPES<I_RESOLVERSTYPES>['TopicCreatePayload']
   >;
-  TopicCreateResult: ResolverTypeWrapper<TOPICCREATERESULT>;
-  TopicEditInput: TOPICEDITINPUT;
+  TopicCreateResult: ResolverTypeWrapper<I_TOPICCREATERESULT>;
+  TopicEditInput: I_TOPICEDITINPUT;
   TopicEditPayload: ResolverTypeWrapper<
-    RESOLVERSUNIONTYPES<RESOLVERSTYPES>['TopicEditPayload']
+    I_RESOLVERSUNIONTYPES<I_RESOLVERSTYPES>['TopicEditPayload']
   >;
-  TopicEditResult: ResolverTypeWrapper<TOPICEDITRESULT>;
-  TopicsCreatedByUserInput: TOPICSCREATEDBYUSERINPUT;
+  TopicEditResult: ResolverTypeWrapper<I_TOPICEDITRESULT>;
+  TopicsCreatedByUserInput: I_TOPICSCREATEDBYUSERINPUT;
   TopicsCreatedByUserPayload: ResolverTypeWrapper<
-    RESOLVERSUNIONTYPES<RESOLVERSTYPES>['TopicsCreatedByUserPayload']
+    I_RESOLVERSUNIONTYPES<I_RESOLVERSTYPES>['TopicsCreatedByUserPayload']
   >;
-  TopicsCreatedByUserResult: ResolverTypeWrapper<TOPICSCREATEDBYUSERRESULT>;
-  User: ResolverTypeWrapper<USER>;
+  TopicsCreatedByUserResult: ResolverTypeWrapper<I_TOPICSCREATEDBYUSERRESULT>;
+  User: ResolverTypeWrapper<I_USER>;
   UserPayload: ResolverTypeWrapper<
-    RESOLVERSUNIONTYPES<RESOLVERSTYPES>['UserPayload']
+    I_RESOLVERSUNIONTYPES<I_RESOLVERSTYPES>['UserPayload']
   >;
-  UserResult: ResolverTypeWrapper<USERRESULT>;
+  UserResult: ResolverTypeWrapper<I_USERRESULT>;
   WithInputOutput: ResolverTypeWrapper<Scalars['WithInputOutput']['output']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
-export type RESOLVERSPARENTTYPES = {
+export type I_RESOLVERSPARENTTYPES = {
   BigInt: Scalars['BigInt']['output'];
   DateTime: Scalars['DateTime']['output'];
-  Error: RESOLVERSINTERFACETYPES<RESOLVERSPARENTTYPES>['Error'];
+  Error: I_RESOLVERSINTERFACETYPES<I_RESOLVERSPARENTTYPES>['Error'];
   Mutation: {};
-  PaginationInput: PAGINATIONINPUT;
+  PaginationInput: I_PAGINATIONINPUT;
   Int: Scalars['Int']['output'];
-  PaginationResult: PAGINATIONRESULT;
-  Profile: PROFILE;
+  PaginationResult: I_PAGINATIONRESULT;
+  Profile: I_PROFILE;
   ID: Scalars['ID']['output'];
   Query: {};
   String: Scalars['String']['output'];
   SomeOtherScalars: Scalars['SomeOtherScalars']['output'];
-  StandardError: STANDARDERROR;
+  StandardError: I_STANDARDERROR;
   Subscription: {};
-  Topic: TOPIC;
-  TopicByIdPayload: RESOLVERSUNIONTYPES<RESOLVERSPARENTTYPES>['TopicByIdPayload'];
-  TopicByIdResult: TOPICBYIDRESULT;
-  TopicCreateInput: TOPICCREATEINPUT;
-  TopicCreatePayload: RESOLVERSUNIONTYPES<RESOLVERSPARENTTYPES>['TopicCreatePayload'];
-  TopicCreateResult: TOPICCREATERESULT;
-  TopicEditInput: TOPICEDITINPUT;
-  TopicEditPayload: RESOLVERSUNIONTYPES<RESOLVERSPARENTTYPES>['TopicEditPayload'];
-  TopicEditResult: TOPICEDITRESULT;
-  TopicsCreatedByUserInput: TOPICSCREATEDBYUSERINPUT;
-  TopicsCreatedByUserPayload: RESOLVERSUNIONTYPES<RESOLVERSPARENTTYPES>['TopicsCreatedByUserPayload'];
-  TopicsCreatedByUserResult: TOPICSCREATEDBYUSERRESULT;
-  User: USER;
-  UserPayload: RESOLVERSUNIONTYPES<RESOLVERSPARENTTYPES>['UserPayload'];
-  UserResult: USERRESULT;
+  Topic: I_TOPIC;
+  TopicByIdPayload: I_RESOLVERSUNIONTYPES<I_RESOLVERSPARENTTYPES>['TopicByIdPayload'];
+  TopicByIdResult: I_TOPICBYIDRESULT;
+  TopicCreateInput: I_TOPICCREATEINPUT;
+  TopicCreatePayload: I_RESOLVERSUNIONTYPES<I_RESOLVERSPARENTTYPES>['TopicCreatePayload'];
+  TopicCreateResult: I_TOPICCREATERESULT;
+  TopicEditInput: I_TOPICEDITINPUT;
+  TopicEditPayload: I_RESOLVERSUNIONTYPES<I_RESOLVERSPARENTTYPES>['TopicEditPayload'];
+  TopicEditResult: I_TOPICEDITRESULT;
+  TopicsCreatedByUserInput: I_TOPICSCREATEDBYUSERINPUT;
+  TopicsCreatedByUserPayload: I_RESOLVERSUNIONTYPES<I_RESOLVERSPARENTTYPES>['TopicsCreatedByUserPayload'];
+  TopicsCreatedByUserResult: I_TOPICSCREATEDBYUSERRESULT;
+  User: I_USER;
+  UserPayload: I_RESOLVERSUNIONTYPES<I_RESOLVERSPARENTTYPES>['UserPayload'];
+  UserResult: I_USERRESULT;
   WithInputOutput: Scalars['WithInputOutput']['output'];
   Boolean: Scalars['Boolean']['output'];
 };
 
-export interface BIGINTSCALARCONFIG
-  extends GraphQLScalarTypeConfig<RESOLVERSTYPES['BigInt'], any> {
+export interface I_BIGINTSCALARCONFIG
+  extends GraphQLScalarTypeConfig<I_RESOLVERSTYPES['BigInt'], any> {
   name: 'BigInt';
 }
 
-export interface DATETIMESCALARCONFIG
-  extends GraphQLScalarTypeConfig<RESOLVERSTYPES['DateTime'], any> {
+export type I_CURRENCYRESOLVERS = EnumResolverSignature<
+  { AUD?: any; USD?: any },
+  I_RESOLVERSTYPES['Currency']
+>;
+
+export interface I_DATETIMESCALARCONFIG
+  extends GraphQLScalarTypeConfig<I_RESOLVERSTYPES['DateTime'], any> {
   name: 'DateTime';
 }
 
-export type ERRORRESOLVERS<
+export type I_ERRORRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['Error'] = RESOLVERSPARENTTYPES['Error']
+  ParentType extends I_RESOLVERSPARENTTYPES['Error'] = I_RESOLVERSPARENTTYPES['Error']
 > = {
   __resolveType?: TypeResolveFn<'StandardError', ParentType, ContextType>;
-  error?: Resolver<RESOLVERSTYPES['ErrorType'], ParentType, ContextType>;
+  error?: Resolver<I_RESOLVERSTYPES['ErrorType'], ParentType, ContextType>;
 };
 
-export type MUTATIONRESOLVERS<
+export type I_ERRORTYPERESOLVERS = EnumResolverSignature<
+  {
+    FORBIDDEN_ERROR?: any;
+    INPUT_VALIDATION_ERROR?: any;
+    NOT_FOUND?: any;
+    UNEXPECTED_ERROR?: any;
+  },
+  I_RESOLVERSTYPES['ErrorType']
+>;
+
+export type I_MUTATIONRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['Mutation'] = RESOLVERSPARENTTYPES['Mutation']
+  ParentType extends I_RESOLVERSPARENTTYPES['Mutation'] = I_RESOLVERSPARENTTYPES['Mutation']
 > = {
   topicCreate?: Resolver<
-    RESOLVERSTYPES['TopicCreatePayload'],
+    I_RESOLVERSTYPES['TopicCreatePayload'],
     ParentType,
     ContextType,
-    RequireFields<MUTATIONTOPICCREATEARGS, 'input'>
+    RequireFields<I_MUTATIONTOPICCREATEARGS, 'input'>
   >;
   topicEdit?: Resolver<
-    RESOLVERSTYPES['TopicEditPayload'],
+    I_RESOLVERSTYPES['TopicEditPayload'],
     ParentType,
     ContextType,
-    RequireFields<MUTATIONTOPICEDITARGS, 'input'>
+    RequireFields<I_MUTATIONTOPICEDITARGS, 'input'>
   >;
 };
 
-export type PAGINATIONRESULTRESOLVERS<
+export type I_PAGINATIONRESULTRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['PaginationResult'] = RESOLVERSPARENTTYPES['PaginationResult']
+  ParentType extends I_RESOLVERSPARENTTYPES['PaginationResult'] = I_RESOLVERSPARENTTYPES['PaginationResult']
 > = {
-  currentPage?: Resolver<RESOLVERSTYPES['Int'], ParentType, ContextType>;
-  recordsPerPage?: Resolver<RESOLVERSTYPES['Int'], ParentType, ContextType>;
-  totalPageCount?: Resolver<RESOLVERSTYPES['Int'], ParentType, ContextType>;
+  currentPage?: Resolver<I_RESOLVERSTYPES['Int'], ParentType, ContextType>;
+  recordsPerPage?: Resolver<I_RESOLVERSTYPES['Int'], ParentType, ContextType>;
+  totalPageCount?: Resolver<I_RESOLVERSTYPES['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type PROFILERESOLVERS<
+export type I_PROFILERESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['Profile'] = RESOLVERSPARENTTYPES['Profile']
+  ParentType extends I_RESOLVERSPARENTTYPES['Profile'] = I_RESOLVERSPARENTTYPES['Profile']
 > = {
-  id?: Resolver<RESOLVERSTYPES['ID'], ParentType, ContextType>;
-  user?: Resolver<RESOLVERSTYPES['User'], ParentType, ContextType>;
+  id?: Resolver<I_RESOLVERSTYPES['ID'], ParentType, ContextType>;
+  user?: Resolver<I_RESOLVERSTYPES['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type QUERYRESOLVERS<
+export type I_QUERYRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['Query'] = RESOLVERSPARENTTYPES['Query']
+  ParentType extends I_RESOLVERSPARENTTYPES['Query'] = I_RESOLVERSPARENTTYPES['Query']
 > = {
-  me?: Resolver<RESOLVERSTYPES['UserPayload'], ParentType, ContextType>;
+  me?: Resolver<I_RESOLVERSTYPES['UserPayload'], ParentType, ContextType>;
   topicById?: Resolver<
-    RESOLVERSTYPES['TopicByIdPayload'],
+    I_RESOLVERSTYPES['TopicByIdPayload'],
     ParentType,
     ContextType,
-    RequireFields<QUERYTOPICBYIDARGS, 'id'>
+    RequireFields<I_QUERYTOPICBYIDARGS, 'id'>
   >;
   topicsCreatedByUser?: Resolver<
-    RESOLVERSTYPES['TopicsCreatedByUserPayload'],
+    I_RESOLVERSTYPES['TopicsCreatedByUserPayload'],
     ParentType,
     ContextType,
-    RequireFields<QUERYTOPICSCREATEDBYUSERARGS, 'input'>
+    RequireFields<I_QUERYTOPICSCREATEDBYUSERARGS, 'input'>
   >;
   userByAccountName?: Resolver<
-    RESOLVERSTYPES['UserPayload'],
+    I_RESOLVERSTYPES['UserPayload'],
     ParentType,
     ContextType,
-    RequireFields<QUERYUSERBYACCOUNTNAMEARGS, 'accountName'>
+    RequireFields<I_QUERYUSERBYACCOUNTNAMEARGS, 'accountName'>
   >;
 };
 
-export interface SOMEOTHERSCALARSSCALARCONFIG
-  extends GraphQLScalarTypeConfig<RESOLVERSTYPES['SomeOtherScalars'], any> {
+export interface I_SOMEOTHERSCALARSSCALARCONFIG
+  extends GraphQLScalarTypeConfig<I_RESOLVERSTYPES['SomeOtherScalars'], any> {
   name: 'SomeOtherScalars';
 }
 
-export type STANDARDERRORRESOLVERS<
+export type I_STANDARDERRORRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['StandardError'] = RESOLVERSPARENTTYPES['StandardError']
+  ParentType extends I_RESOLVERSPARENTTYPES['StandardError'] = I_RESOLVERSPARENTTYPES['StandardError']
 > = {
-  error?: Resolver<RESOLVERSTYPES['ErrorType'], ParentType, ContextType>;
+  error?: Resolver<I_RESOLVERSTYPES['ErrorType'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SUBSCRIPTIONRESOLVERS<
+export type I_SUBSCRIPTIONRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['Subscription'] = RESOLVERSPARENTTYPES['Subscription']
+  ParentType extends I_RESOLVERSPARENTTYPES['Subscription'] = I_RESOLVERSPARENTTYPES['Subscription']
 > = {
   profileChanges?: SubscriptionResolver<
-    RESOLVERSTYPES['Profile'],
+    I_RESOLVERSTYPES['Profile'],
     'profileChanges',
     ParentType,
     ContextType
   >;
 };
 
-export type TOPICRESOLVERS<
+export type I_TOPICRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['Topic'] = RESOLVERSPARENTTYPES['Topic']
+  ParentType extends I_RESOLVERSPARENTTYPES['Topic'] = I_RESOLVERSPARENTTYPES['Topic']
 > = {
-  createdAt?: Resolver<RESOLVERSTYPES['DateTime'], ParentType, ContextType>;
-  creator?: Resolver<RESOLVERSTYPES['User'], ParentType, ContextType>;
-  id?: Resolver<RESOLVERSTYPES['ID'], ParentType, ContextType>;
-  name?: Resolver<RESOLVERSTYPES['String'], ParentType, ContextType>;
-  url?: Resolver<Maybe<RESOLVERSTYPES['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<I_RESOLVERSTYPES['DateTime'], ParentType, ContextType>;
+  creator?: Resolver<I_RESOLVERSTYPES['User'], ParentType, ContextType>;
+  id?: Resolver<I_RESOLVERSTYPES['ID'], ParentType, ContextType>;
+  name?: Resolver<I_RESOLVERSTYPES['String'], ParentType, ContextType>;
+  url?: Resolver<Maybe<I_RESOLVERSTYPES['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TOPICBYIDPAYLOADRESOLVERS<
+export type I_TOPICBYIDPAYLOADRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['TopicByIdPayload'] = RESOLVERSPARENTTYPES['TopicByIdPayload']
+  ParentType extends I_RESOLVERSPARENTTYPES['TopicByIdPayload'] = I_RESOLVERSPARENTTYPES['TopicByIdPayload']
 > = {
   __resolveType?: TypeResolveFn<
     'StandardError' | 'TopicByIdResult',
@@ -531,17 +574,17 @@ export type TOPICBYIDPAYLOADRESOLVERS<
   >;
 };
 
-export type TOPICBYIDRESULTRESOLVERS<
+export type I_TOPICBYIDRESULTRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['TopicByIdResult'] = RESOLVERSPARENTTYPES['TopicByIdResult']
+  ParentType extends I_RESOLVERSPARENTTYPES['TopicByIdResult'] = I_RESOLVERSPARENTTYPES['TopicByIdResult']
 > = {
-  result?: Resolver<Maybe<RESOLVERSTYPES['Topic']>, ParentType, ContextType>;
+  result?: Resolver<Maybe<I_RESOLVERSTYPES['Topic']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TOPICCREATEPAYLOADRESOLVERS<
+export type I_TOPICCREATEPAYLOADRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['TopicCreatePayload'] = RESOLVERSPARENTTYPES['TopicCreatePayload']
+  ParentType extends I_RESOLVERSPARENTTYPES['TopicCreatePayload'] = I_RESOLVERSPARENTTYPES['TopicCreatePayload']
 > = {
   __resolveType?: TypeResolveFn<
     'StandardError' | 'TopicCreateResult',
@@ -550,17 +593,17 @@ export type TOPICCREATEPAYLOADRESOLVERS<
   >;
 };
 
-export type TOPICCREATERESULTRESOLVERS<
+export type I_TOPICCREATERESULTRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['TopicCreateResult'] = RESOLVERSPARENTTYPES['TopicCreateResult']
+  ParentType extends I_RESOLVERSPARENTTYPES['TopicCreateResult'] = I_RESOLVERSPARENTTYPES['TopicCreateResult']
 > = {
-  result?: Resolver<RESOLVERSTYPES['Topic'], ParentType, ContextType>;
+  result?: Resolver<I_RESOLVERSTYPES['Topic'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TOPICEDITPAYLOADRESOLVERS<
+export type I_TOPICEDITPAYLOADRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['TopicEditPayload'] = RESOLVERSPARENTTYPES['TopicEditPayload']
+  ParentType extends I_RESOLVERSPARENTTYPES['TopicEditPayload'] = I_RESOLVERSPARENTTYPES['TopicEditPayload']
 > = {
   __resolveType?: TypeResolveFn<
     'StandardError' | 'TopicEditResult',
@@ -569,17 +612,17 @@ export type TOPICEDITPAYLOADRESOLVERS<
   >;
 };
 
-export type TOPICEDITRESULTRESOLVERS<
+export type I_TOPICEDITRESULTRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['TopicEditResult'] = RESOLVERSPARENTTYPES['TopicEditResult']
+  ParentType extends I_RESOLVERSPARENTTYPES['TopicEditResult'] = I_RESOLVERSPARENTTYPES['TopicEditResult']
 > = {
-  result?: Resolver<RESOLVERSTYPES['Topic'], ParentType, ContextType>;
+  result?: Resolver<I_RESOLVERSTYPES['Topic'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TOPICSCREATEDBYUSERPAYLOADRESOLVERS<
+export type I_TOPICSCREATEDBYUSERPAYLOADRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['TopicsCreatedByUserPayload'] = RESOLVERSPARENTTYPES['TopicsCreatedByUserPayload']
+  ParentType extends I_RESOLVERSPARENTTYPES['TopicsCreatedByUserPayload'] = I_RESOLVERSPARENTTYPES['TopicsCreatedByUserPayload']
 > = {
   __resolveType?: TypeResolveFn<
     'StandardError' | 'TopicsCreatedByUserResult',
@@ -588,48 +631,48 @@ export type TOPICSCREATEDBYUSERPAYLOADRESOLVERS<
   >;
 };
 
-export type TOPICSCREATEDBYUSERRESULTRESOLVERS<
+export type I_TOPICSCREATEDBYUSERRESULTRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['TopicsCreatedByUserResult'] = RESOLVERSPARENTTYPES['TopicsCreatedByUserResult']
+  ParentType extends I_RESOLVERSPARENTTYPES['TopicsCreatedByUserResult'] = I_RESOLVERSPARENTTYPES['TopicsCreatedByUserResult']
 > = {
-  result?: Resolver<Array<RESOLVERSTYPES['Topic']>, ParentType, ContextType>;
+  result?: Resolver<Array<I_RESOLVERSTYPES['Topic']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type USERRESOLVERS<
+export type I_USERRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['User'] = RESOLVERSPARENTTYPES['User']
+  ParentType extends I_RESOLVERSPARENTTYPES['User'] = I_RESOLVERSPARENTTYPES['User']
 > = {
   accountGitHub?: Resolver<
-    Maybe<RESOLVERSTYPES['String']>,
+    Maybe<I_RESOLVERSTYPES['String']>,
     ParentType,
     ContextType
   >;
   accountLinkedIn?: Resolver<
-    Maybe<RESOLVERSTYPES['String']>,
+    Maybe<I_RESOLVERSTYPES['String']>,
     ParentType,
     ContextType
   >;
-  accountName?: Resolver<RESOLVERSTYPES['String'], ParentType, ContextType>;
+  accountName?: Resolver<I_RESOLVERSTYPES['String'], ParentType, ContextType>;
   accountTwitter?: Resolver<
-    Maybe<RESOLVERSTYPES['String']>,
+    Maybe<I_RESOLVERSTYPES['String']>,
     ParentType,
     ContextType
   >;
   accountWebsite?: Resolver<
-    Maybe<RESOLVERSTYPES['String']>,
+    Maybe<I_RESOLVERSTYPES['String']>,
     ParentType,
     ContextType
   >;
-  avatar?: Resolver<Maybe<RESOLVERSTYPES['String']>, ParentType, ContextType>;
-  id?: Resolver<RESOLVERSTYPES['ID'], ParentType, ContextType>;
-  name?: Resolver<Maybe<RESOLVERSTYPES['String']>, ParentType, ContextType>;
+  avatar?: Resolver<Maybe<I_RESOLVERSTYPES['String']>, ParentType, ContextType>;
+  id?: Resolver<I_RESOLVERSTYPES['ID'], ParentType, ContextType>;
+  name?: Resolver<Maybe<I_RESOLVERSTYPES['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type USERPAYLOADRESOLVERS<
+export type I_USERPAYLOADRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['UserPayload'] = RESOLVERSPARENTTYPES['UserPayload']
+  ParentType extends I_RESOLVERSPARENTTYPES['UserPayload'] = I_RESOLVERSPARENTTYPES['UserPayload']
 > = {
   __resolveType?: TypeResolveFn<
     'StandardError' | 'UserResult',
@@ -638,41 +681,43 @@ export type USERPAYLOADRESOLVERS<
   >;
 };
 
-export type USERRESULTRESOLVERS<
+export type I_USERRESULTRESOLVERS<
   ContextType = ResolverContext,
-  ParentType extends RESOLVERSPARENTTYPES['UserResult'] = RESOLVERSPARENTTYPES['UserResult']
+  ParentType extends I_RESOLVERSPARENTTYPES['UserResult'] = I_RESOLVERSPARENTTYPES['UserResult']
 > = {
-  result?: Resolver<Maybe<RESOLVERSTYPES['User']>, ParentType, ContextType>;
+  result?: Resolver<Maybe<I_RESOLVERSTYPES['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export interface WITHINPUTOUTPUTSCALARCONFIG
-  extends GraphQLScalarTypeConfig<RESOLVERSTYPES['WithInputOutput'], any> {
+export interface I_WITHINPUTOUTPUTSCALARCONFIG
+  extends GraphQLScalarTypeConfig<I_RESOLVERSTYPES['WithInputOutput'], any> {
   name: 'WithInputOutput';
 }
 
-export type RESOLVERS<ContextType = ResolverContext> = {
+export type I_RESOLVERS<ContextType = ResolverContext> = {
   BigInt?: GraphQLScalarType;
+  Currency?: I_CURRENCYRESOLVERS;
   DateTime?: GraphQLScalarType;
-  Error?: ERRORRESOLVERS<ContextType>;
-  Mutation?: MUTATIONRESOLVERS<ContextType>;
-  PaginationResult?: PAGINATIONRESULTRESOLVERS<ContextType>;
-  Profile?: PROFILERESOLVERS<ContextType>;
-  Query?: QUERYRESOLVERS<ContextType>;
+  Error?: I_ERRORRESOLVERS<ContextType>;
+  ErrorType?: I_ERRORTYPERESOLVERS;
+  Mutation?: I_MUTATIONRESOLVERS<ContextType>;
+  PaginationResult?: I_PAGINATIONRESULTRESOLVERS<ContextType>;
+  Profile?: I_PROFILERESOLVERS<ContextType>;
+  Query?: I_QUERYRESOLVERS<ContextType>;
   SomeOtherScalars?: GraphQLScalarType;
-  StandardError?: STANDARDERRORRESOLVERS<ContextType>;
-  Subscription?: SUBSCRIPTIONRESOLVERS<ContextType>;
-  Topic?: TOPICRESOLVERS<ContextType>;
-  TopicByIdPayload?: TOPICBYIDPAYLOADRESOLVERS<ContextType>;
-  TopicByIdResult?: TOPICBYIDRESULTRESOLVERS<ContextType>;
-  TopicCreatePayload?: TOPICCREATEPAYLOADRESOLVERS<ContextType>;
-  TopicCreateResult?: TOPICCREATERESULTRESOLVERS<ContextType>;
-  TopicEditPayload?: TOPICEDITPAYLOADRESOLVERS<ContextType>;
-  TopicEditResult?: TOPICEDITRESULTRESOLVERS<ContextType>;
-  TopicsCreatedByUserPayload?: TOPICSCREATEDBYUSERPAYLOADRESOLVERS<ContextType>;
-  TopicsCreatedByUserResult?: TOPICSCREATEDBYUSERRESULTRESOLVERS<ContextType>;
-  User?: USERRESOLVERS<ContextType>;
-  UserPayload?: USERPAYLOADRESOLVERS<ContextType>;
-  UserResult?: USERRESULTRESOLVERS<ContextType>;
+  StandardError?: I_STANDARDERRORRESOLVERS<ContextType>;
+  Subscription?: I_SUBSCRIPTIONRESOLVERS<ContextType>;
+  Topic?: I_TOPICRESOLVERS<ContextType>;
+  TopicByIdPayload?: I_TOPICBYIDPAYLOADRESOLVERS<ContextType>;
+  TopicByIdResult?: I_TOPICBYIDRESULTRESOLVERS<ContextType>;
+  TopicCreatePayload?: I_TOPICCREATEPAYLOADRESOLVERS<ContextType>;
+  TopicCreateResult?: I_TOPICCREATERESULTRESOLVERS<ContextType>;
+  TopicEditPayload?: I_TOPICEDITPAYLOADRESOLVERS<ContextType>;
+  TopicEditResult?: I_TOPICEDITRESULTRESOLVERS<ContextType>;
+  TopicsCreatedByUserPayload?: I_TOPICSCREATEDBYUSERPAYLOADRESOLVERS<ContextType>;
+  TopicsCreatedByUserResult?: I_TOPICSCREATEDBYUSERRESULTRESOLVERS<ContextType>;
+  User?: I_USERRESOLVERS<ContextType>;
+  UserPayload?: I_USERPAYLOADRESOLVERS<ContextType>;
+  UserResult?: I_USERRESULTRESOLVERS<ContextType>;
   WithInputOutput?: GraphQLScalarType;
 };

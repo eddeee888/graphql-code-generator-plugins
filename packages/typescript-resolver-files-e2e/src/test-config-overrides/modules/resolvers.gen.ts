@@ -1,5 +1,5 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
-import type { Resolvers } from './types.gen';
+import type { I_RESOLVERS } from './types.gen';
 import { me as Query_me } from './user/rslvrs/Query/me';
 import { topicById as Query_topicById } from './topic/rslvrs/Query/topicById';
 import { topicsCreatedByUser as Query_topicsCreatedByUser } from './topic/rslvrs/Query/topicsCreatedByUser';
@@ -19,9 +19,17 @@ import { User } from './user/rslvrs/User';
 import { UserResult } from './user/rslvrs/UserResult';
 import { SomeOtherScalars } from './base/rslvrs/SomeOtherScalars';
 import { WithInputOutput } from './base/rslvrs/WithInputOutput';
+import { Error } from './base/rslvrs/Error';
+import { TopicByIdPayload } from './topic/rslvrs/TopicByIdPayload';
+import { TopicCreatePayload } from './topic/rslvrs/TopicCreatePayload';
+import { TopicEditPayload } from './topic/rslvrs/TopicEditPayload';
+import { TopicsCreatedByUserPayload } from './topic/rslvrs/TopicsCreatedByUserPayload';
+import { UserPayload } from './user/rslvrs/UserPayload';
+import { Currency } from './base/rslvrs/Currency';
+import { ErrorType } from './base/rslvrs/ErrorType';
 import CustomBigIntResolver from './base/CustomBigIntResolver';
 import { DateTimeResolver } from 'graphql-scalars';
-export const resolvers: Resolvers = {
+export const resolvers: I_RESOLVERS = {
   Query: {
     me: Query_me,
     topicById: Query_topicById,
@@ -45,6 +53,14 @@ export const resolvers: Resolvers = {
   UserResult: UserResult,
   SomeOtherScalars: SomeOtherScalars,
   WithInputOutput: WithInputOutput,
+  Error: Error,
+  TopicByIdPayload: TopicByIdPayload,
+  TopicCreatePayload: TopicCreatePayload,
+  TopicEditPayload: TopicEditPayload,
+  TopicsCreatedByUserPayload: TopicsCreatedByUserPayload,
+  UserPayload: UserPayload,
+  Currency: Currency,
+  ErrorType: ErrorType,
   BigInt: CustomBigIntResolver,
   DateTime: DateTimeResolver,
 };

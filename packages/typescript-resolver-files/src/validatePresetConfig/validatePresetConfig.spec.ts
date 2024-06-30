@@ -1,4 +1,5 @@
 import {
+  type RawPresetConfig,
   type ParsedPresetConfig,
   validatePresetConfig,
 } from './validatePresetConfig';
@@ -23,6 +24,11 @@ const defaultExpected: ParsedPresetConfig = {
     object: '*',
     union: '',
     interface: '',
+    enum: '',
+  },
+  mergeSchema: {
+    path: 'schema.generated.graphqls',
+    config: {},
   },
   typeDefsFilePath: './typeDefs.generated.ts',
   typeDefsFileMode: 'merged',
@@ -37,7 +43,10 @@ const defaultExpected: ParsedPresetConfig = {
   tsMorphProjectOptions: {
     skipAddingFilesFromTsConfig: true,
   },
-  fixObjectTypeResolvers: 'smart',
+  fixObjectTypeResolvers: {
+    object: 'smart',
+    enum: 'smart',
+  },
   emitLegacyCommonJSImports: true,
 };
 
@@ -190,21 +199,62 @@ describe('validatePresetConfig - general', () => {
     });
   });
 
-  it('returns result.fixObjectTypeResolvers = "smart" if set as "smart"', () => {
+  it('returns result.fixObjectTypeResolvers object with every key set as "smart" if input is set as "smart"', () => {
     const parsed = validatePresetConfig({ fixObjectTypeResolvers: 'smart' });
 
     expect(parsed).toEqual({
       ...defaultExpected,
-      fixObjectTypeResolvers: 'smart',
+      fixObjectTypeResolvers: {
+        object: 'smart',
+        enum: 'smart',
+      },
     });
   });
 
-  it('returns result.fixObjectTypeResolvers = "disabled" if set as "disabled"', () => {
+  it('returns result.fixObjectTypeResolvers object with every key set as "disabled" if input is set as "disabled"', () => {
     const parsed = validatePresetConfig({ fixObjectTypeResolvers: 'disabled' });
 
     expect(parsed).toEqual({
       ...defaultExpected,
-      fixObjectTypeResolvers: 'disabled',
+      fixObjectTypeResolvers: {
+        object: 'disabled',
+        enum: 'disabled',
+      },
+    });
+  });
+
+  it('returns result.fixObjectTypeResolvers object when input is an object', () => {
+    const parsed = validatePresetConfig({
+      fixObjectTypeResolvers: {
+        object: 'smart',
+        enum: 'disabled',
+      },
+    });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      fixObjectTypeResolvers: {
+        object: 'smart',
+        enum: 'disabled',
+      },
+    });
+  });
+
+  it('returns result.fixObjectTypeResolvers fields as "disabled" if the input object fields are not "smart" or "disabled"', () => {
+    const parsed = validatePresetConfig({
+      fixObjectTypeResolvers: {
+        object: 'never_an_option',
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        enum: undefined as any,
+      },
+    });
+
+    expect(parsed).toEqual({
+      ...defaultExpected,
+      fixObjectTypeResolvers: {
+        object: 'disabled',
+        enum: 'disabled',
+      },
     });
   });
 
@@ -277,7 +327,7 @@ describe('validatePresetConfig - general', () => {
     expect(() =>
       validatePresetConfig({ fixObjectTypeResolvers: 'not-valid-for-sure' })
     ).toThrow(
-      'Validation - presetConfig.fixObjectTypeResolvers must be "smart" or "disabled" (default is "smart")'
+      'Validation - presetConfig.fixObjectTypeResolvers must be an object, "smart" or "disabled" (default is "smart")'
     );
   });
 
@@ -420,7 +470,7 @@ describe('validatePresetConfig - mode: merged', () => {
 
 describe('validatePresetConfig - resolverGeneration', () => {
   it.each<{
-    input: 'disabled' | 'recommended' | 'all';
+    input: 'disabled' | 'recommended' | 'all' | 'minimal';
     expected: ParsedPresetConfig['resolverGeneration'];
   }>([
     {
@@ -433,6 +483,20 @@ describe('validatePresetConfig - resolverGeneration', () => {
         object: '',
         union: '',
         interface: '',
+        enum: '',
+      },
+    },
+    {
+      input: 'minimal',
+      expected: {
+        query: '*',
+        mutation: '*',
+        subscription: '*',
+        scalar: '*',
+        object: '',
+        union: '',
+        interface: '',
+        enum: '',
       },
     },
     {
@@ -445,6 +509,7 @@ describe('validatePresetConfig - resolverGeneration', () => {
         object: '*',
         union: '',
         interface: '',
+        enum: '',
       },
     },
     {
@@ -457,6 +522,7 @@ describe('validatePresetConfig - resolverGeneration', () => {
         object: '*',
         union: '*',
         interface: '*',
+        enum: '*',
       },
     },
   ])(
@@ -484,6 +550,7 @@ describe('validatePresetConfig - resolverGeneration', () => {
       object: '',
       union: '',
       interface: '',
+      enum: '',
     });
   });
 
@@ -492,6 +559,49 @@ describe('validatePresetConfig - resolverGeneration', () => {
       validatePresetConfig({ resolverGeneration: 'omg_what_is_this' })
     ).toThrow(
       'Validation - presetConfig.resolverGeneration must be an object, "disabled", "recommended", "minimal" or "all" (default is "recommended")'
+    );
+  });
+
+  describe('validatePresetConfig - mergeSchema', () => {
+    it.each<{
+      input: RawPresetConfig['mergeSchema'];
+      expected: ParsedPresetConfig['mergeSchema'];
+    }>([
+      {
+        input: false,
+        expected: false,
+      },
+      {
+        input: true,
+        expected: {
+          path: 'schema.generated.graphqls',
+          config: {},
+        },
+      },
+      {
+        input: 'schema.gen.gql',
+        expected: {
+          path: 'schema.gen.gql',
+          config: {},
+        },
+      },
+      {
+        input: {
+          path: 'omg.graphql',
+          config: { sort: true },
+        },
+        expected: {
+          path: 'omg.graphql',
+          config: { sort: true },
+        },
+      },
+    ])(
+      'correctly returns the parsed "$input" resolverGeneration object',
+      ({ input, expected }) => {
+        const result = validatePresetConfig({ mergeSchema: input });
+
+        expect(result.mergeSchema).toEqual(expected);
+      }
     );
   });
 });

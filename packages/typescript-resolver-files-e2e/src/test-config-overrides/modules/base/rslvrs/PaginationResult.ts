@@ -1,4 +1,4 @@
-import type { PaginationResultResolvers } from './../../types.gen';
-export const PaginationResult: PaginationResultResolvers = {
+import type { I_PAGINATIONRESULTRESOLVERS } from './../../types.gen';
+export const PaginationResult: I_PAGINATIONRESULTRESOLVERS = {
   /* Implement PaginationResult resolver logic here */
 };

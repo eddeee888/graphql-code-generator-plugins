@@ -17,6 +17,17 @@ enum ErrorType {
   UNEXPECTED_ERROR
 }
 
+enum SortOrder {
+  ASC
+  DESC
+}
+
+enum Country {
+  AU
+  US
+  NZ
+}
+
 input PaginationInput {
   recordsPerPage: Int
   page: Int
