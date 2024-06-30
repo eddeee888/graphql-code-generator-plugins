@@ -3,726 +3,433 @@ export const typeDefs = {
   kind: 'Document',
   definitions: [
     {
+      name: { kind: 'Name', value: 'Query' },
       kind: 'ObjectTypeDefinition',
-      name: { kind: 'Name', value: 'Query', loc: { start: 5, end: 10 } },
-      interfaces: [],
+      fields: [
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'topicById' },
+          arguments: [
+            {
+              kind: 'InputValueDefinition',
+              name: { kind: 'Name', value: 'id' },
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'ID' },
+                },
+              },
+              directives: [],
+            },
+          ],
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'TopicByIdPayload' },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'topicsCreatedByUser' },
+          arguments: [
+            {
+              kind: 'InputValueDefinition',
+              name: { kind: 'Name', value: 'input' },
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'TopicsCreatedByUserInput' },
+                },
+              },
+              directives: [],
+            },
+          ],
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'TopicsCreatedByUserPayload' },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'me' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UserPayload' },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'userByAccountName' },
+          arguments: [
+            {
+              kind: 'InputValueDefinition',
+              name: { kind: 'Name', value: 'accountName' },
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'String' },
+                },
+              },
+              directives: [],
+            },
+          ],
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UserPayload' },
+            },
+          },
+          directives: [],
+        },
+      ],
       directives: [],
-      fields: [],
-      loc: { start: 0, end: 10 },
+      interfaces: [],
     },
     {
+      name: { kind: 'Name', value: 'Mutation' },
       kind: 'ObjectTypeDefinition',
-      name: { kind: 'Name', value: 'Mutation', loc: { start: 17, end: 25 } },
-      interfaces: [],
+      fields: [
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'topicCreate' },
+          arguments: [
+            {
+              kind: 'InputValueDefinition',
+              name: { kind: 'Name', value: 'input' },
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'TopicCreateInput' },
+                },
+              },
+              directives: [],
+            },
+          ],
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'TopicCreatePayload' },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'topicEdit' },
+          arguments: [
+            {
+              kind: 'InputValueDefinition',
+              name: { kind: 'Name', value: 'input' },
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'TopicEditInput' },
+                },
+              },
+              directives: [],
+            },
+          ],
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'TopicEditPayload' },
+            },
+          },
+          directives: [],
+        },
+      ],
       directives: [],
-      fields: [],
-      loc: { start: 12, end: 25 },
+      interfaces: [],
     },
     {
+      name: { kind: 'Name', value: 'Subscription' },
       kind: 'ObjectTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'Subscription',
-        loc: { start: 32, end: 44 },
-      },
-      interfaces: [],
+      fields: [
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'profileChanges' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'Profile' },
+            },
+          },
+          directives: [],
+        },
+      ],
       directives: [],
-      fields: [],
-      loc: { start: 27, end: 44 },
+      interfaces: [],
     },
     {
       kind: 'InterfaceTypeDefinition',
-      name: { kind: 'Name', value: 'Error', loc: { start: 56, end: 61 } },
+      name: { kind: 'Name', value: 'Error' },
       interfaces: [],
       directives: [],
       fields: [
         {
           kind: 'FieldDefinition',
-          name: { kind: 'Name', value: 'error', loc: { start: 66, end: 71 } },
+          name: { kind: 'Name', value: 'error' },
           arguments: [],
           type: {
             kind: 'NonNullType',
             type: {
               kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'ErrorType',
-                loc: { start: 73, end: 82 },
-              },
-              loc: { start: 73, end: 82 },
+              name: { kind: 'Name', value: 'ErrorType' },
             },
-            loc: { start: 73, end: 83 },
           },
           directives: [],
-          loc: { start: 66, end: 83 },
         },
       ],
-      loc: { start: 46, end: 85 },
     },
     {
       kind: 'ObjectTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'PayloadError',
-        loc: { start: 92, end: 104 },
-      },
+      name: { kind: 'Name', value: 'PayloadError' },
       interfaces: [
-        {
-          kind: 'NamedType',
-          name: { kind: 'Name', value: 'Error', loc: { start: 116, end: 121 } },
-          loc: { start: 116, end: 121 },
-        },
+        { kind: 'NamedType', name: { kind: 'Name', value: 'Error' } },
       ],
       directives: [],
       fields: [
         {
           kind: 'FieldDefinition',
-          name: { kind: 'Name', value: 'error', loc: { start: 126, end: 131 } },
+          name: { kind: 'Name', value: 'error' },
           arguments: [],
           type: {
             kind: 'NonNullType',
             type: {
               kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'ErrorType',
-                loc: { start: 133, end: 142 },
-              },
-              loc: { start: 133, end: 142 },
+              name: { kind: 'Name', value: 'ErrorType' },
             },
-            loc: { start: 133, end: 143 },
           },
           directives: [],
-          loc: { start: 126, end: 143 },
         },
       ],
-      loc: { start: 87, end: 145 },
     },
     {
       kind: 'EnumTypeDefinition',
-      name: { kind: 'Name', value: 'ErrorType', loc: { start: 152, end: 161 } },
+      name: { kind: 'Name', value: 'ErrorType' },
       directives: [],
       values: [
         {
           kind: 'EnumValueDefinition',
-          name: {
-            kind: 'Name',
-            value: 'NOT_FOUND',
-            loc: { start: 166, end: 175 },
-          },
+          name: { kind: 'Name', value: 'NOT_FOUND' },
           directives: [],
-          loc: { start: 166, end: 175 },
         },
         {
           kind: 'EnumValueDefinition',
-          name: {
-            kind: 'Name',
-            value: 'INPUT_VALIDATION_ERROR',
-            loc: { start: 178, end: 200 },
-          },
+          name: { kind: 'Name', value: 'INPUT_VALIDATION_ERROR' },
           directives: [],
-          loc: { start: 178, end: 200 },
         },
         {
           kind: 'EnumValueDefinition',
-          name: {
-            kind: 'Name',
-            value: 'FORBIDDEN_ERROR',
-            loc: { start: 203, end: 218 },
-          },
+          name: { kind: 'Name', value: 'FORBIDDEN_ERROR' },
           directives: [],
-          loc: { start: 203, end: 218 },
         },
         {
           kind: 'EnumValueDefinition',
-          name: {
-            kind: 'Name',
-            value: 'UNEXPECTED_ERROR',
-            loc: { start: 221, end: 237 },
-          },
+          name: { kind: 'Name', value: 'UNEXPECTED_ERROR' },
           directives: [],
-          loc: { start: 221, end: 237 },
         },
       ],
-      loc: { start: 147, end: 239 },
     },
     {
       kind: 'InputObjectTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'PaginationInput',
-        loc: { start: 247, end: 262 },
-      },
+      name: { kind: 'Name', value: 'PaginationInput' },
       directives: [],
       fields: [
         {
           kind: 'InputValueDefinition',
-          name: {
-            kind: 'Name',
-            value: 'recordsPerPage',
-            loc: { start: 267, end: 281 },
-          },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'Int', loc: { start: 283, end: 286 } },
-            loc: { start: 283, end: 286 },
-          },
+          name: { kind: 'Name', value: 'recordsPerPage' },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
           directives: [],
-          loc: { start: 267, end: 286 },
         },
         {
           kind: 'InputValueDefinition',
-          name: { kind: 'Name', value: 'page', loc: { start: 289, end: 293 } },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'Int', loc: { start: 295, end: 298 } },
-            loc: { start: 295, end: 298 },
-          },
+          name: { kind: 'Name', value: 'page' },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
           directives: [],
-          loc: { start: 289, end: 298 },
         },
       ],
-      loc: { start: 241, end: 300 },
     },
     {
       kind: 'ObjectTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'PaginationResult',
-        loc: { start: 307, end: 323 },
-      },
+      name: { kind: 'Name', value: 'PaginationResult' },
       interfaces: [],
       directives: [],
       fields: [
         {
           kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'currentPage',
-            loc: { start: 328, end: 339 },
-          },
+          name: { kind: 'Name', value: 'currentPage' },
           arguments: [],
           type: {
             kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'Int',
-                loc: { start: 341, end: 344 },
-              },
-              loc: { start: 341, end: 344 },
-            },
-            loc: { start: 341, end: 345 },
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
           },
           directives: [],
-          loc: { start: 328, end: 345 },
         },
         {
           kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'recordsPerPage',
-            loc: { start: 348, end: 362 },
-          },
+          name: { kind: 'Name', value: 'recordsPerPage' },
           arguments: [],
           type: {
             kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'Int',
-                loc: { start: 364, end: 367 },
-              },
-              loc: { start: 364, end: 367 },
-            },
-            loc: { start: 364, end: 368 },
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
           },
           directives: [],
-          loc: { start: 348, end: 368 },
         },
         {
           kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'totalPageCount',
-            loc: { start: 371, end: 385 },
-          },
+          name: { kind: 'Name', value: 'totalPageCount' },
           arguments: [],
           type: {
             kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'Int',
-                loc: { start: 387, end: 390 },
-              },
-              loc: { start: 387, end: 390 },
-            },
-            loc: { start: 387, end: 391 },
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
           },
           directives: [],
-          loc: { start: 371, end: 391 },
         },
       ],
-      loc: { start: 302, end: 393 },
     },
     {
       kind: 'ScalarTypeDefinition',
-      name: { kind: 'Name', value: 'DateTime', loc: { start: 402, end: 410 } },
+      name: { kind: 'Name', value: 'DateTime' },
       directives: [],
-      loc: { start: 395, end: 410 },
     },
     {
       kind: 'ScalarTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'SomeRandomScalar',
-        loc: { start: 419, end: 435 },
-      },
+      name: { kind: 'Name', value: 'SomeRandomScalar' },
       directives: [],
-      loc: { start: 412, end: 435 },
-    },
-    {
-      kind: 'ObjectTypeExtension',
-      name: { kind: 'Name', value: 'Query', loc: { start: 448, end: 453 } },
-      interfaces: [],
-      directives: [],
-      fields: [
-        {
-          kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'topicById',
-            loc: { start: 458, end: 467 },
-          },
-          arguments: [
-            {
-              kind: 'InputValueDefinition',
-              name: {
-                kind: 'Name',
-                value: 'id',
-                loc: { start: 468, end: 470 },
-              },
-              type: {
-                kind: 'NonNullType',
-                type: {
-                  kind: 'NamedType',
-                  name: {
-                    kind: 'Name',
-                    value: 'ID',
-                    loc: { start: 472, end: 474 },
-                  },
-                  loc: { start: 472, end: 474 },
-                },
-                loc: { start: 472, end: 475 },
-              },
-              directives: [],
-              loc: { start: 468, end: 475 },
-            },
-          ],
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'TopicByIdPayload',
-                loc: { start: 478, end: 494 },
-              },
-              loc: { start: 478, end: 494 },
-            },
-            loc: { start: 478, end: 495 },
-          },
-          directives: [],
-          loc: { start: 458, end: 495 },
-        },
-        {
-          kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'topicsCreatedByUser',
-            loc: { start: 498, end: 517 },
-          },
-          arguments: [
-            {
-              kind: 'InputValueDefinition',
-              name: {
-                kind: 'Name',
-                value: 'input',
-                loc: { start: 518, end: 523 },
-              },
-              type: {
-                kind: 'NonNullType',
-                type: {
-                  kind: 'NamedType',
-                  name: {
-                    kind: 'Name',
-                    value: 'TopicsCreatedByUserInput',
-                    loc: { start: 525, end: 549 },
-                  },
-                  loc: { start: 525, end: 549 },
-                },
-                loc: { start: 525, end: 550 },
-              },
-              directives: [],
-              loc: { start: 518, end: 550 },
-            },
-          ],
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'TopicsCreatedByUserPayload',
-                loc: { start: 553, end: 579 },
-              },
-              loc: { start: 553, end: 579 },
-            },
-            loc: { start: 553, end: 580 },
-          },
-          directives: [],
-          loc: { start: 498, end: 580 },
-        },
-      ],
-      loc: { start: 436, end: 582 },
-    },
-    {
-      kind: 'ObjectTypeExtension',
-      name: { kind: 'Name', value: 'Mutation', loc: { start: 596, end: 604 } },
-      interfaces: [],
-      directives: [],
-      fields: [
-        {
-          kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'topicCreate',
-            loc: { start: 609, end: 620 },
-          },
-          arguments: [
-            {
-              kind: 'InputValueDefinition',
-              name: {
-                kind: 'Name',
-                value: 'input',
-                loc: { start: 621, end: 626 },
-              },
-              type: {
-                kind: 'NonNullType',
-                type: {
-                  kind: 'NamedType',
-                  name: {
-                    kind: 'Name',
-                    value: 'TopicCreateInput',
-                    loc: { start: 628, end: 644 },
-                  },
-                  loc: { start: 628, end: 644 },
-                },
-                loc: { start: 628, end: 645 },
-              },
-              directives: [],
-              loc: { start: 621, end: 645 },
-            },
-          ],
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'TopicCreatePayload',
-                loc: { start: 648, end: 666 },
-              },
-              loc: { start: 648, end: 666 },
-            },
-            loc: { start: 648, end: 667 },
-          },
-          directives: [],
-          loc: { start: 609, end: 667 },
-        },
-        {
-          kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'topicEdit',
-            loc: { start: 670, end: 679 },
-          },
-          arguments: [
-            {
-              kind: 'InputValueDefinition',
-              name: {
-                kind: 'Name',
-                value: 'input',
-                loc: { start: 680, end: 685 },
-              },
-              type: {
-                kind: 'NonNullType',
-                type: {
-                  kind: 'NamedType',
-                  name: {
-                    kind: 'Name',
-                    value: 'TopicEditInput',
-                    loc: { start: 687, end: 701 },
-                  },
-                  loc: { start: 687, end: 701 },
-                },
-                loc: { start: 687, end: 702 },
-              },
-              directives: [],
-              loc: { start: 680, end: 702 },
-            },
-          ],
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'TopicEditPayload',
-                loc: { start: 705, end: 721 },
-              },
-              loc: { start: 705, end: 721 },
-            },
-            loc: { start: 705, end: 722 },
-          },
-          directives: [],
-          loc: { start: 670, end: 722 },
-        },
-      ],
-      loc: { start: 584, end: 724 },
     },
     {
       kind: 'ObjectTypeDefinition',
-      name: { kind: 'Name', value: 'Topic', loc: { start: 731, end: 736 } },
+      name: { kind: 'Name', value: 'Topic' },
       interfaces: [],
       directives: [],
       fields: [
         {
           kind: 'FieldDefinition',
-          name: { kind: 'Name', value: 'id', loc: { start: 741, end: 743 } },
+          name: { kind: 'Name', value: 'id' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'name' },
           arguments: [],
           type: {
             kind: 'NonNullType',
             type: {
               kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'ID',
-                loc: { start: 745, end: 747 },
-              },
-              loc: { start: 745, end: 747 },
+              name: { kind: 'Name', value: 'String' },
             },
-            loc: { start: 745, end: 748 },
           },
           directives: [],
-          loc: { start: 741, end: 748 },
         },
         {
           kind: 'FieldDefinition',
-          name: { kind: 'Name', value: 'name', loc: { start: 751, end: 755 } },
+          name: { kind: 'Name', value: 'url' },
+          arguments: [],
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'creator' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'User' } },
+          },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'createdAt' },
           arguments: [],
           type: {
             kind: 'NonNullType',
             type: {
               kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'String',
-                loc: { start: 757, end: 763 },
-              },
-              loc: { start: 757, end: 763 },
+              name: { kind: 'Name', value: 'DateTime' },
             },
-            loc: { start: 757, end: 764 },
           },
           directives: [],
-          loc: { start: 751, end: 764 },
-        },
-        {
-          kind: 'FieldDefinition',
-          name: { kind: 'Name', value: 'url', loc: { start: 767, end: 770 } },
-          arguments: [],
-          type: {
-            kind: 'NamedType',
-            name: {
-              kind: 'Name',
-              value: 'String',
-              loc: { start: 772, end: 778 },
-            },
-            loc: { start: 772, end: 778 },
-          },
-          directives: [],
-          loc: { start: 767, end: 778 },
-        },
-        {
-          kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'creator',
-            loc: { start: 781, end: 788 },
-          },
-          arguments: [],
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'User',
-                loc: { start: 790, end: 794 },
-              },
-              loc: { start: 790, end: 794 },
-            },
-            loc: { start: 790, end: 795 },
-          },
-          directives: [],
-          loc: { start: 781, end: 795 },
-        },
-        {
-          kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'createdAt',
-            loc: { start: 798, end: 807 },
-          },
-          arguments: [],
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'DateTime',
-                loc: { start: 809, end: 817 },
-              },
-              loc: { start: 809, end: 817 },
-            },
-            loc: { start: 809, end: 818 },
-          },
-          directives: [],
-          loc: { start: 798, end: 818 },
         },
       ],
-      loc: { start: 726, end: 820 },
     },
     {
       kind: 'ObjectTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'TopicByIdResult',
-        loc: { start: 827, end: 842 },
-      },
+      name: { kind: 'Name', value: 'TopicByIdResult' },
       interfaces: [],
       directives: [],
       fields: [
         {
           kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'result',
-            loc: { start: 847, end: 853 },
-          },
+          name: { kind: 'Name', value: 'result' },
           arguments: [],
-          type: {
-            kind: 'NamedType',
-            name: {
-              kind: 'Name',
-              value: 'Topic',
-              loc: { start: 855, end: 860 },
-            },
-            loc: { start: 855, end: 860 },
-          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Topic' } },
           directives: [],
-          loc: { start: 847, end: 860 },
         },
       ],
-      loc: { start: 822, end: 862 },
     },
     {
       kind: 'UnionTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'TopicByIdPayload',
-        loc: { start: 870, end: 886 },
-      },
+      name: { kind: 'Name', value: 'TopicByIdPayload' },
       directives: [],
       types: [
-        {
-          kind: 'NamedType',
-          name: {
-            kind: 'Name',
-            value: 'TopicByIdResult',
-            loc: { start: 889, end: 904 },
-          },
-          loc: { start: 889, end: 904 },
-        },
-        {
-          kind: 'NamedType',
-          name: {
-            kind: 'Name',
-            value: 'PayloadError',
-            loc: { start: 907, end: 919 },
-          },
-          loc: { start: 907, end: 919 },
-        },
+        { kind: 'NamedType', name: { kind: 'Name', value: 'TopicByIdResult' } },
+        { kind: 'NamedType', name: { kind: 'Name', value: 'PayloadError' } },
       ],
-      loc: { start: 864, end: 919 },
     },
     {
       kind: 'InputObjectTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'TopicsCreatedByUserInput',
-        loc: { start: 927, end: 951 },
-      },
+      name: { kind: 'Name', value: 'TopicsCreatedByUserInput' },
       directives: [],
       fields: [
         {
           kind: 'InputValueDefinition',
-          name: {
-            kind: 'Name',
-            value: 'userId',
-            loc: { start: 956, end: 962 },
-          },
+          name: { kind: 'Name', value: 'userId' },
           type: {
             kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'ID',
-                loc: { start: 964, end: 966 },
-              },
-              loc: { start: 964, end: 966 },
-            },
-            loc: { start: 964, end: 967 },
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
           },
           directives: [],
-          loc: { start: 956, end: 967 },
         },
       ],
-      loc: { start: 921, end: 969 },
     },
     {
       kind: 'ObjectTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'TopicsCreatedByUserResult',
-        loc: { start: 976, end: 1001 },
-      },
+      name: { kind: 'Name', value: 'TopicsCreatedByUserResult' },
       interfaces: [],
       directives: [],
       fields: [
         {
           kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'result',
-            loc: { start: 1006, end: 1012 },
-          },
+          name: { kind: 'Name', value: 'result' },
           arguments: [],
           type: {
             kind: 'NonNullType',
@@ -732,321 +439,150 @@ export const typeDefs = {
                 kind: 'NonNullType',
                 type: {
                   kind: 'NamedType',
-                  name: {
-                    kind: 'Name',
-                    value: 'Topic',
-                    loc: { start: 1015, end: 1020 },
-                  },
-                  loc: { start: 1015, end: 1020 },
+                  name: { kind: 'Name', value: 'Topic' },
                 },
-                loc: { start: 1015, end: 1021 },
               },
-              loc: { start: 1014, end: 1022 },
             },
-            loc: { start: 1014, end: 1023 },
           },
           directives: [],
-          loc: { start: 1006, end: 1023 },
         },
       ],
-      loc: { start: 971, end: 1025 },
     },
     {
       kind: 'UnionTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'TopicsCreatedByUserPayload',
-        loc: { start: 1033, end: 1059 },
-      },
+      name: { kind: 'Name', value: 'TopicsCreatedByUserPayload' },
       directives: [],
       types: [
         {
           kind: 'NamedType',
-          name: {
-            kind: 'Name',
-            value: 'TopicsCreatedByUserResult',
-            loc: { start: 1062, end: 1087 },
-          },
-          loc: { start: 1062, end: 1087 },
+          name: { kind: 'Name', value: 'TopicsCreatedByUserResult' },
         },
-        {
-          kind: 'NamedType',
-          name: {
-            kind: 'Name',
-            value: 'PayloadError',
-            loc: { start: 1090, end: 1102 },
-          },
-          loc: { start: 1090, end: 1102 },
-        },
+        { kind: 'NamedType', name: { kind: 'Name', value: 'PayloadError' } },
       ],
-      loc: { start: 1027, end: 1102 },
     },
     {
       kind: 'InputObjectTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'TopicCreateInput',
-        loc: { start: 1110, end: 1126 },
-      },
+      name: { kind: 'Name', value: 'TopicCreateInput' },
       directives: [],
       fields: [
         {
           kind: 'InputValueDefinition',
-          name: {
-            kind: 'Name',
-            value: 'name',
-            loc: { start: 1131, end: 1135 },
-          },
+          name: { kind: 'Name', value: 'name' },
           type: {
             kind: 'NonNullType',
             type: {
               kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'String',
-                loc: { start: 1137, end: 1143 },
-              },
-              loc: { start: 1137, end: 1143 },
+              name: { kind: 'Name', value: 'String' },
             },
-            loc: { start: 1137, end: 1144 },
           },
           directives: [],
-          loc: { start: 1131, end: 1144 },
         },
         {
           kind: 'InputValueDefinition',
-          name: { kind: 'Name', value: 'url', loc: { start: 1147, end: 1150 } },
-          type: {
-            kind: 'NamedType',
-            name: {
-              kind: 'Name',
-              value: 'String',
-              loc: { start: 1152, end: 1158 },
-            },
-            loc: { start: 1152, end: 1158 },
-          },
+          name: { kind: 'Name', value: 'url' },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
           directives: [],
-          loc: { start: 1147, end: 1158 },
         },
       ],
-      loc: { start: 1104, end: 1160 },
     },
     {
       kind: 'ObjectTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'TopicCreateResult',
-        loc: { start: 1167, end: 1184 },
-      },
+      name: { kind: 'Name', value: 'TopicCreateResult' },
       interfaces: [],
       directives: [],
       fields: [
         {
           kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'result',
-            loc: { start: 1189, end: 1195 },
-          },
+          name: { kind: 'Name', value: 'result' },
           arguments: [],
           type: {
             kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'Topic',
-                loc: { start: 1197, end: 1202 },
-              },
-              loc: { start: 1197, end: 1202 },
-            },
-            loc: { start: 1197, end: 1203 },
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Topic' } },
           },
           directives: [],
-          loc: { start: 1189, end: 1203 },
         },
       ],
-      loc: { start: 1162, end: 1205 },
     },
     {
       kind: 'UnionTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'TopicCreatePayload',
-        loc: { start: 1213, end: 1231 },
-      },
+      name: { kind: 'Name', value: 'TopicCreatePayload' },
       directives: [],
       types: [
         {
           kind: 'NamedType',
-          name: {
-            kind: 'Name',
-            value: 'TopicCreateResult',
-            loc: { start: 1234, end: 1251 },
-          },
-          loc: { start: 1234, end: 1251 },
+          name: { kind: 'Name', value: 'TopicCreateResult' },
         },
-        {
-          kind: 'NamedType',
-          name: {
-            kind: 'Name',
-            value: 'PayloadError',
-            loc: { start: 1254, end: 1266 },
-          },
-          loc: { start: 1254, end: 1266 },
-        },
+        { kind: 'NamedType', name: { kind: 'Name', value: 'PayloadError' } },
       ],
-      loc: { start: 1207, end: 1266 },
     },
     {
       kind: 'InputObjectTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'TopicEditInput',
-        loc: { start: 1274, end: 1288 },
-      },
+      name: { kind: 'Name', value: 'TopicEditInput' },
       directives: [],
       fields: [
         {
           kind: 'InputValueDefinition',
-          name: { kind: 'Name', value: 'id', loc: { start: 1293, end: 1295 } },
+          name: { kind: 'Name', value: 'id' },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+          directives: [],
+        },
+        {
+          kind: 'InputValueDefinition',
+          name: { kind: 'Name', value: 'name' },
           type: {
             kind: 'NonNullType',
             type: {
               kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'ID',
-                loc: { start: 1297, end: 1299 },
-              },
-              loc: { start: 1297, end: 1299 },
+              name: { kind: 'Name', value: 'String' },
             },
-            loc: { start: 1297, end: 1300 },
           },
           directives: [],
-          loc: { start: 1293, end: 1300 },
         },
         {
           kind: 'InputValueDefinition',
-          name: {
-            kind: 'Name',
-            value: 'name',
-            loc: { start: 1303, end: 1307 },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'String',
-                loc: { start: 1309, end: 1315 },
-              },
-              loc: { start: 1309, end: 1315 },
-            },
-            loc: { start: 1309, end: 1316 },
-          },
+          name: { kind: 'Name', value: 'url' },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
           directives: [],
-          loc: { start: 1303, end: 1316 },
-        },
-        {
-          kind: 'InputValueDefinition',
-          name: { kind: 'Name', value: 'url', loc: { start: 1319, end: 1322 } },
-          type: {
-            kind: 'NamedType',
-            name: {
-              kind: 'Name',
-              value: 'String',
-              loc: { start: 1324, end: 1330 },
-            },
-            loc: { start: 1324, end: 1330 },
-          },
-          directives: [],
-          loc: { start: 1319, end: 1330 },
         },
       ],
-      loc: { start: 1268, end: 1332 },
     },
     {
       kind: 'ObjectTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'TopicEditResult',
-        loc: { start: 1339, end: 1354 },
-      },
+      name: { kind: 'Name', value: 'TopicEditResult' },
       interfaces: [],
       directives: [],
       fields: [
         {
           kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'result',
-            loc: { start: 1359, end: 1365 },
-          },
+          name: { kind: 'Name', value: 'result' },
           arguments: [],
           type: {
             kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'Topic',
-                loc: { start: 1367, end: 1372 },
-              },
-              loc: { start: 1367, end: 1372 },
-            },
-            loc: { start: 1367, end: 1373 },
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Topic' } },
           },
           directives: [],
-          loc: { start: 1359, end: 1373 },
         },
       ],
-      loc: { start: 1334, end: 1375 },
     },
     {
       kind: 'UnionTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'TopicEditPayload',
-        loc: { start: 1383, end: 1399 },
-      },
+      name: { kind: 'Name', value: 'TopicEditPayload' },
       directives: [],
       types: [
-        {
-          kind: 'NamedType',
-          name: {
-            kind: 'Name',
-            value: 'TopicEditResult',
-            loc: { start: 1402, end: 1417 },
-          },
-          loc: { start: 1402, end: 1417 },
-        },
-        {
-          kind: 'NamedType',
-          name: {
-            kind: 'Name',
-            value: 'PayloadError',
-            loc: { start: 1420, end: 1432 },
-          },
-          loc: { start: 1420, end: 1432 },
-        },
+        { kind: 'NamedType', name: { kind: 'Name', value: 'TopicEditResult' } },
+        { kind: 'NamedType', name: { kind: 'Name', value: 'PayloadError' } },
       ],
-      loc: { start: 1377, end: 1432 },
     },
     {
-      kind: 'ObjectTypeExtension',
-      name: { kind: 'Name', value: 'User', loc: { start: 1446, end: 1450 } },
-      interfaces: [],
-      directives: [],
+      name: { kind: 'Name', value: 'User' },
+      kind: 'ObjectTypeDefinition',
       fields: [
         {
           kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'topics',
-            loc: { start: 1455, end: 1461 },
-          },
+          name: { kind: 'Name', value: 'topics' },
           arguments: [],
           type: {
             kind: 'NonNullType',
@@ -1056,428 +592,159 @@ export const typeDefs = {
                 kind: 'NonNullType',
                 type: {
                   kind: 'NamedType',
-                  name: {
-                    kind: 'Name',
-                    value: 'Topic',
-                    loc: { start: 1464, end: 1469 },
-                  },
-                  loc: { start: 1464, end: 1469 },
+                  name: { kind: 'Name', value: 'Topic' },
                 },
-                loc: { start: 1464, end: 1470 },
               },
-              loc: { start: 1463, end: 1471 },
             },
-            loc: { start: 1463, end: 1472 },
           },
           directives: [],
-          loc: { start: 1455, end: 1472 },
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'id' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'name' },
+          arguments: [],
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'accountName' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'accountWebsite' },
+          arguments: [],
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'accountTwitter' },
+          arguments: [],
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'accountGitHub' },
+          arguments: [],
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'accountLinkedIn' },
+          arguments: [],
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'avatar' },
+          arguments: [],
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+          directives: [],
         },
       ],
-      loc: { start: 1434, end: 1474 },
-    },
-    {
-      kind: 'ObjectTypeExtension',
-      name: {
-        kind: 'Name',
-        value: 'Subscription',
-        loc: { start: 1487, end: 1499 },
-      },
-      interfaces: [],
       directives: [],
-      fields: [
-        {
-          kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'profileChanges',
-            loc: { start: 1504, end: 1518 },
-          },
-          arguments: [],
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'Profile',
-                loc: { start: 1520, end: 1527 },
-              },
-              loc: { start: 1520, end: 1527 },
-            },
-            loc: { start: 1520, end: 1528 },
-          },
-          directives: [],
-          loc: { start: 1504, end: 1528 },
-        },
-      ],
-      loc: { start: 1475, end: 1530 },
-    },
-    {
-      kind: 'ObjectTypeDefinition',
-      name: { kind: 'Name', value: 'Profile', loc: { start: 1537, end: 1544 } },
       interfaces: [],
-      directives: [],
-      fields: [
-        {
-          kind: 'FieldDefinition',
-          name: { kind: 'Name', value: 'id', loc: { start: 1549, end: 1551 } },
-          arguments: [],
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'ID',
-                loc: { start: 1553, end: 1555 },
-              },
-              loc: { start: 1553, end: 1555 },
-            },
-            loc: { start: 1553, end: 1556 },
-          },
-          directives: [],
-          loc: { start: 1549, end: 1556 },
-        },
-        {
-          kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'user',
-            loc: { start: 1559, end: 1563 },
-          },
-          arguments: [],
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'User',
-                loc: { start: 1565, end: 1569 },
-              },
-              loc: { start: 1565, end: 1569 },
-            },
-            loc: { start: 1565, end: 1570 },
-          },
-          directives: [],
-          loc: { start: 1559, end: 1570 },
-        },
-      ],
-      loc: { start: 1532, end: 1572 },
-    },
-    {
-      kind: 'ObjectTypeExtension',
-      name: { kind: 'Name', value: 'Query', loc: { start: 1585, end: 1590 } },
-      interfaces: [],
-      directives: [],
-      fields: [
-        {
-          kind: 'FieldDefinition',
-          name: { kind: 'Name', value: 'me', loc: { start: 1595, end: 1597 } },
-          arguments: [],
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'UserPayload',
-                loc: { start: 1599, end: 1610 },
-              },
-              loc: { start: 1599, end: 1610 },
-            },
-            loc: { start: 1599, end: 1611 },
-          },
-          directives: [],
-          loc: { start: 1595, end: 1611 },
-        },
-        {
-          kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'userByAccountName',
-            loc: { start: 1614, end: 1631 },
-          },
-          arguments: [
-            {
-              kind: 'InputValueDefinition',
-              name: {
-                kind: 'Name',
-                value: 'accountName',
-                loc: { start: 1632, end: 1643 },
-              },
-              type: {
-                kind: 'NonNullType',
-                type: {
-                  kind: 'NamedType',
-                  name: {
-                    kind: 'Name',
-                    value: 'String',
-                    loc: { start: 1645, end: 1651 },
-                  },
-                  loc: { start: 1645, end: 1651 },
-                },
-                loc: { start: 1645, end: 1652 },
-              },
-              directives: [],
-              loc: { start: 1632, end: 1652 },
-            },
-          ],
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'UserPayload',
-                loc: { start: 1655, end: 1666 },
-              },
-              loc: { start: 1655, end: 1666 },
-            },
-            loc: { start: 1655, end: 1667 },
-          },
-          directives: [],
-          loc: { start: 1614, end: 1667 },
-        },
-      ],
-      loc: { start: 1573, end: 1669 },
     },
     {
       kind: 'ObjectTypeDefinition',
-      name: { kind: 'Name', value: 'User', loc: { start: 1676, end: 1680 } },
+      name: { kind: 'Name', value: 'Profile' },
       interfaces: [],
       directives: [],
       fields: [
         {
           kind: 'FieldDefinition',
-          name: { kind: 'Name', value: 'id', loc: { start: 1685, end: 1687 } },
+          name: { kind: 'Name', value: 'id' },
           arguments: [],
           type: {
             kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'ID',
-                loc: { start: 1689, end: 1691 },
-              },
-              loc: { start: 1689, end: 1691 },
-            },
-            loc: { start: 1689, end: 1692 },
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
           },
           directives: [],
-          loc: { start: 1685, end: 1692 },
         },
         {
           kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'name',
-            loc: { start: 1695, end: 1699 },
-          },
-          arguments: [],
-          type: {
-            kind: 'NamedType',
-            name: {
-              kind: 'Name',
-              value: 'String',
-              loc: { start: 1701, end: 1707 },
-            },
-            loc: { start: 1701, end: 1707 },
-          },
-          directives: [],
-          loc: { start: 1695, end: 1707 },
-        },
-        {
-          kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'accountName',
-            loc: { start: 1710, end: 1721 },
-          },
+          name: { kind: 'Name', value: 'user' },
           arguments: [],
           type: {
             kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: {
-                kind: 'Name',
-                value: 'String',
-                loc: { start: 1723, end: 1729 },
-              },
-              loc: { start: 1723, end: 1729 },
-            },
-            loc: { start: 1723, end: 1730 },
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'User' } },
           },
           directives: [],
-          loc: { start: 1710, end: 1730 },
-        },
-        {
-          kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'accountWebsite',
-            loc: { start: 1733, end: 1747 },
-          },
-          arguments: [],
-          type: {
-            kind: 'NamedType',
-            name: {
-              kind: 'Name',
-              value: 'String',
-              loc: { start: 1749, end: 1755 },
-            },
-            loc: { start: 1749, end: 1755 },
-          },
-          directives: [],
-          loc: { start: 1733, end: 1755 },
-        },
-        {
-          kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'accountTwitter',
-            loc: { start: 1758, end: 1772 },
-          },
-          arguments: [],
-          type: {
-            kind: 'NamedType',
-            name: {
-              kind: 'Name',
-              value: 'String',
-              loc: { start: 1774, end: 1780 },
-            },
-            loc: { start: 1774, end: 1780 },
-          },
-          directives: [],
-          loc: { start: 1758, end: 1780 },
-        },
-        {
-          kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'accountGitHub',
-            loc: { start: 1783, end: 1796 },
-          },
-          arguments: [],
-          type: {
-            kind: 'NamedType',
-            name: {
-              kind: 'Name',
-              value: 'String',
-              loc: { start: 1798, end: 1804 },
-            },
-            loc: { start: 1798, end: 1804 },
-          },
-          directives: [],
-          loc: { start: 1783, end: 1804 },
-        },
-        {
-          kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'accountLinkedIn',
-            loc: { start: 1807, end: 1822 },
-          },
-          arguments: [],
-          type: {
-            kind: 'NamedType',
-            name: {
-              kind: 'Name',
-              value: 'String',
-              loc: { start: 1824, end: 1830 },
-            },
-            loc: { start: 1824, end: 1830 },
-          },
-          directives: [],
-          loc: { start: 1807, end: 1830 },
-        },
-        {
-          kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'avatar',
-            loc: { start: 1833, end: 1839 },
-          },
-          arguments: [],
-          type: {
-            kind: 'NamedType',
-            name: {
-              kind: 'Name',
-              value: 'String',
-              loc: { start: 1841, end: 1847 },
-            },
-            loc: { start: 1841, end: 1847 },
-          },
-          directives: [],
-          loc: { start: 1833, end: 1847 },
         },
       ],
-      loc: { start: 1671, end: 1849 },
     },
     {
       kind: 'ObjectTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'UserResult',
-        loc: { start: 1856, end: 1866 },
-      },
+      name: { kind: 'Name', value: 'UserResult' },
       interfaces: [],
       directives: [],
       fields: [
         {
           kind: 'FieldDefinition',
-          name: {
-            kind: 'Name',
-            value: 'result',
-            loc: { start: 1871, end: 1877 },
-          },
+          name: { kind: 'Name', value: 'result' },
           arguments: [],
-          type: {
-            kind: 'NamedType',
-            name: {
-              kind: 'Name',
-              value: 'User',
-              loc: { start: 1879, end: 1883 },
-            },
-            loc: { start: 1879, end: 1883 },
-          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'User' } },
           directives: [],
-          loc: { start: 1871, end: 1883 },
         },
       ],
-      loc: { start: 1851, end: 1885 },
     },
     {
       kind: 'UnionTypeDefinition',
-      name: {
-        kind: 'Name',
-        value: 'UserPayload',
-        loc: { start: 1893, end: 1904 },
-      },
+      name: { kind: 'Name', value: 'UserPayload' },
       directives: [],
       types: [
+        { kind: 'NamedType', name: { kind: 'Name', value: 'UserResult' } },
+        { kind: 'NamedType', name: { kind: 'Name', value: 'PayloadError' } },
+      ],
+    },
+    {
+      kind: 'SchemaDefinition',
+      operationTypes: [
         {
-          kind: 'NamedType',
-          name: {
-            kind: 'Name',
-            value: 'UserResult',
-            loc: { start: 1907, end: 1917 },
-          },
-          loc: { start: 1907, end: 1917 },
+          kind: 'OperationTypeDefinition',
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Query' } },
+          operation: 'query',
         },
         {
-          kind: 'NamedType',
-          name: {
-            kind: 'Name',
-            value: 'PayloadError',
-            loc: { start: 1920, end: 1932 },
+          kind: 'OperationTypeDefinition',
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'Mutation' },
           },
-          loc: { start: 1920, end: 1932 },
+          operation: 'mutation',
+        },
+        {
+          kind: 'OperationTypeDefinition',
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'Subscription' },
+          },
+          operation: 'subscription',
         },
       ],
-      loc: { start: 1887, end: 1932 },
     },
   ],
-  loc: { start: 0, end: 1933 },
 } as unknown as DocumentNode;
