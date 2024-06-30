@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as addPlugin from '@graphql-codegen/add';
+import * as schemaAstPlugin from '@graphql-codegen/schema-ast';
 import * as typeScriptPlugin from '@graphql-codegen/typescript';
 import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import {
@@ -56,6 +57,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       resolverGeneration,
       typeDefsFilePath,
       typeDefsFileMode,
+      mergeSchema,
       scalarsModule,
       scalarsOverrides,
       mode,
@@ -215,6 +217,18 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           documents: [],
         };
         generatesSection.push(typeDefsFile);
+      });
+    }
+
+    // merge schema
+    if (mergeSchema) {
+      generatesSection.push({
+        filename: path.posix.join(baseOutputDir, mergeSchema.path),
+        pluginMap: { ['schema-ast']: schemaAstPlugin },
+        plugins: [{ ['schema-ast']: {} }],
+        schema,
+        documents: [],
+        config: mergeSchema.config,
       });
     }
 

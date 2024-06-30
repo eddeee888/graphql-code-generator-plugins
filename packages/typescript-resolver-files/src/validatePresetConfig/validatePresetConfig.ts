@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import type { AddPluginConfig } from '@graphql-codegen/add/typings/config';
 import type * as typeScriptPlugin from '@graphql-codegen/typescript';
 import type * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
+import type * as schemaAstPlugin from '@graphql-codegen/schema-ast';
 import type { ProjectOptions } from 'ts-morph';
 import { cwd, fmt, logger } from '../utils';
 
@@ -59,6 +60,9 @@ export interface ParsedPresetConfig {
     string,
     { resolver?: string; type?: ScalarsOverridesType }
   >;
+  mergeSchema:
+    | { path: string; config: schemaAstPlugin.SchemaASTConfig }
+    | false;
   mode: ConfigMode;
   whitelistedModules: string[];
   blacklistedModules: string[];
@@ -85,6 +89,7 @@ export interface RawPresetConfig {
     string,
     { resolver?: string; type?: ScalarsOverridesType }
   >;
+  mergeSchema?: boolean | string | { path: string; config: unknown };
   mode?: string;
   whitelistedModules?: string[];
   blacklistedModules?: string[];
@@ -106,6 +111,10 @@ export interface TypedPresetConfig extends RawPresetConfig {
     | NormalizedFixObjectTypeResolvers;
   typesPluginsConfig?: ParsedTypesPluginsConfig;
   resolverGeneration?: StringResolverGeneration | NormalizedResolverGeneration;
+  mergeSchema?:
+    | boolean
+    | string
+    | { path: string; config: schemaAstPlugin.SchemaASTConfig };
 }
 
 export const validatePresetConfig = ({
@@ -119,6 +128,7 @@ export const validatePresetConfig = ({
   typeDefsFileMode: inputTypeDefsFileMode = 'merged',
   mappersFileExtension = '.mappers.ts',
   mappersSuffix = 'Mapper',
+  mergeSchema,
   scalarsModule = 'graphql-scalars',
   scalarsOverrides = {},
   mode = 'modules',
@@ -293,6 +303,7 @@ export const validatePresetConfig = ({
     resolverGeneration: parseResolverGeneration(resolverGeneration),
     typeDefsFilePath: finalTypeDefsFilePath,
     typeDefsFileMode,
+    mergeSchema: parseMergeSchema(mergeSchema),
     mode,
     mappersFileExtension,
     mappersSuffix,
@@ -459,4 +470,27 @@ const validateAddOption = (
 
   // TODO: a bit hacky here but what's a good way to coerce this type? 🤔
   return add as ParsedPresetConfig['add'];
+};
+
+const parseMergeSchema = (
+  mergeSchema: RawPresetConfig['mergeSchema']
+): ParsedPresetConfig['mergeSchema'] => {
+  const defaultPath = 'schema.generated.graphqls';
+
+  if (mergeSchema === false) {
+    return false;
+  }
+
+  if (mergeSchema === true || mergeSchema === undefined) {
+    return { path: defaultPath, config: {} };
+  }
+
+  if (typeof mergeSchema === 'string') {
+    return { path: mergeSchema, config: {} };
+  }
+
+  return {
+    path: mergeSchema.path,
+    config: mergeSchema.config as schemaAstPlugin.SchemaASTConfig,
+  };
 };

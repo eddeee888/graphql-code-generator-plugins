@@ -83,8 +83,8 @@ const updateProjectConfig = (tree: Tree, options: NormalizedSchema): void => {
   };
   e2eCleanupConfig[options.testFullName] = {
     commands: [
-      `rimraf -g 'packages/typescript-resolver-files-e2e/src/${options.testFullName}/**/resolvers/'`,
-      `rimraf -g 'packages/typescript-resolver-files-e2e/src/${options.testFullName}/**/*.generated.*'`,
+      `rimraf -g \"packages/typescript-resolver-files-e2e/src/${options.testFullName}/**/resolvers/\"`,
+      `rimraf -g \"packages/typescript-resolver-files-e2e/src/${options.testFullName}/**/*.generated.*\"`,
     ],
     parallel: false,
   };

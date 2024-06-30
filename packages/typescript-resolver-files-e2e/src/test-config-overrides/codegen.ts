@@ -38,6 +38,14 @@ const config: CodegenConfig = {
           enumsAsTypes: false,
           contextType: './customTypes#ResolverContext',
         },
+        mergeSchema: {
+          path: 'schema.gen.gql',
+          config: {
+            includeIntrospectionTypes: true,
+            commentDescriptions: true,
+            sort: true,
+          },
+        },
       }),
   },
 };

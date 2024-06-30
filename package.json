@@ -16,6 +16,7 @@
     "@graphql-codegen/add": "5.0.3",
     "@graphql-codegen/cli": "5.0.2",
     "@graphql-codegen/plugin-helpers": "5.0.4",
+    "@graphql-codegen/schema-ast": "4.1.0",
     "@graphql-codegen/typescript": "4.0.8",
     "@graphql-codegen/typescript-resolvers": "4.2.0",
     "@nx/devkit": "19.0.2",
