@@ -27,7 +27,7 @@ const defaultExpected: ParsedPresetConfig = {
     enum: '',
   },
   mergeSchema: {
-    path: 'schema.generated.gql',
+    path: 'schema.generated.graphqls',
     config: {},
   },
   typeDefsFilePath: './typeDefs.generated.ts',
@@ -574,7 +574,7 @@ describe('validatePresetConfig - resolverGeneration', () => {
       {
         input: true,
         expected: {
-          path: 'schema.generated.gql',
+          path: 'schema.generated.graphqls',
           config: {},
         },
       },
