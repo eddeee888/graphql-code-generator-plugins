@@ -1,4 +1,4 @@
-import { parse } from 'graphql';
+import { mergeTypeDefs } from '@graphql-tools/merge';
 
 interface GenerateTypeDefsContentParams {
   mergedSDL: string;
@@ -7,7 +7,7 @@ interface GenerateTypeDefsContentParams {
 export const generateTypeDefsContent = ({
   mergedSDL,
 }: GenerateTypeDefsContentParams): string => {
-  const documentNode = parse(mergedSDL);
+  const documentNode = mergeTypeDefs(mergedSDL, { noLocation: true });
   const documentNodeString = JSON.stringify(documentNode);
 
   return `import type { DocumentNode } from 'graphql';
