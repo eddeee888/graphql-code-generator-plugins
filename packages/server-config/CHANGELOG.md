@@ -1,5 +1,11 @@
 # @eddeee888/gcg-server-config
 
+## 0.2.2
+
+### Patch Changes
+
+- 906d454: Bump @graphql-codegen/typescript-resolvers to v4.2.1
+
 ## 0.2.1
 
 ### Patch Changes
