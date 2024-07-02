@@ -1,5 +1,14 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.10.1
+
+### Patch Changes
+
+- 906d454: Bump @graphql-codegen/typescript-resolvers to v4.2.1
+- bb9b5fe: Use @graphql-tools/merge to merge typeDefs
+- Updated dependencies [906d454]
+  - @eddeee888/gcg-server-config@0.2.2
+
 ## 0.10.0
 
 ### Minor Changes
