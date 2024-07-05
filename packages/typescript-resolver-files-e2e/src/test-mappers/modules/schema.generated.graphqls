@@ -1,4 +1,14 @@
+type Cat implements Pet {
+  id: ID!
+  scratchy: Boolean!
+}
+
 scalar DateTime
+
+type Dog implements Pet {
+  barky: Boolean!
+  id: ID!
+}
 
 interface Error {
   error: ErrorType!
@@ -27,6 +37,10 @@ type PaginationResult {
   totalPageCount: Int!
 }
 
+interface Pet {
+  id: ID!
+}
+
 type Profile {
   id: ID!
   user: User!
@@ -34,6 +48,7 @@ type Profile {
 
 type Query {
   me: UserPayload!
+  pet(id: ID!): Pet!
   topicById(id: ID!): TopicByIdPayload!
   topicsCreatedByUser(
     input: TopicsCreatedByUserInput!

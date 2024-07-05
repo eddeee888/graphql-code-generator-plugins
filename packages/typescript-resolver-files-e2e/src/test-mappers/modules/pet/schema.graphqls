@@ -1,0 +1,17 @@
+extend type Query {
+  pet(id: ID!): Pet!
+}
+
+interface Pet {
+  id: ID!
+}
+
+type Dog implements Pet {
+  id: ID!
+  barky: Boolean!
+}
+
+type Cat implements Pet {
+  id: ID!
+  scratchy: Boolean!
+}

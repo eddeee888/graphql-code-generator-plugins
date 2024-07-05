@@ -3,6 +3,7 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from 'graphql';
+import { Pet_Mapper } from './pet/schema.type-mappers';
 import { Profile_Mapper } from './user/profile.type-mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
@@ -41,6 +42,18 @@ export type Scalars = {
   DateTime: { input: Date | string; output: Date | string };
 };
 
+export type Cat = Pet & {
+  __typename?: 'Cat';
+  id: Scalars['ID']['output'];
+  scratchy: Scalars['Boolean']['output'];
+};
+
+export type Dog = Pet & {
+  __typename?: 'Dog';
+  barky: Scalars['Boolean']['output'];
+  id: Scalars['ID']['output'];
+};
+
 export type Error = {
   error: ErrorType;
 };
@@ -77,6 +90,10 @@ export type PaginationResult = {
   totalPageCount: Scalars['Int']['output'];
 };
 
+export type Pet = {
+  id: Scalars['ID']['output'];
+};
+
 export type Profile = {
   __typename?: 'Profile';
   id: Scalars['ID']['output'];
@@ -86,9 +103,14 @@ export type Profile = {
 export type Query = {
   __typename?: 'Query';
   me: UserPayload;
+  pet: Pet;
   topicById: TopicByIdPayload;
   topicsCreatedByUser: TopicsCreatedByUserPayload;
   userByAccountName: UserPayload;
+};
+
+export type QuerypetArgs = {
+  id: Scalars['ID']['input'];
 };
 
 export type QuerytopicByIdArgs = {
@@ -326,11 +348,16 @@ export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
     Error: Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & {
       __typename: 'StandardError';
     };
+    Pet: (Cat & { __typename: 'Cat' }) | (Dog & { __typename: 'Dog' });
   };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Cat: ResolverTypeWrapper<Cat>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  Dog: ResolverTypeWrapper<Dog>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Error']>;
   ErrorType: ResolverTypeWrapper<
     | 'NOT_FOUND'
@@ -342,8 +369,8 @@ export type ResolversTypes = {
   PaginationInput: PaginationInput;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PaginationResult: ResolverTypeWrapper<PaginationResult>;
+  Pet: ResolverTypeWrapper<Pet_Mapper>;
   Profile: ResolverTypeWrapper<Profile_Mapper>;
-  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   StandardError: ResolverTypeWrapper<
@@ -375,19 +402,22 @@ export type ResolversTypes = {
     ResolversUnionTypes<ResolversTypes>['UserPayload']
   >;
   UserResult: ResolverTypeWrapper<UserResult>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Cat: Cat;
+  ID: Scalars['ID']['output'];
+  Boolean: Scalars['Boolean']['output'];
   DateTime: Scalars['DateTime']['output'];
+  Dog: Dog;
   Error: ResolversInterfaceTypes<ResolversParentTypes>['Error'];
   Mutation: {};
   PaginationInput: PaginationInput;
   Int: Scalars['Int']['output'];
   PaginationResult: PaginationResult;
+  Pet: Pet_Mapper;
   Profile: Profile_Mapper;
-  ID: Scalars['ID']['output'];
   Query: {};
   String: Scalars['String']['output'];
   StandardError: StandardError;
@@ -407,13 +437,30 @@ export type ResolversParentTypes = {
   User: User;
   UserPayload: ResolversUnionTypes<ResolversParentTypes>['UserPayload'];
   UserResult: UserResult;
-  Boolean: Scalars['Boolean']['output'];
+};
+
+export type CatResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Cat'] = ResolversParentTypes['Cat']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  scratchy?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export interface DateTimeScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
   name: 'DateTime';
 }
+
+export type DogResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Dog'] = ResolversParentTypes['Dog']
+> = {
+  barky?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type ErrorResolvers<
   ContextType = any,
@@ -461,6 +508,14 @@ export type PaginationResultResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type PetResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Pet'] = ResolversParentTypes['Pet']
+> = {
+  __resolveType?: TypeResolveFn<'Cat' | 'Dog', ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+};
+
 export type ProfileResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']
@@ -475,6 +530,12 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
   me?: Resolver<ResolversTypes['UserPayload'], ParentType, ContextType>;
+  pet?: Resolver<
+    ResolversTypes['Pet'],
+    ParentType,
+    ContextType,
+    RequireFields<QuerypetArgs, 'id'>
+  >;
   topicById?: Resolver<
     ResolversTypes['TopicByIdPayload'],
     ParentType,
@@ -654,11 +715,14 @@ export type UserResultResolvers<
 };
 
 export type Resolvers<ContextType = any> = {
+  Cat?: CatResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
+  Dog?: DogResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
   ErrorType?: ErrorTypeResolvers;
   Mutation?: MutationResolvers<ContextType>;
   PaginationResult?: PaginationResultResolvers<ContextType>;
+  Pet?: PetResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   StandardError?: StandardErrorResolvers<ContextType>;
