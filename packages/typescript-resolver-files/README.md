@@ -158,6 +158,7 @@ Internally, each string option is turned into an object. This object uses glob p
   object: '*',
   union: '',
   interface: '',
+  enum: '',
 }
 ```
 
