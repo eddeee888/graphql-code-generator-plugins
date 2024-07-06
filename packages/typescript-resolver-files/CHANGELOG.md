@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.10.2
+
+### Patch Changes
+
+- 9088222: Fix interface mappers not being detected automatically
+
 ## 0.10.1
 
 ### Patch Changes
