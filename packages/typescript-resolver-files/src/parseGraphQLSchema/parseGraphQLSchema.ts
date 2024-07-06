@@ -161,9 +161,11 @@ export const parseGraphQLSchema = async ({
       }
 
       // Wire up `mappers` config:
+      // - Interface
       // - Enum
       // - Non-root object types
       if (
+        isInterfaceType(namedType) ||
         isEnumType(namedType) ||
         (!isRootObjectType(schemaType) && isObjectType(namedType))
       ) {
