@@ -85,8 +85,8 @@ export const validateAndMergeParsedConfigs = ({
     },
     unmanagedResolvers: {
       ...unmanagedNonScalarResolvers,
-      ...unmanagedScalarResolvers,
       ...scalarsModuleResolvers,
+      ...unmanagedScalarResolvers,
     },
   };
 };
