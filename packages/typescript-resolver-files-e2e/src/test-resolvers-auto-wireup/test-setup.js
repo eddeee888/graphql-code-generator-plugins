@@ -56,6 +56,19 @@ try {
       `,
     },
 
+    // `externalOverrides` gives full control to user
+    {
+      file: 'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/pet/resolvers/PetHouse.ts',
+      content: `export const PetHouseResolvers = {};`,
+    },
+
+    // `scalarOverrides` must give full control to user
+    // https://github.com/eddeee888/graphql-code-generator-plugins/issues/306
+    {
+      file: 'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/base/resolvers/Date.ts',
+      content: `export const DateResolver = {}`,
+    },
+
     // Files in blacklisted modules should not be filled or added to resolvers.generated.ts
     'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/user/resolvers/User.ts',
 

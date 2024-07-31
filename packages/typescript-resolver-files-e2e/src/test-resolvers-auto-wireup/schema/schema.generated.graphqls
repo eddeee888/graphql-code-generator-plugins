@@ -6,6 +6,8 @@ enum Country {
 
 scalar CustomLogicScalar
 
+scalar Date
+
 scalar DateTime
 
 interface Error {
@@ -45,6 +47,10 @@ type Pet {
   id: ID!
   name: String!
   primaryOwner: User!
+}
+
+type PetHouse {
+  id: ID!
 }
 
 type PetToy {

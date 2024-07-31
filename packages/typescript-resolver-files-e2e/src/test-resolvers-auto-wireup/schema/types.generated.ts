@@ -8,6 +8,7 @@ import {
   ErrorTypeMapper,
   SortOrderMapper,
 } from './base/base.mappers';
+import { PetHouseMapper } from './pet/schema.mappers';
 import { TopicMapper, TopicEditResultMapper } from './topic/topic.mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
@@ -44,6 +45,7 @@ export type Scalars = {
   Int: { input: number; output: number };
   Float: { input: number; output: number };
   CustomLogicScalar: { input: any; output: any };
+  Date: { input: Date | string; output: Date | string };
   DateTime: { input: Date | string; output: Date | string };
   JSON: { input: any; output: any };
   SomeRandomScalar: { input: any; output: any };
@@ -97,6 +99,11 @@ export type Pet = {
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   primaryOwner: User;
+};
+
+export type PetHouse = {
+  __typename?: 'PetHouse';
+  id: Scalars['ID']['output'];
 };
 
 export type PetToy = {
@@ -373,6 +380,7 @@ export type ResolversTypes = {
   CustomLogicScalar: ResolverTypeWrapper<
     Scalars['CustomLogicScalar']['output']
   >;
+  Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Error']>;
   ErrorType: ResolverTypeWrapper<ErrorTypeMapper>;
@@ -387,6 +395,7 @@ export type ResolversTypes = {
   Pet: ResolverTypeWrapper<Pet>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  PetHouse: ResolverTypeWrapper<PetHouseMapper>;
   PetToy: ResolverTypeWrapper<PetToy>;
   Profile: ResolverTypeWrapper<Profile>;
   Query: ResolverTypeWrapper<{}>;
@@ -435,6 +444,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   CustomLogicScalar: Scalars['CustomLogicScalar']['output'];
+  Date: Scalars['Date']['output'];
   DateTime: Scalars['DateTime']['output'];
   Error: ResolversInterfaceTypes<ResolversParentTypes>['Error'];
   JSON: Scalars['JSON']['output'];
@@ -446,6 +456,7 @@ export type ResolversParentTypes = {
   Pet: Pet;
   ID: Scalars['ID']['output'];
   String: Scalars['String']['output'];
+  PetHouse: PetHouseMapper;
   PetToy: PetToy;
   Profile: Profile;
   Query: {};
@@ -484,6 +495,11 @@ export type CountryResolvers = EnumResolverSignature<
 export interface CustomLogicScalarScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['CustomLogicScalar'], any> {
   name: 'CustomLogicScalar';
+}
+
+export interface DateScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
+  name: 'Date';
 }
 
 export interface DateTimeScalarConfig
@@ -557,6 +573,14 @@ export type PetResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   primaryOwner?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PetHouseResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['PetHouse'] = ResolversParentTypes['PetHouse']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -777,6 +801,7 @@ export type ZooResolvers<
 export type Resolvers<ContextType = any> = {
   Country?: CountryResolvers;
   CustomLogicScalar?: GraphQLScalarType;
+  Date?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
   Error?: ErrorResolvers<ContextType>;
   ErrorType?: ErrorTypeResolvers;
@@ -785,6 +810,7 @@ export type Resolvers<ContextType = any> = {
   PaginationResult?: PaginationResultResolvers<ContextType>;
   PayloadError?: PayloadErrorResolvers<ContextType>;
   Pet?: PetResolvers<ContextType>;
+  PetHouse?: PetHouseResolvers<ContextType>;
   PetToy?: PetToyResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

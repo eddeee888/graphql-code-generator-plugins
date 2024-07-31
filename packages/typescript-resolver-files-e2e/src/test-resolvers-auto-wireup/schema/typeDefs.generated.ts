@@ -356,6 +356,11 @@ export const typeDefs = {
     },
     {
       kind: 'ScalarTypeDefinition',
+      name: { kind: 'Name', value: 'Date' },
+      directives: [],
+    },
+    {
+      kind: 'ScalarTypeDefinition',
       name: { kind: 'Name', value: 'SomeRandomScalar' },
       directives: [],
     },
@@ -532,6 +537,24 @@ export const typeDefs = {
       ],
       directives: [],
       interfaces: [],
+    },
+    {
+      kind: 'ObjectTypeDefinition',
+      name: { kind: 'Name', value: 'PetHouse' },
+      interfaces: [],
+      directives: [],
+      fields: [
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'id' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+          directives: [],
+        },
+      ],
     },
     {
       kind: 'ObjectTypeDefinition',

@@ -12,3 +12,7 @@ type PetToy {
 extend type User {
   pets: [Pet!]!
 }
+
+type PetHouse {
+  id: ID!
+}
