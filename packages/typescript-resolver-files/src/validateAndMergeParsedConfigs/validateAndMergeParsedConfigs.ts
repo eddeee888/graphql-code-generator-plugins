@@ -7,9 +7,16 @@ import { fmt } from '../utils';
 
 interface MergedConfig {
   userDefinedSchemaTypeMap: ParsedGraphQLSchemaMeta['userDefinedSchemaTypeMap'];
-  externalResolvers: ParsedPresetConfig['externalResolvers'];
   scalarTypes: Record<string, ScalarsOverridesType>;
   typeMappers: Record<string, string>;
+  /**
+   * Resolvers users explicitly wants to control i.e. unmanaged by server preset so no static analysis is run on these resolvers
+   * This is set by a few options:
+   * - config.externalResolvers: for non-scalar types
+   * - config.scalarsOverrides: for scalar types
+   * - external resolvers e.g. from `graphql-scalars` module
+   **/
+  unmanagedResolvers: Record<string, string>;
 }
 
 /**
@@ -18,26 +25,27 @@ interface MergedConfig {
  *   - scalarsOverrides must be used over externalResolvers to override scalars
  */
 export const validateAndMergeParsedConfigs = ({
-  externalResolvers,
+  unmanagedNonScalarResolvers,
   parsedGraphQLSchemaMeta: {
     userDefinedSchemaTypeMap,
     pluginsConfig: {
-      defaultScalarExternalResolvers,
+      scalarsModuleResolvers,
+      unmanagedScalarResolvers,
       defaultScalarTypesMap,
       defaultTypeMappers,
     },
   },
 }: {
-  externalResolvers: ParsedPresetConfig['externalResolvers'];
+  unmanagedNonScalarResolvers: ParsedPresetConfig['externalResolvers'];
   parsedGraphQLSchemaMeta: ParsedGraphQLSchemaMeta;
 }): MergedConfig => {
-  Object.keys(defaultScalarExternalResolvers).forEach((schemaType) => {
+  Object.keys(scalarsModuleResolvers).forEach((schemaType) => {
     if (
       // If the scalar is defined on the filesystem, it means user wants to use their custom definition.
       // This means we should use it, instead of importing it from scalar module
       userDefinedSchemaTypeMap.scalar[schemaType]?.resolverFile.isOnFilesystem
     ) {
-      delete defaultScalarExternalResolvers[schemaType];
+      delete scalarsModuleResolvers[schemaType];
     }
   });
 
@@ -55,7 +63,7 @@ export const validateAndMergeParsedConfigs = ({
     {}
   );
 
-  Object.keys(externalResolvers).forEach((schemaType) => {
+  Object.keys(unmanagedNonScalarResolvers).forEach((schemaType) => {
     if (userDefinedSchemaTypeMap.scalar[schemaType]) {
       throw new Error(
         fmt.error(
@@ -68,16 +76,17 @@ export const validateAndMergeParsedConfigs = ({
 
   return {
     userDefinedSchemaTypeMap,
-    externalResolvers: {
-      ...defaultScalarExternalResolvers,
-      ...externalResolvers,
-    },
     scalarTypes: {
       ...defaultScalarTypesMap,
     },
     typeMappers: {
       ...schemaEnumTypeMappers,
       ...defaultTypeMappers,
+    },
+    unmanagedResolvers: {
+      ...unmanagedNonScalarResolvers,
+      ...unmanagedScalarResolvers,
+      ...scalarsModuleResolvers,
     },
   };
 };

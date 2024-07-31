@@ -97,7 +97,8 @@ export interface ParsedGraphQLSchemaMeta {
   };
   pluginsConfig: {
     defaultScalarTypesMap: Record<string, ScalarsOverridesType>;
-    defaultScalarExternalResolvers: Record<string, string>;
+    scalarsModuleResolvers: Record<string, string>;
+    unmanagedScalarResolvers: Record<string, string>;
     defaultTypeMappers: Record<string, string>;
   };
 }
@@ -116,7 +117,7 @@ export const parseGraphQLSchema = async ({
   blacklistedModules,
   federationEnabled,
 }: ParseGraphQLSchemaParams): Promise<ParsedGraphQLSchemaMeta> => {
-  const scalarResolverMap = scalarsModule
+  const scalarsModuleResolverMap = scalarsModule
     ? await getScalarResolverMapFromModule(scalarsModule)
     : {};
 
@@ -197,7 +198,7 @@ export const parseGraphQLSchema = async ({
       // Handle scalar type wireups
       if (isScalarType(namedType)) {
         handleScalarType({
-          scalarResolverMap,
+          scalarsModuleResolverMap,
           schemaType,
           scalarsModule,
           scalarsOverrides,
@@ -256,7 +257,8 @@ export const parseGraphQLSchema = async ({
       },
       pluginsConfig: {
         defaultScalarTypesMap: {},
-        defaultScalarExternalResolvers: {},
+        scalarsModuleResolvers: {},
+        unmanagedScalarResolvers: {},
         defaultTypeMappers: {},
       },
     }
@@ -264,31 +266,32 @@ export const parseGraphQLSchema = async ({
 };
 
 const handleScalarType = ({
-  scalarResolverMap,
+  scalarsModuleResolverMap,
   schemaType,
-  result,
   scalarsModule,
   scalarsOverrides,
+  result,
 }: {
-  scalarResolverMap: Record<string, GraphQLScalarType<unknown, unknown>>;
+  scalarsModuleResolverMap: Record<string, GraphQLScalarType<unknown, unknown>>;
   schemaType: string;
-  result: ParsedGraphQLSchemaMeta;
   scalarsModule: string | false;
   scalarsOverrides: ParsedPresetConfig['scalarsOverrides'];
+  result: ParsedGraphQLSchemaMeta;
 }): void => {
-  const scalarResolver = scalarResolverMap[schemaType];
+  const scalarsModuleResolver = scalarsModuleResolverMap[schemaType];
   // Use found the scalar from scalar module
-  if (scalarResolver) {
+  if (scalarsModuleResolver) {
     if (
-      scalarResolver.extensions.codegenScalarType &&
-      typeof scalarResolver.extensions.codegenScalarType === 'string'
+      scalarsModuleResolver.extensions.codegenScalarType &&
+      typeof scalarsModuleResolver.extensions.codegenScalarType === 'string'
     ) {
       result.pluginsConfig.defaultScalarTypesMap[schemaType] =
-        scalarResolver.extensions.codegenScalarType;
+        scalarsModuleResolver.extensions.codegenScalarType;
     }
-    result.pluginsConfig.defaultScalarExternalResolvers[
+
+    result.pluginsConfig.scalarsModuleResolvers[
       schemaType
-    ] = `~${scalarsModule}#${scalarResolver.name}Resolver`;
+    ] = `~${scalarsModule}#${scalarsModuleResolver.name}Resolver`;
   }
 
   // If found scalar overrides, use them
@@ -298,7 +301,7 @@ const handleScalarType = ({
       result.pluginsConfig.defaultScalarTypesMap[schemaType] = override.type;
     }
     if (override.resolver) {
-      result.pluginsConfig.defaultScalarExternalResolvers[schemaType] =
+      result.pluginsConfig.unmanagedScalarResolvers[schemaType] =
         override.resolver;
     }
   }
