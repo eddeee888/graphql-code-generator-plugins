@@ -64,35 +64,38 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     return '';
   })();
 
-  if (fieldsToPick.length > 0 && pickReferenceResolver) {
+  const hasFieldsToPick = fieldsToPick.length > 0;
+
+  // __isTypeOf is required to resolve abstract types, should user chooses this approach.
+  // TODO: Run static analysis to enforce only one __isTypeOf per Object type, so users cannot accidentally implement/override it across modules
+  if (hasFieldsToPick) {
+    fieldsToPick.push('__isTypeOf');
+  }
+
+  if (hasFieldsToPick && pickReferenceResolver) {
     fieldsToPick.push('__resolveReference');
   }
 
   // `typeString` contains the resolver type
   // If there's fieldsToPick, we must only pick said fields from the original resolver type
-  const typeString =
-    fieldsToPick.length > 0
-      ? `Pick<${resolversTypeMeta.typeString}, ${fieldsToPick
-          .map((fieldName) => `'${fieldName}'`)
-          .join('|')}>`
-      : resolversTypeMeta.typeString;
+  const typeString = hasFieldsToPick
+    ? `Pick<${resolversTypeMeta.typeString}, ${fieldsToPick
+        .map((fieldName) => `'${fieldName}'`)
+        .join('|')}>`
+    : resolversTypeMeta.typeString;
 
   // Array of all resolvers that may need type checking
   // If there's fieldsToPick, we must only generate said fields
   const allResolversToGenerate =
     graphQLObjectTypeResolversToGenerate[resolverName];
-  const resolversToGenerate =
-    fieldsToPick.length > 0
-      ? fieldsToPick.reduce<typeof allResolversToGenerate>(
-          (res, fieldToPick) => {
-            if (allResolversToGenerate) {
-              res[fieldToPick] = allResolversToGenerate[fieldToPick];
-            }
-            return res;
-          },
-          {}
-        )
-      : allResolversToGenerate;
+  const resolversToGenerate = hasFieldsToPick
+    ? fieldsToPick.reduce<typeof allResolversToGenerate>((res, fieldToPick) => {
+        if (allResolversToGenerate && allResolversToGenerate[fieldToPick]) {
+          res[fieldToPick] = allResolversToGenerate[fieldToPick];
+        }
+        return res;
+      }, {})
+    : allResolversToGenerate;
 
   const variableStatement = `${forcedGenerationWarning}export const ${resolverName}: ${typeString} = {
     /* Implement ${resolverName} resolver logic here */
