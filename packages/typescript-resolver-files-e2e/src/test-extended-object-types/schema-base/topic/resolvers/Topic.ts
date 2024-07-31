@@ -11,6 +11,7 @@ export const Topic: Pick<
   | 'id'
   | 'name'
   | 'url'
+  | '__isTypeOf'
 > = {
   /* Implement Topic resolver logic here */
   extendedTopicFieldInDifferentFileAndSameModule1: async (
