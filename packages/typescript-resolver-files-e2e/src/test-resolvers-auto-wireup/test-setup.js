@@ -92,7 +92,10 @@ try {
 
     const dir = path.dirname(filename);
     fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(filename, content);
+    fs.writeFileSync(
+      filename,
+      `/* This file has been created on filesystem by src/test-resolvers/auto-wireup/test-setup.js */\n\n${content}`
+    );
   });
 } catch (err) {
   console.error(err);

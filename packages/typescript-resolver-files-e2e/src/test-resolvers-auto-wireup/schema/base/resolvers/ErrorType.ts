@@ -1,4 +1,5 @@
 import type { ErrorTypeResolvers } from './../../types.generated';
+/* This file has been created on filesystem by src/test-resolvers/auto-wireup/test-setup.js */
 /*
  * Note: This enum file is generated because "ErrorTypeMapper" is declared. This is to ensure runtime safety.
  * If you want to skip this file generation, remove the mapper or update the pattern in the `resolverGeneration.object` config.
