@@ -9,6 +9,7 @@ export const User: Pick<
   | 'avatar'
   | 'id'
   | 'name'
+  | '__isTypeOf'
 > = {
   /* Implement User resolver logic here */
 };

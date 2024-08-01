@@ -18,6 +18,7 @@ export const User: Pick<
   | 'avatar'
   | 'id'
   | 'name'
+  | '__isTypeOf'
 > = {
   /* Implement User resolver logic here */
   accountGitHub: async (_parent, _arg, _ctx) => {
