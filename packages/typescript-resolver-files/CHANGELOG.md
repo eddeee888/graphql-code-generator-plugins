@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.10.3
+
+### Patch Changes
+
+- de78270: Ensure \_\_isTypeOf is in the picked properties so users can choose this way to handle abstract type should they choose
+
 ## 0.10.2
 
 ### Patch Changes
