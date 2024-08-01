@@ -3,7 +3,7 @@ import { validateAndMergeParsedConfigs } from './validateAndMergeParsedConfigs';
 describe('validateAndMergeParsedConfigs', () => {
   it('merges configs correctly', () => {
     const result = validateAndMergeParsedConfigs({
-      externalResolvers: {
+      unmanagedNonScalarResolvers: {
         User: 'userResolvers#User as UserResolver',
       },
       parsedGraphQLSchemaMeta: {
@@ -64,15 +64,16 @@ describe('validateAndMergeParsedConfigs', () => {
           defaultScalarTypesMap: {
             DateTime: 'string',
           },
-          defaultScalarExternalResolvers: {
+          scalarsModuleResolvers: {
             DateTime: '~graphql-scalars#DateTimeResolver',
           },
+          unmanagedScalarResolvers: {},
         },
       },
     });
 
     expect(result).toEqual({
-      externalResolvers: {
+      unmanagedResolvers: {
         User: 'userResolvers#User as UserResolver',
         DateTime: '~graphql-scalars#DateTimeResolver',
       },
@@ -138,7 +139,7 @@ describe('validateAndMergeParsedConfigs', () => {
   it('throws error if input externalResolvers is used for scalars', () => {
     expect(() =>
       validateAndMergeParsedConfigs({
-        externalResolvers: {
+        unmanagedNonScalarResolvers: {
           DateTime: '~graphql-scalars#DateTimeResolver',
         },
         parsedGraphQLSchemaMeta: {
@@ -199,9 +200,10 @@ describe('validateAndMergeParsedConfigs', () => {
             defaultScalarTypesMap: {
               DateTime: 'string',
             },
-            defaultScalarExternalResolvers: {
+            scalarsModuleResolvers: {
               DateTime: '~graphql-scalars#DateTimeResolver',
             },
+            unmanagedScalarResolvers: {},
           },
         },
       })
