@@ -21,6 +21,10 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
     const result = getVariableStatementWithExpectedIdentifier(sourceFile, {
       __filetype: 'objectType',
       content: '',
+      filesystem: {
+        type: 'virtual',
+        contentUpdated: false,
+      },
       mainImportIdentifier: 'User',
       meta: {
         moduleName: 'user',
@@ -65,6 +69,10 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
     const result = getVariableStatementWithExpectedIdentifier(sourceFile, {
       __filetype: 'objectType',
       content: '',
+      filesystem: {
+        type: 'virtual',
+        contentUpdated: false,
+      },
       mainImportIdentifier: 'User',
       meta: {
         moduleName: 'user',
@@ -105,6 +113,10 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
     const result = getVariableStatementWithExpectedIdentifier(sourceFile, {
       __filetype: 'objectType',
       content: '',
+      filesystem: {
+        type: 'virtual',
+        contentUpdated: false,
+      },
       mainImportIdentifier: 'User',
       meta: {
         moduleName: 'user',

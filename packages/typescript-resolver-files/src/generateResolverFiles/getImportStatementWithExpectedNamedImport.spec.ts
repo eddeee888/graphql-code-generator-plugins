@@ -17,6 +17,10 @@ describe('getImportStatementWithExpectedNamedImport', () => {
     const result = getImportStatementWithExpectedNamedImport(sourceFile, {
       __filetype: 'objectType',
       content: '',
+      filesystem: {
+        type: 'virtual',
+        contentUpdated: false,
+      },
       mainImportIdentifier: 'User',
       meta: {
         moduleName: 'user',
@@ -52,6 +56,10 @@ describe('getImportStatementWithExpectedNamedImport', () => {
     const result = getImportStatementWithExpectedNamedImport(sourceFile, {
       __filetype: 'rootObjectTypeFieldResolver',
       content: '',
+      filesystem: {
+        type: 'virtual',
+        contentUpdated: false,
+      },
       mainImportIdentifier: 'user',
       meta: {
         belongsToRootObject: 'Query',
@@ -90,6 +98,10 @@ describe('getImportStatementWithExpectedNamedImport', () => {
     const result = getImportStatementWithExpectedNamedImport(sourceFile, {
       __filetype: 'interfaceResolver',
       content: '',
+      filesystem: {
+        type: 'virtual',
+        contentUpdated: false,
+      },
       mainImportIdentifier: 'user',
       meta: {
         moduleName: 'user',
