@@ -7,7 +7,7 @@ on:
       - master-next
 
 env:
-  node-version: '18.x'
+  node-version: '22.x'
 
 jobs:
   precheck:
@@ -48,7 +48,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04, windows-latest]
-        node-version: [18.x, 20.x]
+        node-version: [18.x, 20.x, 22.x]
     runs-on: ${{ matrix.os }}
     needs: precheck
     if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' }}
@@ -79,7 +79,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04, windows-latest]
-        node-version: [18.x, 20.x]
+        node-version: [18.x, 20.x, 22.x]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
