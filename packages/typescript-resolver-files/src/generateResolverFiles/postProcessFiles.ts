@@ -123,7 +123,11 @@ const ensureExportedResolver = (
 
     ensureCorrectResolverType = typeNode
       ? () => {
-          const originalTypeText = typeNode.getText();
+          const trimTypeText = (value: string): string =>
+            value.replace(/[\n\r\s]/g, '');
+
+          const trimmedOriginalTypeText = trimTypeText(typeNode.getText());
+
           typeNode.replaceWithText(resolverFile.meta.resolverType.final);
           // TODO: This string compare might not work correctly...
           // if the formatted type is the semantically the same but formatted differently from `resolverType.final`
@@ -137,7 +141,8 @@ const ensureExportedResolver = (
           // vs
           // `Pick<Book, 'author' | 'title'>`
           // ```
-          if (originalTypeText !== typeNode.getText()) {
+          const trimmedNewTypeText = trimTypeText(typeNode.getText());
+          if (trimmedOriginalTypeText !== trimmedNewTypeText) {
             resolverFile.filesystem.contentUpdated = true;
           }
         }
