@@ -122,8 +122,29 @@ const ensureExportedResolver = (
     const typeNode = variableDeclaration?.getTypeNode();
 
     ensureCorrectResolverType = typeNode
-      ? () => typeNode.replaceWithText(resolverFile.meta.resolverType.final)
-      : () => variableDeclaration.setType(resolverFile.meta.resolverType.final);
+      ? () => {
+          const originalTypeText = typeNode.getText();
+          typeNode.replaceWithText(resolverFile.meta.resolverType.final);
+          // TODO: This string compare might not work correctly...
+          // if the formatted type is the semantically the same but formatted differently from `resolverType.final`
+          // e.g.
+          // ```
+          // Pick<
+          //   BookResolvers,
+          //   | 'title'
+          //   | 'author'
+          // >`
+          // vs
+          // `Pick<Book, 'author' | 'title'>`
+          // ```
+          if (originalTypeText !== typeNode.getText()) {
+            resolverFile.filesystem.contentUpdated = true;
+          }
+        }
+      : () => {
+          variableDeclaration.setType(resolverFile.meta.resolverType.final);
+          resolverFile.filesystem.contentUpdated = true;
+        };
   }
 
   // For non-scalarResolver, ensure correct type is imported
@@ -135,7 +156,6 @@ const ensureExportedResolver = (
     ensureCorrectResolverType
   ) {
     ensureCorrectResolverType();
-    resolverFile.filesystem.contentUpdated = true;
   }
 
   if (!variableStatement) {
