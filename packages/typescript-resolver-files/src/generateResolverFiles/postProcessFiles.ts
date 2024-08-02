@@ -31,6 +31,10 @@ export const postProcessFiles = ({
 
     const existingSourceFile = project.addSourceFileAtPathIfExists(filePath);
     if (existingSourceFile) {
+      file.filesystem = {
+        type: 'filesystem',
+        contentUpdated: false,
+      };
       sourceFilesToProcess.push({
         sourceFile: existingSourceFile,
         resolverFile: file,
@@ -57,19 +61,10 @@ export const postProcessFiles = ({
       sourceFile.getFilePath()
     );
 
-    const { addedVariableStatement, ensureCorrectResolverType } =
-      ensureExportedResolver(sourceFile, resolverFile);
-
-    // For non-scalarResolver, ensure correct type is imported
-    // For scalarResolver, we don't need to add type to the variable statement for a few reasons:
-    // - For cases when we need to create a new GraphQLScalarType, it infer the type from `new GraphQLScalarType`
-    // - For cases when there's custom user logic, it's up to the user to import the correct type or call `new GraphQLScalarType` by themselves
-    if (
-      resolverFile.__filetype !== 'scalarResolver' &&
-      ensureCorrectResolverType
-    ) {
-      ensureCorrectResolverType();
-    }
+    const { addedVariableStatement } = ensureExportedResolver(
+      sourceFile,
+      resolverFile
+    );
 
     if (
       resolverFile.__filetype !== 'scalarResolver' ||
@@ -108,21 +103,47 @@ export const postProcessFiles = ({
 const ensureExportedResolver = (
   sourceFile: SourceFile,
   resolverFile: ResolverFile
-): {
-  addedVariableStatement: boolean;
-  ensureCorrectResolverType: (() => void) | undefined;
-} => {
-  const { variableStatement, isExported, ensureCorrectResolverType } =
+): { addedVariableStatement: boolean } => {
+  const { variableStatement, isExported } =
     getVariableStatementWithExpectedIdentifier(sourceFile, resolverFile);
+
+  /**
+   * If we found the variable statement replace its type with the expected resolver type string
+   *
+   * This is because we change the type of the resolver in some cases:
+   * 1. When `extend type <Object>` is used, we might change its original type to the picked version
+   *    e.g. `Book` might become `Pick<Book, 'title' | 'author'>`
+   */
+  let ensureCorrectResolverType: (() => void) | undefined = undefined;
+  if (variableStatement && resolverFile.meta.resolverType?.final) {
+    const variableDeclaration = variableStatement
+      .getDeclarationList()
+      .getDeclarations()[0];
+    const typeNode = variableDeclaration?.getTypeNode();
+
+    ensureCorrectResolverType = typeNode
+      ? () => typeNode.replaceWithText(resolverFile.meta.resolverType.final)
+      : () => variableDeclaration.setType(resolverFile.meta.resolverType.final);
+  }
+
+  // For non-scalarResolver, ensure correct type is imported
+  // For scalarResolver, we don't need to add type to the variable statement for a few reasons:
+  // - For cases when we need to create a new GraphQLScalarType, it infer the type from `new GraphQLScalarType`
+  // - For cases when there's custom user logic, it's up to the user to import the correct type or call `new GraphQLScalarType` by themselves
+  if (
+    resolverFile.__filetype !== 'scalarResolver' &&
+    ensureCorrectResolverType
+  ) {
+    ensureCorrectResolverType();
+    resolverFile.filesystem.contentUpdated = true;
+  }
 
   if (!variableStatement) {
     // Did not find variable statement with expected identifier, add it to the end with a warning
     sourceFile.addStatements(resolverFile.meta.variableStatement);
+    resolverFile.filesystem.contentUpdated = true;
 
-    return {
-      addedVariableStatement: true,
-      ensureCorrectResolverType,
-    };
+    return { addedVariableStatement: true };
   } else if (variableStatement && !isExported) {
     // If has identifier but not exported
     // Add export keyword to statement
@@ -133,18 +154,13 @@ const ensureExportedResolver = (
     );
     if (!isExpectedIdentifierExported) {
       variableStatement.setIsExported(true);
+      resolverFile.filesystem.contentUpdated = true;
     }
     // else, if identifier's been exported do nothing
-    return {
-      addedVariableStatement: false,
-      ensureCorrectResolverType,
-    };
+    return { addedVariableStatement: false };
   }
 
-  return {
-    addedVariableStatement: false,
-    ensureCorrectResolverType,
-  };
+  return { addedVariableStatement: false };
 };
 
 /**
@@ -164,5 +180,6 @@ const ensureImportedType = (
       0,
       resolverFile.meta.resolverTypeImportDeclaration
     );
+    resolverFile.filesystem.contentUpdated = true;
   }
 };

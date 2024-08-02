@@ -66,6 +66,12 @@ export const generateTypeDefsFiles = ({
   Object.entries(filesContent).forEach(([filePath, content]) => {
     result[filePath] = {
       __filetype: 'file',
+      // TODO: this is virtual so it will always re-generate
+      // In the future, if no schema file changes, then we don't need to re-generate this file
+      filesystem: {
+        type: 'virtual',
+        contentUpdated: false,
+      },
       content: generateTypeDefsContent({ mergedSDL: content }),
       mainImportIdentifier: 'typeDefs',
     };

@@ -44,6 +44,7 @@ export const ensureEnumTypeResolversAreGenerated = (
             name: allowedValue,
             initializer: `'${allowedValue}'`,
           });
+        resolverFile.filesystem.contentUpdated = true;
       }
     }
   );

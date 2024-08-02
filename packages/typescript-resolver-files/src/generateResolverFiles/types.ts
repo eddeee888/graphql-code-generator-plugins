@@ -15,6 +15,10 @@ export type GeneratedTypesFileMeta = {
 
 interface BaseVirtualFile {
   __filetype: string;
+  filesystem: {
+    type: 'virtual' | 'filesystem';
+    contentUpdated: boolean;
+  };
   content: string;
   mainImportIdentifier: string;
 }

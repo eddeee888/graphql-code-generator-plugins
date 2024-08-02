@@ -111,6 +111,10 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
 
   result.files[fieldFilePath] = {
     __filetype: 'objectType',
+    filesystem: {
+      type: 'virtual',
+      contentUpdated: false,
+    },
     content: `
     ${resolverTypeImportDeclaration}
     ${variableStatement}`,
