@@ -7,7 +7,7 @@ on:
 env:
   npm-token: ${{ secrets.NPM_TOKEN }}
   github-token: ${{ secrets.GITHUB_TOKEN }}
-  node-version: '18.x'
+  node-version: '22.x'
   release-tag: pr${{ github.event.issue.number }}-run${{ github.run_number }}-${{ github.run_attempt }}
 
 jobs:
