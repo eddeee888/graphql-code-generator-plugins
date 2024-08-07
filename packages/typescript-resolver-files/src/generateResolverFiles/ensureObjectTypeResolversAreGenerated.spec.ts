@@ -149,6 +149,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         resolverType: {
           baseImport: 'UserResolvers',
           final: 'UserResolvers',
+          otherVariants: [],
         },
         resolversToGenerate: {
           id: {
@@ -336,6 +337,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         resolverType: {
           baseImport: 'UserResolvers',
           final: 'UserResolvers',
+          otherVariants: [],
         },
         resolversToGenerate: {
           id: {

@@ -34,6 +34,7 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
         resolverType: {
           baseImport: 'UserResolvers',
           final: 'UserResolvers',
+          otherVariants: [],
         },
         normalizedResolverName: {
           base: 'User',
@@ -82,6 +83,7 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
         resolverType: {
           baseImport: 'UserResolvers',
           final: 'UserResolvers',
+          otherVariants: [],
         },
         normalizedResolverName: {
           base: 'User',
@@ -126,6 +128,7 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
         resolverType: {
           baseImport: 'UserResolvers',
           final: 'UserResolvers',
+          otherVariants: [],
         },
         normalizedResolverName: {
           base: 'User',

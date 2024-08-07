@@ -30,6 +30,7 @@ describe('getImportStatementWithExpectedNamedImport', () => {
         resolverType: {
           baseImport: 'UserResolvers',
           final: 'UserResolvers',
+          otherVariants: [],
         },
         normalizedResolverName: {
           base: 'User',
