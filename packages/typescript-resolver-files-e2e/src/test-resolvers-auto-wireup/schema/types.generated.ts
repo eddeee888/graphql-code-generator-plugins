@@ -222,8 +222,11 @@ export type UserResult = {
 
 export type Zoo = {
   __typename?: 'Zoo';
+  favouritePet: Pet;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  pets: Array<Pet>;
+  rating: Scalars['Int']['output'];
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -793,8 +796,11 @@ export type ZooResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Zoo'] = ResolversParentTypes['Zoo']
 > = {
+  favouritePet?: Resolver<ResolversTypes['Pet'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  pets?: Resolver<Array<ResolversTypes['Pet']>, ParentType, ContextType>;
+  rating?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
