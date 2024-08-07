@@ -133,7 +133,7 @@ export interface GenerateResolverFilesContext {
     resolverMainFile: string;
     resolverMainFileMode: ParsedPresetConfig['resolverMainFileMode'];
     resolverGeneration: ParsedPresetConfig['resolverGeneration'];
-    externalResolvers: Record<string, string>;
+    unmanagedResolvers: Record<string, string>;
     tsMorph: {
       project: Project;
       typesSourceFile: SourceFile;

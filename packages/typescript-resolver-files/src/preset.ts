@@ -122,7 +122,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     );
 
     const mergedConfig = validateAndMergeParsedConfigs({
-      externalResolvers,
+      unmanagedNonScalarResolvers: externalResolvers,
       parsedGraphQLSchemaMeta,
     });
 
@@ -255,8 +255,8 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
               typesSourceFile,
             },
             fixObjectTypeResolvers,
-            externalResolvers: {
-              ...mergedConfig.externalResolvers,
+            unmanagedResolvers: {
+              ...mergedConfig.unmanagedResolvers,
             },
             emitLegacyCommonJSImports,
             generatedTypesFileMeta,

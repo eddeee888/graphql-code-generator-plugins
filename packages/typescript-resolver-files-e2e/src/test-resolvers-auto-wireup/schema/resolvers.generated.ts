@@ -19,6 +19,8 @@ import { TopicCreatePayload } from './topic/resolvers/TopicCreatePayload';
 import { Country } from './base/resolvers/Country';
 import { ErrorType } from './base/resolvers/ErrorType';
 import { SortOrder } from './base/resolvers/SortOrder';
+import { PetHouseResolvers } from './pet/resolvers/PetHouse';
+import { DateResolver } from './base/resolvers/Date';
 import { DateTimeResolver } from 'graphql-scalars';
 export const resolvers: Resolvers = {
   Query: {
@@ -45,5 +47,7 @@ export const resolvers: Resolvers = {
   Country: Country,
   ErrorType: ErrorType,
   SortOrder: SortOrder,
+  PetHouse: PetHouseResolvers,
+  Date: DateResolver,
   DateTime: DateTimeResolver,
 };

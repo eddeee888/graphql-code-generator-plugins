@@ -19,18 +19,15 @@ export const visitNamedType = <T = null>(
   },
   ctx: GenerateResolverFilesContext
 ): void => {
-  const externalResolverImportSyntax =
-    ctx.config.externalResolvers[normalizedResolverName.base];
-
-  // when used with extended object types scenario
-  if (externalResolverImportSyntax) {
-    // If has external resolver, use it
+  const unmanagedResolversImportSyntax =
+    ctx.config.unmanagedResolvers[normalizedResolverName.base];
+  if (unmanagedResolversImportSyntax) {
     addExternalResolverImport(
       {
         moduleName,
         relativePathFromBaseToModule,
         normalizedResolverName: normalizedResolverName.base,
-        configImportSyntax: externalResolverImportSyntax,
+        configImportSyntax: unmanagedResolversImportSyntax,
       },
       ctx
     );

@@ -16,7 +16,11 @@ interface AddExternalResolverImportParams {
 /**
  * addExternalResolverImport
  *
- * 1. parse external resolvers (originally from config.externalResolvers) import syntax
+ * External resolvers are resolvers that are not managed by server preset:
+ * - unmanaged resolvers e.g. using config.externalResolvers or config.scalarsOverrides
+ * - resolvers that come from an external module e.g. `graphql-scalars`
+ *
+ * 1. parse external resolvers (originally from ) import syntax
  * 2. dedupes any duplicated imports
  * 3. declares the which identifier name to use for GraphQL object or resolver in identifierUsages
  */
