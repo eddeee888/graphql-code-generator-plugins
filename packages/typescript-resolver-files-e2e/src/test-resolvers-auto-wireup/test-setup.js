@@ -13,6 +13,20 @@ try {
     // https://github.com/eddeee888/graphql-code-generator-plugins/pull/297
     'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/topic/resolvers/TopicEditResult.ts',
 
+    // Object types with `Pick` type with a correct type but differently formatted should not be re-generated
+    {
+      file: 'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/pet/resolvers/Zoo.ts',
+      content: `import type { ZooResolvers } from './../../types.generated';
+export const Zoo: Pick<
+  ZooResolvers,
+  | 'favouritePet'
+  | 'pets'
+  | 'rating'
+  | '__isTypeOf'
+> = { /* Custom */ };
+`,
+    },
+
     // Existing object type file with wrong type and no type import, should import type and replace wrong type
     {
       file: 'packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/schema/pet/resolvers/Pet.ts',

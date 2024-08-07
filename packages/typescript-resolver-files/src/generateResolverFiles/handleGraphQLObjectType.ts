@@ -76,13 +76,33 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     fieldsToPick.push('__resolveReference');
   }
 
-  // `typeString` contains the resolver type
-  // If there's fieldsToPick, we must only pick said fields from the original resolver type
-  const typeString = hasFieldsToPick
-    ? `Pick<${resolversTypeMeta.typeString}, ${fieldsToPick
-        .map((fieldName) => `'${fieldName}'`)
-        .join('|')}>`
-    : resolversTypeMeta.typeString;
+  // - `typeString` contains the resolver type
+  //   If there's fieldsToPick, we must only pick said fields from the original resolver type
+  // - `otherTypeStringVariants` contains other types that are the same as `typeString` but formatted differently
+  //   This is used to check if the resolver type is the same when running static analysis
+  //   We want to use string comparison instead of true AST check because it's a lot faster and simpler
+  const { typeString, otherTypeStringVariants } = ((): {
+    typeString: string;
+    otherTypeStringVariants: string[];
+  } => {
+    if (hasFieldsToPick) {
+      return {
+        typeString: `Pick<${resolversTypeMeta.typeString}, ${fieldsToPick
+          .map((fieldName) => `'${fieldName}'`)
+          .join('|')}>`,
+        otherTypeStringVariants: [
+          `Pick<${resolversTypeMeta.typeString}, |${fieldsToPick
+            .map((fieldName) => `'${fieldName}'`)
+            .join('|')}>`,
+        ],
+      };
+    }
+
+    return {
+      typeString: resolversTypeMeta.typeString,
+      otherTypeStringVariants: [],
+    };
+  })();
 
   // Array of all resolvers that may need type checking
   // If there's fieldsToPick, we must only generate said fields
@@ -111,6 +131,10 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
 
   result.files[fieldFilePath] = {
     __filetype: 'objectType',
+    filesystem: {
+      type: 'virtual',
+      contentUpdated: false,
+    },
     content: `
     ${resolverTypeImportDeclaration}
     ${variableStatement}`,
@@ -124,6 +148,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
       resolverType: {
         baseImport: resolversTypeMeta.typeNamedImport,
         final: typeString,
+        otherVariants: otherTypeStringVariants,
       },
       resolversToGenerate,
     },

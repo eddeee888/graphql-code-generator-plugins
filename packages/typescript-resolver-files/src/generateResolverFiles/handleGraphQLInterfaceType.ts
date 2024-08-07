@@ -39,6 +39,10 @@ export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
 
   result.files[fieldFilePath] = {
     __filetype: 'interfaceResolver',
+    filesystem: {
+      type: 'virtual',
+      contentUpdated: false,
+    },
     content: `
     ${resolverTypeImportDeclaration}
     ${variableStatement}`,

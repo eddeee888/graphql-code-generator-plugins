@@ -25,6 +25,7 @@ import {
 } from './validatePresetConfig';
 import { validateAndMergeParsedConfigs } from './validateAndMergeParsedConfigs';
 import { normalizeAddConfigPath } from './normalizeAddConfigPath';
+import { logger } from './utils';
 
 export const presetName = '@eddeee888/gcg-typescript-resolver-files';
 
@@ -265,15 +266,37 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         }),
       createProfilerRunName('generateResolverFiles')
     );
+
+    const resultFilesArray = Object.entries(result.files);
     const resolverFilesGenerateOptions: Types.GenerateOptions[] =
-      Object.entries(result.files).map(([filename, { content }]) => ({
-        filename,
-        pluginMap: { add: addPlugin },
-        plugins: [{ add: { content } }],
-        config: {},
-        schema,
-        documents: [],
-      }));
+      resultFilesArray
+        .filter(([_, file]) => {
+          // Only generate files that are:
+          // 1. `virtual` - because file doesn't exist yet
+          // 2. on `filesystem` and with `contentUpdated` - because file content has been updated, so we want to apply the changes
+          return (
+            file.filesystem.type === 'virtual' ||
+            (file.filesystem.type === 'filesystem' &&
+              file.filesystem.contentUpdated === true)
+          );
+        })
+        .map(([filename, { content }]) => {
+          return {
+            filename,
+            pluginMap: { add: addPlugin },
+            plugins: [{ add: { content } }],
+            config: {},
+            schema,
+            documents: [],
+          };
+        });
+    logger.debug(
+      `Applying changes to ${resolverFilesGenerateOptions.length}/${
+        resultFilesArray.length
+      } files. (${
+        resultFilesArray.length - resolverFilesGenerateOptions.length
+      } skipped files because they are already on filesystem and are not updated)`
+    );
 
     return [...resolverFilesGenerateOptions, ...generatesSection];
   },
