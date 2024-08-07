@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.10.4
+
+### Patch Changes
+
+- 7f281c9: Fix scalarOverrides not giving full control to users
+
 ## 0.10.3
 
 ### Patch Changes
