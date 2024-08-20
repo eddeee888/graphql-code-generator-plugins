@@ -150,6 +150,9 @@ type UserResult {
 }
 
 type Zoo {
+  favouritePet: Pet!
   id: ID!
   name: String!
+  pets: [Pet!]!
+  rating: Int!
 }
