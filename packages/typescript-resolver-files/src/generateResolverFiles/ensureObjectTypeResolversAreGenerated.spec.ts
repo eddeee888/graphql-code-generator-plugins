@@ -127,11 +127,16 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         /* Implement logic here */
       };`
     );
-
-    ensureObjectTypeResolversAreGenerated(sourceFile, {
+    const resolverFile: Parameters<
+      typeof ensureObjectTypeResolversAreGenerated
+    >[1] = {
       __filetype: 'objectType',
       content: '',
       mainImportIdentifier: 'User',
+      filesystem: {
+        type: 'filesystem',
+        contentUpdated: false,
+      },
       meta: {
         moduleName: 'user',
         relativePathFromBaseToModule: ['user'],
@@ -144,6 +149,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         resolverType: {
           baseImport: 'UserResolvers',
           final: 'UserResolvers',
+          otherVariants: [],
         },
         resolversToGenerate: {
           id: {
@@ -172,7 +178,8 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
           },
         },
       },
-    });
+    };
+    ensureObjectTypeResolversAreGenerated(sourceFile, resolverFile);
 
     expect(sourceFile.getText()).toMatchInlineSnapshot(`
       "import type { UserResolvers } from './types.generated';
@@ -184,6 +191,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
                 fullName: ({ fullName }) => fullName
           };"
     `);
+    expect(resolverFile.filesystem.contentUpdated).toBe(true);
   });
 
   it('adds missing field resolvers, if necessary, when Mapper is a Class', () => {
@@ -307,10 +315,15 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         /* Implement logic here */
       };`
     );
-
-    ensureObjectTypeResolversAreGenerated(sourceFile, {
+    const resolverFile: Parameters<
+      typeof ensureObjectTypeResolversAreGenerated
+    >[1] = {
       __filetype: 'objectType',
       content: '',
+      filesystem: {
+        type: 'filesystem',
+        contentUpdated: false,
+      },
       mainImportIdentifier: 'User',
       meta: {
         moduleName: 'user',
@@ -324,6 +337,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         resolverType: {
           baseImport: 'UserResolvers',
           final: 'UserResolvers',
+          otherVariants: [],
         },
         resolversToGenerate: {
           id: {
@@ -352,7 +366,9 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
           },
         },
       },
-    });
+    };
+
+    ensureObjectTypeResolversAreGenerated(sourceFile, resolverFile);
 
     expect(sourceFile.getText()).toMatchInlineSnapshot(`
       "import type { UserResolvers } from './types.generated';
@@ -364,5 +380,6 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
                 fullName: ({ fullName }) => fullName
           };"
     `);
+    expect(resolverFile.filesystem.contentUpdated).toBe(true);
   });
 });
