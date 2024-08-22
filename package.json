@@ -18,7 +18,7 @@
     "@graphql-codegen/plugin-helpers": "5.0.4",
     "@graphql-codegen/schema-ast": "4.1.0",
     "@graphql-codegen/typescript": "4.0.8",
-    "@graphql-codegen/typescript-resolvers": "4.2.1",
+    "@graphql-codegen/typescript-resolvers": "4.3.0-alpha-20240822105817-3034c9a805e0ef5d80c80d66fb637e327e0b402c",
     "@graphql-tools/merge": "9.0.4",
     "@nx/devkit": "19.5.6",
     "@nx/eslint": "19.5.6",
