@@ -5,7 +5,6 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
   null,
   {
     fieldsToPick?: string[];
-    pickReferenceResolver?: boolean;
   }
 > = (
   {
@@ -17,7 +16,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     moduleName,
     relativePathFromBaseToModule,
     fieldsToPick = [], // If fieldsToPick.length === 0, it means the current object handles all resolvers
-    pickReferenceResolver,
+    generatedTypesFileMeta,
   },
   {
     result,
@@ -72,7 +71,11 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     fieldsToPick.push('__isTypeOf');
   }
 
-  if (hasFieldsToPick && pickReferenceResolver) {
+  if (
+    hasFieldsToPick &&
+    generatedTypesFileMeta.generatedResolverTypes.userDefined[resolverName]
+      .federation?.hasResolveReference
+  ) {
     fieldsToPick.push('__resolveReference');
   }
 

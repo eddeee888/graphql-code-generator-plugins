@@ -62,7 +62,6 @@ export interface ResolverDetails {
 
 type ObjectResolverDetails = ResolverDetails & {
   fieldsToPick: string[];
-  pickReferenceResolver: boolean;
 };
 
 type EnumResolverDetails = ResolverDetails & {
@@ -404,13 +403,6 @@ const handleObjectType = ({
     return res;
   }, {});
 
-  let pickReferenceResolver = false;
-  if (federationEnabled && namedType.astNode?.directives) {
-    pickReferenceResolver = namedType.astNode.directives.some(
-      (d) => d.name.value === 'key'
-    );
-  }
-
   result.userDefinedSchemaTypeMap.object[schemaType] =
     result.userDefinedSchemaTypeMap.object[schemaType] || {};
 
@@ -452,7 +444,6 @@ const handleObjectType = ({
       ] = {
         ...resolverDetails,
         fieldsToPick,
-        pickReferenceResolver,
       };
     }
   );
