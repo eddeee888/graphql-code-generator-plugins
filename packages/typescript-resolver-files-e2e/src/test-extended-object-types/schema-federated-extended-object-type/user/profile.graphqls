@@ -1,8 +1,0 @@
-extend type Subscription {
-  profileChanges: Profile!
-}
-
-type Profile {
-  id: ID!
-  user: User!
-}
