@@ -16,3 +16,9 @@ extend type User {
 type PetHouse {
   id: ID!
 }
+
+extend type Zoo {
+  pets: [Pet!]!
+  favouritePet: Pet!
+  rating: Int!
+}

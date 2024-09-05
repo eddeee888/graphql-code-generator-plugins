@@ -15,6 +15,10 @@ export type GeneratedTypesFileMeta = {
 
 interface BaseVirtualFile {
   __filetype: string;
+  filesystem: {
+    type: 'virtual' | 'filesystem';
+    contentUpdated: boolean;
+  };
   content: string;
   mainImportIdentifier: string;
 }
@@ -110,7 +114,8 @@ export interface ObjectTypeFile extends BaseVirtualFile {
     variableStatement: string;
     resolverType: {
       baseImport: string; // e.g. `UserResolvers`
-      final: string; // e.g. `UserResolvers`, `Pick<UserResolvers, 'id'>`
+      final: string; // e.g. `UserResolvers`, `Pick<UserResolvers, 'id'|'name'>`
+      otherVariants: string[]; // e.g. `Pick<UserResolvers, |'id'|'name'>`
     };
     normalizedResolverName: NormalizedResolverName;
     resolversToGenerate?: GraphQLObjectTypeResolversToGenerate[number];
@@ -181,6 +186,7 @@ export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
     // typeString: valid type specified for a field or object type
     typeString: string;
   };
+  generatedTypesFileMeta: GeneratedTypesFileMeta;
 }
 
 export type GraphQLTypeHandler<

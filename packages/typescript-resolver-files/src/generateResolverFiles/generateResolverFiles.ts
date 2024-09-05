@@ -68,7 +68,6 @@ export const generateResolverFiles = (
               {
                 ...baseParams,
                 fieldsToPick: details.fieldsToPick,
-                pickReferenceResolver: details.pickReferenceResolver,
               },
               prev_ctx
             ),

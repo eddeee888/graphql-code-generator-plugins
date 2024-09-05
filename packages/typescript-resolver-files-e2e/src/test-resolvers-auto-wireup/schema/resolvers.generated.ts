@@ -11,6 +11,7 @@ import { Topic } from './topic/resolvers/Topic';
 import { TopicCreateResult } from './topic/resolvers/TopicCreateResult';
 import { TopicEditResult } from './topic/resolvers/TopicEditResult';
 import { User } from './pet/resolvers/User';
+import { Zoo } from './pet/resolvers/Zoo';
 import { CustomLogicScalar } from './base/resolvers/CustomLogicScalar';
 import { JSON } from './base/resolvers/JSON';
 import { SomeRandomScalar } from './base/resolvers/SomeRandomScalar';
@@ -39,6 +40,7 @@ export const resolvers: Resolvers = {
   TopicCreateResult: TopicCreateResult,
   TopicEditResult: TopicEditResult,
   User: User,
+  Zoo: Zoo,
   CustomLogicScalar: CustomLogicScalar,
   JSON: JSON,
   SomeRandomScalar: SomeRandomScalar,

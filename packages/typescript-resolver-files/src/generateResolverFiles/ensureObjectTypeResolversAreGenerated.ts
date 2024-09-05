@@ -71,19 +71,21 @@ export const ensureObjectTypeResolversAreGenerated = (
   > = [];
   Object.values(resolversData).forEach(
     ({ resolverName, resolverDeclaration, implemented }) => {
-      if (!implemented) {
-        const addedNode = variableStatement
-          .getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)[0]
-          .addPropertyAssignment({
-            name: resolverName,
-            initializer: resolverDeclaration,
-          });
-
-        addedPropertyAssignmentNodes[addedNode.getStartLineNumber()] = {
-          node: addedNode,
-          __toBeRemoved: true,
-        };
+      if (implemented) {
+        return;
       }
+
+      const addedNode = variableStatement
+        .getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)[0]
+        .addPropertyAssignment({
+          name: resolverName,
+          initializer: resolverDeclaration,
+        });
+
+      addedPropertyAssignmentNodes[addedNode.getStartLineNumber()] = {
+        node: addedNode,
+        __toBeRemoved: true,
+      };
     }
   );
 
@@ -104,6 +106,10 @@ export const ensureObjectTypeResolversAreGenerated = (
     ({ node, __toBeRemoved }) => {
       if (__toBeRemoved) {
         node.remove();
+      } else {
+        // If found a property assignment that cannot be removed i.e. incompatible types between mapper vs schema types
+        // Then we must mark the content as updated to be added to generate list
+        resolverFile.filesystem.contentUpdated = true;
       }
     }
   );

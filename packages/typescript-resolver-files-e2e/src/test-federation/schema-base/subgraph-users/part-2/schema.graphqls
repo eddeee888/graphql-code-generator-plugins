@@ -1,0 +1,7 @@
+extend type User {
+  profile: Profile
+}
+
+extend type Profile {
+  user: User!
+}

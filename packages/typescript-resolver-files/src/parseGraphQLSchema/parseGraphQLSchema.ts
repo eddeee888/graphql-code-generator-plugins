@@ -42,7 +42,6 @@ interface ParseGraphQLSchemaParams {
   resolverRelativeTargetDir: string;
   whitelistedModules: ParsedPresetConfig['whitelistedModules'];
   blacklistedModules: ParsedPresetConfig['blacklistedModules'];
-  federationEnabled: boolean;
 }
 
 export interface ResolverDetails {
@@ -62,7 +61,6 @@ export interface ResolverDetails {
 
 type ObjectResolverDetails = ResolverDetails & {
   fieldsToPick: string[];
-  pickReferenceResolver: boolean;
 };
 
 type EnumResolverDetails = ResolverDetails & {
@@ -115,7 +113,6 @@ export const parseGraphQLSchema = async ({
   resolverRelativeTargetDir,
   whitelistedModules,
   blacklistedModules,
-  federationEnabled,
 }: ParseGraphQLSchemaParams): Promise<ParsedGraphQLSchemaMeta> => {
   const scalarsModuleResolverMap = scalarsModule
     ? await getScalarResolverMapFromModule(scalarsModule)
@@ -187,7 +184,6 @@ export const parseGraphQLSchema = async ({
           baseOutputDir,
           blacklistedModules,
           whitelistedModules,
-          federationEnabled,
           namedType,
           schemaType,
           result: res,
@@ -359,7 +355,6 @@ const handleObjectType = ({
   baseOutputDir,
   blacklistedModules,
   whitelistedModules,
-  federationEnabled,
   namedType,
   schemaType,
   result,
@@ -371,7 +366,6 @@ const handleObjectType = ({
   baseOutputDir: ParseGraphQLSchemaParams['baseOutputDir'];
   blacklistedModules: ParseGraphQLSchemaParams['blacklistedModules'];
   whitelistedModules: ParseGraphQLSchemaParams['whitelistedModules'];
-  federationEnabled: ParseGraphQLSchemaParams['federationEnabled'];
   namedType: GraphQLObjectType;
   schemaType: string;
   result: ParsedGraphQLSchemaMeta;
@@ -403,13 +397,6 @@ const handleObjectType = ({
 
     return res;
   }, {});
-
-  let pickReferenceResolver = false;
-  if (federationEnabled && namedType.astNode?.directives) {
-    pickReferenceResolver = namedType.astNode.directives.some(
-      (d) => d.name.value === 'key'
-    );
-  }
 
   result.userDefinedSchemaTypeMap.object[schemaType] =
     result.userDefinedSchemaTypeMap.object[schemaType] || {};
@@ -452,7 +439,6 @@ const handleObjectType = ({
       ] = {
         ...resolverDetails,
         fieldsToPick,
-        pickReferenceResolver,
       };
     }
   );

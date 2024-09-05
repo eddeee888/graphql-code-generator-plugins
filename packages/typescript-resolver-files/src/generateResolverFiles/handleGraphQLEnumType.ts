@@ -66,6 +66,10 @@ export const handleGraphQLEnumType: GraphQLTypeHandler<
 
   result.files[fieldFilePath] = {
     __filetype: 'enumResolver',
+    filesystem: {
+      type: 'virtual',
+      contentUpdated: false,
+    },
     content: `
     ${resolverTypeImportDeclaration}
     ${variableStatement}`,
