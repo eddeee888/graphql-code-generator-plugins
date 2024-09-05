@@ -37,6 +37,7 @@ const config: CodegenConfig = {
         {
           typesPluginsConfig: {
             federation: true,
+            generateInternalResolversIfNeeded: { __resolveReference: false },
           },
         },
         {

@@ -186,6 +186,7 @@ export interface GraphQLTypeHandlerParams<BelongsToRootObject = null> {
     // typeString: valid type specified for a field or object type
     typeString: string;
   };
+  generatedTypesFileMeta: GeneratedTypesFileMeta;
 }
 
 export type GraphQLTypeHandler<

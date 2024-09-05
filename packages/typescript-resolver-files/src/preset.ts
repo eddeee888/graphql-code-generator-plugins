@@ -101,7 +101,6 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     );
 
     const generatesSection: Types.GenerateOptions[] = [];
-    const federationEnabled = Boolean(typesPluginsConfig.federation);
 
     const parsedGraphQLSchemaMeta = await profiler.run(
       async () =>
@@ -117,7 +116,6 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           resolverRelativeTargetDir,
           whitelistedModules,
           blacklistedModules,
-          federationEnabled,
         }),
       createProfilerRunName('parseGraphQLSchema')
     );
@@ -136,6 +134,9 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       },
       namingConvention: 'keep',
       emitLegacyCommonJSImports,
+      generateInternalResolversIfNeeded: {
+        __resolveReference: true,
+      },
       ...typesPluginsConfig,
       scalars: mergedConfig.scalarTypes,
       mappers: {
