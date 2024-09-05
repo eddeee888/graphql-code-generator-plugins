@@ -1,0 +1,9 @@
+extend type Product @key(fields: "upc") {
+  upc: String!
+  maker: Maker!
+}
+
+type Maker {
+  id: ID!
+  name: String!
+}
