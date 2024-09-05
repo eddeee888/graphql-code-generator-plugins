@@ -73,8 +73,9 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
 
   if (
     hasFieldsToPick &&
-    generatedTypesFileMeta.generatedResolverTypes.userDefined[resolverName]
-      .federation?.hasResolveReference
+    generatedTypesFileMeta.generatedResolverTypes.userDefined[
+      normalizedResolverName.base
+    ].federation?.hasResolveReference
   ) {
     fieldsToPick.push('__resolveReference');
   }
