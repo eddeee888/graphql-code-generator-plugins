@@ -42,7 +42,6 @@ interface ParseGraphQLSchemaParams {
   resolverRelativeTargetDir: string;
   whitelistedModules: ParsedPresetConfig['whitelistedModules'];
   blacklistedModules: ParsedPresetConfig['blacklistedModules'];
-  federationEnabled: boolean;
 }
 
 export interface ResolverDetails {
@@ -114,7 +113,6 @@ export const parseGraphQLSchema = async ({
   resolverRelativeTargetDir,
   whitelistedModules,
   blacklistedModules,
-  federationEnabled,
 }: ParseGraphQLSchemaParams): Promise<ParsedGraphQLSchemaMeta> => {
   const scalarsModuleResolverMap = scalarsModule
     ? await getScalarResolverMapFromModule(scalarsModule)
@@ -186,7 +184,6 @@ export const parseGraphQLSchema = async ({
           baseOutputDir,
           blacklistedModules,
           whitelistedModules,
-          federationEnabled,
           namedType,
           schemaType,
           result: res,
@@ -358,7 +355,6 @@ const handleObjectType = ({
   baseOutputDir,
   blacklistedModules,
   whitelistedModules,
-  federationEnabled,
   namedType,
   schemaType,
   result,
@@ -370,7 +366,6 @@ const handleObjectType = ({
   baseOutputDir: ParseGraphQLSchemaParams['baseOutputDir'];
   blacklistedModules: ParseGraphQLSchemaParams['blacklistedModules'];
   whitelistedModules: ParseGraphQLSchemaParams['whitelistedModules'];
-  federationEnabled: ParseGraphQLSchemaParams['federationEnabled'];
   namedType: GraphQLObjectType;
   schemaType: string;
   result: ParsedGraphQLSchemaMeta;
