@@ -340,14 +340,6 @@ const validateTypesPluginsConfig = (
     );
   }
 
-  if ('namingConvention' in config) {
-    console.warn(
-      fmt.warn(
-        "presetConfig.typesPluginsConfig.namingConvention is not fully supported. The default is `namingConvention: 'keep'`. Change at your own risk."
-      )
-    );
-  }
-
   const { scalars: _, emitLegacyCommonJSImports: __, ...rest } = config;
 
   return rest;

@@ -4,8 +4,6 @@ import {
   validatePresetConfig,
 } from './validatePresetConfig';
 
-const warnMock = jest.spyOn(console, 'warn');
-
 beforeEach(() => {
   jest.resetAllMocks();
 });
@@ -277,50 +275,6 @@ describe('validatePresetConfig - general', () => {
     ).toThrow(
       'Validation - presetConfig.typesPluginsConfig.emitLegacyCommonJSImports is not supported. Use presetConfig.emitLegacyCommonJSImports instead.'
     );
-  });
-
-  it('warns if config.typesPluginsConfig.namingConvention is used as an object, but the value is passed through', () => {
-    const parsed = validatePresetConfig({
-      typesPluginsConfig: {
-        namingConvention: {
-          enumValues: 'change-case-all#pascalCase',
-          typeNames: 'change-case-all#upperCase',
-          transformUnderscore: true,
-        },
-      },
-    });
-    expect(warnMock).toHaveBeenNthCalledWith(
-      1,
-      expect.stringContaining(
-        `presetConfig.typesPluginsConfig.namingConvention is not fully supported. The default is \`namingConvention: 'keep'\`. Change at your own risk.`
-      )
-    );
-    expect(parsed).toEqual({
-      ...defaultExpected,
-      typesPluginsConfig: {
-        namingConvention: {
-          enumValues: 'change-case-all#pascalCase',
-          typeNames: 'change-case-all#upperCase',
-          transformUnderscore: true,
-        },
-      },
-    });
-  });
-
-  it('warns if config.typesPluginsConfig.namingConvention is used as an string, but the value is passed through', () => {
-    const parsed = validatePresetConfig({
-      typesPluginsConfig: { namingConvention: 'change-case-all#test' },
-    });
-    expect(warnMock).toHaveBeenNthCalledWith(
-      1,
-      expect.stringContaining(
-        `presetConfig.typesPluginsConfig.namingConvention is not fully supported. The default is \`namingConvention: 'keep'\`. Change at your own risk.`
-      )
-    );
-    expect(parsed).toEqual({
-      ...defaultExpected,
-      typesPluginsConfig: { namingConvention: 'change-case-all#test' },
-    });
   });
 
   it('throws if result.fixObjectTypeResolvers is not valid', () => {
