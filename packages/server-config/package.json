@@ -25,7 +25,7 @@
   "license": "MIT",
   "dependencies": {
     "@graphql-codegen/typescript": "^4.0.7",
-    "@graphql-codegen/typescript-resolvers": "4.3.0-alpha-20240825133857-587899fa7a3e2a93691aa808cffc232c189c850c",
+    "@graphql-codegen/typescript-resolvers": "^4.4.0",
     "tslib": "^2.3.0"
   },
   "publishConfig": {
