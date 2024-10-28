@@ -1717,6 +1717,18 @@
     lodash "~4.17.0"
     tslib "~2.6.0"
 
+"@graphql-codegen/plugin-helpers@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-5.1.0.tgz#5c4ace748b9761d082ec1a0c19a82047bacce553"
+  integrity sha512-Y7cwEAkprbTKzVIe436TIw4w03jorsMruvCvu0HJkavaKMQbWY+lQ1RIuROgszDbxAyM35twB5/sUvYG5oW+yg==
+  dependencies:
+    "@graphql-tools/utils" "^10.0.0"
+    change-case-all "1.0.15"
+    common-tags "1.8.2"
+    import-from "4.0.0"
+    lodash "~4.17.0"
+    tslib "~2.6.0"
+
 "@graphql-codegen/schema-ast@4.1.0", "@graphql-codegen/schema-ast@^4.1.0":
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/schema-ast/-/schema-ast-4.1.0.tgz#a1e71f99346495b9272161a9ed07756e82648726"
@@ -1769,6 +1781,18 @@
     auto-bind "~4.0.0"
     tslib "~2.6.0"
 
+"@graphql-codegen/typescript-resolvers@4.4.0":
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-resolvers/-/typescript-resolvers-4.4.0.tgz#397f6cf730147ea6b239efc8341f781828906426"
+  integrity sha512-RVgGqsI3NhHF5c7WrxbA3/gN7YIRVzLd5yWxVvtAZCXCIhBkrBVpXk/1b18eQIn5GyJoByx9vRW5pb604e0vCA==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^5.1.0"
+    "@graphql-codegen/typescript" "^4.1.1"
+    "@graphql-codegen/visitor-plugin-common" "5.5.0"
+    "@graphql-tools/utils" "^10.0.0"
+    auto-bind "~4.0.0"
+    tslib "~2.6.0"
+
 "@graphql-codegen/typescript@4.0.8", "@graphql-codegen/typescript@^4.0.8":
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-4.0.8.tgz#ff0d5a0a86a002ac356e23e26b7079c6087e8ec5"
@@ -1799,6 +1823,17 @@
     "@graphql-codegen/plugin-helpers" "^5.0.4"
     "@graphql-codegen/schema-ast" "^4.0.2"
     "@graphql-codegen/visitor-plugin-common" "5.2.0"
+    auto-bind "~4.0.0"
+    tslib "~2.6.0"
+
+"@graphql-codegen/typescript@^4.1.1":
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-4.1.1.tgz#f82c8f6bb23557ecce20ec120153b72e93c09aef"
+  integrity sha512-+o5LOT71K9hdO4lDVnRGkkET5RdlKvxlQGug8dZgRGrhE2/xoPBsKfLhg9AoJGYMauNZxKj3blABQxHOKEku6Q==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^5.1.0"
+    "@graphql-codegen/schema-ast" "^4.0.2"
+    "@graphql-codegen/visitor-plugin-common" "5.5.0"
     auto-bind "~4.0.0"
     tslib "~2.6.0"
 
@@ -1840,6 +1875,22 @@
   integrity sha512-lx2hg776TjlFjfx5FGe4TXM323lnmw+mEflMZq0Xy2U7mEaG/nd9Oqbn2ln/awU1JHbPOWKgo8H4eXMXSl2WUg==
   dependencies:
     "@graphql-codegen/plugin-helpers" "5.1.0-alpha-20240825133857-587899fa7a3e2a93691aa808cffc232c189c850c"
+    "@graphql-tools/optimize" "^2.0.0"
+    "@graphql-tools/relay-operation-optimizer" "^7.0.0"
+    "@graphql-tools/utils" "^10.0.0"
+    auto-bind "~4.0.0"
+    change-case-all "1.0.15"
+    dependency-graph "^0.11.0"
+    graphql-tag "^2.11.0"
+    parse-filepath "^1.0.2"
+    tslib "~2.6.0"
+
+"@graphql-codegen/visitor-plugin-common@5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-5.5.0.tgz#be78d089a7c833412b7c7934b43b473828886d53"
+  integrity sha512-FSkxe/o4qKbpK+ipIT/jxZLYH0+3+XdIrJWsKlCW9wwJMF9mEJLJtzZNcxHSjz7+Eny6SUElAT2dqZ5XByxkog==
+  dependencies:
+    "@graphql-codegen/plugin-helpers" "^5.1.0"
     "@graphql-tools/optimize" "^2.0.0"
     "@graphql-tools/relay-operation-optimizer" "^7.0.0"
     "@graphql-tools/utils" "^10.0.0"
