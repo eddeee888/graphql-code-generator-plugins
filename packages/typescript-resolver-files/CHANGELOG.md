@@ -1,5 +1,16 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.11.0
+
+### Minor Changes
+
+- 9b45bf3: Use @graphql-codegen/typescript-resolvers meta to handle federation\_\_resolveType
+- 9b45bf3: Do not add files on filesystem that have not been touched by codemod
+
+### Patch Changes
+
+- 9b45bf3: Do not report namingConvention usage as it is fully supported
+
 ## 0.10.4
 
 ### Patch Changes
