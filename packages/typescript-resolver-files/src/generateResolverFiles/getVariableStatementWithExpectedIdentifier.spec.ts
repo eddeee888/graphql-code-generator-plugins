@@ -21,6 +21,10 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
     const result = getVariableStatementWithExpectedIdentifier(sourceFile, {
       __filetype: 'objectType',
       content: '',
+      filesystem: {
+        type: 'virtual',
+        contentUpdated: false,
+      },
       mainImportIdentifier: 'User',
       meta: {
         moduleName: 'user',
@@ -30,6 +34,7 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
         resolverType: {
           baseImport: 'UserResolvers',
           final: 'UserResolvers',
+          otherVariants: [],
         },
         normalizedResolverName: {
           base: 'User',
@@ -65,6 +70,10 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
     const result = getVariableStatementWithExpectedIdentifier(sourceFile, {
       __filetype: 'objectType',
       content: '',
+      filesystem: {
+        type: 'virtual',
+        contentUpdated: false,
+      },
       mainImportIdentifier: 'User',
       meta: {
         moduleName: 'user',
@@ -74,6 +83,7 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
         resolverType: {
           baseImport: 'UserResolvers',
           final: 'UserResolvers',
+          otherVariants: [],
         },
         normalizedResolverName: {
           base: 'User',
@@ -105,6 +115,10 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
     const result = getVariableStatementWithExpectedIdentifier(sourceFile, {
       __filetype: 'objectType',
       content: '',
+      filesystem: {
+        type: 'virtual',
+        contentUpdated: false,
+      },
       mainImportIdentifier: 'User',
       meta: {
         moduleName: 'user',
@@ -114,6 +128,7 @@ describe('getVariableStatementWithExpectedIdentifier()', () => {
         resolverType: {
           baseImport: 'UserResolvers',
           final: 'UserResolvers',
+          otherVariants: [],
         },
         normalizedResolverName: {
           base: 'User',

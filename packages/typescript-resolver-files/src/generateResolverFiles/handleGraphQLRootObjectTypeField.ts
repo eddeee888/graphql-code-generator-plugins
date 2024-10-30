@@ -76,6 +76,10 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
 
   result.files[fieldFilePath] = {
     __filetype: 'rootObjectTypeFieldResolver',
+    filesystem: {
+      type: 'virtual',
+      contentUpdated: false,
+    },
     content: `
         ${resolverTypeImportDeclaration}
         ${variableStatement}`,

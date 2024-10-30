@@ -1,0 +1,24 @@
+type Review {
+  body: String
+  author: User @provides(fields: "username")
+  product: Product
+}
+
+type User @key(fields: "id") {
+  id: ID!
+  username: String! @external
+  reviews: [Review]
+}
+
+type Product @key(fields: "upc") {
+  upc: String!
+  reviews: [Review]
+}
+
+# (This subgraph uses additional
+# federated directives)
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.3"
+    import: ["@key", "@shareable", "@provides", "@external"]
+  )

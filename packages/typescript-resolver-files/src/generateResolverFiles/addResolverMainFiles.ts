@@ -223,6 +223,12 @@ export const addResolverMainFiles = ({
 
     result.files[resolverMainFilename] = {
       __filetype: 'file',
+      // TODO: type='virtual' means we will generate these main files every run.
+      // Consider checking if these files are already on the filesystem, and whether the content has changed before generating?
+      filesystem: {
+        type: 'virtual',
+        contentUpdated: false,
+      },
       mainImportIdentifier: resolversIdentifier,
       content: `/* This file was automatically generated. DO NOT UPDATE MANUALLY. */
     ${printImportLine({

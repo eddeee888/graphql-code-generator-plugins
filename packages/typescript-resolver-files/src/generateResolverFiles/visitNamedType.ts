@@ -56,6 +56,7 @@ export const visitNamedType = <T = null>(
         typeNamedImport: typeNamedImport(ctx.config.generatedTypesFileMeta),
         typeString: typeString(ctx.config.generatedTypesFileMeta),
       },
+      generatedTypesFileMeta: ctx.config.generatedTypesFileMeta,
     },
     ctx
   );

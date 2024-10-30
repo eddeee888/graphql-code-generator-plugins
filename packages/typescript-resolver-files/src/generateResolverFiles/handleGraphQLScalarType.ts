@@ -50,6 +50,10 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
 
   result.files[fieldFilePath] = {
     __filetype: 'scalarResolver',
+    filesystem: {
+      type: 'virtual',
+      contentUpdated: false,
+    },
     content: `
     ${resolverTypeImportDeclaration}
     ${variableStatement}`,

@@ -37,6 +37,10 @@ export const handleGraphQLUnionType: GraphQLTypeHandler = (
 
   result.files[fieldFilePath] = {
     __filetype: 'unionResolver',
+    filesystem: {
+      type: 'virtual',
+      contentUpdated: false,
+    },
     content: `
     ${resolverTypeImportDeclaration}
     ${variableStatement}`,
