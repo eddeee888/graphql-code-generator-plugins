@@ -9,9 +9,9 @@ import { handleGraphQLEnumType } from './handleGraphQLEnumType';
 import { visitNamedType } from './visitNamedType';
 import type { GenerateResolverFilesContext } from './types';
 
-export const generateResolverFiles = (
+export const generateResolverFiles = async (
   ctx: GenerateResolverFilesContext
-): void => {
+): Promise<void> => {
   // Query
   Object.values(
     ctx.config.parsedGraphQLSchemaMeta.userDefinedSchemaTypeMap.query
@@ -141,7 +141,7 @@ export const generateResolverFiles = (
   });
 
   // Post process generated files (could be existing files or files to be generated)
-  postProcessFiles(ctx);
+  await postProcessFiles(ctx);
 
   // Put all resolvers into barrel file/s (or main file/s)
   addResolverMainFiles(ctx);

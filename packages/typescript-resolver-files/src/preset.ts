@@ -243,6 +243,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       async () =>
         generateResolverFiles({
           config: {
+            profiler,
             baseOutputDir,
             resolverTypesPath,
             resolverRelativeTargetDir,

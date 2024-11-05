@@ -1,14 +1,16 @@
 import { type SourceFile, type PropertyAssignment, SyntaxKind } from 'ts-morph';
+import type { Profiler } from '@graphql-codegen/plugin-helpers';
 import type { ObjectTypeFile } from './types';
 import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier';
 
 /**
  * Ensure objectTypeResolver files have all the resolvers due to mismatched types
  */
-export const ensureObjectTypeResolversAreGenerated = (
+export const ensureObjectTypeResolversAreGenerated = async (
+  profiler: Profiler,
   sourceFile: SourceFile,
   resolverFile: ObjectTypeFile
-): void => {
+): Promise<void> => {
   const resolversToGenerate = resolverFile.meta.resolversToGenerate || {};
   if (!Object.keys(resolversToGenerate).length) {
     return;
