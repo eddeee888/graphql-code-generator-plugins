@@ -72,7 +72,7 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
 
             result[schemaType] = result[schemaType] || {};
 
-            // If mapper does not have a field in schema type, report
+            // If mapper does not have a field in schema type, add missing resolver
             if (!typeMapperProperty) {
               result[schemaType][schemaTypeProperty.name] = {
                 resolverName: schemaTypeProperty.name,
@@ -81,22 +81,18 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
               return;
             }
 
-            /**
-             * FIXME: there's currently no way to check if a type is assignable to another type
-             * https://github.com/dsherret/ts-morph/issues/357
-             * https://github.com/microsoft/TypeScript/issues/9879
-             *
-             * Therefore, the workaround now is to generate all resolvers with matching names, then use TS diagnostics to see if there's error when trying to merge the two keys
-             *
-             * Note: this happens only when mappers are used
-             */
-            result[schemaType][schemaTypeProperty.name] = {
-              resolverName: schemaTypeProperty.name,
-              resolverDeclaration: `({ ${schemaTypeProperty.name} }, _arg, _ctx) => {
+            // If mapper field cannot be assigned to schema type field, report, add resolver declaration
+            if (
+              !typeMapperProperty.type.isAssignableTo(schemaTypeProperty.type)
+            ) {
+              result[schemaType][schemaTypeProperty.name] = {
+                resolverName: schemaTypeProperty.name,
+                resolverDeclaration: `({ ${schemaTypeProperty.name} }, _arg, _ctx) => {
                 /* ${schemaTypePropertyIdentifier} resolver is required because ${schemaTypePropertyIdentifier} and ${typeMapperPropertyIdentifier} are not compatible */
                 return ${schemaTypeProperty.name}
               }`,
-            };
+              };
+            }
 
             return;
           }

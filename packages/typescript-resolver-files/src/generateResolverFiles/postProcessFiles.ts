@@ -13,50 +13,48 @@ import { getImportStatementWithExpectedNamedImport } from './getImportStatementW
  * - Make sure correct variables are exported
  * - Make sure object types have field resolvers if mapper type's field cannot be used as schema type's field
  */
-export const postProcessFiles = async ({
+export const postProcessFiles = ({
   config: {
-    profiler,
     tsMorph: { project },
     fixObjectTypeResolvers,
   },
   result,
-}: GenerateResolverFilesContext): Promise<void> => {
+}: GenerateResolverFilesContext): void => {
   const sourceFilesToProcess: {
     sourceFile: SourceFile;
     resolverFile: ResolverFile;
   }[] = [];
-  await profiler.run(async () => {
-    Object.entries(result.files).forEach(([filePath, file]) => {
-      if (file.__filetype === 'file') {
-        return;
-      }
 
-      const existingSourceFile = project.addSourceFileAtPathIfExists(filePath);
-      if (existingSourceFile) {
-        file.filesystem = {
-          type: 'filesystem',
-          contentUpdated: false,
-        };
-        sourceFilesToProcess.push({
-          sourceFile: existingSourceFile,
-          resolverFile: file,
-        });
-        return;
-      }
+  Object.entries(result.files).forEach(([filePath, file]) => {
+    if (file.__filetype === 'file') {
+      return;
+    }
 
-      // If cannot find existing source files, load files that need post-processing into sourceFilesToProcess
-      if (file.__filetype === 'objectType') {
-        const virtualSourceFile = project.createSourceFile(
-          filePath,
-          file.content
-        );
-        sourceFilesToProcess.push({
-          sourceFile: virtualSourceFile,
-          resolverFile: file,
-        });
-      }
-    });
-  }, 'generateResolverFiles: populate source files');
+    const existingSourceFile = project.addSourceFileAtPathIfExists(filePath);
+    if (existingSourceFile) {
+      file.filesystem = {
+        type: 'filesystem',
+        contentUpdated: false,
+      };
+      sourceFilesToProcess.push({
+        sourceFile: existingSourceFile,
+        resolverFile: file,
+      });
+      return;
+    }
+
+    // If cannot find existing source files, load files that need post-processing into sourceFilesToProcess
+    if (file.__filetype === 'objectType') {
+      const virtualSourceFile = project.createSourceFile(
+        filePath,
+        file.content
+      );
+      sourceFilesToProcess.push({
+        sourceFile: virtualSourceFile,
+        resolverFile: file,
+      });
+    }
+  });
 
   for (const { sourceFile, resolverFile } of sourceFilesToProcess) {
     const normalizedRelativePath = path.posix.relative(
@@ -82,15 +80,7 @@ export const postProcessFiles = async ({
       fixObjectTypeResolvers.object === 'smart' &&
       resolverFile.__filetype === 'objectType'
     ) {
-      await profiler.run(
-        async () =>
-          ensureObjectTypeResolversAreGenerated(
-            profiler,
-            sourceFile,
-            resolverFile
-          ),
-        `${resolverFile.meta.normalizedResolverName.withModule}: ensureObjectTypeResolversAreGenerated`
-      );
+      ensureObjectTypeResolversAreGenerated(sourceFile, resolverFile);
     }
 
     if (

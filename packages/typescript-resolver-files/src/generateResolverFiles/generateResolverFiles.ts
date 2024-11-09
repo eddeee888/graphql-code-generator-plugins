@@ -141,7 +141,7 @@ export const generateResolverFiles = async (
   });
 
   // Post process generated files (could be existing files or files to be generated)
-  await postProcessFiles(ctx);
+  postProcessFiles(ctx);
 
   // Put all resolvers into barrel file/s (or main file/s)
   addResolverMainFiles(ctx);

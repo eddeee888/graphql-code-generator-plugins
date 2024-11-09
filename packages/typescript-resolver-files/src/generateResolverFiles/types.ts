@@ -6,7 +6,6 @@ import type { ImportLineMeta, RootObjectType } from '../utils';
 import type { ParsedPresetConfig } from '../validatePresetConfig';
 import type { NormalizedResolverName } from '../parseGraphQLSchema';
 import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
-import type { Profiler } from '@graphql-codegen/plugin-helpers';
 
 export type GeneratedTypesFileMeta = {
   generatedResolverTypes: NonNullable<
@@ -133,7 +132,6 @@ export type ResolverFile =
 
 export interface GenerateResolverFilesContext {
   config: {
-    profiler: Profiler;
     baseOutputDir: string;
     resolverTypesPath: string;
     resolverRelativeTargetDir: string;
