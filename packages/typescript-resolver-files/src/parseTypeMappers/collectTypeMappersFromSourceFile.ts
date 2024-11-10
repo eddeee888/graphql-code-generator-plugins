@@ -2,9 +2,9 @@ import * as path from 'path';
 import {
   type SourceFile,
   type Identifier,
-  type TypeAliasDeclaration,
   type InterfaceDeclaration,
   type Project,
+  type TypeAliasDeclaration,
   Node,
   SyntaxKind,
 } from 'ts-morph';
@@ -39,6 +39,7 @@ export const collectTypeMappersFromSourceFile = (
       {
         tsMorphProject,
         declarationNode: interfaceDeclaration,
+        kind: SyntaxKind.InterfaceDeclaration,
         identifierNode: interfaceDeclaration.getNameNode(),
         typeMappersSuffix,
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
@@ -62,6 +63,7 @@ export const collectTypeMappersFromSourceFile = (
       {
         tsMorphProject,
         declarationNode: typeAlias,
+        kind: SyntaxKind.TypeAliasDeclaration,
         identifierNode,
         typeMappersSuffix,
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
@@ -90,6 +92,7 @@ export const collectTypeMappersFromSourceFile = (
         {
           tsMorphProject,
           declarationNode: null,
+          kind: SyntaxKind.ExportSpecifier,
           identifierNode,
           typeMappersSuffix,
           typeMappersFilePath: typeMappersSourceFile.getFilePath(),
@@ -116,6 +119,7 @@ export const collectTypeMappersFromSourceFile = (
       {
         tsMorphProject,
         declarationNode: null,
+        kind: SyntaxKind.ClassDeclaration,
         identifierNode,
         typeMappersSuffix,
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
@@ -132,6 +136,7 @@ const addTypeMapperDetailsIfValid = (
   {
     tsMorphProject,
     declarationNode,
+    kind,
     identifierNode,
     typeMappersSuffix,
     typeMappersFilePath,
@@ -141,6 +146,11 @@ const addTypeMapperDetailsIfValid = (
   }: {
     tsMorphProject: Project;
     declarationNode: InterfaceDeclaration | TypeAliasDeclaration | null;
+    kind:
+      | SyntaxKind.InterfaceDeclaration
+      | SyntaxKind.TypeAliasDeclaration
+      | SyntaxKind.ExportSpecifier
+      | SyntaxKind.ClassDeclaration;
     identifierNode: Identifier;
     typeMappersSuffix: string;
     typeMappersFilePath: string;
@@ -190,43 +200,45 @@ const addTypeMapperDetailsIfValid = (
     );
   }
 
-  let typeMapperPropertyMap = {};
-  if (shouldCollectPropertyMap) {
-    const originalDeclarationNode = getOriginalDeclarationNode(
-      declarationNode,
-      identifierNode
-    );
-    typeMapperPropertyMap = getNodePropertyMap({
-      node: originalDeclarationNode,
-      tsMorphProject,
-    });
-  }
+  // let typeMapperPropertyMap = {};
+  // if (shouldCollectPropertyMap) {
+  //   const originalDeclarationNode = getOriginalDeclarationNode(
+  //     declarationNode,
+  //     identifierNode
+  //   );
+  //   typeMapperPropertyMap = getNodePropertyMap({
+  //     node: originalDeclarationNode,
+  //     tsMorphProject,
+  //   });
+  // }
 
   result[schemaType] = {
     schemaType,
     typeMapperName: identifierName,
-    typeMapperPropertyMap,
+    filename: typeMappersFilePath,
+    kind,
+    // typeMapperPropertyMap,
     configImportPath,
   };
 };
 
-const getOriginalDeclarationNode = (
-  declarationNode: InterfaceDeclaration | TypeAliasDeclaration | null,
-  identifierNode: Identifier
-): Node => {
-  if (!declarationNode) {
-    return identifierNode.getDefinitionNodes()[0];
-  }
+// const getOriginalDeclarationNode = (
+//   declarationNode: InterfaceDeclaration | TypeAliasDeclaration | null,
+//   identifierNode: Identifier
+// ): Node => {
+//   if (!declarationNode) {
+//     return identifierNode.getDefinitionNodes()[0];
+//   }
 
-  // InterfaceDeclaration
-  if (declarationNode.isKind(SyntaxKind.InterfaceDeclaration)) {
-    return declarationNode;
-  }
+//   // InterfaceDeclaration
+//   if (declarationNode.isKind(SyntaxKind.InterfaceDeclaration)) {
+//     return declarationNode;
+//   }
 
-  // TypeAliasDeclaration
-  const typeNode = declarationNode.getTypeNodeOrThrow();
-  const node = Node.isTypeReference(typeNode) // If type alias is a reference, go to definition using `getDefinitionNodes`
-    ? identifierNode.getDefinitionNodes()[0]
-    : declarationNode;
-  return node;
-};
+//   // TypeAliasDeclaration
+//   const typeNode = declarationNode.getTypeNodeOrThrow();
+//   const node = Node.isTypeReference(typeNode) // If type alias is a reference, go to definition using `getDefinitionNodes`
+//     ? identifierNode.getDefinitionNodes()[0]
+//     : declarationNode;
+//   return node;
+// };

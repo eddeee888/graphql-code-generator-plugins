@@ -1,0 +1,22 @@
+scalar DateTime
+
+type Error {
+  message: String!
+}
+
+type Mutation
+
+type Query
+
+type Subscription
+
+type User {
+  createdAt: DateTime!
+  id: ID!
+  role: UserRole!
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
