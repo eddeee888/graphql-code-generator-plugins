@@ -1,16 +1,35 @@
 import { type SourceFile, type PropertyAssignment, SyntaxKind } from 'ts-morph';
-import type { Profiler } from '@graphql-codegen/plugin-helpers';
 import type { ObjectTypeFile } from './types';
 import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier';
+
+export type AddedPropertyAssignmentNodes = Record<
+  string, // SourceFile's filename
+  Record<
+    number, // Line number
+    {
+      node: PropertyAssignment;
+      resolverFile: ObjectTypeFile;
+      __toBeRemoved: boolean;
+    }
+  >
+>;
 
 /**
  * Ensure objectTypeResolver files have all the resolvers due to mismatched types
  */
-export const ensureObjectTypeResolversAreGenerated = async (
-  profiler: Profiler,
-  sourceFile: SourceFile,
-  resolverFile: ObjectTypeFile
-): Promise<void> => {
+export const addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented = ({
+  addedPropertyAssignmentNodes,
+  sourceFile,
+  resolverFile,
+}: {
+  addedPropertyAssignmentNodes: AddedPropertyAssignmentNodes;
+  sourceFile: SourceFile;
+  resolverFile: ObjectTypeFile;
+}): void => {
+  const sourceFilePath = sourceFile.getFilePath().toString();
+  addedPropertyAssignmentNodes[sourceFilePath] =
+    addedPropertyAssignmentNodes[sourceFilePath] || {};
+
   const resolversToGenerate = resolverFile.meta.resolversToGenerate || {};
   if (!Object.keys(resolversToGenerate).length) {
     return;
@@ -28,7 +47,14 @@ export const ensureObjectTypeResolversAreGenerated = async (
   }
 
   /**
-   * FIXME: TS API does not expose `.isAssignable(Type, Type)` so we cannot use it to compare a field's type in schema type vs mapper type
+   * FIXME: TypeScript's TypeChecker's `.isAssignable(Type, Type)` doesn't seem to handle TypeReference correctly,
+   * so we cannot use it to compare a field's type in schema type vs mapper type
+   * e.g.
+   * ```
+   * type UserMapper = {
+   *   createdAt: string | Date; <-- Date is a TypeReference
+   * }
+   * ```
    *
    * In this workaround, we try to put the type together and use TS's diagnostic tool to see if there's error:
    * 1. If there's error, it means the mapper field cannot be safely mapped to schema field using GraphQL's default behaviour i.e. there will be runtime error
@@ -67,10 +93,6 @@ export const ensureObjectTypeResolversAreGenerated = async (
     });
 
   // 2. Add missing resolver properties if they haven't been implemented
-  const addedPropertyAssignmentNodes: Record<
-    number,
-    { node: PropertyAssignment; __toBeRemoved: boolean }
-  > = [];
   Object.values(resolversData).forEach(
     ({ resolverName, resolverDeclaration, implemented }) => {
       if (implemented) {
@@ -84,35 +106,13 @@ export const ensureObjectTypeResolversAreGenerated = async (
           initializer: resolverDeclaration,
         });
 
-      addedPropertyAssignmentNodes[addedNode.getStartLineNumber()] = {
+      addedPropertyAssignmentNodes[sourceFilePath][
+        addedNode.getStartLineNumber()
+      ] = {
         node: addedNode,
+        resolverFile,
         __toBeRemoved: true,
       };
-    }
-  );
-
-  // 3. Check to see if there's error at the newly added properties:
-  //    a. If there's error, leave it as user needs to manually map mapper type to schema type
-  //    b. If there's no error, remove the node because GraphQL default mapping behaviour should work
-  sourceFile.getPreEmitDiagnostics().forEach((d) => {
-    const lineNumberWithError = d.getLineNumber();
-    // If erroring on a recently added line, do not remove as user needs to implement it
-    if (
-      lineNumberWithError &&
-      addedPropertyAssignmentNodes[lineNumberWithError]
-    ) {
-      addedPropertyAssignmentNodes[lineNumberWithError].__toBeRemoved = false;
-    }
-  });
-  Object.values(addedPropertyAssignmentNodes).forEach(
-    ({ node, __toBeRemoved }) => {
-      if (__toBeRemoved) {
-        node.remove();
-      } else {
-        // If found a property assignment that cannot be removed i.e. incompatible types between mapper vs schema types
-        // Then we must mark the content as updated to be added to generate list
-        resolverFile.filesystem.contentUpdated = true;
-      }
     }
   );
 };

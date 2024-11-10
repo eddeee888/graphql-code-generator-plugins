@@ -3,7 +3,10 @@ import * as path from 'path';
 import { cwd } from '../utils';
 import type { ResolverFile, GenerateResolverFilesContext } from './types';
 import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier';
-import { ensureObjectTypeResolversAreGenerated } from './ensureObjectTypeResolversAreGenerated';
+import {
+  type AddedPropertyAssignmentNodes,
+  addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented,
+} from './addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented';
 import { ensureEnumTypeResolversAreGenerated } from './ensureEnumTypeResolversAreGenerated';
 import { getImportStatementWithExpectedNamedImport } from './getImportStatementWithExpectedNamedImport';
 
@@ -15,7 +18,6 @@ import { getImportStatementWithExpectedNamedImport } from './getImportStatementW
  */
 export const postProcessFiles = async ({
   config: {
-    profiler,
     tsMorph: { project },
     fixObjectTypeResolvers,
   },
@@ -25,45 +27,45 @@ export const postProcessFiles = async ({
     sourceFile: SourceFile;
     resolverFile: ResolverFile;
   }[] = [];
-  await profiler.run(async () => {
-    Object.entries(result.files).forEach(([filePath, file]) => {
-      if (file.__filetype === 'file') {
-        return;
-      }
 
-      const existingSourceFile = project.addSourceFileAtPathIfExists(filePath);
-      if (existingSourceFile) {
-        file.filesystem = {
-          type: 'filesystem',
-          contentUpdated: false,
-        };
-        sourceFilesToProcess.push({
-          sourceFile: existingSourceFile,
-          resolverFile: file,
-        });
-        return;
-      }
+  // 1. Load resolver files into ts-morph project so we can run static analysis
+  Object.entries(result.files).forEach(([filePath, file]) => {
+    if (file.__filetype === 'file') {
+      return;
+    }
 
-      // If cannot find existing source files, load files that need post-processing into sourceFilesToProcess
-      if (file.__filetype === 'objectType') {
-        const virtualSourceFile = project.createSourceFile(
-          filePath,
-          file.content
-        );
-        sourceFilesToProcess.push({
-          sourceFile: virtualSourceFile,
-          resolverFile: file,
-        });
-      }
-    });
-  }, 'generateResolverFiles: populate source files');
+    const existingSourceFile = project.addSourceFileAtPathIfExists(filePath);
+    if (existingSourceFile) {
+      file.filesystem = {
+        type: 'filesystem',
+        contentUpdated: false,
+      };
+      sourceFilesToProcess.push({
+        sourceFile: existingSourceFile,
+        resolverFile: file,
+      });
+      return;
+    }
 
+    // If cannot find existing source files, load files that need post-processing into sourceFilesToProcess
+    if (file.__filetype === 'objectType') {
+      const virtualSourceFile = project.createSourceFile(
+        filePath,
+        file.content
+      );
+      sourceFilesToProcess.push({
+        sourceFile: virtualSourceFile,
+        resolverFile: file,
+      });
+    }
+  });
+
+  // `addedPropertyAssignmentNodes` is used to store added property assignments in object types
+  // these property assigments are to be removed if there's no TypeScript error
+  const addedPropertyAssignmentNodes: AddedPropertyAssignmentNodes = {};
+
+  // 2. Run static analysis on source files
   for (const { sourceFile, resolverFile } of sourceFilesToProcess) {
-    const normalizedRelativePath = path.posix.relative(
-      cwd(),
-      sourceFile.getFilePath()
-    );
-
     const { addedVariableStatement } = ensureExportedResolver(
       sourceFile,
       resolverFile
@@ -82,15 +84,11 @@ export const postProcessFiles = async ({
       fixObjectTypeResolvers.object === 'smart' &&
       resolverFile.__filetype === 'objectType'
     ) {
-      await profiler.run(
-        async () =>
-          ensureObjectTypeResolversAreGenerated(
-            profiler,
-            sourceFile,
-            resolverFile
-          ),
-        `${resolverFile.meta.normalizedResolverName.withModule}: ensureObjectTypeResolversAreGenerated`
-      );
+      addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented({
+        addedPropertyAssignmentNodes,
+        sourceFile,
+        resolverFile,
+      });
     }
 
     if (
@@ -99,6 +97,49 @@ export const postProcessFiles = async ({
     ) {
       ensureEnumTypeResolversAreGenerated(sourceFile, resolverFile);
     }
+  }
+
+  // 3. ensure object type's added property assignments are removed if there's no related TypeScript error
+  // We do this only once at the project level instead of sourceFile level to speed up the process
+  if (fixObjectTypeResolvers.object === 'smart') {
+    project.getPreEmitDiagnostics().forEach((d) => {
+      const filename = d.getSourceFile()?.getFilePath().toString();
+      if (!filename || !addedPropertyAssignmentNodes[filename]) {
+        return;
+      }
+      const lineNumberWithError = d.getLineNumber();
+
+      // If erroring on a recently added line, do not remove as user needs to implement it
+      if (
+        lineNumberWithError &&
+        addedPropertyAssignmentNodes[filename][lineNumberWithError]
+      ) {
+        addedPropertyAssignmentNodes[filename][
+          lineNumberWithError
+        ].__toBeRemoved = false;
+      }
+    });
+    Object.values(addedPropertyAssignmentNodes).forEach((addedNodes) => {
+      Object.values(addedNodes).forEach(
+        ({ node, resolverFile, __toBeRemoved }) => {
+          if (__toBeRemoved) {
+            node.remove();
+          } else {
+            // If found a property assignment that cannot be removed i.e. incompatible types between mapper vs schema types
+            // Then we must mark the content as updated to be added to generate list
+            resolverFile.filesystem.contentUpdated = true;
+          }
+        }
+      );
+    });
+  }
+
+  // 4. Apply to result files the updated content done in step 2. and 3. above
+  for (const { sourceFile, resolverFile } of sourceFilesToProcess) {
+    const normalizedRelativePath = path.posix.relative(
+      cwd(),
+      sourceFile.getFilePath()
+    );
 
     // Overwrite existing files with fixes
     result.files[normalizedRelativePath] = {

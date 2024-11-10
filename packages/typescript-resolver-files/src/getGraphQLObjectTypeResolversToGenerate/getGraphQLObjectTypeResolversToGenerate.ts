@@ -82,11 +82,12 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
             }
 
             /**
-             * FIXME: there's currently no way to check if a type is assignable to another type
+             * FIXME: TypeScript's `isTypeAssignableTo` does not seem to handle TypeReference correctly
              * https://github.com/dsherret/ts-morph/issues/357
              * https://github.com/microsoft/TypeScript/issues/9879
              *
-             * Therefore, the workaround now is to generate all resolvers with matching names, then use TS diagnostics to see if there's error when trying to merge the two keys
+             * Therefore, the workaround now is to generate all resolvers with matching names,
+             * then use TS diagnostics to see if there's error when trying to merge the two keys
              *
              * Note: this happens only when mappers are used
              */
