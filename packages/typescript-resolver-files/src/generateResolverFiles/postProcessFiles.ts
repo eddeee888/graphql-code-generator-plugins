@@ -16,13 +16,13 @@ import { getImportStatementWithExpectedNamedImport } from './getImportStatementW
  * - Make sure correct variables are exported
  * - Make sure object types have field resolvers if mapper type's field cannot be used as schema type's field
  */
-export const postProcessFiles = async ({
+export const postProcessFiles = ({
   config: {
     tsMorph: { project },
     fixObjectTypeResolvers,
   },
   result,
-}: GenerateResolverFilesContext): Promise<void> => {
+}: GenerateResolverFilesContext): void => {
   const sourceFilesToProcess: {
     sourceFile: SourceFile;
     resolverFile: ResolverFile;
