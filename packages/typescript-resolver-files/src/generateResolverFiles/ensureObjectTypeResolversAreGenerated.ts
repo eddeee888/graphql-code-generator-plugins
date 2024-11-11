@@ -66,6 +66,7 @@ export const ensureObjectTypeResolversAreGenerated = (
           name: resolverName,
           initializer: resolverDeclaration,
         });
+      resolverFile.filesystem.contentUpdated = true;
     }
   );
 };
