@@ -93,8 +93,6 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           typeMappersFileExtension,
           typeMappersSuffix,
           tsMorphProject,
-          shouldCollectPropertyMap:
-            fixObjectTypeResolvers.object !== 'disabled',
           emitLegacyCommonJSImports,
         }),
       createProfilerRunName('parseTypeMappers')

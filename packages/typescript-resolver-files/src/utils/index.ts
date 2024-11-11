@@ -6,7 +6,6 @@ export * from './isNativeNamedType';
 export * from './isRootObjectType';
 export * from './isWhitelistedModule';
 export * from './printImportLine';
-export * from './getNodePropertyMap';
 export * from './normalizeRelativePath';
 export * from './relativeModulePath';
 export * from './isMatchResolverNamePattern';

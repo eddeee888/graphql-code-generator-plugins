@@ -1,7 +1,6 @@
 import * as path from 'path';
-import type { Identifier, Project, SyntaxKind } from 'ts-morph';
+import type { Project, SyntaxKind } from 'ts-morph';
 import type { ParseSourcesResult } from '../parseSources';
-import type { NodePropertyMap } from '../utils';
 import { collectTypeMappersFromSourceFile } from './collectTypeMappersFromSourceFile';
 
 export interface ParseTypeMappersParams {
@@ -10,20 +9,20 @@ export interface ParseTypeMappersParams {
   typeMappersFileExtension: string;
   typeMappersSuffix: string;
   tsMorphProject: Project;
-  shouldCollectPropertyMap: boolean;
   emitLegacyCommonJSImports: boolean;
 }
 
 export interface TypeMapperDetails {
   schemaType: string;
-  typeMapperName: string;
-  // typeMapperPropertyMap: NodePropertyMap;
-  filename: string; // e.g. /path/to/schema.mappers.ts
-  kind:
-    | SyntaxKind.InterfaceDeclaration
-    | SyntaxKind.TypeAliasDeclaration
-    | SyntaxKind.ExportSpecifier
-    | SyntaxKind.ClassDeclaration;
+  mapper: {
+    name: string;
+    filename: string; // e.g. /path/to/schema.mappers.ts
+    kind:
+      | SyntaxKind.InterfaceDeclaration
+      | SyntaxKind.TypeAliasDeclaration
+      | SyntaxKind.ExportSpecifier
+      | SyntaxKind.ClassDeclaration;
+  };
   configImportPath: string;
 }
 
@@ -35,7 +34,6 @@ export const parseTypeMappers = ({
   typeMappersFileExtension,
   typeMappersSuffix,
   tsMorphProject,
-  shouldCollectPropertyMap,
   emitLegacyCommonJSImports,
 }: ParseTypeMappersParams): TypeMappersMap => {
   const result = Object.entries(sourceMap).reduce<TypeMappersMap>(
@@ -54,11 +52,9 @@ export const parseTypeMappers = ({
 
       collectTypeMappersFromSourceFile(
         {
-          tsMorphProject,
           typeMappersSourceFile,
           typeMappersSuffix,
           resolverTypesPath,
-          shouldCollectPropertyMap,
           emitLegacyCommonJSImports,
         },
         res
