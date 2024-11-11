@@ -78,13 +78,6 @@
           ],
           "parallel": false
         },
-        "test-mappers-vs-schema-types-copy": {
-          "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-mappers-vs-schema-types-copy/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-mappers-vs-schema-types-copy/**/*.generated.*\""
-          ],
-          "parallel": false
-        },
         "test-config-ts": {
           "commands": [
             "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-config-ts/**/resolvers/\"",
@@ -218,9 +211,6 @@
         },
         "test-mappers-vs-schema-types": {
           "configFile": "packages/typescript-resolver-files-e2e/src/test-mappers-vs-schema-types/codegen.ts"
-        },
-        "test-mappers-vs-schema-types-copy": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-mappers-vs-schema-types-copy/codegen.ts"
         },
         "test-config-ts": {
           "configFile": "packages/typescript-resolver-files-e2e/src/test-config-ts/codegen.ts"

@@ -1,9 +1,0 @@
-type Query
-type Mutation
-type Subscription
-
-type Error {
-  message: String!
-}
-
-scalar DateTime
