@@ -2,9 +2,9 @@ import * as path from 'path';
 import {
   type SourceFile,
   type Identifier,
+  type TypeAliasDeclaration,
   type InterfaceDeclaration,
   type Project,
-  type TypeAliasDeclaration,
   Node,
   SyntaxKind,
 } from 'ts-morph';

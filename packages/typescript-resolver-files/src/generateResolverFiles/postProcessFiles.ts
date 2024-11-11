@@ -24,7 +24,6 @@ export const postProcessFiles = ({
     sourceFile: SourceFile;
     resolverFile: ResolverFile;
   }[] = [];
-
   Object.entries(result.files).forEach(([filePath, file]) => {
     if (file.__filetype === 'file') {
       return;
@@ -56,7 +55,7 @@ export const postProcessFiles = ({
     }
   });
 
-  for (const { sourceFile, resolverFile } of sourceFilesToProcess) {
+  sourceFilesToProcess.forEach(({ sourceFile, resolverFile }) => {
     const normalizedRelativePath = path.posix.relative(
       cwd(),
       sourceFile.getFilePath()
@@ -95,7 +94,7 @@ export const postProcessFiles = ({
       ...resolverFile,
       content: sourceFile.getText(),
     };
-  }
+  });
 };
 
 /**

@@ -9,9 +9,9 @@ import { handleGraphQLEnumType } from './handleGraphQLEnumType';
 import { visitNamedType } from './visitNamedType';
 import type { GenerateResolverFilesContext } from './types';
 
-export const generateResolverFiles = async (
+export const generateResolverFiles = (
   ctx: GenerateResolverFilesContext
-): Promise<void> => {
+): void => {
   // Query
   Object.values(
     ctx.config.parsedGraphQLSchemaMeta.userDefinedSchemaTypeMap.query
