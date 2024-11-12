@@ -1,4 +1,4 @@
-import { Project } from 'ts-morph';
+import { Project, SyntaxKind } from 'ts-morph';
 import { collectTypeMappersFromSourceFile } from './collectTypeMappersFromSourceFile';
 
 describe('collectTypeMappersFromSourceFile', () => {
@@ -82,11 +82,9 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
-        tsMorphProject: project,
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        shouldCollectPropertyMap: true,
         emitLegacyCommonJSImports: true,
       },
       result
@@ -95,184 +93,57 @@ describe('collectTypeMappersFromSourceFile', () => {
     expect(result).toEqual({
       Billing: {
         schemaType: 'Billing',
-        typeMapperName: 'BillingTypeMapper',
-        configImportPath: './module1/schema.mappers#BillingTypeMapper',
-        typeMapperPropertyMap: {
-          address: { name: 'address' },
-          id: { name: 'id' },
+        mapper: {
+          name: 'BillingTypeMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#BillingTypeMapper',
       },
       Payment: {
         schemaType: 'Payment',
-        typeMapperName: 'PaymentTypeMapper',
-        configImportPath: './module1/schema.mappers#PaymentTypeMapper',
-        typeMapperPropertyMap: {
-          id: { name: 'id' },
-          type: { name: 'type' },
-          typeCode: { name: 'typeCode' },
+        mapper: {
+          name: 'PaymentTypeMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#PaymentTypeMapper',
       },
       Address: {
         schemaType: 'Address',
-        typeMapperName: 'AddressTypeMapper',
-        configImportPath: './module1/schema.mappers#AddressTypeMapper',
-        typeMapperPropertyMap: {
-          id: { name: 'id' },
+        mapper: {
+          name: 'AddressTypeMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#AddressTypeMapper',
       },
       Geo: {
         schemaType: 'Geo',
-        typeMapperName: 'GeoTypeMapper',
-        configImportPath: './module1/schema.mappers#GeoTypeMapper',
-        typeMapperPropertyMap: {
-          id: { name: 'id' },
+        mapper: {
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
+          kind: SyntaxKind.ExportSpecifier,
+          name: 'GeoTypeMapper',
         },
+        configImportPath: './module1/schema.mappers#GeoTypeMapper',
       },
       Preference: {
         schemaType: 'Preference',
-        typeMapperName: 'PreferenceTypeMapper',
-        configImportPath: './module1/schema.mappers#PreferenceTypeMapper',
-        typeMapperPropertyMap: {
-          id: { name: 'id' },
+        mapper: {
+          name: 'PreferenceTypeMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#PreferenceTypeMapper',
       },
       Flag: {
         schemaType: 'Flag',
-        typeMapperName: 'FlagTypeMapper',
-        configImportPath: './module1/schema.mappers#FlagTypeMapper',
-        typeMapperPropertyMap: {
-          id: { name: 'id' },
+        mapper: {
+          name: 'FlagTypeMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
-      },
-    });
-  });
-
-  it('mutates the result based on typeMappersSuffix for exports from other modules but not propert map if shouldCollectPropertyMap=false', () => {
-    const project = new Project({
-      compilerOptions: {
-        paths: {
-          '@external/module1': ['/path/to/external/modules1/index.ts'],
-          '@external/module2': ['/path/to/external/modules2/index.ts'],
-        },
-      },
-    });
-    project.createSourceFile(
-      `/path/to/external/modules1/index.ts`,
-      `
-      export interface Billing {
-        id: number;
-        address: string;
-      }
-      
-      export type PaymentTypeMapper = {
-        id: string;
-        type: 'creditcard' | 'cash' | 'bitcoin';
-        typeCode: 'payment';
-      }
-
-      export type SomethingTypeMapper = {
-        id: number;
-      }
-      `
-    );
-    project.createSourceFile(
-      `/path/to/external/modules2/index.ts`,
-      `
-      export type Address = {
-        id: string;
-      }
-      export interface GeoTypeMapper {
-        id: string;
-      }
-      export type NotAliasMapper2 = {
-        id: number;
-      }
-      `
-    );
-    project.createSourceFile(
-      '/path/to/schemas/module1/localModule1.ts',
-      `
-      export type Preference = {
-        id: number;
-      }
-      export interface FlagTypeMapper {
-        id: number;
-      }
-      export type NotAliasMapper3 = {
-        id: number;
-      }
-      `
-    );
-    const mapperFile = project.createSourceFile(
-      '/path/to/schemas/module1/schema.mappers.ts',
-      `
-      export type { 
-        Billing as BillingTypeMapper, 
-        PaymentTypeMapper, 
-        SomethingTypeMapper as NotAliasMapper1 
-      } from '@external/module1';
-      export { 
-        Address as AddressTypeMapper, 
-        GeoTypeMapper, 
-        NotAliasMapper2 
-      } from '@external/module2';
-      export { 
-        Preference as PreferenceTypeMapper, 
-        FlagTypeMapper, 
-        NotAliasMapper3 
-      } from './localModule1';`
-    );
-
-    const result = {};
-
-    collectTypeMappersFromSourceFile(
-      {
-        tsMorphProject: project,
-        typeMappersSourceFile: mapperFile,
-        typeMappersSuffix: 'TypeMapper',
-        resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        shouldCollectPropertyMap: false,
-        emitLegacyCommonJSImports: true,
-      },
-      result
-    );
-
-    expect(result).toEqual({
-      Billing: {
-        schemaType: 'Billing',
-        typeMapperName: 'BillingTypeMapper',
-        configImportPath: './module1/schema.mappers#BillingTypeMapper',
-        typeMapperPropertyMap: {},
-      },
-      Payment: {
-        schemaType: 'Payment',
-        typeMapperName: 'PaymentTypeMapper',
-        configImportPath: './module1/schema.mappers#PaymentTypeMapper',
-        typeMapperPropertyMap: {},
-      },
-      Address: {
-        schemaType: 'Address',
-        typeMapperName: 'AddressTypeMapper',
-        configImportPath: './module1/schema.mappers#AddressTypeMapper',
-        typeMapperPropertyMap: {},
-      },
-      Geo: {
-        schemaType: 'Geo',
-        typeMapperName: 'GeoTypeMapper',
-        configImportPath: './module1/schema.mappers#GeoTypeMapper',
-        typeMapperPropertyMap: {},
-      },
-      Preference: {
-        schemaType: 'Preference',
-        typeMapperName: 'PreferenceTypeMapper',
-        configImportPath: './module1/schema.mappers#PreferenceTypeMapper',
-        typeMapperPropertyMap: {},
-      },
-      Flag: {
-        schemaType: 'Flag',
-        typeMapperName: 'FlagTypeMapper',
         configImportPath: './module1/schema.mappers#FlagTypeMapper',
-        typeMapperPropertyMap: {},
       },
     });
   });
@@ -367,11 +238,9 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
-        tsMorphProject: project,
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        shouldCollectPropertyMap: true,
         emitLegacyCommonJSImports: true,
       },
       result
@@ -380,51 +249,57 @@ describe('collectTypeMappersFromSourceFile', () => {
     expect(result).toEqual({
       Billing: {
         schemaType: 'Billing',
-        typeMapperName: 'BillingTypeMapper',
-        configImportPath: './module1/schema.mappers#BillingTypeMapper',
-        typeMapperPropertyMap: {
-          __type: { name: '__type' },
+        mapper: {
+          name: 'BillingTypeMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#BillingTypeMapper',
       },
       Payment: {
         schemaType: 'Payment',
-        typeMapperName: 'PaymentTypeMapper',
-        configImportPath: './module1/schema.mappers#PaymentTypeMapper',
-        typeMapperPropertyMap: {
-          __type: { name: '__type' },
+        mapper: {
+          name: 'PaymentTypeMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#PaymentTypeMapper',
       },
       Address: {
         schemaType: 'Address',
-        typeMapperName: 'AddressTypeMapper',
-        configImportPath: './module1/schema.mappers#AddressTypeMapper',
-        typeMapperPropertyMap: {
-          __type: { name: '__type' },
+        mapper: {
+          name: 'AddressTypeMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#AddressTypeMapper',
       },
       Geo: {
         schemaType: 'Geo',
-        typeMapperName: 'GeoTypeMapper',
-        configImportPath: './module1/schema.mappers#GeoTypeMapper',
-        typeMapperPropertyMap: {
-          __type: { name: '__type' },
+        mapper: {
+          name: 'GeoTypeMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#GeoTypeMapper',
       },
       Preference: {
         schemaType: 'Preference',
-        typeMapperName: 'PreferenceTypeMapper',
-        configImportPath: './module1/schema.mappers#PreferenceTypeMapper',
-        typeMapperPropertyMap: {
-          __type: { name: '__type' },
+        mapper: {
+          name: 'PreferenceTypeMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#PreferenceTypeMapper',
       },
       Flag: {
         schemaType: 'Flag',
-        typeMapperName: 'FlagTypeMapper',
-        configImportPath: './module1/schema.mappers#FlagTypeMapper',
-        typeMapperPropertyMap: {
-          __type: { name: '__type' },
+        mapper: {
+          name: 'FlagTypeMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#FlagTypeMapper',
       },
     });
   });
@@ -480,11 +355,9 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
-        tsMorphProject: project,
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        shouldCollectPropertyMap: true,
         emitLegacyCommonJSImports: true,
       },
       result
@@ -492,37 +365,40 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     expect(result).toEqual({
       Profile: {
-        configImportPath: './module1/schema.mappers#ProfileTypeMapper',
         schemaType: 'Profile',
-        typeMapperName: 'ProfileTypeMapper',
-        typeMapperPropertyMap: {
-          id: { name: 'id' },
-          account: { name: 'account' },
+        mapper: {
+          name: 'ProfileTypeMapper',
+          kind: SyntaxKind.TypeAliasDeclaration,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#ProfileTypeMapper',
       },
       User: {
-        configImportPath: './module1/schema.mappers#UserTypeMapper',
         schemaType: 'User',
-        typeMapperName: 'UserTypeMapper',
-        typeMapperPropertyMap: {
-          id: { name: 'id' },
+        mapper: {
+          name: 'UserTypeMapper',
+          kind: SyntaxKind.InterfaceDeclaration,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#UserTypeMapper',
       },
       Like: {
-        configImportPath: './module1/schema.mappers#LikeTypeMapper',
         schemaType: 'Like',
-        typeMapperName: 'LikeTypeMapper',
-        typeMapperPropertyMap: {
-          id: { name: 'id' },
+        mapper: {
+          name: 'LikeTypeMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#LikeTypeMapper',
       },
       Password: {
-        configImportPath: './module1/schema.mappers#PasswordTypeMapper',
         schemaType: 'Password',
-        typeMapperName: 'PasswordTypeMapper',
-        typeMapperPropertyMap: {
-          isValid: { name: 'isValid' },
+        mapper: {
+          name: 'PasswordTypeMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#PasswordTypeMapper',
       },
     });
   });
@@ -575,11 +451,9 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
-        tsMorphProject: project,
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        shouldCollectPropertyMap: true,
         emitLegacyCommonJSImports: true,
       },
       result
@@ -587,33 +461,31 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     expect(result).toEqual({
       Like: {
-        configImportPath: './module1/schema.mappers#LikeTypeMapper',
         schemaType: 'Like',
-        typeMapperName: 'LikeTypeMapper',
-        typeMapperPropertyMap: {
-          id: { name: 'id' },
-          createdAt: { name: 'createdAt' },
+        mapper: {
+          name: 'LikeTypeMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#LikeTypeMapper',
       },
       Post: {
-        configImportPath: './module1/schema.mappers#PostTypeMapper',
         schemaType: 'Post',
-        typeMapperName: 'PostTypeMapper',
-        typeMapperPropertyMap: {
-          id: { name: 'id' },
+        mapper: {
+          name: 'PostTypeMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#PostTypeMapper',
       },
       User: {
-        configImportPath: './module1/schema.mappers#UserTypeMapper',
         schemaType: 'User',
-        typeMapperName: 'UserTypeMapper',
-        typeMapperPropertyMap: {
-          id: { name: 'id' },
-          firstName: { name: 'firstName' },
-          lastName: { name: 'lastName' },
-          createdAt: { name: 'createdAt' },
-          updatedAt: { name: 'updatedAt' },
+        mapper: {
+          name: 'UserTypeMapper',
+          kind: SyntaxKind.ClassDeclaration,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
         },
+        configImportPath: './module1/schema.mappers#UserTypeMapper',
       },
     });
   });
@@ -679,65 +551,66 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     const expectedBilling = {
       schemaType: 'Billing',
-      typeMapperName: 'BillingTypeMapper',
-      configImportPath: './billing/schema.mappers#BillingTypeMapper',
-      typeMapperPropertyMap: {
-        address: { name: 'address' },
-        id: { name: 'id' },
+      mapper: {
+        name: 'BillingTypeMapper',
+        kind: SyntaxKind.ExportSpecifier,
+        filename: '/path/to/schemas/billing/schema.mappers.ts',
       },
+      configImportPath: './billing/schema.mappers#BillingTypeMapper',
     };
     const expectedPayment = {
       schemaType: 'Payment',
-      typeMapperName: 'PaymentTypeMapper',
-      configImportPath: './billing/schema.mappers#PaymentTypeMapper',
-      typeMapperPropertyMap: {
-        id: { name: 'id' },
-        type: { name: 'type' },
-        typeCode: { name: 'typeCode' },
+      mapper: {
+        name: 'PaymentTypeMapper',
+        kind: SyntaxKind.ExportSpecifier,
+        filename: '/path/to/schemas/billing/schema.mappers.ts',
       },
+      configImportPath: './billing/schema.mappers#PaymentTypeMapper',
     };
     const expectedAddress = {
       schemaType: 'Address',
-      typeMapperName: 'AddressTypeMapper',
-      configImportPath: './address/schema.mappers#AddressTypeMapper',
-      typeMapperPropertyMap: {
-        id: { name: 'id' },
+      mapper: {
+        name: 'AddressTypeMapper',
+        kind: SyntaxKind.ExportSpecifier,
+        filename: '/path/to/schemas/address/schema.mappers.ts',
       },
+      configImportPath: './address/schema.mappers#AddressTypeMapper',
     };
     const expectedGeo = {
       schemaType: 'Geo',
-      typeMapperName: 'GeoTypeMapper',
-      configImportPath: './address/schema.mappers#GeoTypeMapper',
-      typeMapperPropertyMap: {
-        id: { name: 'id' },
+      mapper: {
+        name: 'GeoTypeMapper',
+        kind: SyntaxKind.ExportSpecifier,
+        filename: '/path/to/schemas/address/schema.mappers.ts',
       },
+      configImportPath: './address/schema.mappers#GeoTypeMapper',
     };
     const expectedPreference = {
       schemaType: 'Preference',
-      typeMapperName: 'PreferenceTypeMapper',
-      configImportPath: './preference/schema.mappers#PreferenceTypeMapper',
-      typeMapperPropertyMap: {
-        id: { name: 'id' },
+      mapper: {
+        name: 'PreferenceTypeMapper',
+        kind: SyntaxKind.ExportSpecifier,
+        filename: '/path/to/schemas/preference/schema.mappers.ts',
       },
+      configImportPath: './preference/schema.mappers#PreferenceTypeMapper',
     };
     const expectedFlag = {
       schemaType: 'Flag',
-      typeMapperName: 'FlagTypeMapper',
-      configImportPath: './preference/schema.mappers#FlagTypeMapper',
-      typeMapperPropertyMap: {
-        id: { name: 'id' },
+      mapper: {
+        name: 'FlagTypeMapper',
+        kind: SyntaxKind.ExportSpecifier,
+        filename: '/path/to/schemas/preference/schema.mappers.ts',
       },
+      configImportPath: './preference/schema.mappers#FlagTypeMapper',
     };
 
     const result = {};
 
     collectTypeMappersFromSourceFile(
       {
-        tsMorphProject: project,
         typeMappersSourceFile: billingMapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        shouldCollectPropertyMap: true,
         emitLegacyCommonJSImports: true,
       },
       result
@@ -749,11 +622,9 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
-        tsMorphProject: project,
         typeMappersSourceFile: addressMapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        shouldCollectPropertyMap: true,
         emitLegacyCommonJSImports: true,
       },
       result
@@ -767,11 +638,9 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
-        tsMorphProject: project,
         typeMappersSourceFile: preferenceMapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        shouldCollectPropertyMap: true,
         emitLegacyCommonJSImports: true,
       },
       result
@@ -832,11 +701,9 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
-        tsMorphProject: project,
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'Mapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        shouldCollectPropertyMap: false,
         emitLegacyCommonJSImports: false,
       },
       result
@@ -845,21 +712,30 @@ describe('collectTypeMappersFromSourceFile', () => {
     expect(result).toEqual({
       Billing: {
         schemaType: 'Billing',
-        typeMapperName: 'BillingMapper',
+        mapper: {
+          name: 'BillingMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
+        },
         configImportPath: './module1/schema.mappers.js#BillingMapper',
-        typeMapperPropertyMap: {},
       },
       Address: {
         schemaType: 'Address',
-        typeMapperName: 'AddressMapper',
+        mapper: {
+          name: 'AddressMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
+        },
         configImportPath: './module1/schema.mappers.js#AddressMapper',
-        typeMapperPropertyMap: {},
       },
       Preference: {
         schemaType: 'Preference',
-        typeMapperName: 'PreferenceMapper',
+        mapper: {
+          name: 'PreferenceMapper',
+          kind: SyntaxKind.ExportSpecifier,
+          filename: '/path/to/schemas/module1/schema.mappers.ts',
+        },
         configImportPath: './module1/schema.mappers.js#PreferenceMapper',
-        typeMapperPropertyMap: {},
       },
     });
   });
@@ -886,11 +762,9 @@ describe('collectTypeMappersFromSourceFile', () => {
 
     collectTypeMappersFromSourceFile(
       {
-        tsMorphProject: project,
         typeMappersSourceFile: project.getSourceFiles()[0],
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        shouldCollectPropertyMap: true,
         emitLegacyCommonJSImports: true,
       },
       result
@@ -899,11 +773,9 @@ describe('collectTypeMappersFromSourceFile', () => {
     expect(() =>
       collectTypeMappersFromSourceFile(
         {
-          tsMorphProject: project,
           typeMappersSourceFile: project.getSourceFiles()[1],
           typeMappersSuffix: 'TypeMapper',
           resolverTypesPath: '/path/to/schemas/types.generated.ts',
-          shouldCollectPropertyMap: true,
           emitLegacyCommonJSImports: true,
         },
         result
