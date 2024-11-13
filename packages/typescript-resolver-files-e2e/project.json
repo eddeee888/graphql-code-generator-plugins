@@ -24,7 +24,7 @@
           "rimraf -g \"packages/typescript-resolver-files-e2e/src/**/rslvrs/\"",
           "rimraf -g \"packages/typescript-resolver-files-e2e/src/**/*.generated.*\"",
           "rimraf -g \"packages/typescript-resolver-files-e2e/src/**/*.gen.*\"",
-          "node packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/test-setup.js"
+          "node packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/testSetup.js"
         ],
         "parallel": false
       },
@@ -138,7 +138,7 @@
           "commands": [
             "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/**/resolvers/\"",
             "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/**/*.generated.*\"",
-            "node packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/test-setup.js"
+            "node packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/testSetup.js"
           ],
           "parallel": false
         },
