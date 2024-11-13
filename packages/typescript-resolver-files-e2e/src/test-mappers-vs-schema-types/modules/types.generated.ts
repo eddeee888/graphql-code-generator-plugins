@@ -10,6 +10,7 @@ import {
   ProfileMetaMapper,
 } from './user/profile.mappers';
 import { CatMapper, DogMapper } from './pet/schema.mappers';
+import { TopicMapper } from './topic/topic.mappers';
 import { UserMapper } from './user/user.graphqls.mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
@@ -371,9 +372,7 @@ export type ResolversTypes = {
   ProfileMeta: ResolverTypeWrapper<ProfileMetaMapper>;
   Query: ResolverTypeWrapper<{}>;
   Subscription: ResolverTypeWrapper<{}>;
-  Topic: ResolverTypeWrapper<
-    Omit<Topic, 'creator'> & { creator: ResolversTypes['User'] }
-  >;
+  Topic: ResolverTypeWrapper<TopicMapper>;
   TopicByIdPayload: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>['TopicByIdPayload']
   >;
@@ -433,7 +432,7 @@ export type ResolversParentTypes = {
   ProfileMeta: ProfileMetaMapper;
   Query: {};
   Subscription: {};
-  Topic: Omit<Topic, 'creator'> & { creator: ResolversParentTypes['User'] };
+  Topic: TopicMapper;
   TopicByIdPayload: ResolversUnionTypes<ResolversParentTypes>['TopicByIdPayload'];
   TopicByIdResult: Omit<TopicByIdResult, 'result'> & {
     result?: Maybe<ResolversParentTypes['Topic']>;
