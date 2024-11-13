@@ -156,10 +156,6 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
             resolverName: 'id',
             resolverDeclaration: `({ id }) => id`,
           },
-          createdAt: {
-            resolverName: 'createdAt',
-            resolverDeclaration: `({ createdAt }) => createdAt`,
-          },
           accountGitHub: {
             resolverName: 'accountGitHub',
             resolverDeclaration: `({ accountGitHub }) => accountGitHub`,
@@ -171,10 +167,6 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
           fullName: {
             resolverName: 'fullName',
             resolverDeclaration: `({ fullName }) => fullName`,
-          },
-          role: {
-            resolverName: 'role',
-            resolverDeclaration: `({ role }) => role`,
           },
         },
       },
@@ -344,10 +336,6 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
             resolverName: 'id',
             resolverDeclaration: `({ id }) => id`,
           },
-          createdAt: {
-            resolverName: 'createdAt',
-            resolverDeclaration: `({ createdAt }) => createdAt`,
-          },
           accountGitHub: {
             resolverName: 'accountGitHub',
             resolverDeclaration: `({ accountGitHub }) => accountGitHub`,
@@ -359,10 +347,6 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
           fullName: {
             resolverName: 'fullName',
             resolverDeclaration: `({ fullName }) => fullName`,
-          },
-          role: {
-            resolverName: 'role',
-            resolverDeclaration: `({ role }) => role`,
           },
         },
       },
