@@ -24,6 +24,7 @@
           "rimraf -g \"packages/typescript-resolver-files-e2e/src/**/rslvrs/\"",
           "rimraf -g \"packages/typescript-resolver-files-e2e/src/**/*.generated.*\"",
           "rimraf -g \"packages/typescript-resolver-files-e2e/src/**/*.gen.*\"",
+          "rimraf -g \"packages/typescript-resolver-files-e2e/src/**/generated\"",
           "node packages/typescript-resolver-files-e2e/src/test-mappers-vs-schema-types/testSetup.js",
           "node packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/testSetup.js"
         ],
@@ -154,7 +155,7 @@
         "test-deep-modules": {
           "commands": [
             "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-deep-modules/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-deep-modules/**/*.generated.*\""
+            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-deep-modules/**/generated\""
           ],
           "parallel": false
         }
