@@ -146,7 +146,11 @@ export type Topic = {
   createdAt: Scalars['DateTime']['output'];
   creator: User;
   id: Scalars['ID']['output'];
+  likedBy: Array<User>;
+  likedByNullable?: Maybe<Array<Maybe<User>>>;
+  mostRelatedTopic?: Maybe<Topic>;
   name: Scalars['String']['output'];
+  relatedTopics: Array<Topic>;
   url?: Maybe<Scalars['String']['output']>;
 };
 
@@ -604,7 +608,23 @@ export type TopicResolvers<
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   creator?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  likedBy?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  likedByNullable?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['User']>>>,
+    ParentType,
+    ContextType
+  >;
+  mostRelatedTopic?: Resolver<
+    Maybe<ResolversTypes['Topic']>,
+    ParentType,
+    ContextType
+  >;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  relatedTopics?: Resolver<
+    Array<ResolversTypes['Topic']>,
+    ParentType,
+    ContextType
+  >;
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

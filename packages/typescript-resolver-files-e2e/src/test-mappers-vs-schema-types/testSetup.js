@@ -10,7 +10,8 @@ createTestSetup({
       export const Topic: TopicResolvers = {
         id: ({ id }) => id,
         createdAt: async (_parent, _arg, _ctx) => {
-          /* existing implementation */
+          /* existing implementation, must keep */
+          return '2024-01-01T00:00:00.000Z';
         },
       };`,
     },
