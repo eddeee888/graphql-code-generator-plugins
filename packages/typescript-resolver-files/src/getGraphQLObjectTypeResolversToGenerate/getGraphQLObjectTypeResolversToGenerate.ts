@@ -9,7 +9,7 @@ import {
   SyntaxKind,
   Node,
 } from 'ts-morph';
-import type { TypeMappersMap } from '../parseTypeMappers';
+import type { TypeMapperDetails, TypeMappersMap } from '../parseTypeMappers';
 import { type NodePropertyMap, getNodePropertyMap } from './getNodePropertyMap';
 import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
 
@@ -62,56 +62,13 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
   typeMappersEntries.forEach(([_, { schemaType, mapper }]) => {
     const matchedSchemaTypePropertyMap = schemaTypePropertyMap[schemaType];
     if (matchedSchemaTypePropertyMap) {
-      const typeMapperFile = tsMorphProject.getSourceFile(mapper.filename);
-      if (!typeMapperFile) {
-        throw new Error(
-          `Unable to find ${typeMapperFile} file after parsing. This shouldn't happen.`
-        );
-      }
-
-      /**
-       * Finding `firstDescendantThatIsMapper` here is a bit of the duplicated traversing logic in `collectTypeMappersFromSourceFile`.
-       * However, in `collectTypeMappersFromSourceFile`, we find the mappers details.
-       * And here, we actually do look for the mapper nodes and run analysis on it.
-       *
-       * Previously, we were parsing the node property map in `collectTypeMappersFromSourceFile`
-       * but for some reason `isAssignableTo` has issue comparing types, so we have to move the static analysis here for now.
-       */
-      const firstDescendantThatIsMapper = (() => {
-        for (const descendant of typeMapperFile.getDescendants()) {
-          const typedNode = descendant.isKind(mapper.kind);
-          if (typedNode) {
-            let identifierNode = descendant.getNameNode();
-            if (descendant.isKind(SyntaxKind.ExportSpecifier)) {
-              const aliasNode = descendant.getAliasNode();
-              if (aliasNode) {
-                identifierNode = aliasNode;
-              }
-            }
-
-            if (identifierNode?.getText() === mapper.name) {
-              return {
-                declarationNode: descendant,
-                identifierNode,
-              };
-            }
-          }
-        }
-        return;
-      })();
-
-      if (!firstDescendantThatIsMapper) {
-        throw new Error(
-          `Unable to find ${mapper.name} node after parsing. This shouldn't happen.`
-        );
-      }
-
-      const originalDeclarationNode = getOriginalDeclarationNode(
-        firstDescendantThatIsMapper
-      );
-      const typeMapperPropertyMap = getNodePropertyMap({
-        node: originalDeclarationNode,
+      const originalDeclarationNode = mustGetMapperOriginalDeclarationNode({
         tsMorphProject,
+        mapper,
+      });
+      const typeMapperPropertyMap = getNodePropertyMap({
+        tsMorphProject,
+        node: originalDeclarationNode,
       });
 
       Object.values(matchedSchemaTypePropertyMap).forEach(
@@ -159,17 +116,74 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
   return result;
 };
 
-const getOriginalDeclarationNode = ({
-  declarationNode,
-  identifierNode,
+const mustGetMapperOriginalDeclarationNode = ({
+  tsMorphProject,
+  mapper,
 }: {
+  tsMorphProject: Project;
+  mapper: TypeMapperDetails['mapper'];
+}): Node => {
+  const typeMapperFile = tsMorphProject.getSourceFile(mapper.filename);
+  if (!typeMapperFile) {
+    throw new Error(
+      `Unable to find ${typeMapperFile} file after parsing. This shouldn't happen.`
+    );
+  }
+
+  /**
+   * Finding `firstDescendantThatIsMapper` here is a bit of the duplicated traversing logic in `collectTypeMappersFromSourceFile`.
+   * However, in `collectTypeMappersFromSourceFile`, we find the mappers details.
+   * And here, we actually do look for the mapper nodes and run analysis on it.
+   *
+   * Previously, we were parsing the node property map in `collectTypeMappersFromSourceFile`
+   * but for some reason `isAssignableTo` has issue comparing types, so we have to move the static analysis here for now.
+   */
+  const firstDescendantThatIsMapper = (():
+    | GetOriginalDeclarationNodeParams
+    | undefined => {
+    for (const descendant of typeMapperFile.getDescendants()) {
+      const typedNode = descendant.isKind(mapper.kind);
+      if (typedNode) {
+        let identifierNode = descendant.getNameNode();
+        if (descendant.isKind(SyntaxKind.ExportSpecifier)) {
+          const aliasNode = descendant.getAliasNode();
+          if (aliasNode) {
+            identifierNode = aliasNode;
+          }
+        }
+
+        if (identifierNode?.getText() === mapper.name) {
+          return {
+            declarationNode: descendant,
+            identifierNode,
+          };
+        }
+      }
+    }
+    return;
+  })();
+
+  if (!firstDescendantThatIsMapper) {
+    throw new Error(
+      `Unable to find ${mapper.name} node after parsing. This shouldn't happen.`
+    );
+  }
+
+  return getOriginalDeclarationNode(firstDescendantThatIsMapper);
+};
+
+interface GetOriginalDeclarationNodeParams {
   declarationNode:
     | InterfaceDeclaration
     | TypeAliasDeclaration
     | ExportSpecifier
     | ClassDeclaration;
   identifierNode: Identifier;
-}): Node => {
+}
+const getOriginalDeclarationNode = ({
+  declarationNode,
+  identifierNode,
+}: GetOriginalDeclarationNodeParams): Node => {
   if (
     declarationNode.isKind(SyntaxKind.ExportSpecifier) ||
     declarationNode.isKind(SyntaxKind.ClassDeclaration)

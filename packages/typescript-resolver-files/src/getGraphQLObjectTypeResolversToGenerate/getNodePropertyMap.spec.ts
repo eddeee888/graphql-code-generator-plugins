@@ -105,4 +105,38 @@ describe('getNodePropertyMap', () => {
       'import("/path/to/types").UserRole'
     );
   });
+
+  it('correctly resolves property map a type alias mapper', () => {
+    const project = new Project();
+    const sourceFile = project.createSourceFile(
+      '/path/to/mappers.ts',
+      `
+      type UserRole = 'Admin' | 'User';
+      export type UserMapper = {
+        id: number;
+        name: string;
+        role: UserRole;
+      }`
+    );
+
+    const node = sourceFile.getFirstDescendant(
+      (descendant) =>
+        Node.isTypeAliasDeclaration(descendant) &&
+        descendant.getName() === 'UserMapper'
+    );
+
+    const nodePropertyMap = getNodePropertyMap({
+      tsMorphProject: project,
+      node,
+    });
+
+    expect(nodePropertyMap.id.name).toBe('id');
+    expect(nodePropertyMap.id.type.getText()).toBe('number');
+
+    expect(nodePropertyMap.name.name).toBe('name');
+    expect(nodePropertyMap.name.type.getText()).toBe('string');
+
+    expect(nodePropertyMap.role.name).toBe('role');
+    expect(nodePropertyMap.role.type.getText()).toBe('UserRole'); // Non-exported types will have result in the name, not the `import("/path/to/mappers")` path
+  });
 });
