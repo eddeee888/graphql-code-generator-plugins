@@ -13,12 +13,15 @@ export interface ParseSourcesResult {
   sourceMap: Record<string, ParsedSource>;
 }
 
-export function parseSources({sources, baseOutputDir, moduleNamingMode}: {
-  sources: Source[],
-  baseOutputDir: string
-  moduleNamingMode: ModuleNamingMode,
-}
-): ParseSourcesResult {
+export function parseSources({
+  sources,
+  baseOutputDir,
+  moduleNamingMode,
+}: {
+  sources: Source[];
+  baseOutputDir: string;
+  moduleNamingMode: ModuleNamingMode;
+}): ParseSourcesResult {
   return sources.reduce<ParseSourcesResult>(
     (result, source) => {
       if (!source.location) {
