@@ -32,6 +32,7 @@ const defaultExpected: ParsedPresetConfig = {
   typeDefsFileMode: 'merged',
   mappersFileExtension: '.mappers.ts',
   mappersSuffix: 'Mapper',
+  moduleNamingMode: 'last',
   scalarsModule: 'graphql-scalars',
   scalarsOverrides: {},
   externalResolvers: {},
