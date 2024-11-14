@@ -1,5 +1,6 @@
 import * as path from 'path';
 import type { Source } from '@graphql-tools/utils';
+import type { ModuleNamingMode } from '../validatePresetConfig';
 
 export interface ParsedSource {
   source: Source;
@@ -12,9 +13,11 @@ export interface ParseSourcesResult {
   sourceMap: Record<string, ParsedSource>;
 }
 
-export function parseSources(
+export function parseSources({sources, baseOutputDir, moduleNamingMode}: {
   sources: Source[],
   baseOutputDir: string
+  moduleNamingMode: ModuleNamingMode,
+}
 ): ParseSourcesResult {
   return sources.reduce<ParseSourcesResult>(
     (result, source) => {
@@ -25,11 +28,14 @@ export function parseSources(
       const sourcePath = path.parse(source.location);
       const moduleDir = sourcePath.dir;
 
-      const moduleName = path.basename(moduleDir);
-
       const relativePathFromBaseToModule = path
         .relative(path.resolve(baseOutputDir), path.resolve(sourcePath.dir))
         .split(path.sep);
+
+      const moduleName = {
+        first: () => relativePathFromBaseToModule[0],
+        last: () => path.basename(moduleDir),
+      }[moduleNamingMode]();
 
       result.sourceMap[source.location] = {
         source,

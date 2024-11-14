@@ -41,6 +41,7 @@ type NormalizedResolverGeneration = {
   interface: string | string[];
   enum: string | string[];
 };
+export type ModuleNamingMode = 'first' | 'last';
 
 export type ScalarsOverridesType = string | { input: string; output: string };
 
@@ -56,6 +57,7 @@ export interface ParsedPresetConfig {
   mappersRelativeTargetDir: string;
   mappersFileExtension: string;
   mappersSuffix: string;
+  moduleNamingMode: ModuleNamingMode;
   scalarsModule: string | false;
   scalarsOverrides: Record<
     string,
@@ -86,6 +88,7 @@ export interface RawPresetConfig {
   mappersRelativeTargetDir?: string;
   mappersFileExtension?: string;
   mappersSuffix?: string;
+  moduleNamingMode?: ModuleNamingMode;
   scalarsModule?: string | boolean;
   scalarsOverrides?: Record<
     string,
@@ -131,6 +134,7 @@ export const validatePresetConfig = ({
   mappersRelativeTargetDir = './',
   mappersFileExtension = '.mappers.ts',
   mappersSuffix = 'Mapper',
+  moduleNamingMode = 'last',
   mergeSchema,
   scalarsModule = 'graphql-scalars',
   scalarsOverrides = {},
@@ -205,6 +209,15 @@ export const validatePresetConfig = ({
     throw new Error(
       fmt.error(
         'presetConfig.typeDefsFileMode must be "merged", "mergedWhitelisted" or "modules" (default is "merged")',
+        'Validation'
+      )
+    );
+  }
+
+  if (moduleNamingMode !== 'first' && moduleNamingMode !== 'last') {
+    throw new Error(
+      fmt.error(
+        'presetConfig.moduleNamingMode must be "first" or "last" (default is "last")',
         'Validation'
       )
     );
@@ -311,6 +324,7 @@ export const validatePresetConfig = ({
     mappersRelativeTargetDir,
     mappersFileExtension,
     mappersSuffix,
+    moduleNamingMode,
     scalarsModule: finalScalarsModule,
     scalarsOverrides,
     whitelistedModules: whitelistedModules || [],

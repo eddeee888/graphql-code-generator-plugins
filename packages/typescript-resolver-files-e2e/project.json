@@ -151,10 +151,10 @@
           ],
           "parallel": false
         },
-        "test-resolver-multi-module-object": {
+        "test-deep-modules": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-resolver-multi-module-object/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-resolver-multi-module-object/**/*.generated.*\""
+            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-deep-modules/**/resolvers/\"",
+            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-deep-modules/**/*.generated.*\""
           ],
           "parallel": false
         }
@@ -182,7 +182,7 @@
           "nx graphql-codegen typescript-resolver-files-e2e -c test-nested-domain-modules --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-resolvers-auto-wireup --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-federation --verbose",
-          "nx graphql-codegen typescript-resolver-files-e2e -c test-resolver-multi-module-object --verbose"
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-deep-modules --verbose"
         ],
         "parallel": false
       },
@@ -255,8 +255,8 @@
         "test-federation": {
           "configFile": "packages/typescript-resolver-files-e2e/src/test-federation/codegen.ts"
         },
-        "test-resolver-multi-module-object": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-resolver-multi-module-object/codegen.ts"
+        "test-deep-modules": {
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-deep-modules/codegen.ts"
         }
       },
       "dependsOn": ["prepare-e2e-modules"]

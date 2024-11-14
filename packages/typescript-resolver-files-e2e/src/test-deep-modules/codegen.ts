@@ -6,10 +6,11 @@ const config: CodegenConfig = {
     afterAllFileWrite: ['prettier --write'],
   },
   generates: {
-    'packages/typescript-resolver-files-e2e/src/test-resolver-multi-module-object/modules':
+    'packages/typescript-resolver-files-e2e/src/test-deep-modules/modules':
       defineConfig(
         {
-          mergeSchema: false,
+          mergeSchema: 'generated/schema.graphqls',
+          moduleNamingMode: 'first',
           resolverGeneration: 'all',
           resolverMainFile: '../generated/resolvers.ts',
           resolverMainFileMode: 'modules',
@@ -20,8 +21,8 @@ const config: CodegenConfig = {
         },
         {
           schema: [
-            'packages/typescript-resolver-files-e2e/src/test-resolver-multi-module-object/**/*.graphqls',
-            'packages/typescript-resolver-files-e2e/src/test-resolver-multi-module-object/**/*.graphqls.ts',
+            'packages/typescript-resolver-files-e2e/src/test-deep-modules/modules/**/*.graphqls',
+            'packages/typescript-resolver-files-e2e/src/test-deep-modules/modules/**/*.graphqls.ts',
           ],
         }
       ),
