@@ -109,6 +109,25 @@ Running codegen will generate the following files:
 
 How files are collocated. `modules` detects containing dir of a schema file as "modules", then split resolvers into those modules. `merged` treats `baseOutputDir` as the one and only module and generates resolvers.
 
+### moduleNamingMode
+
+`last` or `first` (Default: `last`)
+
+Specifies how the plugin determines the module name for each schema file.
+
+- **`last`**: The module name is derived from the **last** directory in the file's path.
+- **`first`**: The module name is derived from the **first** directory (within the schema directory) in the file's path.
+
+For example:
+
+#### last
+
+- `src/schema/foo/bar/baz/User.graphql` => module name is `baz`
+
+#### first
+
+- `src/schema/foo/bar/baz/User.graphql` => module name is `foo`
+
 ### resolverTypesPath
 
 `string` (Default: `./types.generated.ts`)
