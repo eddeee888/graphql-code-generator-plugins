@@ -30,6 +30,7 @@ const defaultExpected: ParsedPresetConfig = {
   },
   typeDefsFilePath: './typeDefs.generated.ts',
   typeDefsFileMode: 'merged',
+  mappersRelativeTargetDir: './',
   mappersFileExtension: '.mappers.ts',
   mappersSuffix: 'Mapper',
   scalarsModule: 'graphql-scalars',

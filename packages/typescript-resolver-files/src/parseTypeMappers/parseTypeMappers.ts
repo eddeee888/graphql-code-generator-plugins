@@ -7,6 +7,7 @@ import { collectTypeMappersFromSourceFile } from './collectTypeMappersFromSource
 export interface ParseTypeMappersParams {
   sourceMap: ParseSourcesResult['sourceMap'];
   resolverTypesPath: string;
+  typeMappersRelativeTargetDir: string;
   typeMappersFileExtension: string;
   typeMappersSuffix: string;
   tsMorphProject: Project;
@@ -26,6 +27,7 @@ export type TypeMappersMap = Record<string, TypeMapperDetails>;
 export const parseTypeMappers = ({
   sourceMap,
   resolverTypesPath,
+  typeMappersRelativeTargetDir,
   typeMappersFileExtension,
   typeMappersSuffix,
   tsMorphProject,
@@ -36,6 +38,7 @@ export const parseTypeMappers = ({
     (res, [_, { sourcePath }]) => {
       const typeMapperFilePath = path.posix.join(
         sourcePath.dir,
+        typeMappersRelativeTargetDir,
         `${sourcePath.name}${typeMappersFileExtension}`
       );
 
