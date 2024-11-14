@@ -59,6 +59,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       typeDefsFilePath,
       typeDefsFileMode,
       mergeSchema,
+      moduleNamingMode,
       scalarsModule,
       scalarsOverrides,
       mode,
@@ -78,7 +79,11 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
 
     const normalizedAdd = normalizeAddConfigPath({ add, baseOutputDir });
 
-    const { sourceMap } = parseSources(sources, baseOutputDir);
+    const { sourceMap } = parseSources({
+      sources,
+      baseOutputDir,
+      moduleNamingMode,
+    });
 
     const tsMorphProject = await profiler.run(
       async () => new Project(tsMorphProjectOptions),
