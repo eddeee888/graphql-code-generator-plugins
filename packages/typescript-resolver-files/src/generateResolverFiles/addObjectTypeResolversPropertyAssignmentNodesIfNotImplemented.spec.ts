@@ -1,11 +1,15 @@
 import * as path from 'path';
 import { Project } from 'ts-morph';
-import { ensureObjectTypeResolversAreGenerated } from './ensureObjectTypeResolversAreGenerated';
+import {
+  type AddedPropertyAssignmentNodes,
+  addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented,
+} from './addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented';
+import type { ObjectTypeFile } from './types';
 
 const createFilePath = (filePath: string): string =>
   path.join('/path/', filePath);
 
-describe('ensureObjectTypeResolversAreGenerated()', () => {
+describe('addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented()', () => {
   it('adds missing field resolvers if needed', () => {
     const project = new Project();
     project.createSourceFile(
@@ -120,6 +124,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
     `
     );
 
+    const addedPropertyAssignmentNodes: AddedPropertyAssignmentNodes = {};
     const sourceFile = project.createSourceFile(
       createFilePath('User.ts'),
       `import type { UserResolvers } from './types.generated';
@@ -127,9 +132,7 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         /* Implement logic here */
       };`
     );
-    const resolverFile: Parameters<
-      typeof ensureObjectTypeResolversAreGenerated
-    >[1] = {
+    const resolverFile: ObjectTypeFile = {
       __filetype: 'objectType',
       content: '',
       mainImportIdentifier: 'User',
@@ -171,7 +174,33 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         },
       },
     };
-    ensureObjectTypeResolversAreGenerated(sourceFile, resolverFile);
+    addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented({
+      addedPropertyAssignmentNodes,
+      sourceFile,
+      resolverFile,
+    });
+
+    const addedNode1 = addedPropertyAssignmentNodes['/path/User.ts'][4];
+    expect(addedNode1.__toBeRemoved).toBe(true);
+    expect(addedNode1.node.getText()).toBe('id: ({ id }) => id');
+
+    const addedNode2 = addedPropertyAssignmentNodes['/path/User.ts'][5];
+    expect(addedNode2.__toBeRemoved).toBe(true);
+    expect(addedNode2.node.getText()).toBe(
+      'accountGitHub: ({ accountGitHub }) => accountGitHub'
+    );
+
+    const addedNode3 = addedPropertyAssignmentNodes['/path/User.ts'][6];
+    expect(addedNode3.__toBeRemoved).toBe(true);
+    expect(addedNode3.node.getText()).toBe(
+      'accountGoogle: ({ accountGoogle }) => accountGoogle'
+    );
+
+    const addedNode4 = addedPropertyAssignmentNodes['/path/User.ts'][7];
+    expect(addedNode4.__toBeRemoved).toBe(true);
+    expect(addedNode4.node.getText()).toBe(
+      'fullName: ({ fullName }) => fullName'
+    );
 
     expect(sourceFile.getText()).toMatchInlineSnapshot(`
       "import type { UserResolvers } from './types.generated';
@@ -183,10 +212,9 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
                 fullName: ({ fullName }) => fullName
           };"
     `);
-    expect(resolverFile.filesystem.contentUpdated).toBe(true);
   });
 
-  it('adds does not add missing field resolvers if not needed', () => {
+  it('adds does not add missing field resolvers if not needed i.e. resolversToGenerate is {}', () => {
     const project = new Project();
     project.createSourceFile(
       createFilePath('user.mappers.ts'),
@@ -299,14 +327,13 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
     `
     );
 
+    const addedPropertyAssignmentNodes: AddedPropertyAssignmentNodes = {};
     const sourceFile = project.createSourceFile(
       createFilePath('User.ts'),
       `import type { UserResolvers } from './types.generated';
       export const User: UserResolvers = {};`
     );
-    const resolverFile: Parameters<
-      typeof ensureObjectTypeResolversAreGenerated
-    >[1] = {
+    const resolverFile: ObjectTypeFile = {
       __filetype: 'objectType',
       content: '',
       mainImportIdentifier: 'User',
@@ -331,13 +358,19 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
         resolversToGenerate: {},
       },
     };
-    ensureObjectTypeResolversAreGenerated(sourceFile, resolverFile);
+    addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented({
+      addedPropertyAssignmentNodes,
+      sourceFile,
+      resolverFile,
+    });
 
+    expect(addedPropertyAssignmentNodes).toEqual({
+      '/path/User.ts': {},
+    });
     expect(sourceFile.getText()).toMatchInlineSnapshot(`
       "import type { UserResolvers } from './types.generated';
             export const User: UserResolvers = {};"
     `);
-    expect(resolverFile.filesystem.contentUpdated).toBe(false);
   });
 
   it('adds missing field resolvers, if necessary, when Mapper is a Class', () => {
@@ -462,8 +495,8 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
       };`
     );
     const resolverFile: Parameters<
-      typeof ensureObjectTypeResolversAreGenerated
-    >[1] = {
+      typeof addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented
+    >[0]['resolverFile'] = {
       __filetype: 'objectType',
       content: '',
       filesystem: {
@@ -506,7 +539,11 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
       },
     };
 
-    ensureObjectTypeResolversAreGenerated(sourceFile, resolverFile);
+    addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented({
+      addedPropertyAssignmentNodes: {},
+      sourceFile,
+      resolverFile,
+    });
 
     expect(sourceFile.getText()).toMatchInlineSnapshot(`
       "import type { UserResolvers } from './types.generated';
@@ -518,6 +555,5 @@ describe('ensureObjectTypeResolversAreGenerated()', () => {
                 fullName: ({ fullName }) => fullName
           };"
     `);
-    expect(resolverFile.filesystem.contentUpdated).toBe(true);
   });
 });

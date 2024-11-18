@@ -94,18 +94,24 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
             return;
           }
 
-          // If mapper field cannot be assigned to schema type field, report, add resolver declaration
-          if (
-            !typeMapperProperty.type.isAssignableTo(schemaTypeProperty.type)
-          ) {
-            result[schemaType][schemaTypeProperty.name] = {
-              resolverName: schemaTypeProperty.name,
-              resolverDeclaration: `({ ${schemaTypeProperty.name} }, _arg, _ctx) => {
+          /**
+           * FIXME: TypeScript's `isTypeAssignableTo` should be used to check if the mapper type vs resolver return type is compatible.
+           * The current challenge is to:
+           * - Switch from using the schema type to resolver return type e.g. `User` -> `UserResolver`
+           * - Take the ReturnType of the resolver function type e.g. `Resolver<ResolversTypes['UserRole'], ParentType, ContextType>`
+           *
+           * For now, the workaround now is to generate all resolvers with matching names,
+           * then use TS diagnostics to see if there's error when trying to merge the two keys.
+           *
+           * Note: this happens only when mappers are used
+           */
+          result[schemaType][schemaTypeProperty.name] = {
+            resolverName: schemaTypeProperty.name,
+            resolverDeclaration: `({ ${schemaTypeProperty.name} }, _arg, _ctx) => {
                 /* ${schemaTypePropertyIdentifier} resolver is required because ${schemaTypePropertyIdentifier} and ${typeMapperPropertyIdentifier} are not compatible */
                 return ${schemaTypeProperty.name}
               }`,
-            };
-          }
+          };
 
           return;
         }

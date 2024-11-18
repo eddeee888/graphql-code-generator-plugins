@@ -1,14 +1,35 @@
-import { type SourceFile, SyntaxKind } from 'ts-morph';
+import { type PropertyAssignment, type SourceFile, SyntaxKind } from 'ts-morph';
 import type { ObjectTypeFile } from './types';
 import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier';
+
+export type AddedPropertyAssignmentNodes = Record<
+  string, // SourceFile's filename
+  Record<
+    number, // Line number
+    {
+      node: PropertyAssignment;
+      resolverFile: ObjectTypeFile;
+      __toBeRemoved: boolean;
+    }
+  >
+>;
 
 /**
  * Ensure objectTypeResolver files have all the resolvers due to mismatched types
  */
-export const ensureObjectTypeResolversAreGenerated = (
-  sourceFile: SourceFile,
-  resolverFile: ObjectTypeFile
-): void => {
+export const addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented = ({
+  addedPropertyAssignmentNodes,
+  sourceFile,
+  resolverFile,
+}: {
+  addedPropertyAssignmentNodes: AddedPropertyAssignmentNodes;
+  sourceFile: SourceFile;
+  resolverFile: ObjectTypeFile;
+}): void => {
+  const sourceFilePath = sourceFile.getFilePath().toString();
+  addedPropertyAssignmentNodes[sourceFilePath] =
+    addedPropertyAssignmentNodes[sourceFilePath] || {};
+
   const resolversToGenerate = resolverFile.meta.resolversToGenerate || {};
   if (!Object.keys(resolversToGenerate).length) {
     return;
@@ -21,7 +42,7 @@ export const ensureObjectTypeResolversAreGenerated = (
 
   if (!variableStatement) {
     throw new Error(
-      'Missing variableStatement in ensureObjectTypeResolversAreGenerated.'
+      'Missing variableStatement in addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented.'
     );
   }
 
@@ -60,13 +81,20 @@ export const ensureObjectTypeResolversAreGenerated = (
         return;
       }
 
-      variableStatement
+      const addedNode = variableStatement
         .getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)[0]
         .addPropertyAssignment({
           name: resolverName,
           initializer: resolverDeclaration,
         });
-      resolverFile.filesystem.contentUpdated = true;
+
+      addedPropertyAssignmentNodes[sourceFilePath][
+        addedNode.getStartLineNumber()
+      ] = {
+        node: addedNode,
+        resolverFile,
+        __toBeRemoved: true,
+      };
     }
   );
 };
