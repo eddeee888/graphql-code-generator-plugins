@@ -180,23 +180,26 @@ describe('addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented()', () =
       resolverFile,
     });
 
-    const addedNode1 = addedPropertyAssignmentNodes['/path/User.ts'][4];
+    // This is `/path/User.ts` file. We target it this way because the path on windows is different from linux
+    const file = Object.values(addedPropertyAssignmentNodes)[0];
+
+    const addedNode1 = file[4];
     expect(addedNode1.__toBeRemoved).toBe(true);
     expect(addedNode1.node.getText()).toBe('id: ({ id }) => id');
 
-    const addedNode2 = addedPropertyAssignmentNodes['/path/User.ts'][5];
+    const addedNode2 = file[5];
     expect(addedNode2.__toBeRemoved).toBe(true);
     expect(addedNode2.node.getText()).toBe(
       'accountGitHub: ({ accountGitHub }) => accountGitHub'
     );
 
-    const addedNode3 = addedPropertyAssignmentNodes['/path/User.ts'][6];
+    const addedNode3 = file[6];
     expect(addedNode3.__toBeRemoved).toBe(true);
     expect(addedNode3.node.getText()).toBe(
       'accountGoogle: ({ accountGoogle }) => accountGoogle'
     );
 
-    const addedNode4 = addedPropertyAssignmentNodes['/path/User.ts'][7];
+    const addedNode4 = file[7];
     expect(addedNode4.__toBeRemoved).toBe(true);
     expect(addedNode4.node.getText()).toBe(
       'fullName: ({ fullName }) => fullName'
@@ -364,9 +367,10 @@ describe('addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented()', () =
       resolverFile,
     });
 
-    expect(addedPropertyAssignmentNodes).toEqual({
-      '/path/User.ts': {},
-    });
+    // This is `/path/User.ts` file. We target it this way because the path on windows is different from linux
+    const file = Object.values(addedPropertyAssignmentNodes)[0];
+
+    expect(file).toEqual({});
     expect(sourceFile.getText()).toMatchInlineSnapshot(`
       "import type { UserResolvers } from './types.generated';
             export const User: UserResolvers = {};"
@@ -539,11 +543,37 @@ describe('addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented()', () =
       },
     };
 
+    const addedPropertyAssignmentNodes: AddedPropertyAssignmentNodes = {};
     addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented({
-      addedPropertyAssignmentNodes: {},
+      addedPropertyAssignmentNodes,
       sourceFile,
       resolverFile,
     });
+
+    // This is `/path/User.ts` file. We target it this way because the path on windows is different from linux
+    const file = Object.values(addedPropertyAssignmentNodes)[0];
+
+    const addedNode1 = file[4];
+    expect(addedNode1.__toBeRemoved).toBe(true);
+    expect(addedNode1.node.getText()).toBe('id: ({ id }) => id');
+
+    const addedNode2 = file[5];
+    expect(addedNode2.__toBeRemoved).toBe(true);
+    expect(addedNode2.node.getText()).toBe(
+      'accountGitHub: ({ accountGitHub }) => accountGitHub'
+    );
+
+    const addedNode3 = file[6];
+    expect(addedNode3.__toBeRemoved).toBe(true);
+    expect(addedNode3.node.getText()).toBe(
+      'accountGoogle: ({ accountGoogle }) => accountGoogle'
+    );
+
+    const addedNode4 = file[7];
+    expect(addedNode4.__toBeRemoved).toBe(true);
+    expect(addedNode4.node.getText()).toBe(
+      'fullName: ({ fullName }) => fullName'
+    );
 
     expect(sourceFile.getText()).toMatchInlineSnapshot(`
       "import type { UserResolvers } from './types.generated';
