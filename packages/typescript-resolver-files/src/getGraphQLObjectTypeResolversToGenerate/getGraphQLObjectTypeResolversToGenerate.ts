@@ -12,6 +12,7 @@ import {
 import type { TypeMapperDetails, TypeMappersMap } from '../parseTypeMappers';
 import { type NodePropertyMap, getNodePropertyMap } from './getNodePropertyMap';
 import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
+import type { GeneratedTypesFileMeta } from '../generateResolverFiles';
 
 export type GraphQLObjectTypeResolversToGenerate = Record<
   string,
@@ -21,18 +22,48 @@ export type GraphQLObjectTypeResolversToGenerate = Record<
 export const getGraphQLObjectTypeResolversToGenerate = ({
   tsMorphProject,
   typesSourceFile,
-  userDefinedSchemaObjectTypeMap,
   typeMappersMap,
+  userDefinedSchemaObjectTypeMap,
+  generatedTypesFileMeta,
 }: {
   tsMorphProject: Project;
   typesSourceFile: SourceFile;
   typeMappersMap: TypeMappersMap;
   userDefinedSchemaObjectTypeMap: ParsedGraphQLSchemaMeta['userDefinedSchemaTypeMap']['object'];
+  generatedTypesFileMeta: GeneratedTypesFileMeta;
 }): GraphQLObjectTypeResolversToGenerate => {
   const typeMappersEntries = Object.entries(typeMappersMap);
   if (typeMappersEntries.length === 0) {
     return {};
   }
+
+  /**
+   * `generatedTypesFileMeta.generatedResolverTypes.userDefined` is `schemaType` -> `generatedSchemaTypeName`
+   * We will be parsing `types.generated.ts` file for the `generatedSchemaTypeName`
+   * So, we need to invert `generatedTypesFileMeta.generatedResolverTypes.userDefined` to get `generatedSchemaTypeName` -> `schemaType`
+   * e.g.
+   *
+   * generatedTypesFileMeta.generatedResolverTypes.userDefined = {
+   *   User: {
+   *     name: 'UserResolvers'
+   *   }
+   * }
+   *
+   * after transformation:
+   *
+   * generatedSchemaTypeNameMap = {
+   *   UserResolvers: 'User'
+   * }
+   */
+  const generatedSchemaTypeNameMap = Object.entries(
+    generatedTypesFileMeta.generatedResolverTypes.userDefined
+  ).reduce<Record<string, string>>(
+    (res, [schemaType, generatedSchemaTypeName]) => {
+      res[generatedSchemaTypeName.name] = schemaType;
+      return res;
+    },
+    {}
+  );
 
   // 1. Get property map of all schema types
   const schemaTypePropertyMap: Record<string, NodePropertyMap> = {};
@@ -42,8 +73,11 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
   ): void => {
     const identifier = node.getNameNode();
     const identifierName = identifier.getText();
-    if (userDefinedSchemaObjectTypeMap[identifierName]) {
-      schemaTypePropertyMap[identifierName] = getNodePropertyMap({
+
+    const schemaType = generatedSchemaTypeNameMap[identifierName];
+
+    if (schemaType && userDefinedSchemaObjectTypeMap[schemaType]) {
+      schemaTypePropertyMap[schemaType] = getNodePropertyMap({
         tsMorphProject,
         node,
       });
