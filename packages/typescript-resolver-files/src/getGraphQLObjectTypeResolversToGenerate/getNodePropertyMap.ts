@@ -2,10 +2,12 @@ import {
   type Project,
   type ClassDeclaration,
   type Node,
+  type Type,
   SyntaxKind,
 } from 'ts-morph';
 
-export type NodePropertyMap = Record<string, { name: string }>;
+type NodePropertyMapValue = { type: Type; name: string };
+export type NodePropertyMap = Record<string, NodePropertyMapValue>;
 
 /**
  * Function to get properties of a Node in a map
@@ -24,9 +26,9 @@ export const getNodePropertyMap = ({
 
   const typeChecker = tsMorphProject.getTypeChecker();
 
-  const properties = ((): string[] => {
+  const properties = ((): NodePropertyMapValue[] => {
     if (node.isKind(SyntaxKind.ClassDeclaration)) {
-      const result: string[] = [];
+      const result: NodePropertyMapValue[] = [];
       collectClassNodeProperties(node, result);
       return result;
     }
@@ -34,13 +36,19 @@ export const getNodePropertyMap = ({
     return typeChecker
       .getTypeAtLocation(node)
       .getProperties()
-      .map((property) => property.getName());
+      .map((prop) => {
+        return {
+          type: prop.getDeclarations()[0].getType(),
+          name: prop.getName(),
+        };
+      });
   })();
 
   const nodePropertyMap = properties.reduce<NodePropertyMap>(
-    (res, propertyName) => {
-      res[propertyName] = {
-        name: propertyName,
+    (res, { type, name }) => {
+      res[name] = {
+        type,
+        name,
       };
       return res;
     },
@@ -52,7 +60,7 @@ export const getNodePropertyMap = ({
 
 const collectClassNodeProperties = (
   classNode: ClassDeclaration,
-  result: string[]
+  result: NodePropertyMapValue[]
 ): void => {
   const baseClass = classNode.getBaseClass();
   if (baseClass) {
@@ -74,6 +82,9 @@ const collectClassNodeProperties = (
       // getter is skipped
       return;
     }
-    result.push(prop.getName());
+    result.push({
+      type: prop.getType(),
+      name: prop.getName(),
+    });
   });
 };

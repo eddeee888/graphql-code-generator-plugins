@@ -68,7 +68,11 @@ type Topic {
   createdAt: DateTime!
   creator: User!
   id: ID!
+  likedBy: [User!]!
+  likedByNullable: [User]
+  mostRelatedTopic: Topic
   name: String!
+  relatedTopics: [Topic!]!
   url: String
 }
 
