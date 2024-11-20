@@ -26,7 +26,4 @@ export const User: I_USERRESOLVERS = {
   name: async (_parent, _arg, _ctx) => {
     /* User.name resolver is required because User.name exists but UserMapper.name does not */
   },
-  __isTypeOf: async (_parent, _arg, _ctx) => {
-    /* User.__isTypeOf resolver is required because User.__isTypeOf exists but UserMapper.__isTypeOf does not */
-  },
 };
