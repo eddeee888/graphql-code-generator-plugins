@@ -69,16 +69,19 @@ const generateVirtualTypesFile = async ({
   const addResultAsComplextOutput =
     convertPluginOutputToComplextPluginOutput(addResult);
 
+  const print = (value: string[] | undefined): string =>
+    value ? value.join('\n') : '';
+
   return {
     filePath: resolverTypesPath,
     content: `
-    ${addResultAsComplextOutput.prepend?.join('\n')}
-    ${typescriptResult.prepend?.join('\n')}
-    ${typescriptResolversResult.prepend?.join('\n')}
+    ${print(addResultAsComplextOutput.prepend)}
+    ${print(typescriptResult.prepend)}
+    ${print(typescriptResolversResult.prepend)}
     ${typescriptResult.content}
     ${typescriptResolversResult.content}
     ${addResultAsComplextOutput.content}
-    ${addResultAsComplextOutput.append?.join('\n')}
+    ${print(addResultAsComplextOutput.append)}
     `,
     meta: {
       generatedResolverTypes: typescriptResolversResult.meta

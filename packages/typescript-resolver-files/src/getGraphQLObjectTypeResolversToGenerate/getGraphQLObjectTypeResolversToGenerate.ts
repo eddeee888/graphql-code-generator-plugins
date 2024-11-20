@@ -1,12 +1,16 @@
 import {
   type InterfaceDeclaration,
   type TypeAliasDeclaration,
+  type ClassDeclaration,
+  type ExportSpecifier,
   type SourceFile,
   type Project,
+  type Identifier,
   SyntaxKind,
+  Node,
 } from 'ts-morph';
-import type { TypeMappersMap } from '../parseTypeMappers';
-import { type NodePropertyMap, getNodePropertyMap } from '../utils';
+import type { TypeMapperDetails, TypeMappersMap } from '../parseTypeMappers';
+import { type NodePropertyMap, getNodePropertyMap } from './getNodePropertyMap';
 import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
 
 export type GraphQLObjectTypeResolversToGenerate = Record<
@@ -55,55 +59,152 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
 
   // 3. Find resolvers to generate and add reason
   const result: GraphQLObjectTypeResolversToGenerate = {};
-  typeMappersEntries.forEach(
-    ([_, { schemaType, typeMapperName, typeMapperPropertyMap }]) => {
-      const matchedSchemaTypePropertyMap = schemaTypePropertyMap[schemaType];
-      if (matchedSchemaTypePropertyMap) {
-        Object.values(matchedSchemaTypePropertyMap).forEach(
-          (schemaTypeProperty) => {
-            const typeMapperProperty =
-              typeMapperPropertyMap[schemaTypeProperty.name];
-            const typeMapperPropertyIdentifier = `${typeMapperName}.${schemaTypeProperty.name}`;
-            const schemaTypePropertyIdentifier = `${schemaType}.${schemaTypeProperty.name}`;
+  typeMappersEntries.forEach(([_, { schemaType, mapper }]) => {
+    const matchedSchemaTypePropertyMap = schemaTypePropertyMap[schemaType];
+    if (matchedSchemaTypePropertyMap) {
+      const originalDeclarationNode = mustGetMapperOriginalDeclarationNode({
+        tsMorphProject,
+        mapper,
+      });
+      const typeMapperPropertyMap = getNodePropertyMap({
+        tsMorphProject,
+        node: originalDeclarationNode,
+      });
 
-            if (schemaTypeProperty.name === '__typename') {
-              return;
-            }
+      Object.values(matchedSchemaTypePropertyMap).forEach(
+        (schemaTypeProperty) => {
+          const typeMapperProperty =
+            typeMapperPropertyMap[schemaTypeProperty.name];
 
-            result[schemaType] = result[schemaType] || {};
+          const typeMapperPropertyIdentifier = `${mapper.name}.${schemaTypeProperty.name}`;
+          const schemaTypePropertyIdentifier = `${schemaType}.${schemaTypeProperty.name}`;
 
-            // If mapper does not have a field in schema type, report
-            if (!typeMapperProperty) {
-              result[schemaType][schemaTypeProperty.name] = {
-                resolverName: schemaTypeProperty.name,
-                resolverDeclaration: `async (_parent, _arg, _ctx) => { /* ${schemaTypePropertyIdentifier} resolver is required because ${schemaTypePropertyIdentifier} exists but ${typeMapperPropertyIdentifier} does not */ }`,
-              };
-              return;
-            }
+          if (schemaTypeProperty.name === '__typename') {
+            return;
+          }
 
-            /**
-             * FIXME: there's currently no way to check if a type is assignable to another type
-             * https://github.com/dsherret/ts-morph/issues/357
-             * https://github.com/microsoft/TypeScript/issues/9879
-             *
-             * Therefore, the workaround now is to generate all resolvers with matching names, then use TS diagnostics to see if there's error when trying to merge the two keys
-             *
-             * Note: this happens only when mappers are used
-             */
+          result[schemaType] = result[schemaType] || {};
+
+          // If mapper does not have a field in schema type, add missing resolver
+          if (!typeMapperProperty) {
             result[schemaType][schemaTypeProperty.name] = {
               resolverName: schemaTypeProperty.name,
-              resolverDeclaration: `({ ${schemaTypeProperty.name} }, _arg, _ctx) => {
+              resolverDeclaration: `async (_parent, _arg, _ctx) => { /* ${schemaTypePropertyIdentifier} resolver is required because ${schemaTypePropertyIdentifier} exists but ${typeMapperPropertyIdentifier} does not */ }`,
+            };
+            return;
+          }
+
+          /**
+           * FIXME: TypeScript's `isTypeAssignableTo` should be used to check if the mapper type vs resolver return type is compatible.
+           * The current challenge is to:
+           * - Switch from using the schema type to resolver return type e.g. `User` -> `UserResolver`
+           * - Take the ReturnType of the resolver function type e.g. `Resolver<ResolversTypes['UserRole'], ParentType, ContextType>`
+           *
+           * For now, the workaround now is to generate all resolvers with matching names,
+           * then use TS diagnostics to see if there's error when trying to merge the two keys.
+           *
+           * Note: this happens only when mappers are used
+           */
+          result[schemaType][schemaTypeProperty.name] = {
+            resolverName: schemaTypeProperty.name,
+            resolverDeclaration: `({ ${schemaTypeProperty.name} }, _arg, _ctx) => {
                 /* ${schemaTypePropertyIdentifier} resolver is required because ${schemaTypePropertyIdentifier} and ${typeMapperPropertyIdentifier} are not compatible */
                 return ${schemaTypeProperty.name}
               }`,
-            };
+          };
 
-            return;
-          }
-        );
-      }
+          return;
+        }
+      );
     }
-  );
+  });
 
   return result;
+};
+
+const mustGetMapperOriginalDeclarationNode = ({
+  tsMorphProject,
+  mapper,
+}: {
+  tsMorphProject: Project;
+  mapper: TypeMapperDetails['mapper'];
+}): Node => {
+  const typeMapperFile = tsMorphProject.getSourceFile(mapper.filename);
+  if (!typeMapperFile) {
+    throw new Error(
+      `Unable to find ${typeMapperFile} file after parsing. This shouldn't happen.`
+    );
+  }
+
+  /**
+   * Finding `firstDescendantThatIsMapper` here is a bit of the duplicated traversing logic in `collectTypeMappersFromSourceFile`.
+   * However, in `collectTypeMappersFromSourceFile`, we find the mappers details.
+   * And here, we actually do look for the mapper nodes and run analysis on it.
+   *
+   * Previously, we were parsing the node property map in `collectTypeMappersFromSourceFile`
+   * but for some reason `isAssignableTo` has issue comparing types, so we have to move the static analysis here for now.
+   */
+  const firstDescendantThatIsMapper = (():
+    | GetOriginalDeclarationNodeParams
+    | undefined => {
+    for (const descendant of typeMapperFile.getDescendants()) {
+      const typedNode = descendant.isKind(mapper.kind);
+      if (typedNode) {
+        let identifierNode = descendant.getNameNode();
+        if (descendant.isKind(SyntaxKind.ExportSpecifier)) {
+          const aliasNode = descendant.getAliasNode();
+          if (aliasNode) {
+            identifierNode = aliasNode;
+          }
+        }
+
+        if (identifierNode?.getText() === mapper.name) {
+          return {
+            declarationNode: descendant,
+            identifierNode,
+          };
+        }
+      }
+    }
+    return;
+  })();
+
+  if (!firstDescendantThatIsMapper) {
+    throw new Error(
+      `Unable to find ${mapper.name} node after parsing. This shouldn't happen.`
+    );
+  }
+
+  return getOriginalDeclarationNode(firstDescendantThatIsMapper);
+};
+
+interface GetOriginalDeclarationNodeParams {
+  declarationNode:
+    | InterfaceDeclaration
+    | TypeAliasDeclaration
+    | ExportSpecifier
+    | ClassDeclaration;
+  identifierNode: Identifier;
+}
+const getOriginalDeclarationNode = ({
+  declarationNode,
+  identifierNode,
+}: GetOriginalDeclarationNodeParams): Node => {
+  if (
+    declarationNode.isKind(SyntaxKind.ExportSpecifier) ||
+    declarationNode.isKind(SyntaxKind.ClassDeclaration)
+  ) {
+    return identifierNode.getDefinitionNodes()[0];
+  }
+
+  // InterfaceDeclaration
+  if (declarationNode.isKind(SyntaxKind.InterfaceDeclaration)) {
+    return declarationNode;
+  }
+
+  // TypeAliasDeclaration
+  const typeNode = declarationNode.getTypeNodeOrThrow();
+  return Node.isTypeReference(typeNode)
+    ? identifierNode.getDefinitionNodes()[0] // If type alias is a reference, go to definition using `getDefinitionNodes`
+    : declarationNode;
 };

@@ -48,10 +48,10 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
   const forcedGenerationWarning = (() => {
     if (!matchedPatternToGenerate && mapperDetails) {
       logger.debug(
-        `Object resolver generation was NOT skipped because there is a associated mapper: "${normalizedResolverName.withModule}". "Pattern: ${resolverGeneration.object}". Mapper: ${mapperDetails.typeMapperName}`
+        `Object resolver generation was NOT skipped because there is a associated mapper: "${normalizedResolverName.withModule}". "Pattern: ${resolverGeneration.object}". Mapper: ${mapperDetails.mapper.name}`
       );
       return `/*
-    * Note: This object type is generated because "${mapperDetails.typeMapperName}" is declared. This is to ensure runtime safety.
+    * Note: This object type is generated because "${mapperDetails.mapper.name}" is declared. This is to ensure runtime safety.
     *
     * When a mapper is used, it is possible to hit runtime errors in some scenarios:
     * - given a field name, the schema type's field type does not match mapper's field type

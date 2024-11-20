@@ -12,10 +12,14 @@ extend type Mutation {
 
 type Topic {
   id: ID!
-  name: String!
-  url: String
-  creator: User!
   createdAt: DateTime!
+  creator: User!
+  likedBy: [User!]!
+  likedByNullable: [User]
+  mostRelatedTopic: Topic
+  name: String!
+  relatedTopics: [Topic!]!
+  url: String
 }
 
 type TopicByIdResult {

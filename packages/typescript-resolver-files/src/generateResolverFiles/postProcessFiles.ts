@@ -3,7 +3,10 @@ import * as path from 'path';
 import { cwd } from '../utils';
 import type { ResolverFile, GenerateResolverFilesContext } from './types';
 import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier';
-import { ensureObjectTypeResolversAreGenerated } from './ensureObjectTypeResolversAreGenerated';
+import {
+  type AddedPropertyAssignmentNodes,
+  addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented,
+} from './addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented';
 import { ensureEnumTypeResolversAreGenerated } from './ensureEnumTypeResolversAreGenerated';
 import { getImportStatementWithExpectedNamedImport } from './getImportStatementWithExpectedNamedImport';
 
@@ -24,6 +27,8 @@ export const postProcessFiles = ({
     sourceFile: SourceFile;
     resolverFile: ResolverFile;
   }[] = [];
+
+  // 1. Load resolver files into ts-morph project so we can run static analysis
   Object.entries(result.files).forEach(([filePath, file]) => {
     if (file.__filetype === 'file') {
       return;
@@ -55,6 +60,10 @@ export const postProcessFiles = ({
     }
   });
 
+  // `addedPropertyAssignmentNodes` is used to store added property assignments in object types
+  // these property assigments are to be removed if there's no TypeScript error
+  const addedPropertyAssignmentNodes: AddedPropertyAssignmentNodes = {};
+
   sourceFilesToProcess.forEach(({ sourceFile, resolverFile }) => {
     const normalizedRelativePath = path.posix.relative(
       cwd(),
@@ -79,7 +88,11 @@ export const postProcessFiles = ({
       fixObjectTypeResolvers.object === 'smart' &&
       resolverFile.__filetype === 'objectType'
     ) {
-      ensureObjectTypeResolversAreGenerated(sourceFile, resolverFile);
+      addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented({
+        addedPropertyAssignmentNodes,
+        sourceFile,
+        resolverFile,
+      });
     }
 
     if (
@@ -88,6 +101,55 @@ export const postProcessFiles = ({
     ) {
       ensureEnumTypeResolversAreGenerated(sourceFile, resolverFile);
     }
+
+    // Overwrite existing files with fixes
+    result.files[normalizedRelativePath] = {
+      ...resolverFile,
+      content: sourceFile.getText(),
+    };
+  });
+
+  // 3. ensure object type's added property assignments are removed if there's no related TypeScript error
+  // We do this only once at the project level instead of sourceFile level to speed up the process
+  if (fixObjectTypeResolvers.object === 'smart') {
+    project.getPreEmitDiagnostics().forEach((d) => {
+      const filename = d.getSourceFile()?.getFilePath().toString();
+      if (!filename || !addedPropertyAssignmentNodes[filename]) {
+        return;
+      }
+      const lineNumberWithError = d.getLineNumber();
+
+      // If erroring on a recently added line, do not remove as user needs to implement it
+      if (
+        lineNumberWithError &&
+        addedPropertyAssignmentNodes[filename][lineNumberWithError]
+      ) {
+        addedPropertyAssignmentNodes[filename][
+          lineNumberWithError
+        ].__toBeRemoved = false;
+      }
+    });
+    Object.values(addedPropertyAssignmentNodes).forEach((addedNodes) => {
+      Object.values(addedNodes).forEach(
+        ({ node, resolverFile, __toBeRemoved }) => {
+          if (__toBeRemoved) {
+            node.remove();
+          } else {
+            // If found a property assignment that cannot be removed i.e. incompatible types between mapper vs schema types
+            // Then we must mark the content as updated to be added to generate list
+            resolverFile.filesystem.contentUpdated = true;
+          }
+        }
+      );
+    });
+  }
+
+  // 4. Apply to result files the updated content done in step 2. and 3. above
+  sourceFilesToProcess.forEach(({ sourceFile, resolverFile }) => {
+    const normalizedRelativePath = path.posix.relative(
+      cwd(),
+      sourceFile.getFilePath()
+    );
 
     // Overwrite existing files with fixes
     result.files[normalizedRelativePath] = {

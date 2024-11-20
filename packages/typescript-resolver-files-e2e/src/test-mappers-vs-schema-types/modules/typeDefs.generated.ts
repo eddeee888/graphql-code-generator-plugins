@@ -388,22 +388,15 @@ export const typeDefs = {
         },
         {
           kind: 'FieldDefinition',
-          name: { kind: 'Name', value: 'name' },
+          name: { kind: 'Name', value: 'createdAt' },
           arguments: [],
           type: {
             kind: 'NonNullType',
             type: {
               kind: 'NamedType',
-              name: { kind: 'Name', value: 'String' },
+              name: { kind: 'Name', value: 'DateTime' },
             },
           },
-          directives: [],
-        },
-        {
-          kind: 'FieldDefinition',
-          name: { kind: 'Name', value: 'url' },
-          arguments: [],
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
           directives: [],
         },
         {
@@ -418,15 +411,77 @@ export const typeDefs = {
         },
         {
           kind: 'FieldDefinition',
-          name: { kind: 'Name', value: 'createdAt' },
+          name: { kind: 'Name', value: 'likedBy' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'User' },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'likedByNullable' },
+          arguments: [],
+          type: {
+            kind: 'ListType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'User' } },
+          },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'mostRelatedTopic' },
+          arguments: [],
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Topic' } },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'name' },
           arguments: [],
           type: {
             kind: 'NonNullType',
             type: {
               kind: 'NamedType',
-              name: { kind: 'Name', value: 'DateTime' },
+              name: { kind: 'Name', value: 'String' },
             },
           },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'relatedTopics' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'Topic' },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'url' },
+          arguments: [],
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
           directives: [],
         },
       ],

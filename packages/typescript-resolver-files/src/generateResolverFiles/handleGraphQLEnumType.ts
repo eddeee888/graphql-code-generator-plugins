@@ -40,10 +40,10 @@ export const handleGraphQLEnumType: GraphQLTypeHandler<
   const forcedGenerationWarning = (() => {
     if (!matchedPatternToGenerate && mapperDetails) {
       logger.debug(
-        `Enum resolver generation was NOT skipped because there is a associated mapper: "${normalizedResolverName.withModule}". "Pattern: ${resolverGeneration.enum}". Mapper: ${mapperDetails.typeMapperName}`
+        `Enum resolver generation was NOT skipped because there is a associated mapper: "${normalizedResolverName.withModule}". "Pattern: ${resolverGeneration.enum}". Mapper: ${mapperDetails.mapper.name}`
       );
       return `/*
-    * Note: This enum file is generated because "${mapperDetails.typeMapperName}" is declared. This is to ensure runtime safety.
+    * Note: This enum file is generated because "${mapperDetails.mapper.name}" is declared. This is to ensure runtime safety.
     * If you want to skip this file generation, remove the mapper or update the pattern in the \`resolverGeneration.object\` config.
     */\n`;
     }
