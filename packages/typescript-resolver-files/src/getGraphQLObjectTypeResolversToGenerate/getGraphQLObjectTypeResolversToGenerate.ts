@@ -117,8 +117,12 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
         const typeMapperPropertyIdentifier = `${mapper.name}.${schemaTypeProperty.name}`;
         const schemaTypePropertyIdentifier = `${schemaType}.${schemaTypeProperty.name}`;
 
+        // Generated resolvers types may have one or more of these meta resolvers
+        // A mapper would most likely never have these resolvers, so we skip them
+        // Otherwise, these resolvers will always be generated
         const metaResolvers: Record<string, boolean> = {
           __isTypeOf: true,
+          __resolveReference: true,
         };
 
         if (metaResolvers[schemaTypeProperty.name]) {

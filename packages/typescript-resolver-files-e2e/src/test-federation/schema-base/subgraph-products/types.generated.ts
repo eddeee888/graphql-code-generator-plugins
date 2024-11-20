@@ -1,4 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
+import { MakerMapper, ProductMapper } from './part-2/schema.mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -181,10 +182,10 @@ export type DirectiveResolverFn<
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Maker: ResolverTypeWrapper<Maker>;
+  Maker: ResolverTypeWrapper<MakerMapper>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
-  Product: ResolverTypeWrapper<Product>;
+  Product: ResolverTypeWrapper<ProductMapper>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Query: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
@@ -192,10 +193,10 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Maker: Maker;
+  Maker: MakerMapper;
   ID: Scalars['ID']['output'];
   String: Scalars['String']['output'];
-  Product: Product;
+  Product: ProductMapper;
   Int: Scalars['Int']['output'];
   Query: {};
   Boolean: Scalars['Boolean']['output'];
