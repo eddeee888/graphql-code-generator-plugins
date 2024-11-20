@@ -328,6 +328,12 @@ Experimental options:
 
 - `namingConvention`
 
+### mappersRelativeTargetDir
+
+`string` (Default: `./`)
+
+By default, mappers must be siblings with the schema they represent. For example, if the schema file is `/path/to/schema.graphql`, the mapper file is `/path/to/schema.mappers.ts`. This extension allows mappers to reside in a different directory relative to the schema file using the pattern `<schemaPath>/<mappersRelativeTargetDir>/<schemaName><mappersFileExtension>`.
+
 ### mappersFileExtension
 
 `string` (Default: `.mappers.ts`)

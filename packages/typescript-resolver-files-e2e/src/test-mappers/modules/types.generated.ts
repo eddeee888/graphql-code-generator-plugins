@@ -3,8 +3,8 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from 'graphql';
-import { Pet_Mapper } from './pet/schema.type-mappers';
-import { Profile_Mapper } from './user/profile.type-mappers';
+import { Pet_Mapper } from './pet/mappers/schema.type-mappers';
+import { Profile_Mapper } from './user/mappers/profile.type-mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = {

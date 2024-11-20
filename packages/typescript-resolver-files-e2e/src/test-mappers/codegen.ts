@@ -22,6 +22,7 @@ const config: CodegenConfig = {
           interface: '*',
           enum: '',
         },
+        mappersRelativeTargetDir: 'mappers',
         mappersFileExtension: '.type-mappers.ts',
         mappersSuffix: '_Mapper',
       }),

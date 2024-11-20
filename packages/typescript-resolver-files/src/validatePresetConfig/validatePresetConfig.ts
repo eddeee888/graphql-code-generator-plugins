@@ -53,6 +53,7 @@ export interface ParsedPresetConfig {
   resolverGeneration: NormalizedResolverGeneration;
   typeDefsFilePath: string | false;
   typeDefsFileMode: TypeDefsFileMode;
+  mappersRelativeTargetDir: string;
   mappersFileExtension: string;
   mappersSuffix: string;
   scalarsModule: string | false;
@@ -82,6 +83,7 @@ export interface RawPresetConfig {
   resolverGeneration?: string | Record<string, string | string[]>;
   typeDefsFilePath?: string | boolean;
   typeDefsFileMode?: string;
+  mappersRelativeTargetDir?: string;
   mappersFileExtension?: string;
   mappersSuffix?: string;
   scalarsModule?: string | boolean;
@@ -126,6 +128,7 @@ export const validatePresetConfig = ({
   resolverGeneration = 'recommended',
   typeDefsFilePath = defaultTypeDefsFilePath,
   typeDefsFileMode: inputTypeDefsFileMode = 'merged',
+  mappersRelativeTargetDir = './',
   mappersFileExtension = '.mappers.ts',
   mappersSuffix = 'Mapper',
   mergeSchema,
@@ -305,6 +308,7 @@ export const validatePresetConfig = ({
     typeDefsFileMode,
     mergeSchema: parseMergeSchema(mergeSchema),
     mode,
+    mappersRelativeTargetDir,
     mappersFileExtension,
     mappersSuffix,
     scalarsModule: finalScalarsModule,
