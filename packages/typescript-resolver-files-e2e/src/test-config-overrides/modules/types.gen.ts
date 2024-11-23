@@ -3,6 +3,7 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from 'graphql';
+import { UserMapper } from './user/user.graphqls.mappers';
 import { ResolverContext } from './customTypes';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
@@ -306,29 +307,37 @@ export type I_RESOLVERSUNIONTYPES<_RefType extends Record<string, unknown>> = {
     | (Omit<I_STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
         __typename: 'StandardError';
       })
-    | (I_TOPICBYIDRESULT & { __typename: 'TopicByIdResult' });
+    | (Omit<I_TOPICBYIDRESULT, 'result'> & {
+        result?: Maybe<_RefType['Topic']>;
+      } & { __typename: 'TopicByIdResult' });
   TopicCreatePayload:
     | (Omit<I_STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
         __typename: 'StandardError';
       })
-    | (I_TOPICCREATERESULT & { __typename: 'TopicCreateResult' });
+    | (Omit<I_TOPICCREATERESULT, 'result'> & { result: _RefType['Topic'] } & {
+        __typename: 'TopicCreateResult';
+      });
   TopicEditPayload:
     | (Omit<I_STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
         __typename: 'StandardError';
       })
-    | (I_TOPICEDITRESULT & { __typename: 'TopicEditResult' });
+    | (Omit<I_TOPICEDITRESULT, 'result'> & { result: _RefType['Topic'] } & {
+        __typename: 'TopicEditResult';
+      });
   TopicsCreatedByUserPayload:
     | (Omit<I_STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
         __typename: 'StandardError';
       })
-    | (I_TOPICSCREATEDBYUSERRESULT & {
-        __typename: 'TopicsCreatedByUserResult';
-      });
+    | (Omit<I_TOPICSCREATEDBYUSERRESULT, 'result'> & {
+        result: Array<_RefType['Topic']>;
+      } & { __typename: 'TopicsCreatedByUserResult' });
   UserPayload:
     | (Omit<I_STANDARDERROR, 'error'> & { error: _RefType['ErrorType'] } & {
         __typename: 'StandardError';
       })
-    | (I_USERRESULT & { __typename: 'UserResult' });
+    | (Omit<I_USERRESULT, 'result'> & { result?: Maybe<_RefType['User']> } & {
+        __typename: 'UserResult';
+      });
 };
 
 /** Mapping of interface types */
@@ -358,7 +367,9 @@ export type I_RESOLVERSTYPES = {
   PaginationInput: I_PAGINATIONINPUT;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PaginationResult: ResolverTypeWrapper<I_PAGINATIONRESULT>;
-  Profile: ResolverTypeWrapper<I_PROFILE>;
+  Profile: ResolverTypeWrapper<
+    Omit<I_PROFILE, 'user'> & { user: I_RESOLVERSTYPES['User'] }
+  >;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -367,31 +378,47 @@ export type I_RESOLVERSTYPES = {
     Omit<I_STANDARDERROR, 'error'> & { error: I_RESOLVERSTYPES['ErrorType'] }
   >;
   Subscription: ResolverTypeWrapper<{}>;
-  Topic: ResolverTypeWrapper<I_TOPIC>;
+  Topic: ResolverTypeWrapper<
+    Omit<I_TOPIC, 'creator'> & { creator: I_RESOLVERSTYPES['User'] }
+  >;
   TopicByIdPayload: ResolverTypeWrapper<
     I_RESOLVERSUNIONTYPES<I_RESOLVERSTYPES>['TopicByIdPayload']
   >;
-  TopicByIdResult: ResolverTypeWrapper<I_TOPICBYIDRESULT>;
+  TopicByIdResult: ResolverTypeWrapper<
+    Omit<I_TOPICBYIDRESULT, 'result'> & {
+      result?: Maybe<I_RESOLVERSTYPES['Topic']>;
+    }
+  >;
   TopicCreateInput: I_TOPICCREATEINPUT;
   TopicCreatePayload: ResolverTypeWrapper<
     I_RESOLVERSUNIONTYPES<I_RESOLVERSTYPES>['TopicCreatePayload']
   >;
-  TopicCreateResult: ResolverTypeWrapper<I_TOPICCREATERESULT>;
+  TopicCreateResult: ResolverTypeWrapper<
+    Omit<I_TOPICCREATERESULT, 'result'> & { result: I_RESOLVERSTYPES['Topic'] }
+  >;
   TopicEditInput: I_TOPICEDITINPUT;
   TopicEditPayload: ResolverTypeWrapper<
     I_RESOLVERSUNIONTYPES<I_RESOLVERSTYPES>['TopicEditPayload']
   >;
-  TopicEditResult: ResolverTypeWrapper<I_TOPICEDITRESULT>;
+  TopicEditResult: ResolverTypeWrapper<
+    Omit<I_TOPICEDITRESULT, 'result'> & { result: I_RESOLVERSTYPES['Topic'] }
+  >;
   TopicsCreatedByUserInput: I_TOPICSCREATEDBYUSERINPUT;
   TopicsCreatedByUserPayload: ResolverTypeWrapper<
     I_RESOLVERSUNIONTYPES<I_RESOLVERSTYPES>['TopicsCreatedByUserPayload']
   >;
-  TopicsCreatedByUserResult: ResolverTypeWrapper<I_TOPICSCREATEDBYUSERRESULT>;
-  User: ResolverTypeWrapper<I_USER>;
+  TopicsCreatedByUserResult: ResolverTypeWrapper<
+    Omit<I_TOPICSCREATEDBYUSERRESULT, 'result'> & {
+      result: Array<I_RESOLVERSTYPES['Topic']>;
+    }
+  >;
+  User: ResolverTypeWrapper<UserMapper>;
   UserPayload: ResolverTypeWrapper<
     I_RESOLVERSUNIONTYPES<I_RESOLVERSTYPES>['UserPayload']
   >;
-  UserResult: ResolverTypeWrapper<I_USERRESULT>;
+  UserResult: ResolverTypeWrapper<
+    Omit<I_USERRESULT, 'result'> & { result?: Maybe<I_RESOLVERSTYPES['User']> }
+  >;
   WithInputOutput: ResolverTypeWrapper<Scalars['WithInputOutput']['output']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
@@ -405,28 +432,38 @@ export type I_RESOLVERSPARENTTYPES = {
   PaginationInput: I_PAGINATIONINPUT;
   Int: Scalars['Int']['output'];
   PaginationResult: I_PAGINATIONRESULT;
-  Profile: I_PROFILE;
+  Profile: Omit<I_PROFILE, 'user'> & { user: I_RESOLVERSPARENTTYPES['User'] };
   ID: Scalars['ID']['output'];
   Query: {};
   String: Scalars['String']['output'];
   SomeOtherScalars: Scalars['SomeOtherScalars']['output'];
   StandardError: I_STANDARDERROR;
   Subscription: {};
-  Topic: I_TOPIC;
+  Topic: Omit<I_TOPIC, 'creator'> & { creator: I_RESOLVERSPARENTTYPES['User'] };
   TopicByIdPayload: I_RESOLVERSUNIONTYPES<I_RESOLVERSPARENTTYPES>['TopicByIdPayload'];
-  TopicByIdResult: I_TOPICBYIDRESULT;
+  TopicByIdResult: Omit<I_TOPICBYIDRESULT, 'result'> & {
+    result?: Maybe<I_RESOLVERSPARENTTYPES['Topic']>;
+  };
   TopicCreateInput: I_TOPICCREATEINPUT;
   TopicCreatePayload: I_RESOLVERSUNIONTYPES<I_RESOLVERSPARENTTYPES>['TopicCreatePayload'];
-  TopicCreateResult: I_TOPICCREATERESULT;
+  TopicCreateResult: Omit<I_TOPICCREATERESULT, 'result'> & {
+    result: I_RESOLVERSPARENTTYPES['Topic'];
+  };
   TopicEditInput: I_TOPICEDITINPUT;
   TopicEditPayload: I_RESOLVERSUNIONTYPES<I_RESOLVERSPARENTTYPES>['TopicEditPayload'];
-  TopicEditResult: I_TOPICEDITRESULT;
+  TopicEditResult: Omit<I_TOPICEDITRESULT, 'result'> & {
+    result: I_RESOLVERSPARENTTYPES['Topic'];
+  };
   TopicsCreatedByUserInput: I_TOPICSCREATEDBYUSERINPUT;
   TopicsCreatedByUserPayload: I_RESOLVERSUNIONTYPES<I_RESOLVERSPARENTTYPES>['TopicsCreatedByUserPayload'];
-  TopicsCreatedByUserResult: I_TOPICSCREATEDBYUSERRESULT;
-  User: I_USER;
+  TopicsCreatedByUserResult: Omit<I_TOPICSCREATEDBYUSERRESULT, 'result'> & {
+    result: Array<I_RESOLVERSPARENTTYPES['Topic']>;
+  };
+  User: UserMapper;
   UserPayload: I_RESOLVERSUNIONTYPES<I_RESOLVERSPARENTTYPES>['UserPayload'];
-  UserResult: I_USERRESULT;
+  UserResult: Omit<I_USERRESULT, 'result'> & {
+    result?: Maybe<I_RESOLVERSPARENTTYPES['User']>;
+  };
   WithInputOutput: Scalars['WithInputOutput']['output'];
   Boolean: Scalars['Boolean']['output'];
 };
