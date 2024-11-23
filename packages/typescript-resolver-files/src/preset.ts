@@ -51,6 +51,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       add,
       resolverTypesPath: relativeResolverTypesPathFromBaseOutputDir,
       resolverRelativeTargetDir,
+      mappersRelativeTargetDir: typeMappersRelativeTargetDir,
       mappersFileExtension: typeMappersFileExtension,
       mappersSuffix: typeMappersSuffix,
       resolverMainFile,
@@ -90,6 +91,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         parseTypeMappers({
           sourceMap,
           resolverTypesPath,
+          typeMappersRelativeTargetDir,
           typeMappersFileExtension,
           typeMappersSuffix,
           tsMorphProject,
