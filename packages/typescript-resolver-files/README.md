@@ -111,12 +111,13 @@ How files are collocated. `modules` detects containing dir of a schema file as "
 
 ### moduleNamingMode
 
-`last` or `first` (Default: `last`)
+`last` or `first` or a number (Default: `last`)
 
 Specifies how the plugin determines the module name for each schema file.
 
-- **`last`**: The module name is derived from the **last** directory in the file's path.
+- **`last`**: The module name is derived from the **last** directory (within the schema directory) in the file's path.
 - **`first`**: The module name is derived from the **first** directory (within the schema directory) in the file's path.
+- **any number**: The module name is derived from the **nth** directory (within the schema directory) in the file's path. Supports negative numbers which select the **nth** directory from the back of the file's path.
 
 For example:
 
