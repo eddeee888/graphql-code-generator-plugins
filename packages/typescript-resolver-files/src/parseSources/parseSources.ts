@@ -35,10 +35,10 @@ export function parseSources({
         .relative(path.resolve(baseOutputDir), path.resolve(sourcePath.dir))
         .split(path.sep);
 
-      const moduleName = {
-        first: () => relativePathFromBaseToModule[0],
-        last: () => path.basename(moduleDir),
-      }[moduleNamingMode]();
+      const moduleName = selectModuleName({
+        moduleNamingMode,
+        relativePathFromBaseToModule,
+      });
 
       result.sourceMap[source.location] = {
         source,
@@ -52,3 +52,29 @@ export function parseSources({
     { sourceMap: {} }
   );
 }
+
+const selectModuleName = ({
+  moduleNamingMode,
+  relativePathFromBaseToModule,
+}: {
+  moduleNamingMode: ModuleNamingMode;
+  relativePathFromBaseToModule: Array<string>;
+}): string => {
+  const wrappedModuleNamingMode =
+    moduleNamingMode >= 0
+      ? moduleNamingMode
+      : relativePathFromBaseToModule.length + moduleNamingMode;
+
+  if (
+    wrappedModuleNamingMode < 0 ||
+    wrappedModuleNamingMode >= relativePathFromBaseToModule.length
+  ) {
+    throw new Error(
+      `"moduleNamingMode" ${moduleNamingMode} exceeds path ${relativePathFromBaseToModule.join(
+        '/'
+      )}`
+    );
+  }
+
+  return relativePathFromBaseToModule[wrappedModuleNamingMode];
+};
