@@ -4,4 +4,10 @@ export const Product: Pick<
   'id' | 'name' | 'price' | '__isTypeOf' | '__resolveReference'
 > = {
   /* Implement Product resolver logic here */
+  name: async (_parent, _arg, _ctx) => {
+    /* Product.name resolver is required because Product.name exists but ProductMapper.name does not */
+  },
+  price: async (_parent, _arg, _ctx) => {
+    /* Product.price resolver is required because Product.price exists but ProductMapper.price does not */
+  },
 };

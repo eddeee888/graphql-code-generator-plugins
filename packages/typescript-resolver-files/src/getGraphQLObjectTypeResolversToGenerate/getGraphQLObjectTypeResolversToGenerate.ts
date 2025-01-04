@@ -12,6 +12,7 @@ import {
 import type { TypeMapperDetails, TypeMappersMap } from '../parseTypeMappers';
 import { type NodePropertyMap, getNodePropertyMap } from './getNodePropertyMap';
 import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
+import type { GeneratedTypesFileMeta } from '../generateResolverFiles';
 
 export type GraphQLObjectTypeResolversToGenerate = Record<
   string,
@@ -21,29 +22,62 @@ export type GraphQLObjectTypeResolversToGenerate = Record<
 export const getGraphQLObjectTypeResolversToGenerate = ({
   tsMorphProject,
   typesSourceFile,
-  userDefinedSchemaObjectTypeMap,
   typeMappersMap,
+  userDefinedSchemaObjectTypeMap,
+  generatedTypesFileMeta,
 }: {
   tsMorphProject: Project;
   typesSourceFile: SourceFile;
   typeMappersMap: TypeMappersMap;
   userDefinedSchemaObjectTypeMap: ParsedGraphQLSchemaMeta['userDefinedSchemaTypeMap']['object'];
+  generatedTypesFileMeta: GeneratedTypesFileMeta;
 }): GraphQLObjectTypeResolversToGenerate => {
   const typeMappersEntries = Object.entries(typeMappersMap);
   if (typeMappersEntries.length === 0) {
     return {};
   }
 
-  // 1. Get property map of all schema types
-  const schemaTypePropertyMap: Record<string, NodePropertyMap> = {};
+  /**
+   * `generatedTypesFileMeta.generatedResolverTypes.userDefined` is `schemaType` -> `generatedResolverTypes`
+   * We will be parsing `types.generated.ts` file for the `generatedResolverTypes`
+   * So, we need to invert `generatedTypesFileMeta.generatedResolverTypes.userDefined` to get `generatedResolverTypes` -> `schemaType`
+   * e.g.
+   *
+   * generatedTypesFileMeta.generatedResolverTypes.userDefined = {
+   *   User: {
+   *     name: 'UserResolvers'
+   *   }
+   * }
+   *
+   * after transformation:
+   *
+   * generatedSchemaTypeNameMap = {
+   *   UserResolvers: 'User'
+   * }
+   */
+  const generatedSchemaTypeNameMap = Object.entries(
+    generatedTypesFileMeta.generatedResolverTypes.userDefined
+  ).reduce<Record<string, string>>(
+    (res, [schemaType, generatedSchemaTypeName]) => {
+      res[generatedSchemaTypeName.name] = schemaType;
+      return res;
+    },
+    {}
+  );
 
-  const populateSchemaTypePropertyMap = (
+  // 1. Get property map of all schema types
+  const schemaResolversTypePropertyMap: Record<string, NodePropertyMap> = {};
+
+  const populateSchemaTypeResolversPropertyMap = (
     node: TypeAliasDeclaration | InterfaceDeclaration
   ): void => {
     const identifier = node.getNameNode();
     const identifierName = identifier.getText();
-    if (userDefinedSchemaObjectTypeMap[identifierName]) {
-      schemaTypePropertyMap[identifierName] = getNodePropertyMap({
+
+    const schemaType = generatedSchemaTypeNameMap[identifierName];
+
+    if (schemaType && userDefinedSchemaObjectTypeMap[schemaType]) {
+      schemaResolversTypePropertyMap[schemaType] = getNodePropertyMap({
         tsMorphProject,
         node,
       });
@@ -51,72 +85,83 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
   };
   typesSourceFile
     .getDescendantsOfKind(SyntaxKind.TypeAliasDeclaration)
-    .forEach(populateSchemaTypePropertyMap);
+    .forEach(populateSchemaTypeResolversPropertyMap);
 
   typesSourceFile
     .getDescendantsOfKind(SyntaxKind.InterfaceDeclaration)
-    .forEach(populateSchemaTypePropertyMap);
+    .forEach(populateSchemaTypeResolversPropertyMap);
 
   // 3. Find resolvers to generate and add reason
   const result: GraphQLObjectTypeResolversToGenerate = {};
   typeMappersEntries.forEach(([_, { schemaType, mapper }]) => {
-    const matchedSchemaTypePropertyMap = schemaTypePropertyMap[schemaType];
-    if (matchedSchemaTypePropertyMap) {
-      const originalDeclarationNode = mustGetMapperOriginalDeclarationNode({
-        tsMorphProject,
-        mapper,
-      });
-      const typeMapperPropertyMap = getNodePropertyMap({
-        tsMorphProject,
-        node: originalDeclarationNode,
-      });
+    const matchedSchemaTypePropertyMap =
+      schemaResolversTypePropertyMap[schemaType];
+    if (!matchedSchemaTypePropertyMap) {
+      return;
+    }
 
-      Object.values(matchedSchemaTypePropertyMap).forEach(
-        (schemaTypeProperty) => {
-          const typeMapperProperty =
-            typeMapperPropertyMap[schemaTypeProperty.name];
+    const originalDeclarationNode = mustGetMapperOriginalDeclarationNode({
+      tsMorphProject,
+      mapper,
+    });
+    const typeMapperPropertyMap = getNodePropertyMap({
+      tsMorphProject,
+      node: originalDeclarationNode,
+    });
 
-          const typeMapperPropertyIdentifier = `${mapper.name}.${schemaTypeProperty.name}`;
-          const schemaTypePropertyIdentifier = `${schemaType}.${schemaTypeProperty.name}`;
+    Object.values(matchedSchemaTypePropertyMap).forEach(
+      (schemaTypeProperty) => {
+        const typeMapperProperty =
+          typeMapperPropertyMap[schemaTypeProperty.name];
 
-          if (schemaTypeProperty.name === '__typename') {
-            return;
-          }
+        const typeMapperPropertyIdentifier = `${mapper.name}.${schemaTypeProperty.name}`;
+        const schemaTypePropertyIdentifier = `${schemaType}.${schemaTypeProperty.name}`;
 
-          result[schemaType] = result[schemaType] || {};
+        // Generated resolvers types may have one or more of these meta resolvers
+        // A mapper would most likely never have these resolvers, so we skip them
+        // Otherwise, these resolvers will always be generated
+        const metaResolvers: Record<string, boolean> = {
+          __isTypeOf: true,
+          __resolveReference: true,
+        };
 
-          // If mapper does not have a field in schema type, add missing resolver
-          if (!typeMapperProperty) {
-            result[schemaType][schemaTypeProperty.name] = {
-              resolverName: schemaTypeProperty.name,
-              resolverDeclaration: `async (_parent, _arg, _ctx) => { /* ${schemaTypePropertyIdentifier} resolver is required because ${schemaTypePropertyIdentifier} exists but ${typeMapperPropertyIdentifier} does not */ }`,
-            };
-            return;
-          }
+        if (metaResolvers[schemaTypeProperty.name]) {
+          return;
+        }
 
-          /**
-           * FIXME: TypeScript's `isTypeAssignableTo` should be used to check if the mapper type vs resolver return type is compatible.
-           * The current challenge is to:
-           * - Switch from using the schema type to resolver return type e.g. `User` -> `UserResolver`
-           * - Take the ReturnType of the resolver function type e.g. `Resolver<ResolversTypes['UserRole'], ParentType, ContextType>`
-           *
-           * For now, the workaround now is to generate all resolvers with matching names,
-           * then use TS diagnostics to see if there's error when trying to merge the two keys.
-           *
-           * Note: this happens only when mappers are used
-           */
+        result[schemaType] = result[schemaType] || {};
+
+        // If mapper does not have a field in schema type, add missing resolver
+        if (!typeMapperProperty) {
           result[schemaType][schemaTypeProperty.name] = {
             resolverName: schemaTypeProperty.name,
-            resolverDeclaration: `({ ${schemaTypeProperty.name} }, _arg, _ctx) => {
+            resolverDeclaration: `async (_parent, _arg, _ctx) => { /* ${schemaTypePropertyIdentifier} resolver is required because ${schemaTypePropertyIdentifier} exists but ${typeMapperPropertyIdentifier} does not */ }`,
+          };
+          return;
+        }
+
+        /**
+         * FIXME: TypeScript's `isTypeAssignableTo` should be used to check if the mapper type vs resolver return type is compatible.
+         * The current challenge is to:
+         * - Switch from using the schema type to resolver return type e.g. `User` -> `UserResolver`
+         * - Take the ReturnType of the resolver function type e.g. `Resolver<ResolversTypes['UserRole'], ParentType, ContextType>`
+         *
+         * For now, the workaround now is to generate all resolvers with matching names,
+         * then use TS diagnostics to see if there's error when trying to merge the two keys.
+         *
+         * Note: this happens only when mappers are used
+         */
+        result[schemaType][schemaTypeProperty.name] = {
+          resolverName: schemaTypeProperty.name,
+          resolverDeclaration: `({ ${schemaTypeProperty.name} }, _arg, _ctx) => {
                 /* ${schemaTypePropertyIdentifier} resolver is required because ${schemaTypePropertyIdentifier} and ${typeMapperPropertyIdentifier} are not compatible */
                 return ${schemaTypeProperty.name}
               }`,
-          };
+        };
 
-          return;
-        }
-      );
-    }
+        return;
+      }
+    );
   });
 
   return result;
