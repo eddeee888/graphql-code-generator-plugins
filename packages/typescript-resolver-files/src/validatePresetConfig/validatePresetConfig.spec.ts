@@ -33,7 +33,7 @@ const defaultExpected: ParsedPresetConfig = {
   mappersRelativeTargetDir: './',
   mappersFileExtension: '.mappers.ts',
   mappersSuffix: 'Mapper',
-  moduleNamingMode: 'last',
+  moduleNamingMode: -1,
   scalarsModule: 'graphql-scalars',
   scalarsOverrides: {},
   externalResolvers: {},
