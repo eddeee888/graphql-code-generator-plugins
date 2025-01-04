@@ -1,5 +1,4 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { MakerMapper, ProductMapper } from './part-2/schema.mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -154,17 +153,9 @@ export type DirectiveResolverFn<
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-<<<<<<< HEAD:packages/typescript-resolver-files-e2e/src/test-federation/schema-base/subgraph-products/types.generated.ts
-  Maker: ResolverTypeWrapper<MakerMapper>;
-  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
-  String: ResolverTypeWrapper<Scalars['String']['output']>;
-  Product: ResolverTypeWrapper<ProductMapper>;
-  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
-=======
   Profile: ResolverTypeWrapper<Profile>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
->>>>>>> 7413085 (add e2e test):packages/typescript-resolver-files-e2e/src/test-resolver-multi-module-object/modules/generated/allTypes.ts
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<User>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
@@ -172,17 +163,9 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-<<<<<<< HEAD:packages/typescript-resolver-files-e2e/src/test-federation/schema-base/subgraph-products/types.generated.ts
-  Maker: MakerMapper;
-  ID: Scalars['ID']['output'];
-  String: Scalars['String']['output'];
-  Product: ProductMapper;
-  Int: Scalars['Int']['output'];
-=======
   Profile: Profile;
   ID: Scalars['ID']['output'];
   String: Scalars['String']['output'];
->>>>>>> 7413085 (add e2e test):packages/typescript-resolver-files-e2e/src/test-resolver-multi-module-object/modules/generated/allTypes.ts
   Query: {};
   User: User;
   Boolean: Scalars['Boolean']['output'];
