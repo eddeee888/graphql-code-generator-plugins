@@ -1,5 +1,6 @@
 import * as path from 'path';
 import type { Source } from '@graphql-tools/utils';
+import type { ModuleNamingMode } from '../validatePresetConfig';
 
 export interface ParsedSource {
   source: Source;
@@ -12,10 +13,15 @@ export interface ParseSourcesResult {
   sourceMap: Record<string, ParsedSource>;
 }
 
-export function parseSources(
-  sources: Source[],
-  baseOutputDir: string
-): ParseSourcesResult {
+export function parseSources({
+  sources,
+  baseOutputDir,
+  moduleNamingMode,
+}: {
+  sources: Source[];
+  baseOutputDir: string;
+  moduleNamingMode: ModuleNamingMode;
+}): ParseSourcesResult {
   return sources.reduce<ParseSourcesResult>(
     (result, source) => {
       if (!source.location) {
@@ -23,13 +29,15 @@ export function parseSources(
       }
 
       const sourcePath = path.parse(source.location);
-      const moduleDir = sourcePath.dir;
-
-      const moduleName = path.basename(moduleDir);
 
       const relativePathFromBaseToModule = path
         .relative(path.resolve(baseOutputDir), path.resolve(sourcePath.dir))
         .split(path.sep);
+
+      const moduleName = selectModuleName({
+        moduleNamingMode,
+        relativePathFromBaseToModule,
+      });
 
       result.sourceMap[source.location] = {
         source,
@@ -43,3 +51,29 @@ export function parseSources(
     { sourceMap: {} }
   );
 }
+
+const selectModuleName = ({
+  moduleNamingMode,
+  relativePathFromBaseToModule,
+}: {
+  moduleNamingMode: ModuleNamingMode;
+  relativePathFromBaseToModule: string[];
+}): string => {
+  const wrappedModuleNamingMode =
+    moduleNamingMode >= 0
+      ? moduleNamingMode
+      : relativePathFromBaseToModule.length + moduleNamingMode;
+
+  if (
+    wrappedModuleNamingMode < 0 ||
+    wrappedModuleNamingMode >= relativePathFromBaseToModule.length
+  ) {
+    throw new Error(
+      `"moduleNamingMode" ${moduleNamingMode} exceeds path ${relativePathFromBaseToModule.join(
+        '/'
+      )}`
+    );
+  }
+
+  return relativePathFromBaseToModule[wrappedModuleNamingMode];
+};

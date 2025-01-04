@@ -41,6 +41,7 @@ type NormalizedResolverGeneration = {
   interface: string | string[];
   enum: string | string[];
 };
+export type ModuleNamingMode = number;
 
 export type ScalarsOverridesType = string | { input: string; output: string };
 
@@ -56,6 +57,7 @@ export interface ParsedPresetConfig {
   mappersRelativeTargetDir: string;
   mappersFileExtension: string;
   mappersSuffix: string;
+  moduleNamingMode: ModuleNamingMode;
   scalarsModule: string | false;
   scalarsOverrides: Record<
     string,
@@ -86,6 +88,7 @@ export interface RawPresetConfig {
   mappersRelativeTargetDir?: string;
   mappersFileExtension?: string;
   mappersSuffix?: string;
+  moduleNamingMode?: string | number;
   scalarsModule?: string | boolean;
   scalarsOverrides?: Record<
     string,
@@ -131,6 +134,7 @@ export const validatePresetConfig = ({
   mappersRelativeTargetDir = './',
   mappersFileExtension = '.mappers.ts',
   mappersSuffix = 'Mapper',
+  moduleNamingMode = 'last',
   mergeSchema,
   scalarsModule = 'graphql-scalars',
   scalarsOverrides = {},
@@ -209,6 +213,8 @@ export const validatePresetConfig = ({
       )
     );
   }
+
+  const finalModuleNamingMode = parseModuleNamingMode(moduleNamingMode);
 
   if (!resolverTypesPath) {
     throw new Error(
@@ -311,6 +317,7 @@ export const validatePresetConfig = ({
     mappersRelativeTargetDir,
     mappersFileExtension,
     mappersSuffix,
+    moduleNamingMode: finalModuleNamingMode,
     scalarsModule: finalScalarsModule,
     scalarsOverrides,
     whitelistedModules: whitelistedModules || [],
@@ -489,4 +496,39 @@ const parseMergeSchema = (
     path: mergeSchema.path,
     config: mergeSchema.config as schemaAstPlugin.SchemaASTConfig,
   };
+};
+
+const parseModuleNamingMode = (
+  moduleNamingMode: RawPresetConfig['moduleNamingMode']
+): ParsedPresetConfig['moduleNamingMode'] => {
+  if (moduleNamingMode == null) {
+    // By default, for backwards compatibility prior to `moduleNamingMode`, we
+    // select the last directory in a path.
+    return -1;
+  }
+
+  if (typeof moduleNamingMode === 'string') {
+    // As a convenience we support the keywords "first" and "last".
+    if (moduleNamingMode === 'first') {
+      return 0;
+    } else if (moduleNamingMode === 'last') {
+      return -1;
+    }
+
+    const parsedNumber = parseInt(moduleNamingMode);
+    if (!isNaN(parsedNumber)) {
+      return parsedNumber;
+    }
+  }
+
+  if (typeof moduleNamingMode === 'number') {
+    return moduleNamingMode;
+  }
+
+  throw new Error(
+    fmt.error(
+      'presetConfig.moduleNamingMode must be "first" or "last" or a number (default is "last")',
+      'Validation'
+    )
+  );
 };
