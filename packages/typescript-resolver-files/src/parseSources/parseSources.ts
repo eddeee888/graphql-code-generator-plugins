@@ -29,7 +29,6 @@ export function parseSources({
       }
 
       const sourcePath = path.parse(source.location);
-      const moduleDir = sourcePath.dir;
 
       const relativePathFromBaseToModule = path
         .relative(path.resolve(baseOutputDir), path.resolve(sourcePath.dir))
@@ -58,7 +57,7 @@ const selectModuleName = ({
   relativePathFromBaseToModule,
 }: {
   moduleNamingMode: ModuleNamingMode;
-  relativePathFromBaseToModule: Array<string>;
+  relativePathFromBaseToModule: string[];
 }): string => {
   const wrappedModuleNamingMode =
     moduleNamingMode >= 0
