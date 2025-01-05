@@ -12,7 +12,7 @@ env:
 
 jobs:
   release-check:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       pull-requests: write
     outputs:
@@ -54,7 +54,7 @@ jobs:
           GITHUB_TOKEN: ${{ env.github-token }}
 
   release:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: release-check
     permissions:
       pull-requests: write
