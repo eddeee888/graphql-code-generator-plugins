@@ -1,5 +1,11 @@
 # @eddeee888/gcg-server-config
 
+## 0.2.3
+
+### Patch Changes
+
+- 19e1f03: Fix \_\_resolveReference being required all the time
+
 ## 0.2.2
 
 ### Patch Changes
