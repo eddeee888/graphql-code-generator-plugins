@@ -12,7 +12,7 @@ env:
 
 jobs:
   release-check:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       pull-requests: write
     outputs:
@@ -43,7 +43,7 @@ jobs:
 
       - name: Report failure
         if: failure()
-        uses: octokit/request-action@v2.3.0
+        uses: octokit/request-action@v2.4.0
         with:
           route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
           owner: ${{ github.repository_owner }}
@@ -54,7 +54,7 @@ jobs:
           GITHUB_TOKEN: ${{ env.github-token }}
 
   release:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: release-check
     permissions:
       pull-requests: write
@@ -62,7 +62,7 @@ jobs:
     steps:
       - name: Get Pull Request ref
         id: get_pull_request_ref
-        uses: octokit/request-action@v2.3.0
+        uses: octokit/request-action@v2.4.0
         with:
           route: GET /repos/{owner}/{repo}/pulls/{issue_number}
           owner: ${{ github.repository_owner }}
@@ -105,7 +105,7 @@ jobs:
 
       - name: Report success
         if: success()
-        uses: octokit/request-action@v2.3.0
+        uses: octokit/request-action@v2.4.0
         with:
           route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
           owner: ${{ github.repository_owner }}
@@ -117,7 +117,7 @@ jobs:
 
       - name: Report failure
         if: failure()
-        uses: octokit/request-action@v2.3.0
+        uses: octokit/request-action@v2.4.0
         with:
           route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
           owner: ${{ github.repository_owner }}
