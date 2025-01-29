@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as addPlugin from '@graphql-codegen/add';
 import * as schemaAstPlugin from '@graphql-codegen/schema-ast';
 import * as typeScriptPlugin from '@graphql-codegen/typescript';
-import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
+import { plugin as typeScriptResolversPlugin } from '@graphql-codegen/typescript-resolvers';
 import {
   type Types,
   createNoopProfiler,
@@ -194,7 +194,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       filename: resolverTypesPath,
       pluginMap: {
         typescript: typeScriptPlugin,
-        'typescript-resolvers': typeScriptResolversPlugin,
+        'typescript-resolvers': { plugin: typeScriptResolversPlugin },
         add: addPlugin,
       },
       plugins: resolverTypesFilePlugins,
