@@ -1,5 +1,29 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.12.0
+
+### Minor Changes
+
+- e84fb01: Add mappersRelativeTargetDir config option
+
+  `string` (Default: `./`)
+
+  By default, mappers must be siblings with the schema they represent. For example, if the schema file is `/path/to/schema.graphql`, the mapper file is `/path/to/schema.mappers.ts`. This extension allows mappers to reside in a different directory relative to the schema file using the pattern `<schemaPath>/<mappersRelativeTargetDir>/<schemaName><mappersFileExtension>`.
+
+- 221c671: Add moduleNamingMode option to determine the module name for each schema file
+
+  - **`last`**: The module name is derived from the **last** directory (within the schema directory) in the file's path.
+  - **`first`**: The module name is derived from the **first** directory (within the schema directory) in the file's path.
+  - **any number**: The module name is derived from the **nth zero-indexed** directory (within the schema directory) in the file's path. Supports negative numbers which select the **nth** directory from the back of the file's path.
+
+### Patch Changes
+
+- 19e1f03: Fix \_\_resolveReference being required all the time
+- b4c501c: Update internals to use faster approach to run static analysis
+- df77f2e: Fix issue generated type names with custom naming convention breaks mappers static analysis
+- Updated dependencies [19e1f03]
+  - @eddeee888/gcg-server-config@0.2.3
+
 ## 0.11.0
 
 ### Minor Changes
