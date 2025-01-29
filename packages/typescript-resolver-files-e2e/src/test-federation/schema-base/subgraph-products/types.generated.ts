@@ -220,7 +220,7 @@ export type ProductResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Product'] = ResolversParentTypes['Product']
 > = {
-  __resolveReference: ReferenceResolver<
+  __resolveReference?: ReferenceResolver<
     Maybe<ResolversTypes['Product']>,
     { __typename: 'Product' } & GraphQLRecursivePick<ParentType, { upc: true }>,
     ContextType
