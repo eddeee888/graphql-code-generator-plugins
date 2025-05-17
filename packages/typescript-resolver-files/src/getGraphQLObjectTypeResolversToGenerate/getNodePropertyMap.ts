@@ -2,11 +2,10 @@ import {
   type Project,
   type ClassDeclaration,
   type Node,
-  type Type,
   SyntaxKind,
 } from 'ts-morph';
 
-type NodePropertyMapValue = { type: Type; name: string };
+type NodePropertyMapValue = { name: string };
 export type NodePropertyMap = Record<string, NodePropertyMapValue>;
 
 /**
@@ -38,16 +37,14 @@ export const getNodePropertyMap = ({
       .getProperties()
       .map((prop) => {
         return {
-          type: prop.getDeclarations()[0].getType(),
           name: prop.getName(),
         };
       });
   })();
 
   const nodePropertyMap = properties.reduce<NodePropertyMap>(
-    (res, { type, name }) => {
+    (res, { name }) => {
       res[name] = {
-        type,
         name,
       };
       return res;
@@ -83,7 +80,6 @@ const collectClassNodeProperties = (
       return;
     }
     result.push({
-      type: prop.getType(),
       name: prop.getName(),
     });
   });
