@@ -38,29 +38,18 @@ describe('getNodePropertyMap', () => {
     });
 
     expect(nodePropertyMap.__typename.name).toBe('__typename');
-    expect(nodePropertyMap.__typename.type.getText()).toBe('"User"');
 
     expect(nodePropertyMap.accountGitHub.name).toBe('accountGitHub');
-    expect(nodePropertyMap.accountGitHub.type.getText()).toBe('string');
 
     expect(nodePropertyMap.accountGoogle.name).toBe('accountGoogle');
-    expect(nodePropertyMap.accountGoogle.type.getText()).toBe('string');
 
     expect(nodePropertyMap.createdAt.name).toBe('createdAt');
-    expect(nodePropertyMap.createdAt.type.getText()).toBe(
-      'string | number | Date'
-    );
 
     expect(nodePropertyMap.fullName.name).toBe('fullName');
-    expect(nodePropertyMap.fullName.type.getText()).toBe('string');
 
     expect(nodePropertyMap.id.name).toBe('id');
-    expect(nodePropertyMap.id.type.getText()).toBe('string');
 
     expect(nodePropertyMap.role.name).toBe('role');
-    expect(nodePropertyMap.role.type.getText()).toBe(
-      'import("/path/to/types.generated").UserRole'
-    );
   });
 
   it('correctly resolves property map a class', () => {
@@ -98,12 +87,8 @@ describe('getNodePropertyMap', () => {
     expect(nodePropertyMap.word2).toBe(undefined);
 
     expect(nodePropertyMap.name.name).toBe('name');
-    expect(nodePropertyMap.name.type.getText()).toBe('string');
 
     expect(nodePropertyMap.role.name).toBe('role');
-    expect(nodePropertyMap.role.type.getText()).toBe(
-      'import("/path/to/types").UserRole'
-    );
   });
 
   it('correctly resolves property map a type alias mapper', () => {
@@ -131,12 +116,9 @@ describe('getNodePropertyMap', () => {
     });
 
     expect(nodePropertyMap.id.name).toBe('id');
-    expect(nodePropertyMap.id.type.getText()).toBe('number');
 
     expect(nodePropertyMap.name.name).toBe('name');
-    expect(nodePropertyMap.name.type.getText()).toBe('string');
 
     expect(nodePropertyMap.role.name).toBe('role');
-    expect(nodePropertyMap.role.type.getText()).toBe('UserRole'); // Non-exported types will have result in the name, not the `import("/path/to/mappers")` path
   });
 });

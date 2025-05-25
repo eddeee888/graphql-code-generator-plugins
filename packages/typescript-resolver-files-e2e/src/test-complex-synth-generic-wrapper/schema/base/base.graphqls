@@ -1,0 +1,10 @@
+type Query {
+  book(id: ID!): Book
+}
+
+type Book {
+  id: ID!
+  isbn: String!
+  nextBookInSeries: Book
+  previousBookInSeries: Book
+}
