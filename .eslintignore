@@ -1,3 +1,0 @@
-node_modules
-packages/typescript-resolver-files-e2e/src/**/*.generated.*
-packages/typescript-resolver-files-e2e/src/**/*.gen.*
