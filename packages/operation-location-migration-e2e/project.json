@@ -1,0 +1,13 @@
+{
+  "name": "operation-location-migration-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/operation-location-migration-e2e/src",
+  "projectType": "library",
+  "tags": [],
+  "implicitDependencies": ["operation-location-migration"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

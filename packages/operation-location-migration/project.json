@@ -1,5 +1,5 @@
 {
-  "name": "@eddeee888/gcg-operation-location-migration",
+  "name": "operation-location-migration",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/operation-location-migration/src",
   "projectType": "library",
@@ -21,6 +21,9 @@
       "options": {
         "jestConfig": "packages/operation-location-migration/jest.config.ts"
       }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
     }
   }
 }
