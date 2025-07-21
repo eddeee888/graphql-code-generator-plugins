@@ -1,3 +1,5 @@
 # operation-location-migration-e2e
 
-This library was generated with [Nx](https://nx.dev).
+```bash
+nx graphql-codegen operation-location-migration-e2e -c test-arbitrary-to-colocation
+```

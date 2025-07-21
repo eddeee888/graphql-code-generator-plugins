@@ -3,11 +3,32 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/operation-location-migration-e2e/src",
   "projectType": "library",
-  "tags": [],
   "implicitDependencies": ["operation-location-migration"],
   "targets": {
+    "graphql-codegen": {
+      "executor": "@eddeee888/nx-graphql-code-generator:codegen",
+      "options": {},
+      "configurations": {
+        "test-arbitrary-to-colocation": {
+          "configFile": "{projectRoot}/src/test-arbitrary-to-colocation/codegen.ts"
+        }
+      },
+      "dependsOn": ["prepare-e2e-modules"]
+    },
+    "prepare-e2e-modules": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "rimraf node_modules/@eddeee888/gcg-operation-location-migration",
+          "cp -r dist/packages/operation-location-migration node_modules/@eddeee888/gcg-operation-location-migration"
+        ],
+        "parallel": false
+      },
+      "dependsOn": ["^build"]
+    },
     "lint": {
       "executor": "@nx/eslint:lint"
     }
-  }
+  },
+  "tags": []
 }

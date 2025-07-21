@@ -5,15 +5,12 @@ import {
 
 export const preset: Types.OutputPreset = {
   buildGeneratesSection: async ({
-    schema,
-    schemaAst,
-    presetConfig,
     baseOutputDir,
+    documents,
+    presetConfig,
     profiler = createNoopProfiler(),
   }) => {
-    if (!schemaAst) {
-      throw new Error('Missing schemaAst');
-    }
+    console.log({ documents });
 
     return [];
   },
