@@ -6,6 +6,7 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
+    "@graphql-codegen/add": "5.0.3",
     "@graphql-codegen/plugin-helpers": "5.1.0",
     "@swc/helpers": "~0.5.11"
   }

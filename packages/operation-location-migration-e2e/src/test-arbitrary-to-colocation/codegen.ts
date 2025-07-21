@@ -11,7 +11,10 @@ const config: CodegenConfig = {
   generates: {
     'packages/operation-location-migration-e2e/src/test-arbitrary-to-colocation':
       defineConfig(
-        {},
+        {
+          artifactDirectory: './gql',
+          gqlTagName: 'graphql',
+        },
         {
           documents:
             'packages/operation-location-migration-e2e/src/test-arbitrary-to-colocation/operations/*.graphql',
