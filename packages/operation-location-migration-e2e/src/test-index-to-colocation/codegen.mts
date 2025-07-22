@@ -9,17 +9,6 @@ const config: CodegenConfig = {
     afterAllFileWrite: ['prettier --write'],
   },
   generates: {
-    'packages/operation-location-migration-e2e/src/test-index-to-colocation/generated/hooks.generated.ts':
-      {
-        documents: [
-          'packages/operation-location-migration-e2e/src/test-index-to-colocation/operations/*.graphql',
-        ],
-        plugins: [
-          'typescript',
-          'typescript-operations',
-          'typescript-react-apollo',
-        ],
-      },
     'packages/operation-location-migration-e2e/src/test-index-to-colocation':
       defineConfig(
         {
