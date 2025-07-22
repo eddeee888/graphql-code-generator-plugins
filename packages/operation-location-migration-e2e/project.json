@@ -9,8 +9,8 @@
       "executor": "@eddeee888/nx-graphql-code-generator:codegen",
       "options": {},
       "configurations": {
-        "test-arbitrary-to-colocation": {
-          "configFile": "{projectRoot}/src/test-arbitrary-to-colocation/codegen.ts"
+        "test-index-to-colocation": {
+          "configFile": "{projectRoot}/src/test-index-to-colocation/codegen.mts"
         }
       },
       "dependsOn": ["prepare-e2e-modules"]
