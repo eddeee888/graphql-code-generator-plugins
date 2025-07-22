@@ -1,6 +1,6 @@
 import { useMeQuery } from '../generated/hooks.generated';
 
 export const MeComponent = () => {
-  useMeQuery();
+  useMeQuery({ skip: true });
   return 'Me';
 };
