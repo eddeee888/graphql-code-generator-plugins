@@ -1,6 +1,11 @@
-import { useMeQuery, useMeLazyQuery } from '../generated/hooks.generated';
+import {
+  useMeQuery,
+  useMeLazyQuery,
+  useMeSuspenseQuery,
+} from '../generated/hooks.generated';
 
 export const UserComponent = () => {
-  useMeQuery();
+  useMeQuery({ onCompleted: () => {} });
+  const res = useMeSuspenseQuery();
   return 'User';
 };
