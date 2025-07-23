@@ -5,6 +5,25 @@
   "projectType": "library",
   "implicitDependencies": ["operation-location-migration"],
   "targets": {
+    "e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx test-setup operation-location-migration-e2e",
+          "nx graphql-codegen operation-location-migration-e2e -c test-index-to-colocation",
+          "OUTPUT_PATTERN=\"{projectRoot}/src/**/*.ts\" bash packages/testing-utils/bin/assert-e2e.sh"
+        ],
+        "parallel": false
+      }
+    },
+    "test-setup": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-index-to-colocation/testSetup.ts"
+        ]
+      }
+    },
     "graphql-codegen": {
       "executor": "@eddeee888/nx-graphql-code-generator:codegen",
       "options": {},

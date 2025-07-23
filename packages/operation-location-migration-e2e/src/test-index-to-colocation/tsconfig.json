@@ -5,5 +5,5 @@
     "module": "commonjs",
     "strict": true
   },
-  "include": ["./**/*.ts"]
+  "include": ["./gql/**/*.ts", "./generated/**/*.ts", "./components/**/*.ts"]
 }

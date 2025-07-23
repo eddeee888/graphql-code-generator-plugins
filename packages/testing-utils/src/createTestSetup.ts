@@ -24,7 +24,7 @@ export const createTestSetup = ({
       fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(
         filename,
-        `/* This file has been created on filesystem by src/test-resolvers/auto-wireup/test-setup.js */\n\n${content}`
+        `/* This file has been created on filesystem by @workspace/testing-utils#createTestSetup */\n\n${content}`
       );
     });
   } catch (err) {

@@ -2,7 +2,7 @@
 
 set -eu
 
-output_pattern=packages/typescript-resolver-files-e2e/src/**/*.ts
+output_pattern=$OUTPUT_PATTERN
 
 # Assert committed files are the same
 echo -e "\n=> Checking if actual output matches commited files..."
