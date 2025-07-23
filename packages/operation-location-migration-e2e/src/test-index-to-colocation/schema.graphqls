@@ -7,6 +7,10 @@ type Mutation {
   updateUser(input: UpdateUserInput!): User!
 }
 
+type Subscription {
+  userChanges(id: ID): User
+}
+
 input UpdateUserInput {
   id: ID!
   name: String!

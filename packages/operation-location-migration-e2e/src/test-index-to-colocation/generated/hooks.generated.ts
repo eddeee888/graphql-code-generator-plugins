@@ -49,6 +49,15 @@ export type QueryUserArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  userChanges?: Maybe<User>;
+};
+
+export type SubscriptionUserChangesArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+};
+
 export type UpdateUserInput = {
   id: Scalars['ID']['input'];
   name: Scalars['String']['input'];
@@ -83,6 +92,13 @@ export type UpdateUserMutationVariables = Exact<{
 export type UpdateUserMutation = {
   __typename?: 'Mutation';
   updateUser: { __typename?: 'User'; id: string; name: string };
+};
+
+export type UserChangesSubscriptionVariables = Exact<{ [key: string]: never }>;
+
+export type UserChangesSubscription = {
+  __typename?: 'Subscription';
+  userChanges?: { __typename?: 'User'; id: string; name: string } | null;
 };
 
 export const MeDocument = gql`
@@ -249,3 +265,44 @@ export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<
   UpdateUserMutation,
   UpdateUserMutationVariables
 >;
+export const UserChangesDocument = gql`
+  subscription UserChanges {
+    userChanges(id: "10") {
+      id
+      name
+    }
+  }
+`;
+
+/**
+ * __useUserChangesSubscription__
+ *
+ * To run a query within a React component, call `useUserChangesSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useUserChangesSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserChangesSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUserChangesSubscription(
+  baseOptions?: Apollo.SubscriptionHookOptions<
+    UserChangesSubscription,
+    UserChangesSubscriptionVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSubscription<
+    UserChangesSubscription,
+    UserChangesSubscriptionVariables
+  >(UserChangesDocument, options);
+}
+export type UserChangesSubscriptionHookResult = ReturnType<
+  typeof useUserChangesSubscription
+>;
+export type UserChangesSubscriptionResult =
+  Apollo.SubscriptionResult<UserChangesSubscription>;

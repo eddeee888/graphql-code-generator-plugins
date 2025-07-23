@@ -1,0 +1,6 @@
+subscription UserChanges {
+  userChanges(id: "10") {
+    id
+    name
+  }
+}
