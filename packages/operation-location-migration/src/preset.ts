@@ -1,10 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as addPlugin from '@graphql-codegen/add';
-import {
-  type Types,
-  createNoopProfiler,
-} from '@graphql-codegen/plugin-helpers';
+import type { Types } from '@graphql-codegen/plugin-helpers';
 import { pascalCase } from 'change-case-all';
 import { OperationTypeNode, print, visit } from 'graphql';
 import {
@@ -16,13 +13,22 @@ import {
 } from 'ts-morph';
 import type { TypedPresetConfig } from './config';
 
+/**
+ * TODO
+ * 1. handle `artifactDirectoryType`: "relative" ✅ and "absolute"
+ * 2. warn if unable to handle documents e.g. not valid or anonymous
+ * 3. currently, make naive assumption that imports of the same name means they need to be replaced. We should check import module, but it's more complex
+ * 4. handle `migrationDestination`: "co-location" ✅ | "near-operation-file"
+ * 5. handle `library`: { importFrom: '@apollo/client' | '@apollo/client/react' }
+ *    - Note: in theory we can allow migrating to other libraries. To achieve this, we will need to refactor away Apollo Client assumptions.
+ */
+
 export const preset: Types.OutputPreset<TypedPresetConfig> = {
   buildGeneratesSection: async ({
     baseOutputDir,
     schema,
     documents,
     presetConfig,
-    profiler = createNoopProfiler(),
   }) => {
     const absoluteTsConfigFilePath = path.join(
       cwd(),
@@ -212,8 +218,10 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
               documentNodeName
             );
 
-            // Remove import specifier of hooks, and if no specifiers left, remove the whole import declaration
+            // Remove import specifier of hooks...
             functionToReplace.importSpecifierNode.remove();
+
+            // and if no specifiers left, remove the whole import declaration
             if (
               functionToReplace.importDeclarationNode.getNamedImports()
                 .length === 0
@@ -221,7 +229,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
               functionToReplace.importDeclarationNode.remove();
             }
 
-            // Add documentNode to file if it's not already there
+            // If documentNode is already added, do nothing, otherwise insert it
             if (addedDocMap[documentNodeName]) {
               return;
             }
