@@ -1,8 +1,16 @@
-/* This file has been created on filesystem by src/test-resolvers/auto-wireup/test-setup.js */
+/* This file has been created on filesystem by @workspace/testing-utils#createTestSetup */
+import { useQuery } from '@apollo/client/react';
+import { graphql } from '../gql';
 
-import { useMeQuery } from '../generated/hooks.generated';
-      
-      export const MeComponent = () => {
-        useMeQuery({ skip: true });
-        return 'Me';
-      };
+const MeDoc = graphql(`
+  query Me {
+    me {
+      __typename
+    }
+  }
+`);
+
+export const MeComponent = () => {
+  useQuery(MeDoc, { skip: true });
+  return 'Me';
+};

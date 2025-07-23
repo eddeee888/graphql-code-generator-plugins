@@ -31,7 +31,7 @@ createTestSetup({
       };`,
     },
     {
-      file: 'components/MeComponent.suspense-query.ts',
+      file: 'components/UserComponent.ts',
       content: `import {
         useMeQuery,
         useMeLazyQuery,

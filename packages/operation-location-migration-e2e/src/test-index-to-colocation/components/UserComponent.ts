@@ -1,13 +1,29 @@
-import {
-  useMeQuery,
-  useMeLazyQuery,
-  useMeSuspenseQuery,
-  useUpdateUserMutation,
-} from '../generated/hooks.generated';
+/* This file has been created on filesystem by @workspace/testing-utils#createTestSetup */
+
+import { useMeLazyQuery } from '../generated/hooks.generated';
+import { useQuery, useSuspenseQuery, useMutation } from '@apollo/client/react';
+import { graphql } from '../gql';
+
+const UpdateUserDoc = graphql(`
+  mutation UpdateUser($input: UpdateUserInput!) {
+    updateUser(input: $input) {
+      id
+      name
+    }
+  }
+`);
+
+const MeDoc = graphql(`
+  query Me {
+    me {
+      __typename
+    }
+  }
+`);
 
 export const UserComponent = () => {
-  useMeQuery({ onCompleted: () => {} });
-  const res = useMeSuspenseQuery();
-  useUpdateUserMutation();
+  useQuery(MeDoc, { onCompleted: () => {} });
+  const res = useSuspenseQuery(MeDoc);
+  useMutation(UpdateUserDoc);
   return 'User';
 };
