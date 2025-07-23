@@ -228,10 +228,10 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
             const lastImportIndex = tsSourceFile.getDescendantsOfKind(
               SyntaxKind.ImportDeclaration
             ).length;
-            tsSourceFile.insertStatements(
-              lastImportIndex,
-              `const ${documentNodeName} = graphql(\`${graphqlDocument.documentSDL}\`)`
-            );
+            tsSourceFile.insertStatements(lastImportIndex, [
+              '\n',
+              `const ${documentNodeName} = graphql(\`${graphqlDocument.documentSDL}\`)`,
+            ]);
           }
         }
       );
