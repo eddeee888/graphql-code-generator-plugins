@@ -6,7 +6,7 @@ import {
   createNoopProfiler,
 } from '@graphql-codegen/plugin-helpers';
 import { pascalCase } from 'change-case-all';
-import { OperationTypeNode, visit } from 'graphql';
+import { OperationTypeNode, print, visit } from 'graphql';
 import {
   CallExpression,
   ImportDeclaration,
@@ -59,7 +59,6 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
 
     documents.forEach((documentFile) => {
       const documentPath = path.parse(documentFile.location || '');
-      const documentSDL = documentFile.rawSDL || '';
 
       if (!documentFile.document) {
         throw new Error('Document does not exist!'); // FIXME: should not throw
@@ -72,6 +71,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
           }
 
           const operationName = pascalCase(node.name.value);
+          const documentSDL = print(node);
 
           if (node.operation === OperationTypeNode.QUERY) {
             // Query
@@ -243,11 +243,6 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
           }
         }
       );
-
-      console.log('*** after update:');
-      console.log(tsSourceFile.getFullText());
-
-      console.log('END\n');
     });
 
     return tsSourceFiles.map((tsSourceFile) => ({

@@ -10,7 +10,7 @@
       "options": {
         "commands": [
           "nx test-setup operation-location-migration-e2e",
-          "nx graphql-codegen operation-location-migration-e2e -c test-index-to-colocation",
+          "nx graphql-codegen operation-location-migration-e2e --verbose -c test-index-to-colocation",
           "OUTPUT_PATTERN=\"{projectRoot}/src/**/*.ts\" bash packages/testing-utils/bin/assert-e2e.sh"
         ],
         "parallel": false
