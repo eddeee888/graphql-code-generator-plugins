@@ -142,22 +142,18 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
         functionsToReplace: {},
       };
 
-      tsSourceFile
-        .getDescendantsOfKind(SyntaxKind.ImportDeclaration)
-        .forEach((node) => {
-          node
-            .getDescendantsOfKind(SyntaxKind.ImportSpecifier)
-            .forEach((importSpecifier) => {
-              if (hooksToReplace[importSpecifier.getName()]) {
-                // FIXME: we are assuming same name means must replace. Should check import path as well?
-                fileMetadata.functionsToReplace[importSpecifier.getName()] = {
-                  importDeclarationNode: node,
-                  importSpecifierNode: importSpecifier,
-                  callExpression: null,
-                };
-              }
-            });
+      tsSourceFile.getImportDeclarations().forEach((node) => {
+        node.getNamedImports().forEach((importSpecifier) => {
+          if (hooksToReplace[importSpecifier.getName()]) {
+            // FIXME: we are assuming same name means must replace. Should check import path as well?
+            fileMetadata.functionsToReplace[importSpecifier.getName()] = {
+              importDeclarationNode: node,
+              importSpecifierNode: importSpecifier,
+              callExpression: null,
+            };
+          }
         });
+      });
 
       // find call expressions
       tsSourceFile
@@ -219,9 +215,8 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
             // Remove import specifier of hooks, and if no specifiers left, remove the whole import declaration
             functionToReplace.importSpecifierNode.remove();
             if (
-              functionToReplace.importDeclarationNode.getDescendantsOfKind(
-                SyntaxKind.ImportSpecifier
-              ).length === 0
+              functionToReplace.importDeclarationNode.getNamedImports()
+                .length === 0
             ) {
               functionToReplace.importDeclarationNode.remove();
             }
@@ -230,10 +225,17 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
             if (addedDocMap[documentNodeName]) {
               return;
             }
-            const lastImportIndex = tsSourceFile.getDescendantsOfKind(
-              SyntaxKind.ImportDeclaration
-            ).length;
-            tsSourceFile.insertStatements(lastImportIndex, [
+
+            // Find insertIndex, which is after the last import declaration
+            const importDeclarations = tsSourceFile.getImportDeclarations();
+            const insertPos =
+              importDeclarations[importDeclarations.length - 1].getEnd();
+            const insertIndex =
+              tsSourceFile
+                .getStatements()
+                .findIndex((stmt) => stmt.getStart() > insertPos) + 1;
+
+            tsSourceFile.insertStatements(insertIndex, [
               '\n',
               `const ${documentNodeName} = graphql(\`${graphqlDocument.documentSDL}\`)`,
             ]);
