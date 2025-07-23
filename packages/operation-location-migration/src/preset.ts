@@ -199,6 +199,8 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
         namedImports: [{ name: presetConfig.gqlTagName }],
       });
 
+      const addedDocMap: Record<string, true> = {};
+
       Object.values(fileMetadata.functionsToReplace).forEach(
         (functionToReplace) => {
           if (functionToReplace.callExpression) {
@@ -224,7 +226,10 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
               functionToReplace.importDeclarationNode.remove();
             }
 
-            // Add documentNode to file
+            // Add documentNode to file if it's not already there
+            if (addedDocMap[documentNodeName]) {
+              return;
+            }
             const lastImportIndex = tsSourceFile.getDescendantsOfKind(
               SyntaxKind.ImportDeclaration
             ).length;
@@ -232,6 +237,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
               '\n',
               `const ${documentNodeName} = graphql(\`${graphqlDocument.documentSDL}\`)`,
             ]);
+            addedDocMap[documentNodeName] = true;
           }
         }
       );

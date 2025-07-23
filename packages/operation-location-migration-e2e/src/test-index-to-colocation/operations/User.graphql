@@ -3,3 +3,10 @@ query User($id: ID!) {
     __typename
   }
 }
+
+mutation UpdateUser($input: UpdateUserInput!) {
+  updateUser(input: $input) {
+    id
+    name
+  }
+}

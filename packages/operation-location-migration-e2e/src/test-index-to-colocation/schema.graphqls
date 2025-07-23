@@ -3,6 +3,16 @@ type Query {
   user(id: ID): User
 }
 
+type Mutation {
+  updateUser(input: UpdateUserInput!): User!
+}
+
+input UpdateUserInput {
+  id: ID!
+  name: String!
+}
+
 type User {
   id: ID!
+  name: String!
 }
