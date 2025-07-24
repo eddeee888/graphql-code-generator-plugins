@@ -12,10 +12,14 @@ const config: CodegenConfig = {
     'packages/operation-location-migration-e2e/src/test-index-to-colocation':
       defineConfig(
         {
-          artifactDirectory: './gql',
-          gqlTagName: 'graphql',
           tsConfigFilePath:
             'packages/operation-location-migration-e2e/src/test-index-to-colocation/tsconfig.json',
+          gqlTag: {
+            name: 'graphql',
+            importFrom: './gql',
+            importType: 'relative',
+          },
+          hooksImportFrom: '@apollo/client/react',
         },
         {
           documents:

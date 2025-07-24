@@ -14,13 +14,13 @@ import {
 import type { TypedPresetConfig } from './config';
 
 /**
- * TODO
- * 1. handle `artifactDirectoryType`: "relative" ✅ and "absolute"
- * 2. warn if unable to handle documents e.g. not valid or anonymous
- * 3. currently, make naive assumption that imports of the same name means they need to be replaced. We should check import module, but it's more complex
- * 4. handle `migrationDestination`: "co-location" ✅ | "near-operation-file"
- * 5. handle `library`: { importFrom: '@apollo/client' | '@apollo/client/react' }
- *    - Note: in theory we can allow migrating to other libraries. To achieve this, we will need to refactor away Apollo Client assumptions.
+ * TODO:
+ * 1. Warn if unable to handle documents e.g. not valid or anonymous
+ * 2. Don't make naive assumption that imports of the same name means they need to be replaced.
+ *    - We should check import module, but it's more complex
+ * 3. Handle `migrationDestination`:
+ *    - ✅ "co-location"
+ *    - [] "near-operation-file"
  */
 
 export const preset: Types.OutputPreset<TypedPresetConfig> = {
@@ -37,10 +37,6 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
     if (!fs.existsSync(absoluteTsConfigFilePath)) {
       throw new Error('Requires tsconfig');
     }
-    const gqlTagPath = path.posix.join(
-      baseOutputDir,
-      presetConfig.artifactDirectory
-    ); // FIXME: handle absolute path
 
     const tsProject = new Project({
       tsConfigFilePath: absoluteTsConfigFilePath,
@@ -187,18 +183,23 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
 
       // Codemod files to co-locate the document nodes
       tsSourceFile.addImportDeclaration({
-        moduleSpecifier: '@apollo/client/react', // FIXME: option to import from different module
+        moduleSpecifier: presetConfig.hooksImportFrom,
         namedImports: fileMetadata.needsToImport.map((importName) => ({
           name: importName,
         })),
       });
 
+      const gqlTagModule =
+        presetConfig.gqlTag.importType === 'absolute'
+          ? presetConfig.gqlTag.importFrom
+          : path.posix.relative(
+              path.dirname(tsSourceFile.getFilePath()), // TODO: would this break in windows?
+              path.posix.join(baseOutputDir, presetConfig.gqlTag.importFrom)
+            );
+
       tsSourceFile.addImportDeclaration({
-        moduleSpecifier: path.posix.relative(
-          path.dirname(tsSourceFile.getFilePath()), // TODO: would this break in windows?
-          gqlTagPath
-        ), // TODO: add relative path to codegen gql
-        namedImports: [{ name: presetConfig.gqlTagName }],
+        moduleSpecifier: gqlTagModule,
+        namedImports: [{ name: presetConfig.gqlTag.name }],
       });
 
       const addedDocMap: Record<string, true> = {};
