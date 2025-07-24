@@ -1,7 +1,6 @@
 {
   "name": "@eddeee888/gcg-operation-location-migration",
   "version": "0.0.1",
-  "private": true,
   "type": "commonjs",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
