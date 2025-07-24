@@ -9,6 +9,7 @@ createTestSetup({
       export const Me = () => {
         useMeQuery();
       };`,
+      disableDefaultComment: true,
     },
     {
       file: 'components/User/User.ts',

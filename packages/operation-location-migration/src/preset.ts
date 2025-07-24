@@ -239,10 +239,9 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
             const importDeclarations = tsSourceFile.getImportDeclarations();
             const insertPos =
               importDeclarations[importDeclarations.length - 1].getEnd();
-            const insertIndex =
-              tsSourceFile
-                .getStatements()
-                .findIndex((stmt) => stmt.getStart() > insertPos) + 1;
+            const insertIndex = tsSourceFile
+              .getStatementsWithComments()
+              .findIndex((stmt) => stmt.getStart() > insertPos);
 
             tsSourceFile.insertStatements(insertIndex, [
               '\n',
