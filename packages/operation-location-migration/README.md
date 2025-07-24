@@ -110,7 +110,7 @@ const config: CodegenConfig = {
   schema: 'src/**/*.graphqls',
   documents: 'src/**/*.tsx', // 👈 Your documents should be in your components, so this is updated to target them.
   generates: {
-    'src/gql': {
+    'src/gql/': {
       preset: 'client',
     },
   },

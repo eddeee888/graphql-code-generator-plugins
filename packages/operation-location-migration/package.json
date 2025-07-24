@@ -1,6 +1,23 @@
 {
   "name": "@eddeee888/gcg-operation-location-migration",
-  "version": "0.0.1",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eddeee888/graphql-code-generator-plugins.git",
+    "directory": "packages/operation-location-migration"
+  },
+  "homepage": "https://github.com/eddeee888/graphql-code-generator-plugins/blob/master/packages/operation-location-migration/README.md",
+  "keywords": [
+    "plugins",
+    "graphql",
+    "code",
+    "generator",
+    "preset",
+    "codegen",
+    "codemod"
+  ],
+  "author": "Eddy Nguyen <ch@eddeee888.me>",
+  "license": "MIT",
   "type": "commonjs",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
