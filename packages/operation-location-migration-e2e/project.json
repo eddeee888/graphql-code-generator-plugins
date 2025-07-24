@@ -9,8 +9,10 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "nx test-setup operation-location-migration-e2e",
+          "nx test-setup operation-location-migration-e2e -c test-index-to-colocation",
           "nx graphql-codegen operation-location-migration-e2e --verbose -c test-index-to-colocation",
+          "nx test-setup operation-location-migration-e2e -c test-near-operation-file-to-colocation",
+          "nx graphql-codegen operation-location-migration-e2e --verbose -c test-near-operation-file-to-colocation",
           "OUTPUT_PATTERN=\"{projectRoot}/src/**/*.ts\" bash packages/testing-utils/bin/assert-e2e.sh"
         ],
         "parallel": false
@@ -18,10 +20,18 @@
     },
     "test-setup": {
       "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-index-to-colocation/testSetup.ts"
-        ]
+      "options": {},
+      "configurations": {
+        "test-index-to-colocation": {
+          "commands": [
+            "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-index-to-colocation/testSetup.ts"
+          ]
+        },
+        "test-near-operation-file-to-colocation": {
+          "commands": [
+            "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-near-operation-file-to-colocation/testSetup.ts"
+          ]
+        }
       }
     },
     "graphql-codegen": {
@@ -30,6 +40,9 @@
       "configurations": {
         "test-index-to-colocation": {
           "configFile": "{projectRoot}/src/test-index-to-colocation/codegen.mts"
+        },
+        "test-near-operation-file-to-colocation": {
+          "configFile": "{projectRoot}/src/test-near-operation-file-to-colocation/codegen.mts"
         }
       },
       "dependsOn": ["prepare-e2e-modules"]
