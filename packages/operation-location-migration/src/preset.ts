@@ -15,13 +15,11 @@ import type { TypedPresetConfig } from './config';
 
 /**
  * TODO:
- * 1. Warn if unable to handle documents e.g. not valid or anonymous
- * 2. Don't make naive assumption that imports of the same name means they need to be replaced.
- *    - We should check import module, but it's more complex
- * 3. Handle `migrationDestination`:
- *    - ✅ "co-location"
- *    - [] "near-operation-file"
+ * - Don't make naive assumption that imports of the same name means they need to be replaced.
+ *   - Note: We should check import module, but it's more complex. So let's release first and look for feedback
  */
+
+const presetName = '@eddeee888/operation-location-migration';
 
 export const preset: Types.OutputPreset<TypedPresetConfig> = {
   buildGeneratesSection: async ({
@@ -60,16 +58,24 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
     > = {};
 
     documents.forEach((documentFile) => {
-      const documentPath = path.parse(documentFile.location || '');
+      const documentFilename = documentFile.location || '';
+      const documentPath = path.parse(documentFilename);
 
       if (!documentFile.document) {
-        throw new Error('Document does not exist!'); // FIXME: should not throw
+        console.warn(
+          `[${presetName}] Source does not have a valid DocumentNode: ${documentFilename}`
+        );
+        return;
       }
 
       visit(documentFile.document, {
         OperationDefinition(node) {
           if (!node.name) {
-            throw new Error('Anonymous operation!'); // FIXME: should not throw
+            // Note: Codegen may fail, but we have this here just in case
+            console.warn(
+              `[${presetName}] Anonymous operation is not supported: ${documentFilename}`
+            );
+            return;
           }
 
           const operationName = pascalCase(node.name.value);
