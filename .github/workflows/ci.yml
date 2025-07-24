@@ -16,6 +16,8 @@ jobs:
     outputs:
       affected-typescript-resolver-files: ${{ steps.affected.outputs.typescript-resolver-files }}
       affected-typescript-resolver-files-e2e: ${{ steps.affected.outputs.typescript-resolver-files-e2e }}
+      affected-operation-location-migration: ${{ steps.affected.outputs.operation-location-migration }}
+      affected-operation-location-migration-e2e: ${{ steps.affected.outputs.operation-location-migration-e2e }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -37,6 +39,8 @@ jobs:
         run: |
           echo "typescript-resolver-files=$(./tools/ci/bin/check-affected.sh lib typescript-resolver-files origin/master)" >> $GITHUB_OUTPUT
           echo "typescript-resolver-files-e2e=$(./tools/ci/bin/check-affected.sh lib typescript-resolver-files-e2e origin/master)" >> $GITHUB_OUTPUT
+          echo "operation-location-migration=$(./tools/ci/bin/check-affected.sh lib operation-location-migration origin/master)" >> $GITHUB_OUTPUT
+          echo "operation-location-migration-e2e=$(./tools/ci/bin/check-affected.sh lib operation-location-migration-e2e origin/master)" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
 
   typescript-resolver-files:
