@@ -11,5 +11,8 @@
     "change-case-all": "^1.0.0",
     "graphql": "^16.0.0",
     "ts-morph": "^22.0.0"
+  },
+  "publishConfig": {
+    "directory": "../../dist/packages/operation-location-migration"
   }
 }
