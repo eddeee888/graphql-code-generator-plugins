@@ -43,6 +43,11 @@ jobs:
           echo "operation-location-migration-e2e=$(./tools/ci/bin/check-affected.sh lib operation-location-migration-e2e origin/master)" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
 
+  start-operation-location-migration:
+    needs: precheck
+    if: ${{ needs.precheck.outputs.affected-operation-location-migration == 'true' || needs.precheck.outputs.affected-operation-location-migration-e2e == 'true' }}
+    uses: ./.github/workflows/operation-location-migration.yml
+
   typescript-resolver-files:
     needs: precheck
     if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' }}
