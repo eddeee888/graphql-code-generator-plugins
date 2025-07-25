@@ -1,0 +1,29 @@
+{
+  "name": "operation-location-migration",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/operation-location-migration/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/operation-location-migration",
+        "main": "packages/operation-location-migration/src/index.ts",
+        "tsConfig": "packages/operation-location-migration/tsconfig.lib.json",
+        "assets": ["packages/operation-location-migration/*.md"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/operation-location-migration/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

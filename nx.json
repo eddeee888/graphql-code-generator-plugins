@@ -36,6 +36,11 @@
           "{projectRoot}/package.json"
         ]
       }
+    },
+    "@nx/js:swc": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     }
   },
   "namedInputs": {
@@ -57,5 +62,13 @@
   "workspaceLayout": {
     "appsDir": "packages",
     "libsDir": "packages"
-  }
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "eslint:lint"
+      }
+    }
+  ]
 }

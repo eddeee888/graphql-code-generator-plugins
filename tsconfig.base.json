@@ -15,13 +15,17 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@eddeee888/gcg-operation-location-migration": [
+        "packages/operation-location-migration/src/index.ts"
+      ],
       "@eddeee888/gcg-server-config": ["packages/server-config/src/index.ts"],
       "@eddeee888/gcg-typescript-resolver-files": [
         "packages/typescript-resolver-files/src/index.ts"
       ],
       "@graphql-code-generator-plugins/workspace-plugin": [
         "tools/workspace-plugin/src/index.ts"
-      ]
+      ],
+      "@workspace/testing-utils": ["packages/testing-utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

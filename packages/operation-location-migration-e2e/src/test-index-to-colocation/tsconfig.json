@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "baseUrl": ".",
+    "module": "commonjs",
+    "strict": true
+  },
+  "include": ["./gql/**/*.ts", "./generated/**/*.ts", "./components/**/*.ts"]
+}
