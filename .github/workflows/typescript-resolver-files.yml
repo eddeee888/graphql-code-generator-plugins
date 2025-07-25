@@ -1,0 +1,35 @@
+on:
+  workflow_call:
+
+env:
+  node-version: '22.x'
+
+jobs:
+  typescript-resolver-files:
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, windows-latest]
+        node-version: [18.x, 20.x, 22.x]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: yarn
+          cache-dependency-path: '**/yarn.lock'
+
+      - name: Install deps
+        run: yarn install --prefer-offline
+
+      - name: Lint
+        run: yarn nx lint typescript-resolver-files
+
+      - name: Test
+        run: yarn nx test typescript-resolver-files
+
+      - name: Build
+        run: yarn nx build typescript-resolver-files
