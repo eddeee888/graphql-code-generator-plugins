@@ -1,5 +1,5 @@
 # operation-location-migration-e2e
 
 ```bash
-nx graphql-codegen operation-location-migration-e2e -c test-arbitrary-to-colocation
+nx e2e operation-location-migration-e2e
 ```
