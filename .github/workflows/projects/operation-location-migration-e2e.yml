@@ -1,0 +1,34 @@
+on:
+  workflow_call:
+
+env:
+  node-version: '22.x'
+
+jobs:
+  operation-location-migration-e2e:
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, windows-latest]
+        node-version: [18.x, 20.x, 22.x]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: yarn
+          cache-dependency-path: '**/yarn.lock'
+
+      - name: Install deps
+        run: yarn install --prefer-offline
+
+      - name: e2e
+        run: yarn nx e2e operation-location-migration-e2e
