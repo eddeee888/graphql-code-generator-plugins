@@ -1,5 +1,11 @@
 # @eddeee888/gcg-operation-location-migration
 
+## 0.0.2
+
+### Patch Changes
+
+- 209b7c2: Fix Windows support
+
 ## 0.0.1
 
 ### Patch Changes
