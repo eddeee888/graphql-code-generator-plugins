@@ -22,10 +22,8 @@
       "@eddeee888/gcg-typescript-resolver-files": [
         "packages/typescript-resolver-files/src/index.ts"
       ],
-      "@graphql-code-generator-plugins/workspace-plugin": [
-        "tools/workspace-plugin/src/index.ts"
-      ],
-      "@workspace/testing-utils": ["tools/testing-utils/src/index.ts"]
+      "@workspace/testing-utils": ["tools/testing-utils/src/index.ts"],
+      "@workspace/workspace-plugin": ["tools/workspace-plugin/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
