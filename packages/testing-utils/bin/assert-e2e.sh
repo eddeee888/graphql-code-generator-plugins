@@ -2,7 +2,8 @@
 
 set -eu
 
-output_pattern=$OUTPUT_PATTERN
+# Accept output pattern as first argument, fallback to environment variable
+output_pattern="$1"
 
 # Assert committed files are the same
 echo -e "\n=> Checking if actual output matches commited files..."

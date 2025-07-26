@@ -13,7 +13,7 @@
           "nx graphql-codegen operation-location-migration-e2e --verbose -c test-index-to-colocation-migrate",
           "nx test-setup operation-location-migration-e2e -c test-near-operation-file-to-colocation",
           "nx graphql-codegen operation-location-migration-e2e --verbose -c test-near-operation-file-to-colocation-migrate",
-          "OUTPUT_PATTERN=\"{projectRoot}/src/**/*.ts\" bash packages/testing-utils/bin/assert-e2e.sh"
+          "bash packages/testing-utils/bin/assert-e2e.sh \"{projectRoot}/src/**/*.ts\""
         ],
         "parallel": false
       }
