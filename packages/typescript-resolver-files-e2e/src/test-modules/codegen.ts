@@ -11,7 +11,7 @@ const config: CodegenConfig = {
     'packages/typescript-resolver-files-e2e/src/test-modules/modules':
       defineConfig({
         tsConfigFilePath:
-          'packages/typescript-resolver-files-e2e/tsconfig.json',
+          'packages/typescript-resolver-files-e2e/tsconfig.lib.json',
       }),
   },
 };
