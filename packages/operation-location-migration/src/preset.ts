@@ -202,7 +202,11 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
           ? presetConfig.gqlTag.importFrom
           : path.posix.relative(
               path.posix.dirname(tsSourceFile.getFilePath()),
-              path.posix.join(baseOutputDir, presetConfig.gqlTag.importFrom)
+              path.posix.join(
+                cwd(),
+                baseOutputDir,
+                presetConfig.gqlTag.importFrom
+              )
             );
 
       tsSourceFile.addImportDeclaration({
