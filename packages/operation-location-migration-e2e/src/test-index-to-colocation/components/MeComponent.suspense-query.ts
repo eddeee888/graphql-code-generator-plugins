@@ -8,7 +8,7 @@ query Me {
     __typename
   }
 }
-`)
+`);
 
 export const MeComponent = () => {
   useSuspenseQuery(MeDoc);

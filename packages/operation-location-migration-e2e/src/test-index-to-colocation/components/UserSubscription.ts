@@ -9,7 +9,7 @@ subscription UserChanges {
     name
   }
 }
-`)
+`);
 
 export const UserSubscription = () => {
   useSubscription(UserChangesDoc, {});

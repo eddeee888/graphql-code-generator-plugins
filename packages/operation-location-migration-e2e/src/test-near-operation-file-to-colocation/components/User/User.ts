@@ -8,7 +8,7 @@ query User($id: ID!) {
     ...UserFragment
   }
 }
-`)
+`);
 
 export const Me = () => {
   useSuspenseQuery(UserDoc);

@@ -11,7 +11,7 @@ mutation UpdateUser($input: UpdateUserInput!) {
     name
   }
 }
-`)
+`);
 
 const MeDoc = graphql(`
 query Me {
@@ -19,7 +19,7 @@ query Me {
     __typename
   }
 }
-`)
+`);
 
 export const UserComponent = () => {
   useQuery(MeDoc, { onCompleted: () => {} });

@@ -6,4 +6,4 @@ query Me {
     ...UserFragment
   }
 }
-`)
+`);

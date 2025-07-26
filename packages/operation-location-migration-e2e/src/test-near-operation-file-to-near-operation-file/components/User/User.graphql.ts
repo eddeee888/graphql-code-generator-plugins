@@ -6,4 +6,4 @@ query User($id: ID!) {
     ...UserFragment
   }
 }
-`)
+`);
