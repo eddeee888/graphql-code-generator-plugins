@@ -8,7 +8,6 @@ export default [
       '@nx/dependency-checks': [
         'error',
         {
-          ignoredDependencies: ['graphql'],
           ignoredFiles: ['{projectRoot}/eslint.config.{js,cjs,mjs,ts,cts,mts}'],
         },
       ],
