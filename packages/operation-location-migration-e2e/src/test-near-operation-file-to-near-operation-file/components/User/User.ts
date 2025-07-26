@@ -1,7 +1,7 @@
 /* This file has been created on filesystem by @workspace/testing#createTestSetup */
-
-import { useUserSuspenseQuery } from './User.generated';
+import { useSuspenseQuery } from "@apollo/client";
+import { UserDoc } from "./User.graphql";
 
 export const Me = () => {
-  useUserSuspenseQuery();
+  useSuspenseQuery(UserDoc);
 };

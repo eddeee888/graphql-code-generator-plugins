@@ -19,6 +19,29 @@
           "bash tools/testing/bin/assert-e2e.sh \"{projectRoot}/src/**/*.ts\""
         ],
         "parallel": false
+      },
+      "configurations": {
+        "test-index-to-colocation": {
+          "commands": [
+            "nx test-setup operation-location-migration-e2e -c test-index-to-colocation",
+            "nx graphql-codegen operation-location-migration-e2e --verbose -c test-index-to-colocation-migrate",
+            "bash tools/testing/bin/assert-e2e.sh \"{projectRoot}/src/**/*.ts\""
+          ]
+        },
+        "test-near-operation-file-to-colocation": {
+          "commands": [
+            "nx test-setup operation-location-migration-e2e -c test-near-operation-file-to-colocation",
+            "nx graphql-codegen operation-location-migration-e2e --verbose -c test-near-operation-file-to-colocation-migrate",
+            "bash tools/testing/bin/assert-e2e.sh \"{projectRoot}/src/**/*.ts\""
+          ]
+        },
+        "test-near-operation-file-to-near-operation-file": {
+          "commands": [
+            "nx test-setup operation-location-migration-e2e -c test-near-operation-file-to-near-operation-file",
+            "nx graphql-codegen operation-location-migration-e2e --verbose -c test-near-operation-file-to-near-operation-file-migrate",
+            "bash tools/testing/bin/assert-e2e.sh \"{projectRoot}/src/**/*.ts\""
+          ]
+        }
       }
     },
     "test-setup": {
