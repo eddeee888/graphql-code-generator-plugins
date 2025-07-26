@@ -195,6 +195,12 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
         })),
       });
 
+      console.log({
+        filename: tsSourceFile.getFilePath(),
+        dirname: path.dirname(tsSourceFile.getFilePath()),
+        posixDirname: path.posix.dirname(tsSourceFile.getFilePath()),
+      });
+
       const gqlTagModule =
         presetConfig.gqlTag.importType === 'absolute'
           ? presetConfig.gqlTag.importFrom
