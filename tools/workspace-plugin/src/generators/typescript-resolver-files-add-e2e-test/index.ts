@@ -79,12 +79,12 @@ const updateProjectConfig = (tree: Tree, options: NormalizedSchema): void => {
     `nx graphql-codegen typescript-resolver-files-e2e -c ${options.testFullName} --verbose`
   );
   graphQLCodegenConfig[options.testFullName] = {
-    configFile: `packages/typescript-resolver-files-e2e/src/${options.testFullName}/codegen.ts`,
+    configFile: `{projectRoot}/src/${options.testFullName}/codegen.ts`,
   };
   e2eCleanupConfig[options.testFullName] = {
     commands: [
-      `rimraf -g \"packages/typescript-resolver-files-e2e/src/${options.testFullName}/**/resolvers/\"`,
-      `rimraf -g \"packages/typescript-resolver-files-e2e/src/${options.testFullName}/**/*.generated.*\"`,
+      `rimraf -g \"{projectRoot}/src/${options.testFullName}/**/resolvers/\"`,
+      `rimraf -g \"{projectRoot}/src/${options.testFullName}/**/*.generated.*\"`,
     ],
     parallel: false,
   };
