@@ -1,8 +1,9 @@
 {
   "name": "testing-utils",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/testing-utils/src",
+  "sourceRoot": "tools/testing-utils/src",
   "projectType": "library",
   "tags": [],
+  "// targets": "to see all targets run: nx show project testing-utils --web",
   "targets": {}
 }

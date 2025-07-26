@@ -25,7 +25,7 @@
       "@graphql-code-generator-plugins/workspace-plugin": [
         "tools/workspace-plugin/src/index.ts"
       ],
-      "@workspace/testing-utils": ["packages/testing-utils/src/index.ts"]
+      "@workspace/testing-utils": ["tools/testing-utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
