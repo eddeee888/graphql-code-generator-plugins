@@ -1,3 +1,5 @@
+name: operation-location-migration
+
 on:
   workflow_call:
 
