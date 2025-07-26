@@ -197,17 +197,11 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
         })),
       });
 
-      console.log({
-        filename: tsSourceFile.getFilePath(),
-        dirname: path.dirname(tsSourceFile.getFilePath()),
-        posixDirname: path.posix.dirname(tsSourceFile.getFilePath()),
-      });
-
       const gqlTagModule =
         presetConfig.gqlTag.importType === 'absolute'
           ? presetConfig.gqlTag.importFrom
           : path.posix.relative(
-              path.posix.dirname(tsSourceFile.getFilePath()), // TODO: would this break in windows?
+              path.posix.dirname(tsSourceFile.getFilePath()),
               path.posix.join(baseOutputDir, presetConfig.gqlTag.importFrom)
             );
 
@@ -268,7 +262,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
     });
 
     return tsSourceFiles.map((tsSourceFile) => ({
-      filename: tsSourceFile.getFilePath().split(path.posix.sep).join(path.sep),
+      filename: tsSourceFile.getFilePath(),
       pluginMap: { add: addPlugin },
       plugins: [{ add: { content: tsSourceFile.getFullText() } }],
       config: {},
