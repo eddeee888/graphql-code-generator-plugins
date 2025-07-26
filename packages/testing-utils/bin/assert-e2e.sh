@@ -2,7 +2,7 @@
 
 set -eu
 
-output_pattern=$OUTPUT_PATTERN
+output_pattern="$1"
 
 # Assert committed files are the same
 echo -e "\n=> Checking if actual output matches commited files..."

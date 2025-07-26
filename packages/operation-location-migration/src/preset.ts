@@ -33,7 +33,9 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
       presetConfig.tsConfigFilePath
     );
     if (!fs.existsSync(absoluteTsConfigFilePath)) {
-      throw new Error('Requires tsconfig');
+      throw new Error(
+        `${absoluteTsConfigFilePath} not found! Use presetConfig.tsConfigFilePath to set the path to your tsconfig.json file.`
+      );
     }
 
     const tsProject = new Project({
@@ -199,8 +201,12 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
         presetConfig.gqlTag.importType === 'absolute'
           ? presetConfig.gqlTag.importFrom
           : path.posix.relative(
-              path.dirname(tsSourceFile.getFilePath()), // TODO: would this break in windows?
-              path.posix.join(baseOutputDir, presetConfig.gqlTag.importFrom)
+              path.posix.dirname(tsSourceFile.getFilePath()),
+              path.posix.join(
+                cwd(),
+                baseOutputDir,
+                presetConfig.gqlTag.importFrom
+              )
             );
 
       tsSourceFile.addImportDeclaration({
@@ -251,7 +257,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
 
             tsSourceFile.insertStatements(insertIndex, [
               '\n',
-              `const ${documentNodeName} = graphql(\`${graphqlDocument.documentSDL}\`)`,
+              `const ${documentNodeName} = graphql(\`\n${graphqlDocument.documentSDL}\n\`)`,
             ]);
             addedDocMap[documentNodeName] = true;
           }

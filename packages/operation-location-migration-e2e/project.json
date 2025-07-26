@@ -10,10 +10,10 @@
       "options": {
         "commands": [
           "nx test-setup operation-location-migration-e2e -c test-index-to-colocation",
-          "nx graphql-codegen operation-location-migration-e2e --verbose -c test-index-to-colocation",
+          "nx graphql-codegen operation-location-migration-e2e --verbose -c test-index-to-colocation-migrate",
           "nx test-setup operation-location-migration-e2e -c test-near-operation-file-to-colocation",
-          "nx graphql-codegen operation-location-migration-e2e --verbose -c test-near-operation-file-to-colocation",
-          "OUTPUT_PATTERN=\"{projectRoot}/src/**/*.ts\" bash packages/testing-utils/bin/assert-e2e.sh"
+          "nx graphql-codegen operation-location-migration-e2e --verbose -c test-near-operation-file-to-colocation-migrate",
+          "bash packages/testing-utils/bin/assert-e2e.sh \"{projectRoot}/src/**/*.ts\""
         ],
         "parallel": false
       }
@@ -24,12 +24,14 @@
       "configurations": {
         "test-index-to-colocation": {
           "commands": [
-            "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-index-to-colocation/testSetup.ts"
+            "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-index-to-colocation/testSetup.ts",
+            "nx graphql-codegen operation-location-migration-e2e --verbose -c test-index-to-colocation-setup"
           ]
         },
         "test-near-operation-file-to-colocation": {
           "commands": [
-            "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-near-operation-file-to-colocation/testSetup.ts"
+            "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-near-operation-file-to-colocation/testSetup.ts",
+            "nx graphql-codegen operation-location-migration-e2e --verbose -c test-near-operation-file-to-colocation-setup"
           ]
         }
       }
@@ -38,11 +40,17 @@
       "executor": "@eddeee888/nx-graphql-code-generator:codegen",
       "options": {},
       "configurations": {
-        "test-index-to-colocation": {
-          "configFile": "{projectRoot}/src/test-index-to-colocation/codegen.mts"
+        "test-index-to-colocation-setup": {
+          "configFile": "{projectRoot}/src/test-index-to-colocation/codegen.setup.mts"
         },
-        "test-near-operation-file-to-colocation": {
-          "configFile": "{projectRoot}/src/test-near-operation-file-to-colocation/codegen.mts"
+        "test-index-to-colocation-migrate": {
+          "configFile": "{projectRoot}/src/test-index-to-colocation/codegen.migrate.mts"
+        },
+        "test-near-operation-file-to-colocation-setup": {
+          "configFile": "{projectRoot}/src/test-near-operation-file-to-colocation/codegen.setup.mts"
+        },
+        "test-near-operation-file-to-colocation-migrate": {
+          "configFile": "{projectRoot}/src/test-near-operation-file-to-colocation/codegen.migrate.mts"
         }
       },
       "dependsOn": ["prepare-e2e-modules"]

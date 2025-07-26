@@ -1,14 +1,14 @@
 /* This file has been created on filesystem by @workspace/testing-utils#createTestSetup */
-import { useSuspenseQuery } from '@apollo/client/react';
-import { graphql } from '../gql';
+import { useSuspenseQuery } from "@apollo/client/react";
+import { graphql } from "../gql";
 
 const MeDoc = graphql(`
-  query Me {
-    me {
-      __typename
-    }
+query Me {
+  me {
+    __typename
   }
-`);
+}
+`)
 
 export const MeComponent = () => {
   useSuspenseQuery(MeDoc);
