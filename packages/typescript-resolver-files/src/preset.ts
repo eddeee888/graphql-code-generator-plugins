@@ -202,6 +202,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       schema,
       documents: [],
     };
+    console.log({ resolverTypesPath });
     generatesSection.push(resolverTypesFile);
 
     // typeDefs
@@ -290,6 +291,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           );
         })
         .map(([filename, { content }]) => {
+          console.log({ filename });
           return {
             filename,
             pluginMap: { add: addPlugin },
