@@ -1,4 +1,4 @@
-const { createTestSetup } = require('../utils/createTestSetup');
+import { createTestSetup } from '@workspace/testing-utils';
 
 createTestSetup({
   baseDir:
