@@ -1,4 +1,4 @@
-import { createTestSetup } from '@workspace/testing-utils';
+import { createTestSetup } from '@workspace/testing';
 
 createTestSetup({
   baseDir:

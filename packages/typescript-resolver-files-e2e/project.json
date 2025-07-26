@@ -11,7 +11,7 @@
       "options": {
         "commands": [
           "nx e2e-run typescript-resolver-files-e2e -c clean-run",
-          "bash packages/testing-utils/bin/assert-e2e.sh \"{projectRoot}/src/**/*.ts\""
+          "bash tools/testing/bin/assert-e2e.sh \"{projectRoot}/src/**/*.ts\""
         ],
         "parallel": false
       }
