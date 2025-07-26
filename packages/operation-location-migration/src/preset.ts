@@ -33,7 +33,9 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
       presetConfig.tsConfigFilePath
     );
     if (!fs.existsSync(absoluteTsConfigFilePath)) {
-      throw new Error('Requires tsconfig');
+      throw new Error(
+        `${absoluteTsConfigFilePath} not found! Use presetConfig.tsConfigFilePath to set the path to your tsconfig.json file.`
+      );
     }
 
     const tsProject = new Project({
