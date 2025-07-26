@@ -1,15 +1,13 @@
 {
   "extends": ["config:base", "github>whitesource/merge-confidence:beta"],
   "branchConcurrentLimit": 3,
+  "rebaseWhen": "never",
   "ignoreDeps": [
     "@swc-node/register",
     "@swc/core",
     "@swc/helpers",
     "@types/jest",
     "@types/node",
-    "@typescript-eslint/eslint-plugin",
-    "@typescript-eslint/parser",
-    "babel-jest",
     "eslint",
     "eslint-config-prettier",
     "jest",
