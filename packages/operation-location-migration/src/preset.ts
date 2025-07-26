@@ -207,7 +207,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
         presetConfig.gqlTag.importType === 'absolute'
           ? presetConfig.gqlTag.importFrom
           : path.posix.relative(
-              path.dirname(tsSourceFile.getFilePath()), // TODO: would this break in windows?
+              path.posix.dirname(tsSourceFile.getFilePath()), // TODO: would this break in windows?
               path.posix.join(baseOutputDir, presetConfig.gqlTag.importFrom)
             );
 
