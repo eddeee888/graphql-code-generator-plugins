@@ -40,6 +40,7 @@
         "test-near-operation-file-to-near-operation-file": {
           "commands": [
             "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-near-operation-file-to-near-operation-file/testSetup.ts",
+            "rimraf -g \"{projectRoot}/src/test-near-operation-file-to-near-operation-file/**/*.graphql.ts\"",
             "nx graphql-codegen operation-location-migration-e2e --verbose -c test-near-operation-file-to-near-operation-file-setup"
           ]
         }

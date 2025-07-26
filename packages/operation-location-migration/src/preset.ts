@@ -5,9 +5,10 @@ import type { Types } from '@graphql-codegen/plugin-helpers';
 import { pascalCase } from 'change-case-all';
 import { OperationTypeNode, print, visit } from 'graphql';
 import {
-  CallExpression,
-  ImportDeclaration,
-  ImportSpecifier,
+  type SourceFile,
+  type CallExpression,
+  type ImportDeclaration,
+  type ImportSpecifier,
   Project,
   SyntaxKind,
 } from 'ts-morph';
@@ -42,7 +43,6 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
     const tsProject = new Project({
       tsConfigFilePath: absoluteTsConfigFilePath,
     });
-    const tsSourceFiles = tsProject.getSourceFiles();
 
     const hooksToReplace: Record<
       string,
@@ -55,10 +55,16 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
           | 'useMutation'
           | 'useSubscription';
         importFrom: path.ParsedPath;
-        operationName: string;
+        documentNodeName: string;
         documentSDL: string;
       }
     > = {};
+
+    const nearOperationFilesToCreate: {
+      filename: string;
+      documentNodeName: string;
+      documentSDL: string;
+    }[] = [];
 
     documents.forEach((documentFile) => {
       const documentFilename = documentFile.location || '';
@@ -82,7 +88,16 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
           }
 
           const operationName = pascalCase(node.name.value);
+          const documentNodeName = `${operationName}Doc`;
           const documentSDL = print(node);
+
+          if (targetStyle === 'near-operation-file') {
+            nearOperationFilesToCreate.push({
+              filename: `${documentFilename}.ts`, // FIXME: this is assuming near-operation-file are .graphql
+              documentNodeName,
+              documentSDL,
+            });
+          }
 
           if (node.operation === OperationTypeNode.QUERY) {
             // Query
@@ -91,7 +106,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
               hookName: queryHookName,
               hookType: 'useQuery',
               importFrom: documentPath,
-              operationName,
+              documentNodeName,
               documentSDL,
             };
 
@@ -100,7 +115,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
               hookName: lazyHookName,
               hookType: 'useLazyQuery',
               importFrom: documentPath,
-              operationName,
+              documentNodeName,
               documentSDL,
             };
 
@@ -111,7 +126,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
               hookName: suspenseHookName,
               hookType: 'useSuspenseQuery',
               importFrom: documentPath,
-              operationName,
+              documentNodeName,
               documentSDL,
             };
           } else {
@@ -126,7 +141,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
                   ? 'useMutation'
                   : 'useSubscription',
               importFrom: documentPath,
-              operationName,
+              documentNodeName,
               documentSDL,
             };
           }
@@ -134,7 +149,19 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
       });
     });
 
-    tsSourceFiles.forEach((tsSourceFile) => {
+    nearOperationFilesToCreate.forEach((nearOperationFile) => {
+      const tsSourceFile = tsProject.createSourceFile(
+        nearOperationFile.filename
+      );
+      createGqlTagImport({ baseOutputDir, presetConfig, tsSourceFile });
+      createDoc({
+        tsSourceFile,
+        documentNodeName: nearOperationFile.documentNodeName,
+        documentSDL: nearOperationFile.documentSDL,
+      });
+    });
+
+    tsProject.getSourceFiles().forEach((tsSourceFile) => {
       // find imports
       const fileMetadata: {
         hasNodeToReplace: boolean;
@@ -198,22 +225,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
         })),
       });
 
-      const gqlTagModule =
-        presetConfig.gqlTag.importType === 'absolute'
-          ? presetConfig.gqlTag.importFrom
-          : path.posix.relative(
-              path.posix.dirname(tsSourceFile.getFilePath()),
-              path.posix.join(
-                cwd(),
-                baseOutputDir,
-                presetConfig.gqlTag.importFrom
-              )
-            );
-
-      tsSourceFile.addImportDeclaration({
-        moduleSpecifier: gqlTagModule,
-        namedImports: [{ name: presetConfig.gqlTag.name }],
-      });
+      createGqlTagImport({ baseOutputDir, presetConfig, tsSourceFile });
 
       const addedDocMap: Record<string, true> = {};
 
@@ -222,7 +234,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
           if (functionToReplace.callExpression) {
             const graphqlDocument =
               hooksToReplace[functionToReplace.importSpecifierNode.getName()];
-            const documentNodeName = `${graphqlDocument.operationName}Doc`;
+            const { documentNodeName } = graphqlDocument;
 
             functionToReplace.callExpression
               .getFirstDescendantByKindOrThrow(SyntaxKind.Identifier)
@@ -248,25 +260,19 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
               return;
             }
 
-            // Find insertIndex, which is after the last import declaration
-            const importDeclarations = tsSourceFile.getImportDeclarations();
-            const insertPos =
-              importDeclarations[importDeclarations.length - 1].getEnd();
-            const insertIndex = tsSourceFile
-              .getStatementsWithComments()
-              .findIndex((stmt) => stmt.getStart() > insertPos);
+            createDoc({
+              tsSourceFile,
+              documentNodeName,
+              documentSDL: graphqlDocument.documentSDL,
+            });
 
-            tsSourceFile.insertStatements(insertIndex, [
-              '\n',
-              `const ${documentNodeName} = graphql(\`\n${graphqlDocument.documentSDL}\n\`)`,
-            ]);
             addedDocMap[documentNodeName] = true;
           }
         }
       );
     });
 
-    return tsSourceFiles.map((tsSourceFile) => ({
+    return tsProject.getSourceFiles().map((tsSourceFile) => ({
       filename: tsSourceFile.getFilePath(),
       pluginMap: { add: addPlugin },
       plugins: [{ add: { content: tsSourceFile.getFullText() } }],
@@ -282,4 +288,52 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
  */
 const cwd = (): string => {
   return process.cwd().split(path.sep).join(path.posix.sep);
+};
+
+const createGqlTagImport = ({
+  baseOutputDir,
+  presetConfig,
+  tsSourceFile,
+}: {
+  baseOutputDir: string;
+  presetConfig: TypedPresetConfig;
+  tsSourceFile: SourceFile;
+}) => {
+  // 1. handle gql tag import
+  const gqlTagModule =
+    presetConfig.gqlTag.importType === 'absolute'
+      ? presetConfig.gqlTag.importFrom
+      : path.posix.relative(
+          path.posix.dirname(tsSourceFile.getFilePath()),
+          path.posix.join(cwd(), baseOutputDir, presetConfig.gqlTag.importFrom)
+        );
+
+  tsSourceFile.addImportDeclaration({
+    moduleSpecifier: gqlTagModule,
+    namedImports: [{ name: presetConfig.gqlTag.name }],
+  });
+
+  // 2. create doc
+  // Find insertIndex, which is after the last import declaration
+};
+
+const createDoc = ({
+  tsSourceFile,
+  documentNodeName,
+  documentSDL,
+}: {
+  tsSourceFile: SourceFile;
+  documentNodeName: string;
+  documentSDL: string;
+}) => {
+  const importDeclarations = tsSourceFile.getImportDeclarations();
+  const insertPos = importDeclarations[importDeclarations.length - 1].getEnd();
+  const insertIndex = tsSourceFile
+    .getStatementsWithComments()
+    .findIndex((stmt) => stmt.getStart() > insertPos);
+
+  tsSourceFile.insertStatements(insertIndex, [
+    '\n',
+    `const ${documentNodeName} = graphql(\`\n${documentSDL}\n\`)`,
+  ]);
 };

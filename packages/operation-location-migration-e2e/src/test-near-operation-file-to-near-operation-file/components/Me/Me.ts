@@ -1,13 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { graphql } from '../../gql';
-
-const MeDoc = graphql(`
-  query Me {
-    me {
-      ...UserFragment
-    }
-  }
-`);
+import { MeDoc } from './Me.graphql';
 
 export const Me = () => {
   useQuery(MeDoc);
