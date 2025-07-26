@@ -28,6 +28,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
     documents,
     presetConfig,
   }) => {
+    const targetStyle = presetConfig.targetStyle || 'co-location';
     const absoluteTsConfigFilePath = path.join(
       cwd(),
       presetConfig.tsConfigFilePath

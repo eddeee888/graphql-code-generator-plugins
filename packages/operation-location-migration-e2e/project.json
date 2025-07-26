@@ -14,6 +14,8 @@
           "nx graphql-codegen operation-location-migration-e2e --verbose -c test-index-to-colocation-migrate",
           "nx test-setup operation-location-migration-e2e -c test-near-operation-file-to-colocation",
           "nx graphql-codegen operation-location-migration-e2e --verbose -c test-near-operation-file-to-colocation-migrate",
+          "nx test-setup operation-location-migration-e2e -c test-near-operation-file-to-near-operation-file",
+          "nx graphql-codegen operation-location-migration-e2e --verbose -c test-near-operation-file-to-near-operation-file-migrate",
           "bash tools/testing/bin/assert-e2e.sh \"{projectRoot}/src/**/*.ts\""
         ],
         "parallel": false
@@ -34,6 +36,12 @@
             "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-near-operation-file-to-colocation/testSetup.ts",
             "nx graphql-codegen operation-location-migration-e2e --verbose -c test-near-operation-file-to-colocation-setup"
           ]
+        },
+        "test-near-operation-file-to-near-operation-file": {
+          "commands": [
+            "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-near-operation-file-to-near-operation-file/testSetup.ts",
+            "nx graphql-codegen operation-location-migration-e2e --verbose -c test-near-operation-file-to-near-operation-file-setup"
+          ]
         }
       }
     },
@@ -52,6 +60,12 @@
         },
         "test-near-operation-file-to-colocation-migrate": {
           "configFile": "{projectRoot}/src/test-near-operation-file-to-colocation/codegen.migrate.mts"
+        },
+        "test-near-operation-file-to-near-operation-file-setup": {
+          "configFile": "{projectRoot}/src/test-near-operation-file-to-near-operation-file/codegen.setup.mts"
+        },
+        "test-near-operation-file-to-near-operation-file-migrate": {
+          "configFile": "{projectRoot}/src/test-near-operation-file-to-near-operation-file/codegen.migrate.mts"
         }
       },
       "dependsOn": ["prepare-e2e-modules"]
