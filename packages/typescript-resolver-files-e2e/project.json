@@ -11,7 +11,7 @@
       "options": {
         "commands": [
           "nx e2e-run typescript-resolver-files-e2e -c clean-run",
-          "bash packages/typescript-resolver-files-e2e/bin/assert-e2e.sh"
+          "bash tools/testing/bin/assert-e2e.sh \"{projectRoot}/src/**/*.ts\""
         ],
         "parallel": false
       }
@@ -20,149 +20,149 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "rimraf -g \"packages/typescript-resolver-files-e2e/src/**/resolvers/\"",
-          "rimraf -g \"packages/typescript-resolver-files-e2e/src/**/rslvrs/\"",
-          "rimraf -g \"packages/typescript-resolver-files-e2e/src/**/*.generated.*\"",
-          "rimraf -g \"packages/typescript-resolver-files-e2e/src/**/*.gen.*\"",
-          "rimraf -g \"packages/typescript-resolver-files-e2e/src/**/generated\"",
-          "node packages/typescript-resolver-files-e2e/src/test-mappers-vs-schema-types/testSetup.js",
-          "node packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/testSetup.js"
+          "rimraf -g \"{projectRoot}/src/**/resolvers/\"",
+          "rimraf -g \"{projectRoot}/src/**/rslvrs/\"",
+          "rimraf -g \"{projectRoot}/src/**/*.generated.*\"",
+          "rimraf -g \"{projectRoot}/src/**/*.gen.*\"",
+          "rimraf -g \"{projectRoot}/src/**/generated\"",
+          "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-mappers-vs-schema-types/testSetup.ts",
+          "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-resolvers-auto-wireup/testSetup.ts"
         ],
         "parallel": false
       },
       "configurations": {
         "test-merged": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-merged/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-merged/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-merged/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-merged/**/*.generated.*\""
           ],
           "parallel": false
         },
         "test-modules": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-modules/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-modules/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-modules/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-modules/**/*.generated.*\""
           ],
           "parallel": false
         },
         "test-whitelisted": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-whitelisted/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-whitelisted/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-whitelisted/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-whitelisted/**/*.generated.*\""
           ],
           "parallel": false
         },
         "test-external-resolvers": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-external-resolvers/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-external-resolvers/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-external-resolvers/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-external-resolvers/**/*.generated.*\""
           ],
           "parallel": false
         },
         "test-config-overrides": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-config-overrides/**/rslvrs/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-config-overrides/**/*.gen.*\""
+            "rimraf -g \"{projectRoot}/src/test-config-overrides/**/rslvrs/\"",
+            "rimraf -g \"{projectRoot}/src/test-config-overrides/**/*.gen.*\""
           ],
           "parallel": false
         },
         "test-mappers": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-mappers/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-mappers/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-mappers/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-mappers/**/*.generated.*\""
           ],
           "parallel": false
         },
         "test-mappers-vs-schema-types": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-mappers-vs-schema-types/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-mappers-vs-schema-types/**/*.generated.*\"",
-            "node packages/typescript-resolver-files-e2e/src/test-mappers-vs-schema-types/testSetup.js"
+            "rimraf -g \"{projectRoot}/src/test-mappers-vs-schema-types/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-mappers-vs-schema-types/**/*.generated.*\"",
+            "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-mappers-vs-schema-types/testSetup.ts"
           ],
           "parallel": false
         },
         "test-config-ts": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-config-ts/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-config-ts/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-config-ts/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-config-ts/**/*.generated.*\""
           ],
           "parallel": false
         },
         "test-modules-typedefs-file-mode": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-modules-typedefs-file-mode/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-modules-typedefs-file-mode/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-modules-typedefs-file-mode/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-modules-typedefs-file-mode/**/*.generated.*\""
           ],
           "parallel": false
         },
         "test-modules-resolver-main-file-mode": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-modules-resolver-main-file-mode/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-modules-resolver-main-file-mode/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-modules-resolver-main-file-mode/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-modules-resolver-main-file-mode/**/*.generated.*\""
           ],
           "parallel": false
         },
         "test-scalars-module": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-scalars-module/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-scalars-module/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-scalars-module/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-scalars-module/**/*.generated.*\""
           ],
           "parallel": false
         },
         "test-resolver-generation": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-resolver-generation/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-resolver-generation/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-resolver-generation/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-resolver-generation/**/*.generated.*\""
           ],
           "parallel": false
         },
         "test-add-option": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-add-option/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-add-option/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-add-option/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-add-option/**/*.generated.*\""
           ],
           "parallel": false
         },
         "test-extended-object-types": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-extended-object-types/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-extended-object-types/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-extended-object-types/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-extended-object-types/**/*.generated.*\""
           ],
           "parallel": false
         },
         "test-nested-domain-modules": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-nested-domain-modules/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-nested-domain-modules/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-nested-domain-modules/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-nested-domain-modules/**/*.generated.*\""
           ],
           "parallel": false
         },
         "test-resolvers-auto-wireup": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/**/*.generated.*\"",
-            "node packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/testSetup.js"
+            "rimraf -g \"{projectRoot}/src/test-resolvers-auto-wireup/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-resolvers-auto-wireup/**/*.generated.*\"",
+            "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-resolvers-auto-wireup/testSetup.ts"
           ],
           "parallel": false
         },
         "test-federation": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-federation/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-federation/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-federation/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-federation/**/*.generated.*\""
           ],
           "parallel": false
         },
         "test-deep-modules": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-deep-modules/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-deep-modules/**/generated\""
+            "rimraf -g \"{projectRoot}/src/test-deep-modules/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-deep-modules/**/generated\""
           ],
           "parallel": false
         },
         "test-complex-synth-generic-wrapper": {
           "commands": [
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-complex-synth-generic-wrapper/**/resolvers/\"",
-            "rimraf -g \"packages/typescript-resolver-files-e2e/src/test-complex-synth-generic-wrapper/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-complex-synth-generic-wrapper/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-complex-synth-generic-wrapper/**/*.generated.*\""
           ],
           "parallel": false
         }
@@ -211,64 +211,64 @@
       "options": {},
       "configurations": {
         "test-merged": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-merged/codegen.yml"
+          "configFile": "{projectRoot}/src/test-merged/codegen.yml"
         },
         "test-modules": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-modules/codegen.ts"
+          "configFile": "{projectRoot}/src/test-modules/codegen.ts"
         },
         "test-whitelisted": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-whitelisted/codegen.yml"
+          "configFile": "{projectRoot}/src/test-whitelisted/codegen.yml"
         },
         "test-external-resolvers": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-external-resolvers/codegen.yml"
+          "configFile": "{projectRoot}/src/test-external-resolvers/codegen.yml"
         },
         "test-config-overrides": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-config-overrides/codegen.ts"
+          "configFile": "{projectRoot}/src/test-config-overrides/codegen.ts"
         },
         "test-mappers": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-mappers/codegen.ts"
+          "configFile": "{projectRoot}/src/test-mappers/codegen.ts"
         },
         "test-mappers-vs-schema-types": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-mappers-vs-schema-types/codegen.ts"
+          "configFile": "{projectRoot}/src/test-mappers-vs-schema-types/codegen.ts"
         },
         "test-config-ts": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-config-ts/codegen.ts"
+          "configFile": "{projectRoot}/src/test-config-ts/codegen.ts"
         },
         "test-modules-typedefs-file-mode": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-modules-typedefs-file-mode/codegen.yml"
+          "configFile": "{projectRoot}/src/test-modules-typedefs-file-mode/codegen.yml"
         },
         "test-modules-resolver-main-file-mode": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-modules-resolver-main-file-mode/codegen.yml"
+          "configFile": "{projectRoot}/src/test-modules-resolver-main-file-mode/codegen.yml"
         },
         "test-esm-import": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-esm-import/codegen.ts"
+          "configFile": "{projectRoot}/src/test-esm-import/codegen.ts"
         },
         "test-scalars-module": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-scalars-module/codegen.ts"
+          "configFile": "{projectRoot}/src/test-scalars-module/codegen.ts"
         },
         "test-resolver-generation": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-resolver-generation/codegen.ts"
+          "configFile": "{projectRoot}/src/test-resolver-generation/codegen.ts"
         },
         "test-add-option": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-add-option/codegen.ts"
+          "configFile": "{projectRoot}/src/test-add-option/codegen.ts"
         },
         "test-extended-object-types": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-extended-object-types/codegen.ts"
+          "configFile": "{projectRoot}/src/test-extended-object-types/codegen.ts"
         },
         "test-nested-domain-modules": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-nested-domain-modules/codegen.ts"
+          "configFile": "{projectRoot}/src/test-nested-domain-modules/codegen.ts"
         },
         "test-resolvers-auto-wireup": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-resolvers-auto-wireup/codegen.ts"
+          "configFile": "{projectRoot}/src/test-resolvers-auto-wireup/codegen.ts"
         },
         "test-federation": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-federation/codegen.ts"
+          "configFile": "{projectRoot}/src/test-federation/codegen.ts"
         },
         "test-deep-modules": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-deep-modules/codegen.ts"
+          "configFile": "{projectRoot}/src/test-deep-modules/codegen.ts"
         },
         "test-complex-synth-generic-wrapper": {
-          "configFile": "packages/typescript-resolver-files-e2e/src/test-complex-synth-generic-wrapper/codegen.ts"
+          "configFile": "{projectRoot}/src/test-complex-synth-generic-wrapper/codegen.ts"
         }
       },
       "dependsOn": ["prepare-e2e-modules"]

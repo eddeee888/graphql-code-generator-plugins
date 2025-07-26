@@ -59,7 +59,8 @@
     "typescript-eslint": "8.37.0"
   },
   "workspaces": [
-    "packages/**"
+    "packages/**",
+    "tools/*"
   ],
   "nx": {
     "includedScripts": []

@@ -1,3 +1,5 @@
+name: operation-location-migration-e2e
+
 on:
   workflow_call:
 

@@ -1,3 +1,5 @@
+name: typescript-resolver-files-e2e
+
 on:
   workflow_call:
 

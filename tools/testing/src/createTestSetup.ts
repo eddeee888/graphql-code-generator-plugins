@@ -30,7 +30,7 @@ export const createTestSetup = ({
       if (!disableDefaultComment) {
         fs.writeFileSync(
           filename,
-          `/* This file has been created on filesystem by @workspace/testing-utils#createTestSetup */\n\n${content}`
+          `/* This file has been created on filesystem by @workspace/testing#createTestSetup */\n\n${content}`
         );
       }
     });

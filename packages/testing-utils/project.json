@@ -1,8 +1,0 @@
-{
-  "name": "testing-utils",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/testing-utils/src",
-  "projectType": "library",
-  "tags": [],
-  "targets": {}
-}

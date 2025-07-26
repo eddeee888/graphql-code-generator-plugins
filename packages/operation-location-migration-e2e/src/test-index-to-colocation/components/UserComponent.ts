@@ -1,4 +1,4 @@
-/* This file has been created on filesystem by @workspace/testing-utils#createTestSetup */
+/* This file has been created on filesystem by @workspace/testing#createTestSetup */
 
 import { useMeLazyQuery } from '../generated/hooks.generated';
 import { useQuery, useSuspenseQuery, useMutation } from "@apollo/client/react";

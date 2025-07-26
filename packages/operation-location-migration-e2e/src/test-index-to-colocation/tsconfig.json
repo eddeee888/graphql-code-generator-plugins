@@ -1,7 +1,5 @@
 {
   "compilerOptions": {
-    "rootDir": ".",
-    "baseUrl": ".",
     "module": "commonjs",
     "strict": true
   },

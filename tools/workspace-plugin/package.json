@@ -1,6 +1,7 @@
 {
-  "name": "@graphql-code-generator-plugins/workspace-plugin",
+  "name": "@workspace/workspace-plugin",
   "version": "0.0.1",
+  "private": true,
   "type": "commonjs",
   "generators": "./generators.json"
 }

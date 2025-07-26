@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/operation-location-migration-e2e/src",
   "projectType": "library",
+  "tags": [],
   "implicitDependencies": ["operation-location-migration"],
   "targets": {
     "e2e": {
@@ -13,7 +14,7 @@
           "nx graphql-codegen operation-location-migration-e2e --verbose -c test-index-to-colocation-migrate",
           "nx test-setup operation-location-migration-e2e -c test-near-operation-file-to-colocation",
           "nx graphql-codegen operation-location-migration-e2e --verbose -c test-near-operation-file-to-colocation-migrate",
-          "bash packages/testing-utils/bin/assert-e2e.sh \"{projectRoot}/src/**/*.ts\""
+          "bash tools/testing/bin/assert-e2e.sh \"{projectRoot}/src/**/*.ts\""
         ],
         "parallel": false
       }
@@ -69,6 +70,5 @@
     "lint": {
       "executor": "@nx/eslint:lint"
     }
-  },
-  "tags": []
+  }
 }
