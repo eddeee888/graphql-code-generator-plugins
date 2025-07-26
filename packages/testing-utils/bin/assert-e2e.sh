@@ -2,7 +2,6 @@
 
 set -eu
 
-# Accept output pattern as first argument, fallback to environment variable
 output_pattern="$1"
 
 # Assert committed files are the same
