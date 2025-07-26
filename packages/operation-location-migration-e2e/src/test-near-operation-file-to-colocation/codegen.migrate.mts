@@ -8,9 +8,6 @@ const config: CodegenConfig = {
   documents: [
     'packages/operation-location-migration-e2e/src/test-near-operation-file-to-colocation/**/*.graphql',
   ],
-  hooks: {
-    afterAllFileWrite: ['prettier --write'],
-  },
   generates: {
     'packages/operation-location-migration-e2e/src/test-near-operation-file-to-colocation/components/':
       {

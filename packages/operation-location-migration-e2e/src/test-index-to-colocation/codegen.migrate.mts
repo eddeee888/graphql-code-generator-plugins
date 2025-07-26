@@ -6,9 +6,6 @@ const config: CodegenConfig = {
     'packages/operation-location-migration-e2e/src/test-index-to-colocation/**/*.graphqls',
   documents:
     'packages/operation-location-migration-e2e/src/test-index-to-colocation/operations/*.graphql',
-  hooks: {
-    afterAllFileWrite: ['prettier --write'],
-  },
   generates: {
     'packages/operation-location-migration-e2e/src/test-index-to-colocation':
       defineConfig({
