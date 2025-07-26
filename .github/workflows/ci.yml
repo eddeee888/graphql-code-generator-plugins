@@ -10,9 +10,42 @@ env:
   node-version: '22.x'
 
 jobs:
+  install-deps:
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    name: Install Dependencies
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.node-version }}
+          cache: yarn
+          cache-dependency-path: '**/yarn.lock'
+
+      - name: Install deps
+        run: yarn install --prefer-offline --frozen-lockfile
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: cache-node-modules
+        with:
+          path: |
+            node_modules
+            packages/*/node_modules
+            tools/*/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
   precheck:
     name: Check jobs to run
     runs-on: ubuntu-24.04
+    needs: install-deps
     outputs:
       affected-typescript-resolver-files: ${{ steps.affected.outputs.typescript-resolver-files }}
       affected-typescript-resolver-files-e2e: ${{ steps.affected.outputs.typescript-resolver-files-e2e }}
@@ -28,11 +61,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.node-version }}
-          cache: yarn
-          cache-dependency-path: '**/yarn.lock'
 
-      - name: Install deps
-        run: yarn install --prefer-offline
+      - name: Restore node_modules cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            packages/*/node_modules
+            tools/*/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
 
       - name: Check affected projects
         id: affected
@@ -44,21 +83,21 @@ jobs:
           cat $GITHUB_OUTPUT
 
   typescript-resolver-files:
-    needs: precheck
+    needs: [install-deps, precheck]
     if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' }}
-    uses: ./.github/workflows/projects/typescript-resolver-files.yml
+    uses: ./.github/workflows/typescript-resolver-files.yml
 
   typescript-resolver-files-e2e:
-    needs: precheck
+    needs: [install-deps, precheck]
     if: ${{ needs.precheck.outputs.affected-typescript-resolver-files == 'true' || needs.precheck.outputs.affected-typescript-resolver-files-e2e == 'true' }}
-    uses: ./.github/workflows/projects/typescript-resolver-files-e2e.yml
+    uses: ./.github/workflows/typescript-resolver-files-e2e.yml
 
   operation-location-migration:
-    needs: precheck
+    needs: [install-deps, precheck]
     if: ${{ needs.precheck.outputs.affected-operation-location-migration == 'true' }}
-    uses: ./.github/workflows/projects/operation-location-migration.yml
+    uses: ./.github/workflows/operation-location-migration.yml
 
   operation-location-migration-e2e:
-    needs: precheck
+    needs: [install-deps, precheck]
     if: ${{ needs.precheck.outputs.affected-operation-location-migration == 'true' || needs.precheck.outputs.affected-operation-location-migration-e2e == 'true' }}
-    uses: ./.github/workflows/projects/operation-location-migration-e2e.yml
+    uses: ./.github/workflows/operation-location-migration-e2e.yml
