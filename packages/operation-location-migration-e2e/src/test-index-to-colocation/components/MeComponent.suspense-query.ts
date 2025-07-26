@@ -1,4 +1,4 @@
-/* This file has been created on filesystem by @workspace/testing-utils#createTestSetup */
+/* This file has been created on filesystem by @workspace/testing#createTestSetup */
 import { useSuspenseQuery } from "@apollo/client/react";
 import { graphql } from "../gql";
 
