@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  node-version: '24.x'
+  node-version: '22.x'
 
 jobs:
   install-deps:
