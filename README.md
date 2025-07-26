@@ -7,6 +7,7 @@ List of [GraphQL Code Generator](https://www.the-guild.dev/graphql/codegen) plug
 ## Plugins
 
 - [@eddeee888/gcg-typescript-resolver-files](./packages/typescript-resolver-files): Generates module-based resolvers based on types from [typescript](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript) and [typescript-resolvers](https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-resolvers) plugins
+- [@eddeee888/gcg-operation-location-migration](./packages/operation-location-migration/): Codemod to migrate various client approaches such as [@graphql-codegen/typescript-react-apollo](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-react-apollo) to [Client Preset](https://the-guild.dev/graphql/codegen/plugins/presets/preset-client) approach.
 
 ## Development
 
