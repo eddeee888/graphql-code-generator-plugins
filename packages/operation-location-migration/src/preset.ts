@@ -268,7 +268,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
     });
 
     return tsSourceFiles.map((tsSourceFile) => ({
-      filename: tsSourceFile.getFilePath(),
+      filename: tsSourceFile.getFilePath().split(path.posix.sep).join(path.sep),
       pluginMap: { add: addPlugin },
       plugins: [{ add: { content: tsSourceFile.getFullText() } }],
       config: {},
