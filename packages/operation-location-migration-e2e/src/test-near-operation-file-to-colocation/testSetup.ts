@@ -8,7 +8,7 @@ createTestSetup({
       content: `import { useMeQuery } from './Me.generated';
 export const Me = () => {
   useMeQuery();
-};`,
+};\n`,
       disableDefaultComment: true,
     },
     {
@@ -17,7 +17,7 @@ export const Me = () => {
 
 export const Me = () => {
   useUserSuspenseQuery();
-};`,
+};\n`,
     },
   ],
 });

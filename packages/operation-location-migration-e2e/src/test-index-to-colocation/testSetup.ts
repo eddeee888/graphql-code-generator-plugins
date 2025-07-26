@@ -10,7 +10,7 @@ createTestSetup({
 export const MeComponent = () => {
   useMeLazyQuery();
   return 'Me';
-};`,
+};\n`,
     },
     {
       file: 'components/MeComponent.query.ts',
@@ -19,7 +19,7 @@ export const MeComponent = () => {
 export const MeComponent = () => {
   useMeQuery({ skip: true });
   return 'Me';
-};`,
+};\n`,
     },
     {
       file: 'components/MeComponent.suspense-query.ts',
@@ -28,7 +28,7 @@ export const MeComponent = () => {
 export const MeComponent = () => {
   useMeSuspenseQuery();
   return 'Me';
-};`,
+};\n`,
     },
     {
       file: 'components/UserComponent.ts',
@@ -39,7 +39,7 @@ export const UserComponent = () => {
   const res = useMeSuspenseQuery();
   useUpdateUserMutation();
   return 'User';
-};`,
+};\n`,
     },
     {
       file: 'components/UserSubscription.ts',
@@ -47,7 +47,7 @@ export const UserComponent = () => {
 
 export const UserSubscription = () => {
   useUserChangesSubscription({});
-};`,
+};\n`,
     },
   ],
 });

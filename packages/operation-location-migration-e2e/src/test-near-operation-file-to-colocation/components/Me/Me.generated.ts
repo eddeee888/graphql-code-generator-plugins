@@ -4,21 +4,19 @@ import { gql } from '@apollo/client';
 import { UserFragmentFragmentDoc } from '../User.fragment.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type MeQueryVariables = Types.Exact<{ [key: string]: never }>;
+export type MeQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
-export type MeQuery = {
-  __typename?: 'Query';
-  me?: { __typename?: 'User'; id: string; name: string } | null;
-};
+
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, name: string } | null };
+
 
 export const MeDocument = gql`
-  query Me {
-    me {
-      ...UserFragment
-    }
+    query Me {
+  me {
+    ...UserFragment
   }
-  ${UserFragmentFragmentDoc}
-`;
+}
+    ${UserFragmentFragmentDoc}`;
 
 /**
  * __useMeQuery__
@@ -35,32 +33,18 @@ export const MeDocument = gql`
  *   },
  * });
  */
-export function useMeQuery(
-  baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-}
-export function useMeLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-}
-export function useMeSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<MeQuery, MeQueryVariables>(
-    MeDocument,
-    options
-  );
-}
+export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+      }
+export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+        }
+export function useMeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+        }
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeSuspenseQueryHookResult = ReturnType<typeof useMeSuspenseQuery>;

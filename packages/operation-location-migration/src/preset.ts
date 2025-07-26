@@ -253,7 +253,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
 
             tsSourceFile.insertStatements(insertIndex, [
               '\n',
-              `const ${documentNodeName} = graphql(\`${graphqlDocument.documentSDL}\`)`,
+              `const ${documentNodeName} = graphql(\`\n${graphqlDocument.documentSDL}\n\`)`,
             ]);
             addedDocMap[documentNodeName] = true;
           }
