@@ -62,7 +62,7 @@ export type User = {
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename: 'User' } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', name: string } | null };
 
 export type UserFragmentFragment = { __typename?: 'User', name: string };
 
@@ -93,10 +93,10 @@ export const UserFragmentFragmentDoc = gql`
 export const MeDocument = gql`
     query Me {
   me {
-    __typename
+    ...UserFragment
   }
 }
-    `;
+    ${UserFragmentFragmentDoc}`;
 
 /**
  * __useMeQuery__

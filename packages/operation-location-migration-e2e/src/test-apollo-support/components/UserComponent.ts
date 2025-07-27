@@ -1,8 +1,7 @@
 /* This file has been created on filesystem by @workspace/testing#createTestSetup */
 
 import { useMeLazyQuery } from '../generated/hooks.generated';
-import { useQuery, useSuspenseQuery, useMutation } from "@apollo/client/react";
-import { gql } from "@apollo/client";
+import { useQuery, useSuspenseQuery, useMutation, gql } from "@apollo/client";
 
 const UpdateUserDoc = gql(`
 mutation UpdateUser($input: UpdateUserInput!) {
@@ -16,7 +15,7 @@ mutation UpdateUser($input: UpdateUserInput!) {
 const MeDoc = gql(`
 query Me {
   me {
-    __typename
+    ...UserFragment
   }
 }
 `);

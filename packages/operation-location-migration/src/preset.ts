@@ -11,6 +11,7 @@ import {
   type ImportSpecifier,
   Project,
   SyntaxKind,
+  Node,
 } from 'ts-morph';
 import type { TypedPresetConfig } from './config';
 
@@ -174,6 +175,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
             gqlTagImported = true;
           }
           createDoc({
+            presetConfig,
             tsSourceFile,
             documentNodeName: doc.documentNodeName,
             documentSDL: doc.documentSDL,
@@ -300,6 +302,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
 
             if (graphqlDocument.importDocFrom === null) {
               createDoc({
+                presetConfig,
                 tsSourceFile,
                 documentNodeName,
                 documentSDL: graphqlDocument.documentSDL,
@@ -363,6 +366,11 @@ const cwd = (): string => {
   return process.cwd().split(path.sep).join(path.posix.sep);
 };
 
+/**
+ * Function to import gqlTag:
+ * 1. If there's already an import from the same module, just add named import
+ * 2. If there's no import from the module, create import declaration
+ */
 const createGqlTagImport = ({
   baseOutputDir,
   presetConfig,
@@ -380,18 +388,39 @@ const createGqlTagImport = ({
           path.posix.join(cwd(), baseOutputDir, presetConfig.gqlTag.importFrom)
         );
 
-  tsSourceFile.addImportDeclaration({
-    moduleSpecifier: gqlTagModule,
-    namedImports: [{ name: presetConfig.gqlTag.name }],
+  const existingImportDeclaration =
+    tsSourceFile.getFirstDescendant<ImportDeclaration>(
+      (node): node is ImportDeclaration => {
+        return (
+          Node.isImportDeclaration(node) &&
+          node.getModuleSpecifierValue() === gqlTagModule
+        );
+      }
+    );
+
+  console.log({ existingImportDeclaration });
+
+  if (!existingImportDeclaration) {
+    tsSourceFile.addImportDeclaration({
+      moduleSpecifier: gqlTagModule,
+      namedImports: [{ name: presetConfig.gqlTag.name }],
+    });
+    return;
+  }
+
+  existingImportDeclaration.addNamedImport({
+    name: presetConfig.gqlTag.name,
   });
 };
 
 const createDoc = ({
+  presetConfig,
   tsSourceFile,
   documentNodeName,
   documentSDL,
   exportDoc,
 }: {
+  presetConfig: TypedPresetConfig;
   tsSourceFile: SourceFile;
   documentNodeName: string;
   documentSDL: string;
@@ -412,8 +441,8 @@ const createDoc = ({
 
   tsSourceFile.insertStatements(insertIndex, [
     '\n',
-    `${
-      exportDoc ? 'export ' : ''
-    }const ${documentNodeName} = graphql(\`\n${documentSDL}\n\`);`,
+    `${exportDoc ? 'export ' : ''}const ${documentNodeName} = ${
+      presetConfig.gqlTag.name
+    }(\`\n${documentSDL}\n\`);`,
   ]);
 };

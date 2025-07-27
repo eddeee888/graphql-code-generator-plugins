@@ -1,11 +1,10 @@
 /* This file has been created on filesystem by @workspace/testing#createTestSetup */
-import { useLazyQuery } from "@apollo/client/react";
-import { gql } from "@apollo/client";
+import { useLazyQuery, gql } from "@apollo/client";
 
 const MeDoc = gql(`
 query Me {
   me {
-    __typename
+    ...UserFragment
   }
 }
 `);

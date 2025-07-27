@@ -14,7 +14,7 @@ const config: CodegenConfig = {
         importFrom: '@apollo/client',
         importType: 'absolute',
       },
-      hooksImportFrom: '@apollo/client/react',
+      hooksImportFrom: '@apollo/client',
     }),
   },
 };
