@@ -14,8 +14,10 @@ export const Me = () => {
     {
       file: 'components/User/User.ts',
       content: `import { useUserSuspenseQuery, useUserQuery, useUserLazyQuery, useUpdateUserMutation } from './User.generated';
+import { useRootUserQuery } from '../../RootUser.generated';
 
 export const User = () => {
+  useRootUserQuery()
   useUserSuspenseQuery();
   useUserQuery({ skip: true })
   useUpdateUserMutation({ onCompleted: () => {} })
