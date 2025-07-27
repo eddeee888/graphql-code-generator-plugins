@@ -13,10 +13,12 @@ export const Me = () => {
     },
     {
       file: 'components/User/User.ts',
-      content: `import { useUserSuspenseQuery } from './User.generated';
+      content: `import { useUserSuspenseQuery, useUserQuery, useUserLazyQuery, useUpdateUserMutation } from './User.generated';
 
-export const Me = () => {
+export const User = () => {
   useUserSuspenseQuery();
+  useUserQuery({ skip: true })
+  useUpdateUserMutation({ onCompleted: () => {} })
 };\n`,
     },
   ],
