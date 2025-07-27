@@ -1,5 +1,5 @@
 query Me {
   me {
-    __typename
+    ...UserFragment
   }
 }

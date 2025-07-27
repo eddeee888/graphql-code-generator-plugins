@@ -16,7 +16,7 @@ mutation UpdateUser($input: UpdateUserInput!) {
 const MeDoc = graphql(`
 query Me {
   me {
-    __typename
+    ...UserFragment
   }
 }
 `);
