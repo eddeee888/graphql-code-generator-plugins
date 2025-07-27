@@ -51,12 +51,14 @@
         "test-index-to-colocation": {
           "commands": [
             "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-index-to-colocation/testSetup.ts",
+            "rimraf -g \"{projectRoot}/src/test-index-to-colocation/**/*.graphql.ts\"",
             "nx graphql-codegen operation-location-migration-e2e --verbose -c test-index-to-colocation-setup"
           ]
         },
         "test-near-operation-file-to-colocation": {
           "commands": [
             "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-near-operation-file-to-colocation/testSetup.ts",
+            "rimraf -g \"{projectRoot}/src/test-near-operation-file-to-colocation/**/*.graphql.ts\"",
             "nx graphql-codegen operation-location-migration-e2e --verbose -c test-near-operation-file-to-colocation-setup"
           ]
         },

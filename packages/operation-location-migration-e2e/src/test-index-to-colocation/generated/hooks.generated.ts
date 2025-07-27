@@ -64,6 +64,8 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename: 'User' } | null };
 
+export type UserFragmentFragment = { __typename?: 'User', name: string };
+
 export type UserQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -83,7 +85,11 @@ export type UserChangesSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 export type UserChangesSubscription = { __typename?: 'Subscription', userChanges?: { __typename?: 'User', id: string, name: string } | null };
 
-
+export const UserFragmentFragmentDoc = gql`
+    fragment UserFragment on User {
+  name
+}
+    `;
 export const MeDocument = gql`
     query Me {
   me {
