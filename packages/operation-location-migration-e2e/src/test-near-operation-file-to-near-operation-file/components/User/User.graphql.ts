@@ -1,8 +1,8 @@
 import { graphql } from "../../gql";
 
-export const UserChangesDoc = graphql(`
-subscription UserChanges {
-  userChanges(id: "100") {
+export const UserDoc = graphql(`
+query User($id: ID!) {
+  user(id: $id) {
     ...UserFragment
   }
 }
@@ -17,9 +17,9 @@ mutation UpdateUser {
 }
 `);
 
-export const UserDoc = graphql(`
-query User($id: ID!) {
-  user(id: $id) {
+export const UserChangesDoc = graphql(`
+subscription UserChanges {
+  userChanges(id: "100") {
     ...UserFragment
   }
 }

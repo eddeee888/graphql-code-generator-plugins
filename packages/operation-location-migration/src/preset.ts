@@ -160,18 +160,21 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
     Object.entries(nearOperationFilesToCreate).forEach(([filename, docs]) => {
       let gqlTagImported = false;
       const tsSourceFile = tsProject.createSourceFile(filename);
-      docs.forEach((doc) => {
-        if (!gqlTagImported) {
-          createGqlTagImport({ baseOutputDir, presetConfig, tsSourceFile });
-          gqlTagImported = true;
-        }
-        createDoc({
-          tsSourceFile,
-          documentNodeName: doc.documentNodeName,
-          documentSDL: doc.documentSDL,
-          exportDoc: true,
+
+      docs
+        .reverse() // createDoc inserts docs after imports i.e. the first imported doc ends up at the bottom. So we reverse the order here to ensure the same order in the end.
+        .forEach((doc) => {
+          if (!gqlTagImported) {
+            createGqlTagImport({ baseOutputDir, presetConfig, tsSourceFile });
+            gqlTagImported = true;
+          }
+          createDoc({
+            tsSourceFile,
+            documentNodeName: doc.documentNodeName,
+            documentSDL: doc.documentSDL,
+            exportDoc: true,
+          });
         });
-      });
     });
 
     tsProject.getSourceFiles().forEach((tsSourceFile) => {
@@ -253,8 +256,8 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
        * `nearOperationFileImports` are used to collect required named imports so there is only one import declaration for multiple named imports.
        */
       const nearOperationFileImports: Record<
-        string,
-        OptionalKind<ImportSpecifierStructure>[]
+        string, // path to near operation file
+        Set<string> // unqiue set of named imports
       > = {};
 
       Object.values(fileMetadata.functionsToReplace).forEach(
@@ -298,10 +301,11 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
 
               addedDocMap[documentNodeName] = true;
             } else {
-              nearOperationFileImports[graphqlDocument.importDocFrom] ||= [];
-              nearOperationFileImports[graphqlDocument.importDocFrom].push({
-                name: documentNodeName,
-              });
+              nearOperationFileImports[graphqlDocument.importDocFrom] ||=
+                new Set();
+              nearOperationFileImports[graphqlDocument.importDocFrom].add(
+                documentNodeName
+              );
             }
           }
         }
@@ -324,7 +328,9 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
                 path.posix.dirname(tsSourceFile.getFilePath()),
                 importModulePath
               ),
-            namedImports,
+            namedImports: Array.from(namedImports).map((namedImport) => ({
+              name: namedImport,
+            })),
           });
         }
       );
