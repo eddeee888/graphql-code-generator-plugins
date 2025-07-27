@@ -9,8 +9,6 @@ import {
   type CallExpression,
   type ImportDeclaration,
   type ImportSpecifier,
-  type ImportSpecifierStructure,
-  type OptionalKind,
   Project,
   SyntaxKind,
 } from 'ts-morph';
@@ -80,7 +78,16 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
         return;
       }
 
+      const nearOperationDocFilename = `${documentFilename}.ts`; // FIXME: this is assuming near-operation-file are .graphql;
+
       visit(documentFile.document, {
+        FragmentDefinition(node) {
+          nearOperationFilesToCreate[nearOperationDocFilename] ||= [];
+          nearOperationFilesToCreate[nearOperationDocFilename].push({
+            documentNodeName: `${pascalCase(node.name.value)}Doc`,
+            documentSDL: print(node),
+          });
+        },
         OperationDefinition(node) {
           if (!node.name) {
             // Note: Codegen may fail, but we have this here just in case
@@ -96,8 +103,6 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
 
           let importDocFrom = null;
           if (targetStyle === 'near-operation-file') {
-            const nearOperationDocFilename = `${documentFilename}.ts`; // FIXME: this is assuming near-operation-file are .graphql;
-
             nearOperationFilesToCreate[nearOperationDocFilename] ||= [];
             nearOperationFilesToCreate[nearOperationDocFilename].push({
               documentNodeName,
