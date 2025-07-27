@@ -181,7 +181,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
       // find imports
       const fileMetadata: {
         hasNodeToReplace: boolean;
-        needsToImport: string[];
+        needsToImport: Set<string>;
         functionsToReplace: Record<
           string,
           {
@@ -192,7 +192,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
         >;
       } = {
         hasNodeToReplace: false,
-        needsToImport: [],
+        needsToImport: new Set(),
         functionsToReplace: {},
       };
 
@@ -223,7 +223,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
             fileMetadata.hasNodeToReplace = true;
             fileMetadata.functionsToReplace[calledFunctionName].callExpression =
               callExpression;
-            fileMetadata.needsToImport.push(
+            fileMetadata.needsToImport.add(
               hooksToReplace[calledFunctionName].hookType
             );
           }
@@ -236,9 +236,11 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
       // Codemod files to co-locate the document nodes
       tsSourceFile.addImportDeclaration({
         moduleSpecifier: presetConfig.hooksImportFrom,
-        namedImports: fileMetadata.needsToImport.map((importName) => ({
-          name: importName,
-        })),
+        namedImports: Array.from(fileMetadata.needsToImport).map(
+          (importName) => ({
+            name: importName,
+          })
+        ),
       });
 
       // Only bring in gql tag if target style co-location.
