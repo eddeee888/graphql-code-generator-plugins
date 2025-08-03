@@ -1,5 +1,11 @@
 # @eddeee888/gcg-operation-location-migration
 
+## 0.1.0
+
+### Minor Changes
+
+- cbffd3d: Support migrating to near-operation-file
+
 ## 0.0.2
 
 ### Patch Changes
