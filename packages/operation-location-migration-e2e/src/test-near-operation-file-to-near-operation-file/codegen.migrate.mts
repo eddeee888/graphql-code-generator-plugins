@@ -1,0 +1,24 @@
+import type { CodegenConfig } from '@graphql-codegen/cli';
+import { defineConfig } from '@eddeee888/gcg-operation-location-migration';
+
+const projectRoot = 'packages/operation-location-migration-e2e';
+
+const config: CodegenConfig = {
+  schema: `${projectRoot}/src/test-near-operation-file-to-near-operation-file/**/*.graphqls`,
+  documents: `${projectRoot}/src/test-near-operation-file-to-near-operation-file/**/*.graphql`,
+  generates: {
+    [`${projectRoot}/src/test-near-operation-file-to-near-operation-file`]:
+      defineConfig({
+        tsConfigFilePath: `${projectRoot}/src/test-near-operation-file-to-near-operation-file/tsconfig.json`,
+        targetStyle: 'near-operation-file',
+        gqlTag: {
+          name: 'graphql',
+          importFrom: './gql',
+          importType: 'relative',
+        },
+        hooksImportFrom: '@apollo/client',
+      }),
+  },
+};
+
+export default config;

@@ -1,141 +1,34 @@
+import * as Types from '../types.generated';
+
 import { gql } from '@apollo/client';
+import { UserFragmentFragmentDoc } from '../User.fragment.generated';
 import * as Apollo from '@apollo/client';
-export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 const defaultOptions = {} as const;
-/** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-};
-
-export type Mutation = {
-  __typename?: 'Mutation';
-  updateUser: User;
-};
-
-
-export type MutationUpdateUserArgs = {
-  input: UpdateUserInput;
-};
-
-export type Query = {
-  __typename?: 'Query';
-  me?: Maybe<User>;
-  user?: Maybe<User>;
-};
-
-
-export type QueryUserArgs = {
-  id?: InputMaybe<Scalars['ID']['input']>;
-};
-
-export type Subscription = {
-  __typename?: 'Subscription';
-  userChanges?: Maybe<User>;
-};
-
-
-export type SubscriptionUserChangesArgs = {
-  id?: InputMaybe<Scalars['ID']['input']>;
-};
-
-export type UpdateUserInput = {
-  id: Scalars['ID']['input'];
-  name: Scalars['String']['input'];
-};
-
-export type User = {
-  __typename?: 'User';
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
-};
-
-export type MeQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', name: string } | null };
-
-export type UserFragmentFragment = { __typename?: 'User', name: string };
-
-export type UserQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
+export type UserQueryVariables = Types.Exact<{
+  id: Types.Scalars['ID']['input'];
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user?: { __typename: 'User' } | null };
+export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string } | null };
 
-export type UpdateUserMutationVariables = Exact<{
-  input: UpdateUserInput;
-}>;
+export type UpdateUserMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, name: string } };
 
-export type UserChangesSubscriptionVariables = Exact<{ [key: string]: never; }>;
+export type UserChangesSubscriptionVariables = Types.Exact<{ [key: string]: never; }>;
 
 
 export type UserChangesSubscription = { __typename?: 'Subscription', userChanges?: { __typename?: 'User', id: string, name: string } | null };
 
-export const UserFragmentFragmentDoc = gql`
-    fragment UserFragment on User {
-  name
-}
-    `;
-export const MeDocument = gql`
-    query Me {
-  me {
+
+export const UserDocument = gql`
+    query User($id: ID!) {
+  user(id: $id) {
     ...UserFragment
   }
 }
     ${UserFragmentFragmentDoc}`;
-
-/**
- * __useMeQuery__
- *
- * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
- * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMeQuery({
- *   variables: {
- *   },
- * });
- */
-export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-      }
-export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-        }
-export function useMeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-        }
-export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
-export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
-export type MeSuspenseQueryHookResult = ReturnType<typeof useMeSuspenseQuery>;
-export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
-export const UserDocument = gql`
-    query User($id: ID!) {
-  user(id: $id) {
-    __typename
-  }
-}
-    `;
 
 /**
  * __useUserQuery__
@@ -170,8 +63,8 @@ export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
 export type UserSuspenseQueryHookResult = ReturnType<typeof useUserSuspenseQuery>;
 export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
 export const UpdateUserDocument = gql`
-    mutation UpdateUser($input: UpdateUserInput!) {
-  updateUser(input: $input) {
+    mutation UpdateUser {
+  updateUser(input: {id: "100", name: "Tom"}) {
     id
     name
   }
@@ -192,7 +85,6 @@ export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, U
  * @example
  * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
  *   variables: {
- *      input: // value for 'input'
  *   },
  * });
  */
@@ -205,12 +97,11 @@ export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
 export const UserChangesDocument = gql`
     subscription UserChanges {
-  userChanges(id: "10") {
-    id
-    name
+  userChanges(id: "100") {
+    ...UserFragment
   }
 }
-    `;
+    ${UserFragmentFragmentDoc}`;
 
 /**
  * __useUserChangesSubscription__

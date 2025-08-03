@@ -1,8 +1,7 @@
 /* This file has been created on filesystem by @workspace/testing#createTestSetup */
-import { useQuery } from "@apollo/client/react";
-import { graphql } from "../gql";
+import { useLazyQuery, gql } from "@apollo/client";
 
-const MeDoc = graphql(`
+const MeDoc = gql(`
 query Me {
   me {
     ...UserFragment
@@ -11,6 +10,6 @@ query Me {
 `);
 
 export const MeComponent = () => {
-  useQuery(MeDoc, { skip: true });
+  useLazyQuery(MeDoc);
   return 'Me';
 };

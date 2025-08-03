@@ -1,8 +1,7 @@
 /* This file has been created on filesystem by @workspace/testing#createTestSetup */
-import { useSubscription } from "@apollo/client/react";
-import { graphql } from "../gql";
+import { useSubscription, gql } from "@apollo/client";
 
-const UserChangesDoc = graphql(`
+const UserChangesDoc = gql(`
 subscription UserChanges {
   userChanges(id: "10") {
     id

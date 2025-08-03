@@ -5,10 +5,10 @@ import { graphql } from "../gql";
 const MeDoc = graphql(`
 query Me {
   me {
-    __typename
+    ...UserFragment
   }
 }
-`)
+`);
 
 export const MeComponent = () => {
   useSuspenseQuery(MeDoc);

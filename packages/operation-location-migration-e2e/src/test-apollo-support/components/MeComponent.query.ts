@@ -1,8 +1,7 @@
 /* This file has been created on filesystem by @workspace/testing#createTestSetup */
-import { useQuery } from "@apollo/client/react";
-import { graphql } from "../gql";
+import { useQuery, gql } from "@apollo/client";
 
-const MeDoc = graphql(`
+const MeDoc = gql(`
 query Me {
   me {
     ...UserFragment

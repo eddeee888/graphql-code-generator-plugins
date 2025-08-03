@@ -13,6 +13,12 @@ export interface TypedPresetConfig {
   tsConfigFilePath: string;
 
   /**
+   * The target style to migrate to
+   * @default 'co-location'
+   */
+  targetStyle?: 'co-location' | 'near-operation-file';
+
+  /**
    * Configuration for the GraphQL tag function used in your project.
    * This defines how GraphQL queries are tagged and imported in your codebase.
    */
