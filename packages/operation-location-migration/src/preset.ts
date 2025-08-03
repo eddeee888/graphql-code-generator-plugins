@@ -398,8 +398,6 @@ const createGqlTagImport = ({
       }
     );
 
-  console.log({ existingImportDeclaration });
-
   if (!existingImportDeclaration) {
     tsSourceFile.addImportDeclaration({
       moduleSpecifier: gqlTagModule,
