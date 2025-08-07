@@ -1,0 +1,27 @@
+scalar DateTime
+
+type Mutation {
+  prefixedAPIMutation: RandomResult!
+}
+
+type Query {
+  APIQuery: RandomResult!
+  query: RandomResult!
+  user(id: ID!): User!
+  userProfile(id: ID!): UserProfile!
+}
+
+type RandomResult {
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+  updatedAt: DateTime!
+}
+
+type User {
+  id: ID!
+}
+
+type UserProfile {
+  id: ID!
+}

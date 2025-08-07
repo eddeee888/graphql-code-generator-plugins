@@ -261,6 +261,44 @@ Hint: To see why certain files are skipped, run codegen command with `DEBUG` tur
 DEBUG="@eddeee888/gcg-typescript-resolver-files" yarn graphql-codegen
 ```
 
+### fileOutputCasing
+
+`string` (Default: `pascal-case`)
+
+Controls the naming convention used for generated resolver filenames. By default, resolver files are generated using PascalCase (e.g., `UserProfile.ts`), but you can customize this to match your project's file naming conventions.
+
+Supported options:
+- `pascal-case` (default): `UserProfile.ts`, `APIKey.ts`
+- `kebab-case` or `param-case`: `user-profile.ts`, `api-key.ts`
+- `camel-case`: `userProfile.ts`, `apiKey.ts`
+- `snake-case`: `user_profile.ts`, `api_key.ts`
+- `constant-case`: `USER_PROFILE.ts`, `API_KEY.ts`
+- `dot-case`: `user.profile.ts`, `api.key.ts`
+- `header-case`: `User-Profile.ts`, `Api-Key.ts`
+- `lower-case`: `userprofile.ts`, `apikey.ts`
+- `upper-case`: `USERPROFILE.ts`, `APIKEY.ts`
+- `no-case`: `user profile.ts`, `api key.ts`
+- `path-case`: `user/profile.ts`, `api/key.ts`
+- `sentence-case`: `User profile.ts`, `Api key.ts`
+- `title-case`: `UserProfile.ts`, `APIKey.ts`
+- `capital-case`: `User Profile.ts`, `Api Key.ts`
+
+#### Example
+
+```ts
+// codegen.ts
+defineConfig({
+  fileOutputCasing: 'kebab-case',
+});
+```
+
+This configuration will generate resolver files like:
+- `src/schema/user/resolvers/user-profile.ts` (instead of `UserProfile.ts`)
+- `src/schema/user/resolvers/Query/user-by-id.ts` (instead of `userById.ts`)
+- `src/schema/api/resolvers/api-key.ts` (instead of `APIKey.ts`)
+
+Note: This option only affects the filename casing. The exported resolver variable names and TypeScript interfaces remain unchanged to maintain valid JavaScript identifiers.
+
 ### typeDefsFileMode
 
 `merged` or `mergedWhitelisted` or `modules` (Default: `merged`)

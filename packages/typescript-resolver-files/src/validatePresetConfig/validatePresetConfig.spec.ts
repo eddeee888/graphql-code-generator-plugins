@@ -48,6 +48,7 @@ const defaultExpected: ParsedPresetConfig = {
     enum: 'smart',
   },
   emitLegacyCommonJSImports: true,
+  fileOutputCasing: 'pascal-case',
 };
 
 describe('validatePresetConfig - general', () => {

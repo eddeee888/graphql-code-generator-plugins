@@ -71,6 +71,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       tsMorphProjectOptions,
       fixObjectTypeResolvers,
       emitLegacyCommonJSImports,
+      fileOutputCasing,
     } = validatePresetConfig(rawPresetConfig);
 
     const resolverTypesPath = path.posix.join(
@@ -121,6 +122,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           resolverRelativeTargetDir,
           whitelistedModules,
           blacklistedModules,
+          fileOutputCasing,
         }),
       createProfilerRunName('parseGraphQLSchema')
     );

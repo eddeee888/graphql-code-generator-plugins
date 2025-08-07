@@ -7,6 +7,7 @@ export const visitNamedType = <T = null>(
     moduleName,
     relativePathFromBaseToModule,
     normalizedResolverName,
+    originalResolverName,
     resolverFile,
     relativePathToResolverTypesFile,
     typeNamedImport,
@@ -49,7 +50,7 @@ export const visitNamedType = <T = null>(
       moduleName,
       normalizedResolverName,
       relativePathFromBaseToModule,
-      resolverName: resolverFile.name,
+      resolverName: originalResolverName,
       resolversTypeMeta: {
         module: relativePathToResolverTypesFile,
         moduleType: 'file',

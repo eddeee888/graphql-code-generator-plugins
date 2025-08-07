@@ -19,7 +19,7 @@ const defaultScalarsModule = 'graphql-scalars';
 
 type ParsedTypesPluginsConfig = Omit<
   typeScriptPlugin.TypeScriptPluginConfig &
-    typeScriptResolversPlugin.TypeScriptResolversPluginConfig,
+  typeScriptResolversPlugin.TypeScriptResolversPluginConfig,
   'scalars' | 'emitLegacyCommonJSImports'
 >;
 type ConfigMode = 'merged' | 'modules';
@@ -42,6 +42,22 @@ type NormalizedResolverGeneration = {
   enum: string | string[];
 };
 export type ModuleNamingMode = number;
+export type FileOutputCasing =
+  | 'pascal-case'
+  | 'param-case'
+  | 'kebab-case'
+  | 'camel-case'
+  | 'capital-case'
+  | 'constant-case'
+  | 'dot-case'
+  | 'header-case'
+  | 'lower-case'
+  | 'no-case'
+  | 'path-case'
+  | 'sentence-case'
+  | 'snake-case'
+  | 'title-case'
+  | 'upper-case';
 
 export type ScalarsOverridesType = string | { input: string; output: string };
 
@@ -64,8 +80,8 @@ export interface ParsedPresetConfig {
     { resolver?: string; type?: ScalarsOverridesType }
   >;
   mergeSchema:
-    | { path: string; config: schemaAstPlugin.SchemaASTConfig }
-    | false;
+  | { path: string; config: schemaAstPlugin.SchemaASTConfig }
+  | false;
   mode: ConfigMode;
   whitelistedModules: string[];
   blacklistedModules: string[];
@@ -74,6 +90,7 @@ export interface ParsedPresetConfig {
   tsMorphProjectOptions: ProjectOptions;
   fixObjectTypeResolvers: NormalizedFixObjectTypeResolvers;
   emitLegacyCommonJSImports: boolean;
+  fileOutputCasing: FileOutputCasing;
 }
 
 export interface RawPresetConfig {
@@ -100,10 +117,11 @@ export interface RawPresetConfig {
   blacklistedModules?: string[];
   externalResolvers?: Record<string, string>;
   typesPluginsConfig?: typeScriptPlugin.TypeScriptPluginConfig &
-    typeScriptResolversPlugin.TypeScriptResolversPluginConfig;
+  typeScriptResolversPlugin.TypeScriptResolversPluginConfig;
   tsConfigFilePath?: string;
   fixObjectTypeResolvers?: string | Record<string, string>;
   emitLegacyCommonJSImports?: boolean;
+  fileOutputCasing?: string;
 }
 
 export interface TypedPresetConfig extends RawPresetConfig {
@@ -112,14 +130,14 @@ export interface TypedPresetConfig extends RawPresetConfig {
   resolverMainFileMode?: ResolverMainFileMode;
   typeDefsFileMode?: TypeDefsFileMode;
   fixObjectTypeResolvers?:
-    | StringFixObjectTypeResolvers
-    | NormalizedFixObjectTypeResolvers;
+  | StringFixObjectTypeResolvers
+  | NormalizedFixObjectTypeResolvers;
   typesPluginsConfig?: ParsedTypesPluginsConfig;
   resolverGeneration?: StringResolverGeneration | NormalizedResolverGeneration;
   mergeSchema?:
-    | boolean
-    | string
-    | { path: string; config: schemaAstPlugin.SchemaASTConfig };
+  | boolean
+  | string
+  | { path: string; config: schemaAstPlugin.SchemaASTConfig };
 }
 
 export const validatePresetConfig = ({
@@ -146,6 +164,7 @@ export const validatePresetConfig = ({
   tsConfigFilePath = './tsconfig.json',
   fixObjectTypeResolvers = 'smart',
   emitLegacyCommonJSImports = true,
+  fileOutputCasing = 'pascal-case',
 }: RawPresetConfig): ParsedPresetConfig => {
   if (mode !== 'merged' && mode !== 'modules') {
     throw new Error(
@@ -188,6 +207,32 @@ export const validatePresetConfig = ({
     throw new Error(
       fmt.error(
         'presetConfig.resolverMainFileMode must be "merged" or "modules" (default is "merged")',
+        'Validation'
+      )
+    );
+  }
+
+  const validFileOutputCasings: FileOutputCasing[] = [
+    'pascal-case',
+    'kebab-case',
+    'camel-case',
+    'capital-case',
+    'constant-case',
+    'dot-case',
+    'header-case',
+    'lower-case',
+    'no-case',
+    'path-case',
+    'sentence-case',
+    'snake-case',
+    'title-case',
+    'upper-case'
+  ];
+
+  if (fileOutputCasing && !validFileOutputCasings.includes(fileOutputCasing as FileOutputCasing)) {
+    throw new Error(
+      fmt.error(
+        `presetConfig.fileOutputCasing must be one of: ${validFileOutputCasings.join(', ')} (default is "pascal-case")`,
         'Validation'
       )
     );
@@ -327,6 +372,7 @@ export const validatePresetConfig = ({
     tsMorphProjectOptions,
     fixObjectTypeResolvers: parseFixObjectTypeResolvers(fixObjectTypeResolvers),
     emitLegacyCommonJSImports,
+    fileOutputCasing: fileOutputCasing as FileOutputCasing,
   };
 };
 
