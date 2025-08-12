@@ -24,6 +24,7 @@ import {
   isNativeNamedType,
   isRootObjectType,
   relativeModulePath,
+  transformResolverFileName,
   type RootObjectType,
 } from '../utils';
 import { parseLocationForOutputDir } from './parseLocationForOutputDir';
@@ -42,11 +43,13 @@ interface ParseGraphQLSchemaParams {
   resolverRelativeTargetDir: string;
   whitelistedModules: ParsedPresetConfig['whitelistedModules'];
   blacklistedModules: ParsedPresetConfig['blacklistedModules'];
+  fileOutputCasing: ParsedPresetConfig['fileOutputCasing'];
 }
 
 export interface ResolverDetails {
   schemaType: string;
   moduleName: string;
+  originalResolverName: string;
   resolverFile: {
     name: string;
     path: string;
@@ -113,6 +116,7 @@ export const parseGraphQLSchema = async ({
   resolverRelativeTargetDir,
   whitelistedModules,
   blacklistedModules,
+  fileOutputCasing,
 }: ParseGraphQLSchemaParams): Promise<ParsedGraphQLSchemaMeta> => {
   const scalarsModuleResolverMap = scalarsModule
     ? await getScalarResolverMapFromModule(scalarsModule)
@@ -144,6 +148,7 @@ export const parseGraphQLSchema = async ({
               nestedDirs: [schemaType],
               location: fieldNode.astNode?.loc,
               resolverName: fieldName,
+              fileOutputCasing,
             });
             if (!resolverDetails) {
               return;
@@ -187,6 +192,7 @@ export const parseGraphQLSchema = async ({
           namedType,
           schemaType,
           result: res,
+          fileOutputCasing,
         });
         return res;
       }
@@ -220,6 +226,7 @@ export const parseGraphQLSchema = async ({
         nestedDirs: [],
         location: namedType.astNode?.loc,
         resolverName: namedType.name,
+        fileOutputCasing,
       });
 
       if (resolverDetails) {
@@ -358,6 +365,7 @@ const handleObjectType = ({
   namedType,
   schemaType,
   result,
+  fileOutputCasing,
 }: {
   mode: ParseGraphQLSchemaParams['mode'];
   sourceMap: ParseGraphQLSchemaParams['sourceMap'];
@@ -369,6 +377,7 @@ const handleObjectType = ({
   namedType: GraphQLObjectType;
   schemaType: string;
   result: ParsedGraphQLSchemaMeta;
+  fileOutputCasing: ParsedPresetConfig['fileOutputCasing'];
 }): void => {
   // parse for details
   const fieldsByGraphQLModule = Object.entries(namedType.getFields()).reduce<
@@ -420,6 +429,7 @@ const handleObjectType = ({
         nestedDirs: [],
         location: firstFieldLocation,
         resolverName: namedType.name,
+        fileOutputCasing,
       });
 
       if (!resolverDetails) {
@@ -457,6 +467,7 @@ const createResolverDetails = ({
   nestedDirs,
   location,
   resolverName,
+  fileOutputCasing,
 }: {
   belongsToRootObject: RootObjectType | null;
   mode: ParseGraphQLSchemaParams['mode'];
@@ -470,6 +481,7 @@ const createResolverDetails = ({
   nestedDirs: string[];
   location: Location | undefined;
   resolverName: string;
+  fileOutputCasing: ParsedPresetConfig['fileOutputCasing'];
 }): ResolverDetails | undefined => {
   const parsedDetails = parseLocationForOutputDir({
     nestedDirs,
@@ -494,16 +506,18 @@ const createResolverDetails = ({
     belongsToRootObject
   );
 
+  const transformedFileName = transformResolverFileName(resolverName, fileOutputCasing);
   const resolverFilePath = path.posix.join(
     resolversOutputDir,
-    `${resolverName}.ts`
+    `${transformedFileName}.ts`
   );
 
   return {
     schemaType,
     moduleName,
+    originalResolverName: resolverName,
     resolverFile: {
-      name: resolverName,
+      name: transformedFileName,
       path: resolverFilePath,
       isOnFilesystem: fs.existsSync(resolverFilePath),
     },
