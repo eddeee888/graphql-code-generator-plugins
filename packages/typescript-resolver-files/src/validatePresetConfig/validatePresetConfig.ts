@@ -212,7 +212,7 @@ export const validatePresetConfig = ({
     );
   }
 
-  const validFileOutputCasings: FileOutputCasing[] = [
+  const validFileOutputCasings: Set<FileOutputCasing> = new Set([
     'pascal-case',
     'kebab-case',
     'camel-case',
@@ -227,12 +227,12 @@ export const validatePresetConfig = ({
     'snake-case',
     'title-case',
     'upper-case'
-  ];
+  ]);
 
-  if (fileOutputCasing && !validFileOutputCasings.includes(fileOutputCasing as FileOutputCasing)) {
+  if (fileOutputCasing && !validFileOutputCasings.has(fileOutputCasing as FileOutputCasing)) {
     throw new Error(
       fmt.error(
-        `presetConfig.fileOutputCasing must be one of: ${validFileOutputCasings.join(', ')} (default is "pascal-case")`,
+        `presetConfig.fileOutputCasing must be one of: ${Array.from(validFileOutputCasings).join(', ')} (default is "pascal-case")`,
         'Validation'
       )
     );
