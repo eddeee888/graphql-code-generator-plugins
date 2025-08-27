@@ -152,7 +152,12 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+export type Resolver<
+  TResult,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
+> =
   | ResolverFn<TResult, TParent, TContext, TArgs>
   | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
@@ -216,22 +221,29 @@ export type SubscriptionObject<
 export type SubscriptionResolver<
   TResult,
   TKey extends string,
-  TParent = {},
-  TContext = {},
-  TArgs = {}
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
 > =
   | ((
       ...args: any[]
     ) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+export type TypeResolveFn<
+  TTypes,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>
+> = (
   parent: TParent,
   context: TContext,
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
+export type IsTypeOfResolverFn<
+  T = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>
+> = (
   obj: T,
   context: TContext,
   info: GraphQLResolveInfo
@@ -240,10 +252,10 @@ export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
 export type NextResolverFn<T> = () => Promise<T>;
 
 export type DirectiveResolverFn<
-  TResult = {},
-  TParent = {},
-  TContext = {},
-  TArgs = {}
+  TResult = Record<PropertyKey, never>,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
 > = (
   next: NextResolverFn<TResult>,
   parent: TParent,
@@ -254,8 +266,8 @@ export type DirectiveResolverFn<
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Mutation: ResolverTypeWrapper<{}>;
-  Query: ResolverTypeWrapper<{}>;
+  Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
+  Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   School: ResolverTypeWrapper<School>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -267,7 +279,7 @@ export type ResolversTypes = {
   StudentAvatar: ResolverTypeWrapper<StudentAvatar>;
   StudentGuardian: ResolverTypeWrapper<StudentGuardian>;
   StudentProfile: ResolverTypeWrapper<StudentProfile>;
-  Subscription: ResolverTypeWrapper<{}>;
+  Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Teacher: ResolverTypeWrapper<Teacher>;
   TeacherAvatar: ResolverTypeWrapper<TeacherAvatar>;
   TeacherProfile: ResolverTypeWrapper<TeacherProfile>;
@@ -276,8 +288,8 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Mutation: {};
-  Query: {};
+  Mutation: Record<PropertyKey, never>;
+  Query: Record<PropertyKey, never>;
   ID: Scalars['ID']['output'];
   School: School;
   String: Scalars['String']['output'];
@@ -289,7 +301,7 @@ export type ResolversParentTypes = {
   StudentAvatar: StudentAvatar;
   StudentGuardian: StudentGuardian;
   StudentProfile: StudentProfile;
-  Subscription: {};
+  Subscription: Record<PropertyKey, never>;
   Teacher: Teacher;
   TeacherAvatar: TeacherAvatar;
   TeacherProfile: TeacherProfile;
@@ -348,7 +360,6 @@ export type SchoolResolvers<
   >;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type SchoolCourseResolvers<
@@ -363,7 +374,6 @@ export type SchoolCourseResolvers<
     ContextType
   >;
   teacher?: Resolver<ResolversTypes['Teacher'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type SchoolDemographicsResolvers<
@@ -394,7 +404,6 @@ export type SchoolDemographicsResolvers<
   schoolId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   studentCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   teacherCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type StudentResolvers<
@@ -412,7 +421,6 @@ export type StudentResolvers<
     ParentType,
     ContextType
   >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type StudentAvatarResolvers<
@@ -424,7 +432,6 @@ export type StudentAvatarResolvers<
   hairstyle?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   skinColor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type StudentGuardianResolvers<
@@ -440,7 +447,6 @@ export type StudentGuardianResolvers<
     ParentType,
     ContextType
   >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type StudentProfileResolvers<
@@ -461,7 +467,6 @@ export type StudentProfileResolvers<
     ParentType,
     ContextType
   >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type SubscriptionResolvers<
@@ -486,7 +491,6 @@ export type TeacherResolvers<
     ParentType,
     ContextType
   >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TeacherAvatarResolvers<
@@ -495,7 +499,6 @@ export type TeacherAvatarResolvers<
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TeacherProfileResolvers<
@@ -516,7 +519,6 @@ export type TeacherProfileResolvers<
     ParentType,
     ContextType
   >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {

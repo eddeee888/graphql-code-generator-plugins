@@ -80,7 +80,12 @@ export type GraphQLRecursivePick<T, S> = {
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+export type Resolver<
+  TResult,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
+> =
   | ResolverFn<TResult, TParent, TContext, TArgs>
   | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
@@ -144,22 +149,29 @@ export type SubscriptionObject<
 export type SubscriptionResolver<
   TResult,
   TKey extends string,
-  TParent = {},
-  TContext = {},
-  TArgs = {}
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
 > =
   | ((
       ...args: any[]
     ) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+export type TypeResolveFn<
+  TTypes,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>
+> = (
   parent: TParent,
   context: TContext,
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
+export type IsTypeOfResolverFn<
+  T = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>
+> = (
   obj: T,
   context: TContext,
   info: GraphQLResolveInfo
@@ -168,10 +180,10 @@ export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
 export type NextResolverFn<T> = () => Promise<T>;
 
 export type DirectiveResolverFn<
-  TResult = {},
-  TParent = {},
-  TContext = {},
-  TArgs = {}
+  TResult = Record<PropertyKey, never>,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
 > = (
   next: NextResolverFn<TResult>,
   parent: TParent,
@@ -180,6 +192,19 @@ export type DirectiveResolverFn<
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+/** Mapping of federation types */
+export type FederationTypes = {
+  Product: Product;
+};
+
+/** Mapping of federation reference types */
+export type FederationReferenceTypes = {
+  Product: { __typename: 'Product' } & (
+    | GraphQLRecursivePick<FederationTypes['Product'], { id: true }>
+    | GraphQLRecursivePick<FederationTypes['Product'], { upc: true }>
+  );
+};
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Maker: ResolverTypeWrapper<MakerMapper>;
@@ -187,7 +212,7 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Product: ResolverTypeWrapper<ProductMapper>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
-  Query: ResolverTypeWrapper<{}>;
+  Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
@@ -198,7 +223,7 @@ export type ResolversParentTypes = {
   String: Scalars['String']['output'];
   Product: ProductMapper;
   Int: Scalars['Int']['output'];
-  Query: {};
+  Query: Record<PropertyKey, never>;
   Boolean: Scalars['Boolean']['output'];
 };
 
@@ -213,16 +238,16 @@ export type MakerResolvers<
     ParentType,
     ContextType
   >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ProductResolvers<
   ContextType = any,
-  ParentType extends ResolversParentTypes['Product'] = ResolversParentTypes['Product']
+  ParentType extends ResolversParentTypes['Product'] = ResolversParentTypes['Product'],
+  FederationReferenceType extends FederationReferenceTypes['Product'] = FederationReferenceTypes['Product']
 > = {
   __resolveReference?: ReferenceResolver<
-    Maybe<ResolversTypes['Product']>,
-    { __typename: 'Product' } & GraphQLRecursivePick<ParentType, { upc: true }>,
+    Maybe<ResolversTypes['Product']> | FederationReferenceType,
+    FederationReferenceType,
     ContextType
   >;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -230,7 +255,6 @@ export type ProductResolvers<
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   price?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   upc?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<
