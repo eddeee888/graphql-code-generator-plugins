@@ -207,7 +207,12 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+export type Resolver<
+  TResult,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
+> =
   | ResolverFn<TResult, TParent, TContext, TArgs>
   | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
@@ -271,22 +276,29 @@ export type SubscriptionObject<
 export type SubscriptionResolver<
   TResult,
   TKey extends string,
-  TParent = {},
-  TContext = {},
-  TArgs = {}
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
 > =
   | ((
       ...args: any[]
     ) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+export type TypeResolveFn<
+  TTypes,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>
+> = (
   parent: TParent,
   context: TContext,
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
+export type IsTypeOfResolverFn<
+  T = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>
+> = (
   obj: T,
   context: TContext,
   info: GraphQLResolveInfo
@@ -295,10 +307,10 @@ export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
 export type NextResolverFn<T> = () => Promise<T>;
 
 export type DirectiveResolverFn<
-  TResult = {},
-  TParent = {},
-  TContext = {},
-  TArgs = {}
+  TResult = Record<PropertyKey, never>,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
 > = (
   next: NextResolverFn<TResult>,
   parent: TParent,
@@ -365,16 +377,16 @@ export type ResolversTypes = {
     | 'FORBIDDEN_ERROR'
     | 'UNEXPECTED_ERROR'
   >;
-  Mutation: ResolverTypeWrapper<{}>;
+  Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   PaginationInput: PaginationInput;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PaginationResult: ResolverTypeWrapper<PaginationResult>;
   Profile: ResolverTypeWrapper<ProfileMapper>;
-  Query: ResolverTypeWrapper<{}>;
+  Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   StandardError: ResolverTypeWrapper<
     Omit<StandardError, 'error'> & { error: ResolversTypes['ErrorType'] }
   >;
-  Subscription: ResolverTypeWrapper<{}>;
+  Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Topic: ResolverTypeWrapper<TopicMapper>;
   TopicByIdPayload: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>['TopicByIdPayload']
@@ -422,14 +434,14 @@ export type ResolversParentTypes = {
   String: Scalars['String']['output'];
   DateTime: Scalars['DateTime']['output'];
   Error: ResolversInterfaceTypes<ResolversParentTypes>['Error'];
-  Mutation: {};
+  Mutation: Record<PropertyKey, never>;
   PaginationInput: PaginationInput;
   Int: Scalars['Int']['output'];
   PaginationResult: PaginationResult;
   Profile: ProfileMapper;
-  Query: {};
+  Query: Record<PropertyKey, never>;
   StandardError: StandardError;
-  Subscription: {};
+  Subscription: Record<PropertyKey, never>;
   Topic: TopicMapper;
   TopicByIdPayload: ResolversUnionTypes<ResolversParentTypes>['TopicByIdPayload'];
   TopicByIdResult: Omit<TopicByIdResult, 'result'> & {
@@ -465,7 +477,6 @@ export type BookResolvers<
   isbn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   mainGenre?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   publishedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export interface DateTimeScalarConfig
@@ -478,7 +489,6 @@ export type ErrorResolvers<
   ParentType extends ResolversParentTypes['Error'] = ResolversParentTypes['Error']
 > = {
   __resolveType?: TypeResolveFn<'StandardError', ParentType, ContextType>;
-  error?: Resolver<ResolversTypes['ErrorType'], ParentType, ContextType>;
 };
 
 export type ErrorTypeResolvers = EnumResolverSignature<
@@ -516,7 +526,6 @@ export type PaginationResultResolvers<
   currentPage?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   recordsPerPage?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalPageCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ProfileResolvers<
@@ -525,7 +534,6 @@ export type ProfileResolvers<
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<
@@ -588,7 +596,6 @@ export type TopicResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TopicByIdPayloadResolvers<
@@ -695,7 +702,6 @@ export type UserResolvers<
   avatar?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type UserPayloadResolvers<
