@@ -1,4 +1,4 @@
 import type { UserResolvers } from './../../generated/allTypes';
-export const User: Pick<UserResolvers, 'id' | 'name' | '__isTypeOf'> = {
+export const User: Pick<UserResolvers, 'id' | 'name'> = {
   /* Implement User resolver logic here */
 };

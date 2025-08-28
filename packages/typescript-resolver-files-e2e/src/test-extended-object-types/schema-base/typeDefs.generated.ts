@@ -622,6 +622,157 @@ export const typeDefs = {
       interfaces: [],
     },
     {
+      kind: 'UnionTypeDefinition',
+      name: { kind: 'Name', value: 'Genre' },
+      directives: [],
+      types: [
+        { kind: 'NamedType', name: { kind: 'Name', value: 'Fantasy' } },
+        { kind: 'NamedType', name: { kind: 'Name', value: 'Comedy' } },
+      ],
+    },
+    {
+      name: { kind: 'Name', value: 'Fantasy' },
+      kind: 'ObjectTypeDefinition',
+      fields: [
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'id' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'likedBy' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'User' },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+      ],
+      directives: [],
+      interfaces: [],
+    },
+    {
+      kind: 'ObjectTypeDefinition',
+      name: { kind: 'Name', value: 'Comedy' },
+      interfaces: [],
+      directives: [],
+      fields: [
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'id' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: 'InterfaceTypeDefinition',
+      name: { kind: 'Name', value: 'Pet' },
+      interfaces: [],
+      directives: [],
+      fields: [
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'id' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: 'ObjectTypeDefinition',
+      name: { kind: 'Name', value: 'Dog' },
+      interfaces: [{ kind: 'NamedType', name: { kind: 'Name', value: 'Pet' } }],
+      directives: [],
+      fields: [
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'id' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'canBark' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'Boolean' },
+            },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      name: { kind: 'Name', value: 'Cat' },
+      kind: 'ObjectTypeDefinition',
+      fields: [
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'id' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'canMeow' },
+          arguments: [],
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'Boolean' },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: 'FieldDefinition',
+          name: { kind: 'Name', value: 'owner' },
+          arguments: [],
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'User' } },
+          directives: [],
+        },
+      ],
+      directives: [],
+      interfaces: [{ kind: 'NamedType', name: { kind: 'Name', value: 'Pet' } }],
+    },
+    {
       kind: 'ObjectTypeDefinition',
       name: { kind: 'Name', value: 'TopicByIdResult' },
       interfaces: [],
