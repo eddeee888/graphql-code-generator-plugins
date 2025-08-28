@@ -1,0 +1,13 @@
+interface Pet {
+  id: ID!
+}
+
+type Dog implements Pet {
+  id: ID!
+  canBark: Boolean!
+}
+
+type Cat implements Pet {
+  id: ID!
+  canMeow: Boolean!
+}

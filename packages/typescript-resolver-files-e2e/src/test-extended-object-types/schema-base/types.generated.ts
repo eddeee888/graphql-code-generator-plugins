@@ -47,6 +47,24 @@ export type BookStore_New = {
   id: Scalars['ID']['output'];
 };
 
+export type Cat = Pet & {
+  __typename?: 'Cat';
+  canMeow: Scalars['Boolean']['output'];
+  id: Scalars['ID']['output'];
+  owner?: Maybe<User>;
+};
+
+export type Comedy = {
+  __typename?: 'Comedy';
+  id: Scalars['ID']['output'];
+};
+
+export type Dog = Pet & {
+  __typename?: 'Dog';
+  canBark: Scalars['Boolean']['output'];
+  id: Scalars['ID']['output'];
+};
+
 export type Error = {
   error: ErrorType;
 };
@@ -56,6 +74,14 @@ export type ErrorType =
   | 'INPUT_VALIDATION_ERROR'
   | 'NOT_FOUND'
   | 'UNEXPECTED_ERROR';
+
+export type Fantasy = {
+  __typename?: 'Fantasy';
+  id: Scalars['ID']['output'];
+  likedBy: Array<User>;
+};
+
+export type Genre = Comedy | Fantasy;
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -86,6 +112,10 @@ export type PaginationResult = {
 export type PayloadError = Error & {
   __typename?: 'PayloadError';
   error: ErrorType;
+};
+
+export type Pet = {
+  id: Scalars['ID']['output'];
 };
 
 export type Profile = {
@@ -322,6 +352,9 @@ export type DirectiveResolverFn<
 
 /** Mapping of union types */
 export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
+  Genre:
+    | (Comedy & { __typename: 'Comedy' })
+    | (Fantasy & { __typename: 'Fantasy' });
   TopicByIdPayload:
     | (Omit<PayloadError, 'error'> & { error: _RefType['ErrorType'] } & {
         __typename: 'PayloadError';
@@ -363,13 +396,18 @@ export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
     Error: Omit<PayloadError, 'error'> & { error: _RefType['ErrorType'] } & {
       __typename: 'PayloadError';
     };
+    Pet: (Cat & { __typename: 'Cat' }) | (Dog & { __typename: 'Dog' });
   };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   BookStore_New: ResolverTypeWrapper<BookStore_New>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Cat: ResolverTypeWrapper<Cat>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  Comedy: ResolverTypeWrapper<Comedy>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  Dog: ResolverTypeWrapper<Dog>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Error']>;
   ErrorType: ResolverTypeWrapper<
     | 'NOT_FOUND'
@@ -377,6 +415,8 @@ export type ResolversTypes = {
     | 'FORBIDDEN_ERROR'
     | 'UNEXPECTED_ERROR'
   >;
+  Fantasy: ResolverTypeWrapper<Fantasy>;
+  Genre: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['Genre']>;
   Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   PaginationInput: PaginationInput;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
@@ -384,6 +424,7 @@ export type ResolversTypes = {
   PayloadError: ResolverTypeWrapper<
     Omit<PayloadError, 'error'> & { error: ResolversTypes['ErrorType'] }
   >;
+  Pet: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Pet']>;
   Profile: ResolverTypeWrapper<Profile>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -426,20 +467,26 @@ export type ResolversTypes = {
     ResolversUnionTypes<ResolversTypes>['UserPayload']
   >;
   UserResult: ResolverTypeWrapper<UserResult>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   BookStore_New: BookStore_New;
   ID: Scalars['ID']['output'];
+  Cat: Cat;
+  Boolean: Scalars['Boolean']['output'];
+  Comedy: Comedy;
   DateTime: Scalars['DateTime']['output'];
+  Dog: Dog;
   Error: ResolversInterfaceTypes<ResolversParentTypes>['Error'];
+  Fantasy: Fantasy;
+  Genre: ResolversUnionTypes<ResolversParentTypes>['Genre'];
   Mutation: Record<PropertyKey, never>;
   PaginationInput: PaginationInput;
   Int: Scalars['Int']['output'];
   PaginationResult: PaginationResult;
   PayloadError: PayloadError;
+  Pet: ResolversInterfaceTypes<ResolversParentTypes>['Pet'];
   Profile: Profile;
   Query: Record<PropertyKey, never>;
   String: Scalars['String']['output'];
@@ -468,7 +515,6 @@ export type ResolversParentTypes = {
   User: User;
   UserPayload: ResolversUnionTypes<ResolversParentTypes>['UserPayload'];
   UserResult: UserResult;
-  Boolean: Scalars['Boolean']['output'];
 };
 
 export type BookStore_NewResolvers<
@@ -478,10 +524,37 @@ export type BookStore_NewResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
+export type CatResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Cat'] = ResolversParentTypes['Cat']
+> = {
+  canMeow?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  owner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ComedyResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Comedy'] = ResolversParentTypes['Comedy']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface DateTimeScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
   name: 'DateTime';
 }
+
+export type DogResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Dog'] = ResolversParentTypes['Dog']
+> = {
+  canBark?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type ErrorResolvers<
   ContextType = any,
@@ -499,6 +572,22 @@ export type ErrorTypeResolvers = EnumResolverSignature<
   },
   ResolversTypes['ErrorType']
 >;
+
+export type FantasyResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Fantasy'] = ResolversParentTypes['Fantasy']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  likedBy?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GenreResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Genre'] = ResolversParentTypes['Genre']
+> = {
+  __resolveType?: TypeResolveFn<'Comedy' | 'Fantasy', ParentType, ContextType>;
+};
 
 export type MutationResolvers<
   ContextType = any,
@@ -533,6 +622,13 @@ export type PayloadErrorResolvers<
 > = {
   error?: Resolver<ResolversTypes['ErrorType'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PetResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Pet'] = ResolversParentTypes['Pet']
+> = {
+  __resolveType?: TypeResolveFn<'Cat' | 'Dog', ParentType, ContextType>;
 };
 
 export type ProfileResolvers<
@@ -778,12 +874,18 @@ export type UserResultResolvers<
 
 export type Resolvers<ContextType = any> = {
   BookStore_New?: BookStore_NewResolvers<ContextType>;
+  Cat?: CatResolvers<ContextType>;
+  Comedy?: ComedyResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
+  Dog?: DogResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
   ErrorType?: ErrorTypeResolvers;
+  Fantasy?: FantasyResolvers<ContextType>;
+  Genre?: GenreResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   PaginationResult?: PaginationResultResolvers<ContextType>;
   PayloadError?: PayloadErrorResolvers<ContextType>;
+  Pet?: PetResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SomeRandomScalar?: GraphQLScalarType;

@@ -5,7 +5,6 @@ export const Topic: Pick<
   | 'extendedTopicFieldInDifferentFileAndDifferentModule1'
   | 'extendedTopicFieldInDifferentFileAndDifferentModule2'
   | 'extendedTopicFieldInDifferentFileAndDifferentModule3'
-  | '__isTypeOf'
 > = {
   /* Implement Topic resolver logic here */
   creator: ({ creator }, _arg, _ctx) => {

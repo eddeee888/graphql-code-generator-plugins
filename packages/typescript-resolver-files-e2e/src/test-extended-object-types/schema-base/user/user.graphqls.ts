@@ -27,4 +27,12 @@ export const userTypeDefs = gql`
     extendedTopicFieldInDifferentFileAndDifferentModule2: User!
     extendedTopicFieldInDifferentFileAndDifferentModule3: User!
   }
+
+  extend type Cat {
+    owner: User
+  }
+
+  extend type Fantasy {
+    likedBy: [User!]!
+  }
 `;

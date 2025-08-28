@@ -1,7 +1,4 @@
 import type { TeacherProfileResolvers } from './../../../types.generated';
-export const TeacherProfile: Pick<
-  TeacherProfileResolvers,
-  'avatar' | '__isTypeOf'
-> = {
+export const TeacherProfile: Pick<TeacherProfileResolvers, 'avatar'> = {
   /* Implement TeacherProfile resolver logic here */
 };
