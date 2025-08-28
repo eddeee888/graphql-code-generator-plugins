@@ -8,6 +8,12 @@ import { topicCreate as Mutation_topicCreate } from './topic/resolvers/Mutation/
 import { topicEdit as Mutation_topicEdit } from './topic/resolvers/Mutation/topicEdit';
 import { profileChanges as Subscription_profileChanges } from './user/resolvers/Subscription/profileChanges';
 import { BookStore_New } from './book-store-v2_new_again-final_v3/resolvers/BookStore_New';
+import { Cat as pet_Cat } from './pet/resolvers/Cat';
+import { Cat as user_Cat } from './user/resolvers/Cat';
+import { Comedy } from './book-store-v2_new_again-final_v3/resolvers/Comedy';
+import { Dog } from './pet/resolvers/Dog';
+import { Fantasy as book_store_v2_new_again_final_v3_Fantasy } from './book-store-v2_new_again-final_v3/resolvers/Fantasy';
+import { Fantasy as user_Fantasy } from './user/resolvers/Fantasy';
 import { PaginationResult } from './base/resolvers/PaginationResult';
 import { PayloadError } from './base/resolvers/PayloadError';
 import { Profile } from './user/resolvers/Profile';
@@ -36,6 +42,10 @@ export const resolvers: Resolvers = {
   },
   Subscription: { profileChanges: Subscription_profileChanges },
   BookStore_New: BookStore_New,
+  Cat: { ...pet_Cat, ...user_Cat },
+  Comedy: Comedy,
+  Dog: Dog,
+  Fantasy: { ...book_store_v2_new_again_final_v3_Fantasy, ...user_Fantasy },
   PaginationResult: PaginationResult,
   PayloadError: PayloadError,
   Profile: Profile,
