@@ -1,7 +1,7 @@
 import type { ProductResolvers } from './../../types.generated';
 export const Product: Pick<
   ProductResolvers,
-  'maker' | 'upc' | '__isTypeOf' | '__resolveReference'
+  'maker' | 'upc' | '__resolveReference'
 > = {
   /* Implement Product resolver logic here */
   maker: async (_parent, _arg, _ctx) => {

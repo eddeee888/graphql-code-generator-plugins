@@ -201,7 +201,12 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+export type Resolver<
+  TResult,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
+> =
   | ResolverFn<TResult, TParent, TContext, TArgs>
   | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
@@ -265,22 +270,29 @@ export type SubscriptionObject<
 export type SubscriptionResolver<
   TResult,
   TKey extends string,
-  TParent = {},
-  TContext = {},
-  TArgs = {}
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
 > =
   | ((
       ...args: any[]
     ) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+export type TypeResolveFn<
+  TTypes,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>
+> = (
   parent: TParent,
   context: TContext,
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
+export type IsTypeOfResolverFn<
+  T = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>
+> = (
   obj: T,
   context: TContext,
   info: GraphQLResolveInfo
@@ -289,10 +301,10 @@ export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
 export type NextResolverFn<T> = () => Promise<T>;
 
 export type DirectiveResolverFn<
-  TResult = {},
-  TParent = {},
-  TContext = {},
-  TArgs = {}
+  TResult = Record<PropertyKey, never>,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
 > = (
   next: NextResolverFn<TResult>,
   parent: TParent,
@@ -363,7 +375,7 @@ export type I_RESOLVERSTYPES = {
     | 'FORBIDDEN_ERROR'
     | 'UNEXPECTED_ERROR'
   >;
-  Mutation: ResolverTypeWrapper<{}>;
+  Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   PaginationInput: I_PAGINATIONINPUT;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PaginationResult: ResolverTypeWrapper<I_PAGINATIONRESULT>;
@@ -371,13 +383,13 @@ export type I_RESOLVERSTYPES = {
     Omit<I_PROFILE, 'user'> & { user: I_RESOLVERSTYPES['User'] }
   >;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
-  Query: ResolverTypeWrapper<{}>;
+  Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   SomeOtherScalars: ResolverTypeWrapper<Scalars['SomeOtherScalars']['output']>;
   StandardError: ResolverTypeWrapper<
     Omit<I_STANDARDERROR, 'error'> & { error: I_RESOLVERSTYPES['ErrorType'] }
   >;
-  Subscription: ResolverTypeWrapper<{}>;
+  Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Topic: ResolverTypeWrapper<
     Omit<I_TOPIC, 'creator'> & { creator: I_RESOLVERSTYPES['User'] }
   >;
@@ -428,17 +440,17 @@ export type I_RESOLVERSPARENTTYPES = {
   BigInt: Scalars['BigInt']['output'];
   DateTime: Scalars['DateTime']['output'];
   Error: I_RESOLVERSINTERFACETYPES<I_RESOLVERSPARENTTYPES>['Error'];
-  Mutation: {};
+  Mutation: Record<PropertyKey, never>;
   PaginationInput: I_PAGINATIONINPUT;
   Int: Scalars['Int']['output'];
   PaginationResult: I_PAGINATIONRESULT;
   Profile: Omit<I_PROFILE, 'user'> & { user: I_RESOLVERSPARENTTYPES['User'] };
   ID: Scalars['ID']['output'];
-  Query: {};
+  Query: Record<PropertyKey, never>;
   String: Scalars['String']['output'];
   SomeOtherScalars: Scalars['SomeOtherScalars']['output'];
   StandardError: I_STANDARDERROR;
-  Subscription: {};
+  Subscription: Record<PropertyKey, never>;
   Topic: Omit<I_TOPIC, 'creator'> & { creator: I_RESOLVERSPARENTTYPES['User'] };
   TopicByIdPayload: I_RESOLVERSUNIONTYPES<I_RESOLVERSPARENTTYPES>['TopicByIdPayload'];
   TopicByIdResult: Omit<I_TOPICBYIDRESULT, 'result'> & {
@@ -488,7 +500,6 @@ export type I_ERRORRESOLVERS<
   ParentType extends I_RESOLVERSPARENTTYPES['Error'] = I_RESOLVERSPARENTTYPES['Error']
 > = {
   __resolveType?: TypeResolveFn<'StandardError', ParentType, ContextType>;
-  error?: Resolver<I_RESOLVERSTYPES['ErrorType'], ParentType, ContextType>;
 };
 
 export type I_ERRORTYPERESOLVERS = EnumResolverSignature<
@@ -526,7 +537,6 @@ export type I_PAGINATIONRESULTRESOLVERS<
   currentPage?: Resolver<I_RESOLVERSTYPES['Int'], ParentType, ContextType>;
   recordsPerPage?: Resolver<I_RESOLVERSTYPES['Int'], ParentType, ContextType>;
   totalPageCount?: Resolver<I_RESOLVERSTYPES['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type I_PROFILERESOLVERS<
@@ -535,7 +545,6 @@ export type I_PROFILERESOLVERS<
 > = {
   id?: Resolver<I_RESOLVERSTYPES['ID'], ParentType, ContextType>;
   user?: Resolver<I_RESOLVERSTYPES['User'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type I_QUERYRESOLVERS<
@@ -597,7 +606,6 @@ export type I_TOPICRESOLVERS<
   id?: Resolver<I_RESOLVERSTYPES['ID'], ParentType, ContextType>;
   name?: Resolver<I_RESOLVERSTYPES['String'], ParentType, ContextType>;
   url?: Resolver<Maybe<I_RESOLVERSTYPES['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type I_TOPICBYIDPAYLOADRESOLVERS<
@@ -704,7 +712,6 @@ export type I_USERRESOLVERS<
   avatar?: Resolver<Maybe<I_RESOLVERSTYPES['String']>, ParentType, ContextType>;
   id?: Resolver<I_RESOLVERSTYPES['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<I_RESOLVERSTYPES['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type I_USERPAYLOADRESOLVERS<

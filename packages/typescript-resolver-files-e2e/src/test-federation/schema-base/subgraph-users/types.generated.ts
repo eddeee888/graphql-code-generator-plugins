@@ -69,7 +69,12 @@ export type GraphQLRecursivePick<T, S> = {
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+export type Resolver<
+  TResult,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
+> =
   | ResolverFn<TResult, TParent, TContext, TArgs>
   | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
@@ -133,22 +138,29 @@ export type SubscriptionObject<
 export type SubscriptionResolver<
   TResult,
   TKey extends string,
-  TParent = {},
-  TContext = {},
-  TArgs = {}
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
 > =
   | ((
       ...args: any[]
     ) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+export type TypeResolveFn<
+  TTypes,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>
+> = (
   parent: TParent,
   context: TContext,
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
+export type IsTypeOfResolverFn<
+  T = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>
+> = (
   obj: T,
   context: TContext,
   info: GraphQLResolveInfo
@@ -157,10 +169,10 @@ export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
 export type NextResolverFn<T> = () => Promise<T>;
 
 export type DirectiveResolverFn<
-  TResult = {},
-  TParent = {},
-  TContext = {},
-  TArgs = {}
+  TResult = Record<PropertyKey, never>,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
 > = (
   next: NextResolverFn<TResult>,
   parent: TParent,
@@ -169,11 +181,24 @@ export type DirectiveResolverFn<
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+/** Mapping of federation types */
+export type FederationTypes = {
+  User: User;
+};
+
+/** Mapping of federation reference types */
+export type FederationReferenceTypes = {
+  User: { __typename: 'User' } & GraphQLRecursivePick<
+    FederationTypes['User'],
+    { id: true }
+  >;
+};
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Profile: ResolverTypeWrapper<Profile>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
-  Query: ResolverTypeWrapper<{}>;
+  Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   User: ResolverTypeWrapper<User>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
@@ -183,8 +208,8 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Profile: Profile;
   ID: Scalars['ID']['output'];
-  Query: {};
-  User: User;
+  Query: Record<PropertyKey, never>;
+  User: User | FederationReferenceTypes['User'];
   String: Scalars['String']['output'];
   Boolean: Scalars['Boolean']['output'];
 };
@@ -193,14 +218,8 @@ export type ProfileResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']
 > = {
-  __resolveReference?: ReferenceResolver<
-    Maybe<ResolversTypes['Profile']>,
-    ParentType,
-    ContextType
-  >;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<
@@ -212,17 +231,17 @@ export type QueryResolvers<
 
 export type UserResolvers<
   ContextType = any,
-  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
+  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
+  FederationReferenceType extends FederationReferenceTypes['User'] = FederationReferenceTypes['User']
 > = {
   __resolveReference?: ReferenceResolver<
-    Maybe<ResolversTypes['User']>,
-    { __typename: 'User' } & GraphQLRecursivePick<ParentType, { id: true }>,
+    Maybe<ResolversTypes['User']> | FederationReferenceType,
+    FederationReferenceType,
     ContextType
   >;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   profile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {

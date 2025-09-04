@@ -1,4 +1,4 @@
 import type { StudentResolvers } from './../../../types.generated';
-export const Student: Pick<StudentResolvers, 'id' | '__isTypeOf'> = {
+export const Student: Pick<StudentResolvers, 'id'> = {
   /* Implement Student resolver logic here */
 };
