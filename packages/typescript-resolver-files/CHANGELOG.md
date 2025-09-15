@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.12.2
+
+### Patch Changes
+
+- 6d79fc2: Fix issue where shorthand assignment are not detected for static analysis
+
 ## 0.12.1
 
 ### Patch Changes
