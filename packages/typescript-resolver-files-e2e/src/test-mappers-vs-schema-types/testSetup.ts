@@ -7,12 +7,14 @@ createTestSetup({
     {
       file: 'modules/topic/resolvers/Topic.ts',
       content: `import type { TopicResolvers } from './../../types.generated';
+      import {name} from '../Topic.name';
       export const Topic: TopicResolvers = {
         id: ({ id }) => id,
         createdAt: async (_parent, _arg, _ctx) => {
           /* existing implementation, must keep */
           return '2024-01-01T00:00:00.000Z';
         },
+        name,
       };`,
     },
   ],
