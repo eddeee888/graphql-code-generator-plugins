@@ -1,7 +1,7 @@
 import type { ProductResolvers } from './../../types.generated';
 export const Product: Pick<
   ProductResolvers,
-  'id' | 'name' | 'price' | '__isTypeOf' | '__resolveReference'
+  'id' | 'name' | 'price' | '__resolveReference'
 > = {
   /* Implement Product resolver logic here */
   name: async (_parent, _arg, _ctx) => {

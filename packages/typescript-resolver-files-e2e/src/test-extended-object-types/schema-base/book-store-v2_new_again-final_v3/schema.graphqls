@@ -9,3 +9,13 @@ extend type Topic {
 extend type User {
   bookStore_4_user: BookStore_New
 }
+
+union Genre = Fantasy | Comedy
+
+type Fantasy {
+  id: ID!
+}
+
+type Comedy {
+  id: ID!
+}
