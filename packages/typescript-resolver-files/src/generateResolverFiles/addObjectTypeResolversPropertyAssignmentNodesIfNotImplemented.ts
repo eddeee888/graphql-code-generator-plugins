@@ -56,6 +56,16 @@ export const addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented = ({
     }
   > = { ...resolversToGenerate };
 
+  /**
+   * PropertyAssignment
+   * ```
+   * const name = () => {};
+   * const OutputType = {
+   *   id: () => {},
+   *   name: name,
+   * }
+   * ```
+   */
   variableStatement
     .getDescendantsOfKind(SyntaxKind.PropertyAssignment)
     .forEach((propertyAssignment) => {
@@ -65,10 +75,36 @@ export const addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented = ({
       }
     });
 
+  /**
+   * MethodDeclaration
+   * ```
+   * const OutputType = {
+   *   id(){},
+   * }
+   * ```
+   */
   variableStatement
     .getDescendantsOfKind(SyntaxKind.MethodDeclaration)
     .forEach((methodDeclaration) => {
       const resolverName = methodDeclaration.getName();
+      if (resolversData[resolverName]) {
+        resolversData[resolverName].implemented = true;
+      }
+    });
+
+  /**
+   * ShorthandPropertyAssignment example:
+   * ```
+   * const id = () => {};
+   * const OutputType = {
+   *   id,
+   * }
+   * ```
+   */
+  variableStatement
+    .getDescendantsOfKind(SyntaxKind.ShorthandPropertyAssignment)
+    .forEach((propertyAssignment) => {
+      const resolverName = propertyAssignment.getName();
       if (resolversData[resolverName]) {
         resolversData[resolverName].implemented = true;
       }
