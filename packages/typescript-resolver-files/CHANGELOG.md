@@ -1,5 +1,16 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.13.0
+
+### Minor Changes
+
+- f14a549: Bump codegen packages major version
+
+### Patch Changes
+
+- Updated dependencies [f14a549]
+  - @eddeee888/gcg-server-config@0.3.0
+
 ## 0.12.2
 
 ### Patch Changes
