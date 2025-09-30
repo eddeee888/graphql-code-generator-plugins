@@ -2,7 +2,22 @@ type BookStore_New {
   id: ID!
 }
 
+type Cat implements Pet {
+  canMeow: Boolean!
+  id: ID!
+  owner: User
+}
+
+type Comedy {
+  id: ID!
+}
+
 scalar DateTime
+
+type Dog implements Pet {
+  canBark: Boolean!
+  id: ID!
+}
 
 interface Error {
   error: ErrorType!
@@ -14,6 +29,13 @@ enum ErrorType {
   NOT_FOUND
   UNEXPECTED_ERROR
 }
+
+type Fantasy {
+  id: ID!
+  likedBy: [User!]!
+}
+
+union Genre = Comedy | Fantasy
 
 type Mutation {
   topicCreate(input: TopicCreateInput!): TopicCreatePayload!
@@ -33,6 +55,10 @@ type PaginationResult {
 
 type PayloadError implements Error {
   error: ErrorType!
+}
+
+interface Pet {
+  id: ID!
 }
 
 type Profile {

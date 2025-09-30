@@ -139,9 +139,6 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       },
       namingConvention: 'keep',
       emitLegacyCommonJSImports,
-      generateInternalResolversIfNeeded: {
-        __resolveReference: true,
-      },
       ...typesPluginsConfig,
       scalars: mergedConfig.scalarTypes,
       mappers: {
