@@ -1,5 +1,11 @@
 # @eddeee888/gcg-server-config
 
+## 0.3.0
+
+### Minor Changes
+
+- f14a549: Bump codegen packages major version
+
 ## 0.2.3
 
 ### Patch Changes
