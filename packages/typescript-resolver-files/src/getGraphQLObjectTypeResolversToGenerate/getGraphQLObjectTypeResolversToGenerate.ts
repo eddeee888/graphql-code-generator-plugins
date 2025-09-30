@@ -67,6 +67,7 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
 
   // 1. Get property map of all schema types
   const schemaResolversTypePropertyMap: Record<string, NodePropertyMap> = {};
+  const resolverTypesMap: Record<string, { name: string; node: Node }> = {};
 
   const populateSchemaTypeResolversPropertyMap = (
     node: TypeAliasDeclaration | InterfaceDeclaration
@@ -77,6 +78,10 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
     const schemaType = generatedSchemaTypeNameMap[identifierName];
 
     if (schemaType && userDefinedSchemaObjectTypeMap[schemaType]) {
+      resolverTypesMap[schemaType] = {
+        name: identifierName,
+        node,
+      };
       schemaResolversTypePropertyMap[schemaType] = getNodePropertyMap({
         tsMorphProject,
         node,
@@ -108,6 +113,53 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
       tsMorphProject,
       node: originalDeclarationNode,
     });
+
+    if (schemaType === 'Cat') {
+      const mapperProperties = originalDeclarationNode
+        .getType()
+        .getProperties();
+
+      mapperProperties.map((mapperSymbol) => {
+        const sourceType = mapperSymbol.getTypeAtLocation(
+          originalDeclarationNode
+        );
+        resolverTypesMap[schemaType].node
+          .getType()
+          .getProperties()
+          .forEach((symbol) => {
+            // target is resolver
+            const resolverType = symbol.getTypeAtLocation(
+              resolverTypesMap[schemaType].node
+            );
+
+            const mainResolverType = resolverType.getNonNullableType();
+            const targetType = mainResolverType
+              .getAliasTypeArguments()[0]
+              .getAliasTypeArguments()[0];
+
+            if (mapperSymbol.getName() === symbol.getName()) {
+              console.log('** Test:', {
+                mapperProp: mapperSymbol.getName(),
+                mapperType: sourceType.getText(),
+                resolverProp: symbol.getName(),
+                resolverType: targetType.getText(),
+                assignable: sourceType.isAssignableTo(targetType),
+              });
+            }
+
+            // console.log({
+            //   mapperProp: mapperSymbol.getName(),
+            //   mapperType: sourceType.getText(),
+            //   resolverProp: symbol.getName(),
+            //   resolverType: targetType.getText(),
+            //   isAssignable: typeChecker.isTypeAssignableTo(
+            //     sourceType,
+            //     targetType
+            //   ),
+            // });
+          });
+      });
+    }
 
     Object.values(matchedSchemaTypePropertyMap).forEach(
       (schemaTypeProperty) => {
