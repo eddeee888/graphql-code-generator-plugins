@@ -221,8 +221,13 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
         .getDescendantsOfKind(SyntaxKind.CallExpression)
         .forEach((callExpression) => {
           const calledFunctionName = callExpression
-            .getFirstDescendantByKindOrThrow(SyntaxKind.Identifier)
-            .getText();
+            .getFirstDescendantByKind(SyntaxKind.Identifier)
+            ?.getText();
+
+          if (!calledFunctionName) {
+            return;
+          }
+
           if (
             hooksToReplace[calledFunctionName] &&
             fileMetadata.functionsToReplace[calledFunctionName]
