@@ -1,5 +1,11 @@
 # @eddeee888/gcg-operation-location-migration
 
+## 0.1.1
+
+### Patch Changes
+
+- 9b5f1b8: Fix an issue where dynamic import function does not have an identifier and will cause runtime error
+
 ## 0.1.0
 
 ### Minor Changes
