@@ -1,0 +1,38 @@
+extend type Base {
+  user: User
+}
+
+type User {
+  id: ID!
+
+  # Matches
+  book: Book
+  bookNonNull: Book!
+  bookInline: Book!
+
+  ## mappers fields use Array<T>
+  books1: [Book]
+  books2: [Book!]
+  books3: [Book]!
+  books4: [Book!]!
+
+  ## mappers fields use T[]
+  books5: [Book]
+  books6: [Book!]
+  books7: [Book]!
+  books8: [Book!]!
+
+  # Mismatches
+  mmBook1: Book
+  mmBook2: Book!
+
+  mmBooks1: [Book]
+  mmBooks2: [Book!]
+  mmBooks3: [Book]!
+  mmBooks4: [Book!]!
+}
+
+type Book {
+  id: ID!
+  name: String!
+}

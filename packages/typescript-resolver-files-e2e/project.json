@@ -81,6 +81,13 @@
           ],
           "parallel": false
         },
+        "test-mappers-vs-schema-types-advanced": {
+          "commands": [
+            "rimraf -g \"{projectRoot}/src/test-mappers-vs-schema-types-advanced/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-mappers-vs-schema-types-advanced/**/*.generated.*\""
+          ],
+          "parallel": false
+        },
         "test-config-ts": {
           "commands": [
             "rimraf -g \"{projectRoot}/src/test-config-ts/**/resolvers/\"",
@@ -179,6 +186,7 @@
           "nx graphql-codegen typescript-resolver-files-e2e -c test-config-overrides --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-mappers --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-mappers-vs-schema-types --verbose",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-mappers-vs-schema-types-advanced --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-config-ts --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-modules-typedefs-file-mode --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-modules-resolver-main-file-mode --verbose",
@@ -230,6 +238,9 @@
         },
         "test-mappers-vs-schema-types": {
           "configFile": "{projectRoot}/src/test-mappers-vs-schema-types/codegen.ts"
+        },
+        "test-mappers-vs-schema-types-advanced": {
+          "configFile": "{projectRoot}/src/test-mappers-vs-schema-types-advanced/codegen.ts"
         },
         "test-config-ts": {
           "configFile": "{projectRoot}/src/test-config-ts/codegen.ts"
