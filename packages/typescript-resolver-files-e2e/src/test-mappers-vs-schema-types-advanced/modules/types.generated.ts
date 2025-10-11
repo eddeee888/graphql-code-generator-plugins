@@ -39,6 +39,7 @@ export type Book = {
   __typename?: 'Book';
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  nextBookInSeries: Book;
   relatedBooks: Array<Book>;
 };
 
@@ -222,6 +223,7 @@ export type BookResolvers<
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  nextBookInSeries?: Resolver<ResolversTypes['Book'], ParentType, ContextType>;
   relatedBooks?: Resolver<
     Array<ResolversTypes['Book']>,
     ParentType,
