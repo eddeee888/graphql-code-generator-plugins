@@ -25,10 +25,10 @@ type ParsedTypesPluginsConfig = Omit<
 type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
 export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
-type StringFixObjectTypeResolvers = 'smart' | 'disabled';
+type StringFixObjectTypeResolvers = 'smart' | 'experimental' | 'disabled';
 type NormalizedFixObjectTypeResolvers = {
-  object: 'smart' | 'disabled';
-  enum: 'smart' | 'disabled';
+  object: 'smart' | 'experimental' | 'disabled';
+  enum: 'smart' | 'experimental' | 'disabled';
 };
 type StringResolverGeneration = 'disabled' | 'recommended' | 'minimal' | 'all';
 type NormalizedResolverGeneration = {
@@ -144,7 +144,7 @@ export const validatePresetConfig = ({
   externalResolvers = {},
   typesPluginsConfig = {},
   tsConfigFilePath = './tsconfig.json',
-  fixObjectTypeResolvers = 'smart',
+  fixObjectTypeResolvers = 'experimental',
   emitLegacyCommonJSImports = true,
 }: RawPresetConfig): ParsedPresetConfig => {
   if (mode !== 'merged' && mode !== 'modules') {
@@ -159,11 +159,12 @@ export const validatePresetConfig = ({
   if (
     typeof fixObjectTypeResolvers !== 'object' &&
     fixObjectTypeResolvers !== 'smart' &&
+    fixObjectTypeResolvers !== 'experimental' &&
     fixObjectTypeResolvers !== 'disabled'
   ) {
     throw new Error(
       fmt.error(
-        'presetConfig.fixObjectTypeResolvers must be an object, "smart" or "disabled" (default is "smart")',
+        'presetConfig.fixObjectTypeResolvers must be an object, "smart", "experimental" or "disabled" (default is "experimental")',
         'Validation'
       )
     );
@@ -422,24 +423,19 @@ const parseResolverGeneration = (
 const parseFixObjectTypeResolvers = (
   fixObjectTypeResolvers: StringFixObjectTypeResolvers | Record<string, string>
 ): NormalizedFixObjectTypeResolvers => {
-  if (fixObjectTypeResolvers === 'smart') {
+  if (typeof fixObjectTypeResolvers === 'string') {
     return {
-      object: 'smart',
-      enum: 'smart',
+      object: fixObjectTypeResolvers,
+      enum: fixObjectTypeResolvers,
     };
   }
 
-  if (fixObjectTypeResolvers === 'disabled') {
-    return {
-      object: 'disabled',
-      enum: 'disabled',
+  const allowedOptions: Record<string, 'smart' | 'experimental' | 'disabled'> =
+    {
+      smart: 'smart',
+      disabled: 'disabled',
+      experimental: 'experimental',
     };
-  }
-
-  const allowedOptions: Record<string, 'smart' | 'disabled'> = {
-    smart: 'smart',
-    disabled: 'disabled',
-  };
 
   return {
     object: allowedOptions[fixObjectTypeResolvers.object] || 'disabled',
