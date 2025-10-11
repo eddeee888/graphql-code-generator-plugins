@@ -14,7 +14,7 @@ const config: CodegenConfig = {
         typeDefsFilePath: false,
         mergeSchema: false,
         resolverGeneration: 'minimal',
-        fixObjectTypeResolvers: 'experimental',
+        fixObjectTypeResolvers: 'fast',
         tsConfigFilePath: `${projectRoot}/tsconfig.lib.json`,
       }),
   },

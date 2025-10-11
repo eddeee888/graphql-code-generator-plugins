@@ -85,18 +85,21 @@ export const postProcessFiles = ({
     }
 
     if (
-      fixObjectTypeResolvers.object === 'smart' &&
+      (fixObjectTypeResolvers.object === 'smart' ||
+        fixObjectTypeResolvers.object === 'fast') &&
       resolverFile.__filetype === 'objectType'
     ) {
       addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented({
         addedPropertyAssignmentNodes,
         sourceFile,
         resolverFile,
+        mode: fixObjectTypeResolvers.object,
       });
     }
 
     if (
-      fixObjectTypeResolvers.enum === 'smart' &&
+      (fixObjectTypeResolvers.enum === 'smart' ||
+        fixObjectTypeResolvers.enum === 'fast') &&
       resolverFile.__filetype === 'enumResolver'
     ) {
       ensureEnumTypeResolversAreGenerated(sourceFile, resolverFile);

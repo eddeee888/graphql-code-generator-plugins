@@ -25,10 +25,10 @@ type ParsedTypesPluginsConfig = Omit<
 type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
 export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
-type StringFixObjectTypeResolvers = 'smart' | 'experimental' | 'disabled';
+type StringFixObjectTypeResolvers = 'smart' | 'fast' | 'disabled';
 type NormalizedFixObjectTypeResolvers = {
-  object: 'smart' | 'experimental' | 'disabled';
-  enum: 'smart' | 'experimental' | 'disabled';
+  object: 'smart' | 'fast' | 'disabled';
+  enum: 'smart' | 'fast' | 'disabled';
 };
 type StringResolverGeneration = 'disabled' | 'recommended' | 'minimal' | 'all';
 type NormalizedResolverGeneration = {
@@ -144,7 +144,7 @@ export const validatePresetConfig = ({
   externalResolvers = {},
   typesPluginsConfig = {},
   tsConfigFilePath = './tsconfig.json',
-  fixObjectTypeResolvers = 'experimental',
+  fixObjectTypeResolvers = 'fast',
   emitLegacyCommonJSImports = true,
 }: RawPresetConfig): ParsedPresetConfig => {
   if (mode !== 'merged' && mode !== 'modules') {
@@ -159,12 +159,12 @@ export const validatePresetConfig = ({
   if (
     typeof fixObjectTypeResolvers !== 'object' &&
     fixObjectTypeResolvers !== 'smart' &&
-    fixObjectTypeResolvers !== 'experimental' &&
+    fixObjectTypeResolvers !== 'fast' &&
     fixObjectTypeResolvers !== 'disabled'
   ) {
     throw new Error(
       fmt.error(
-        'presetConfig.fixObjectTypeResolvers must be an object, "smart", "experimental" or "disabled" (default is "experimental")',
+        'presetConfig.fixObjectTypeResolvers must be an object, "smart", "fast" or "disabled" (default is "fast")',
         'Validation'
       )
     );
@@ -430,12 +430,11 @@ const parseFixObjectTypeResolvers = (
     };
   }
 
-  const allowedOptions: Record<string, 'smart' | 'experimental' | 'disabled'> =
-    {
-      smart: 'smart',
-      disabled: 'disabled',
-      experimental: 'experimental',
-    };
+  const allowedOptions: Record<string, 'smart' | 'fast' | 'disabled'> = {
+    smart: 'smart',
+    fast: 'fast',
+    disabled: 'disabled',
+  };
 
   return {
     object: allowedOptions[fixObjectTypeResolvers.object] || 'disabled',
