@@ -35,4 +35,5 @@ type User {
 type Book {
   id: ID!
   name: String!
+  relatedBooks: [Book!]!
 }

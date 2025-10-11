@@ -39,6 +39,7 @@ export type Book = {
   __typename?: 'Book';
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  relatedBooks: Array<Book>;
 };
 
 export type Query = {
@@ -221,6 +222,11 @@ export type BookResolvers<
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  relatedBooks?: Resolver<
+    Array<ResolversTypes['Book']>,
+    ParentType,
+    ContextType
+  >;
 };
 
 export type UserResolvers<

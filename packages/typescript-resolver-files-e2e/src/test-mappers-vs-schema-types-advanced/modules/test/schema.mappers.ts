@@ -4,7 +4,7 @@ export type UserMapper = {
   // Matches
   book: BookMapper | null | undefined;
   bookNonNull: BookMapper;
-  bookInline: { id: number; name: string };
+  bookInline: { id: number; name: string; relatedBooks: { id: number }[] }; // Inline version of BookMapper. Must keep in sync.
 
   books1: Array<BookMapper | null> | null;
   books2: Array<BookMapper> | null;
@@ -29,4 +29,5 @@ export type UserMapper = {
 export type BookMapper = {
   id: number;
   name: string;
+  relatedBooks: { id: number }[];
 };

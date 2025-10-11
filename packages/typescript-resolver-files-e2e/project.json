@@ -26,6 +26,7 @@
           "rimraf -g \"{projectRoot}/src/**/*.gen.*\"",
           "rimraf -g \"{projectRoot}/src/**/generated\"",
           "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-mappers-vs-schema-types/testSetup.ts",
+          "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-mappers-vs-schema-types-advanced/testSetup.ts",
           "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-resolvers-auto-wireup/testSetup.ts"
         ],
         "parallel": false
@@ -84,7 +85,8 @@
         "test-mappers-vs-schema-types-advanced": {
           "commands": [
             "rimraf -g \"{projectRoot}/src/test-mappers-vs-schema-types-advanced/**/resolvers/\"",
-            "rimraf -g \"{projectRoot}/src/test-mappers-vs-schema-types-advanced/**/*.generated.*\""
+            "rimraf -g \"{projectRoot}/src/test-mappers-vs-schema-types-advanced/**/*.generated.*\"",
+            "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-mappers-vs-schema-types-advanced/testSetup.ts"
           ],
           "parallel": false
         },
