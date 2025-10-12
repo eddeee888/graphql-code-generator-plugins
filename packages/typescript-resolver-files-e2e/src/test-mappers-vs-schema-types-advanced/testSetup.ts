@@ -8,6 +8,7 @@ createTestSetup({
     {
       file: 'modules/test/resolvers/Book.ts',
       content: `
+      import type { BookResolvers } from './../../types.generated';
       export const Book: BookResolvers = {
         relatedBooks: ({ relatedBooks }) => {
           /* This existing content is not overwritten*/
