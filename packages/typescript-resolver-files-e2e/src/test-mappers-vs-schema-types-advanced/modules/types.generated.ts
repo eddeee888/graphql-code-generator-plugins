@@ -37,6 +37,11 @@ export type Book = {
   relatedBooks: Array<Book>;
 };
 
+export type NotMapped = {
+  __typename?: 'NotMapped';
+  id: Scalars['ID']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
   user?: Maybe<User>;
@@ -186,6 +191,7 @@ export type ResolversTypes = {
   Book: ResolverTypeWrapper<BookMapper>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  NotMapped: ResolverTypeWrapper<NotMapped>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   User: ResolverTypeWrapper<UserMapper>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
@@ -196,6 +202,7 @@ export type ResolversParentTypes = {
   Book: BookMapper;
   ID: Scalars['ID']['output'];
   String: Scalars['String']['output'];
+  NotMapped: NotMapped;
   Query: Record<PropertyKey, never>;
   User: UserMapper;
   Boolean: Scalars['Boolean']['output'];
@@ -213,6 +220,13 @@ export type BookResolvers<
     ParentType,
     ContextType
   >;
+};
+
+export type NotMappedResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['NotMapped'] = ResolversParentTypes['NotMapped']
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
 export type QueryResolvers<
@@ -284,6 +298,7 @@ export type UserResolvers<
 
 export type Resolvers<ContextType = any> = {
   Book?: BookResolvers<ContextType>;
+  NotMapped?: NotMappedResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };

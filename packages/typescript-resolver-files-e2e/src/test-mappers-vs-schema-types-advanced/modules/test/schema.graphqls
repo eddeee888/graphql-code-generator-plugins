@@ -38,3 +38,7 @@ type Book {
   relatedBooks: [Book!]!
   nextBookInSeries: Book!
 }
+
+type NotMapped {
+  id: ID!
+}
