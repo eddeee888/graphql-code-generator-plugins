@@ -1,4 +1,4 @@
-extend type Base {
+extend type Query {
   user: User
 }
 
