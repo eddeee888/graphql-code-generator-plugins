@@ -126,14 +126,18 @@ export const addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented = ({
           initializer: resolverDeclaration,
         });
 
+      if (mode === 'fast') {
+        resolverFile.filesystem.contentUpdated = true;
+      }
+
       addedPropertyAssignmentNodes[sourceFilePath][
         addedNode.getStartLineNumber()
       ] = {
         node: addedNode,
         resolverFile,
         // When mode is "smart", we use TS compiler for typechecking, and it'd remove the node if there is no compilation error. Therefore, `__toBeRemoved: true`
-        // When mode is "experimental", we already check whether the the type is assignable, so no need to remove the node.
-        __toBeRemoved: mode === 'smart' ? true : false,
+        // When mode is "fast", we already check whether the the type is assignable, so no need to remove the node.
+        __toBeRemoved: mode === 'fast' ? false : true,
       };
     }
   );
