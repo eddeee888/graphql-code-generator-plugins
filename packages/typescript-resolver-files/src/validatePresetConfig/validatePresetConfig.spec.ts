@@ -283,7 +283,7 @@ describe('validatePresetConfig - general', () => {
     expect(() =>
       validatePresetConfig({ fixObjectTypeResolvers: 'not-valid-for-sure' })
     ).toThrow(
-      'Validation - presetConfig.fixObjectTypeResolvers must be an object, "smart" or "disabled" (default is "smart")'
+      'Validation - presetConfig.fixObjectTypeResolvers must be an object, "smart", "fast" or "disabled" (default is "smart")'
     );
   });
 
