@@ -13,19 +13,21 @@ import type { TypeMapperDetails, TypeMappersMap } from '../parseTypeMappers';
 import { type NodePropertyMap, getNodePropertyMap } from './getNodePropertyMap';
 import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
 import type { GeneratedTypesFileMeta } from '../generateResolverFiles';
+import { Profiler } from '@graphql-codegen/plugin-helpers';
 
 export type GraphQLObjectTypeResolversToGenerate = Record<
   string,
   Record<string, { resolverName: string; resolverDeclaration: string }>
 >;
 
-export const getGraphQLObjectTypeResolversToGenerate = ({
+export const getGraphQLObjectTypeResolversToGenerate = async ({
   mode,
   tsMorphProject,
   typesSourceFile,
   typeMappersMap,
   userDefinedSchemaObjectTypeMap,
   generatedTypesFileMeta,
+  profiler,
 }: {
   mode: 'smart' | 'fast';
   tsMorphProject: Project;
@@ -33,7 +35,8 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
   typeMappersMap: TypeMappersMap;
   userDefinedSchemaObjectTypeMap: ParsedGraphQLSchemaMeta['userDefinedSchemaTypeMap']['object'];
   generatedTypesFileMeta: GeneratedTypesFileMeta;
-}): GraphQLObjectTypeResolversToGenerate => {
+  profiler: Profiler;
+}): Promise<GraphQLObjectTypeResolversToGenerate> => {
   const typeMappersEntries = Object.entries(typeMappersMap);
   if (typeMappersEntries.length === 0) {
     return {};
@@ -76,29 +79,37 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
         properties: NodePropertyMap;
       }
     > = {};
-    const populateSchemaTypeResolversPropertyMap = (
+    const populateSchemaTypeResolversPropertyMap = async (
       node: TypeAliasDeclaration | InterfaceDeclaration
-    ): void => {
+    ): Promise<void> => {
       const identifierName = node.getNameNode().getText(); // e.g. UserResolvers, BookResolvers
 
       const schemaType = generatedSchemaTypeNameMap[identifierName]; // schemaType examples: User, Book
 
       if (schemaType && userDefinedSchemaObjectTypeMap[schemaType]) {
-        resolverTypesMap[schemaType] = {
-          node,
-          properties: getNodePropertyMap({ node }),
-        };
+        await profiler.run(async () => {
+          resolverTypesMap[schemaType] = {
+            node,
+            properties: getNodePropertyMap({ node }),
+          };
+        }, `[test]: ${schemaType}`);
       }
     };
 
-    typesSourceFile.getDescendants().forEach((node) => {
+    const syntaxList = typesSourceFile.getChildAtIndex(0); // Assumption: Root node of the types
+    if (!syntaxList) {
+      throw new Error(
+        `Root node of generated types file doesn't exist. This likely means the file is empty. This shouldn't happen.`
+      );
+    }
+    for (const node of syntaxList.getChildren()) {
       if (
         node.isKind(SyntaxKind.TypeAliasDeclaration) ||
         node.isKind(SyntaxKind.InterfaceDeclaration)
       ) {
-        populateSchemaTypeResolversPropertyMap(node);
+        await populateSchemaTypeResolversPropertyMap(node);
       }
-    });
+    }
 
     // 3. Find resolvers to generate and add reason
     const result: GraphQLObjectTypeResolversToGenerate = {};
