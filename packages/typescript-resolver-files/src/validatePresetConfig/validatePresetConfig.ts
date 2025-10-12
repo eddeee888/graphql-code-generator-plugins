@@ -144,7 +144,7 @@ export const validatePresetConfig = ({
   externalResolvers = {},
   typesPluginsConfig = {},
   tsConfigFilePath = './tsconfig.json',
-  fixObjectTypeResolvers = 'fast',
+  fixObjectTypeResolvers = 'smart',
   emitLegacyCommonJSImports = true,
 }: RawPresetConfig): ParsedPresetConfig => {
   if (mode !== 'merged' && mode !== 'modules') {
@@ -164,7 +164,7 @@ export const validatePresetConfig = ({
   ) {
     throw new Error(
       fmt.error(
-        'presetConfig.fixObjectTypeResolvers must be an object, "smart", "fast" or "disabled" (default is "fast")',
+        'presetConfig.fixObjectTypeResolvers must be an object, "smart", "fast" or "disabled" (default is "smart")',
         'Validation'
       )
     );
