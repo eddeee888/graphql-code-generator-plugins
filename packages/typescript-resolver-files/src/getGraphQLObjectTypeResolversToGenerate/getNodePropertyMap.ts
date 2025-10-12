@@ -18,16 +18,12 @@ export type NodePropertyMap = Record<string, NodePropertyMapValue>;
  */
 export const getNodePropertyMap = ({
   node,
-  tsMorphProject,
 }: {
   node: Node | undefined;
-  tsMorphProject: Project;
 }): NodePropertyMap => {
   if (!node) {
     return {};
   }
-
-  const typeChecker = tsMorphProject.getTypeChecker();
 
   const properties = ((): NodePropertyMapValue[] => {
     if (node.isKind(SyntaxKind.ClassDeclaration)) {
@@ -36,8 +32,8 @@ export const getNodePropertyMap = ({
       return result;
     }
 
-    return typeChecker
-      .getTypeAtLocation(node)
+    return node
+      .getType()
       .getProperties()
       .map((prop) => {
         return {

@@ -86,21 +86,19 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
       if (schemaType && userDefinedSchemaObjectTypeMap[schemaType]) {
         resolverTypesMap[schemaType] = {
           node,
-          properties: getNodePropertyMap({
-            tsMorphProject,
-            node,
-          }),
+          properties: getNodePropertyMap({ node }),
         };
       }
     };
 
-    typesSourceFile
-      .getDescendantsOfKind(SyntaxKind.TypeAliasDeclaration)
-      .forEach(populateSchemaTypeResolversPropertyMap);
-
-    typesSourceFile
-      .getDescendantsOfKind(SyntaxKind.InterfaceDeclaration)
-      .forEach(populateSchemaTypeResolversPropertyMap);
+    typesSourceFile.getDescendants().forEach((node) => {
+      if (
+        node.isKind(SyntaxKind.TypeAliasDeclaration) ||
+        node.isKind(SyntaxKind.InterfaceDeclaration)
+      ) {
+        populateSchemaTypeResolversPropertyMap(node);
+      }
+    });
 
     // 3. Find resolvers to generate and add reason
     const result: GraphQLObjectTypeResolversToGenerate = {};
@@ -116,7 +114,6 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
           mapper,
         });
       const mapperPropsMap = getNodePropertyMap({
-        tsMorphProject,
         node: mapperOriginalDeclarationNode,
       });
 
@@ -186,10 +183,7 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
     const schemaType = generatedSchemaTypeNameMap[identifierName];
 
     if (schemaType && userDefinedSchemaObjectTypeMap[schemaType]) {
-      schemaResolversTypePropertyMap[schemaType] = getNodePropertyMap({
-        tsMorphProject,
-        node,
-      });
+      schemaResolversTypePropertyMap[schemaType] = getNodePropertyMap({ node });
     }
   };
   typesSourceFile
@@ -214,7 +208,6 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
       mapper,
     });
     const typeMapperPropertyMap = getNodePropertyMap({
-      tsMorphProject,
       node: originalDeclarationNode,
     });
 
