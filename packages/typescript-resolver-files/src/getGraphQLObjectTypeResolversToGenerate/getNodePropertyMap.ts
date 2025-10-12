@@ -1,5 +1,4 @@
 import {
-  type Project,
   type ClassDeclaration,
   type Node,
   type Type,

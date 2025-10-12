@@ -175,7 +175,6 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
                 mergedConfig.userDefinedSchemaTypeMap.object,
               typeMappersMap,
               generatedTypesFileMeta,
-              profiler,
             }),
       createProfilerRunName('getGraphQLObjectTypeResolversToGenerate')
     );

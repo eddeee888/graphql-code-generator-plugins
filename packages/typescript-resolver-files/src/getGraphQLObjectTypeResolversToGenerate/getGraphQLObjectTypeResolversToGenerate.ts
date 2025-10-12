@@ -27,7 +27,6 @@ export const getGraphQLObjectTypeResolversToGenerate = async ({
   typeMappersMap,
   userDefinedSchemaObjectTypeMap,
   generatedTypesFileMeta,
-  profiler,
 }: {
   mode: 'smart' | 'fast';
   tsMorphProject: Project;
@@ -35,7 +34,6 @@ export const getGraphQLObjectTypeResolversToGenerate = async ({
   typeMappersMap: TypeMappersMap;
   userDefinedSchemaObjectTypeMap: ParsedGraphQLSchemaMeta['userDefinedSchemaTypeMap']['object'];
   generatedTypesFileMeta: GeneratedTypesFileMeta;
-  profiler: Profiler;
 }): Promise<GraphQLObjectTypeResolversToGenerate> => {
   const typeMappersEntries = Object.entries(typeMappersMap);
   if (typeMappersEntries.length === 0) {
@@ -73,41 +71,31 @@ export const getGraphQLObjectTypeResolversToGenerate = async ({
   if (mode === 'fast') {
     // 1. Get property map of all schema types
     const resolverTypesMap: Record<
-      string,
-      {
-        node: Node;
-        properties: NodePropertyMap;
-      }
+      string, // Schema type
+      { node: Node; properties: NodePropertyMap }
     > = {};
-    const populateSchemaTypeResolversPropertyMap = async (
-      node: TypeAliasDeclaration | InterfaceDeclaration
-    ): Promise<void> => {
-      const identifierName = node.getNameNode().getText(); // e.g. UserResolvers, BookResolvers
 
-      const schemaType = generatedSchemaTypeNameMap[identifierName]; // schemaType examples: User, Book
-
-      if (schemaType && userDefinedSchemaObjectTypeMap[schemaType]) {
-        await profiler.run(async () => {
-          resolverTypesMap[schemaType] = {
-            node,
-            properties: getNodePropertyMap({ node }),
-          };
-        }, `[test]: ${schemaType}`);
-      }
-    };
-
-    const syntaxList = typesSourceFile.getChildAtIndex(0); // Assumption: Root node of the types
+    const syntaxList = typesSourceFile.getChildAtIndex(0); // Assumption: There is a root node in this file that contain all exports
     if (!syntaxList) {
       throw new Error(
         `Root node of generated types file doesn't exist. This likely means the file is empty. This shouldn't happen.`
       );
     }
+    // Assumption: All resolvers exports are 1 level below root node i.e. we can use syntaxList.getChildren()
     for (const node of syntaxList.getChildren()) {
       if (
         node.isKind(SyntaxKind.TypeAliasDeclaration) ||
         node.isKind(SyntaxKind.InterfaceDeclaration)
       ) {
-        await populateSchemaTypeResolversPropertyMap(node);
+        const identifierName = node.getNameNode().getText(); // e.g. UserResolvers, BookResolvers
+        const schemaType = generatedSchemaTypeNameMap[identifierName]; // schemaType examples: User, Book
+
+        if (schemaType && typeMappersMap[schemaType]) {
+          resolverTypesMap[schemaType] = {
+            node,
+            properties: getNodePropertyMap({ node }),
+          };
+        }
       }
     }
 
