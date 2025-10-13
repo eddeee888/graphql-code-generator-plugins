@@ -19,7 +19,7 @@ export type GraphQLObjectTypeResolversToGenerate = Record<
   Record<string, { resolverName: string; resolverDeclaration: string }>
 >;
 
-export const getGraphQLObjectTypeResolversToGenerate = async ({
+export const getGraphQLObjectTypeResolversToGenerate = ({
   mode,
   tsMorphProject,
   typesSourceFile,
@@ -33,7 +33,7 @@ export const getGraphQLObjectTypeResolversToGenerate = async ({
   typeMappersMap: TypeMappersMap;
   userDefinedSchemaObjectTypeMap: ParsedGraphQLSchemaMeta['userDefinedSchemaTypeMap']['object'];
   generatedTypesFileMeta: GeneratedTypesFileMeta;
-}): Promise<GraphQLObjectTypeResolversToGenerate> => {
+}): GraphQLObjectTypeResolversToGenerate => {
   const typeMappersEntries = Object.entries(typeMappersMap);
   if (typeMappersEntries.length === 0) {
     return {};
