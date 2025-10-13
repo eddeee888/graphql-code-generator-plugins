@@ -13,7 +13,6 @@ import type { TypeMapperDetails, TypeMappersMap } from '../parseTypeMappers';
 import { type NodePropertyMap, getNodePropertyMap } from './getNodePropertyMap';
 import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
 import type { GeneratedTypesFileMeta } from '../generateResolverFiles';
-import { Profiler } from '@graphql-codegen/plugin-helpers';
 
 export type GraphQLObjectTypeResolversToGenerate = Record<
   string,
