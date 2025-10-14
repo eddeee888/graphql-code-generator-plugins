@@ -1,11 +1,14 @@
 import {
-  type Project,
   type ClassDeclaration,
   type Node,
+  type Type,
   SyntaxKind,
 } from 'ts-morph';
 
-type NodePropertyMapValue = { name: string };
+type NodePropertyMapValue = {
+  name: string;
+  type: Type;
+};
 export type NodePropertyMap = Record<string, NodePropertyMapValue>;
 
 /**
@@ -14,16 +17,12 @@ export type NodePropertyMap = Record<string, NodePropertyMapValue>;
  */
 export const getNodePropertyMap = ({
   node,
-  tsMorphProject,
 }: {
   node: Node | undefined;
-  tsMorphProject: Project;
 }): NodePropertyMap => {
   if (!node) {
     return {};
   }
-
-  const typeChecker = tsMorphProject.getTypeChecker();
 
   const properties = ((): NodePropertyMapValue[] => {
     if (node.isKind(SyntaxKind.ClassDeclaration)) {
@@ -32,20 +31,22 @@ export const getNodePropertyMap = ({
       return result;
     }
 
-    return typeChecker
-      .getTypeAtLocation(node)
+    return node
+      .getType()
       .getProperties()
       .map((prop) => {
         return {
           name: prop.getName(),
+          type: prop.getTypeAtLocation(node),
         };
       });
   })();
 
   const nodePropertyMap = properties.reduce<NodePropertyMap>(
-    (res, { name }) => {
+    (res, { name, type }) => {
       res[name] = {
         name,
+        type,
       };
       return res;
     },
@@ -81,6 +82,7 @@ const collectClassNodeProperties = (
     }
     result.push({
       name: prop.getName(),
+      type: prop.getType(),
     });
   });
 };

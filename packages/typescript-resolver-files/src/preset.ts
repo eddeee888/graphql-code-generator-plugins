@@ -165,16 +165,17 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
 
     const graphQLObjectTypeResolversToGenerate = await profiler.run(
       async () =>
-        fixObjectTypeResolvers.object === 'smart'
-          ? getGraphQLObjectTypeResolversToGenerate({
+        fixObjectTypeResolvers.object === 'disabled'
+          ? {}
+          : getGraphQLObjectTypeResolversToGenerate({
+              mode: fixObjectTypeResolvers.object,
               tsMorphProject,
               typesSourceFile,
               userDefinedSchemaObjectTypeMap:
                 mergedConfig.userDefinedSchemaTypeMap.object,
               typeMappersMap,
               generatedTypesFileMeta,
-            })
-          : {},
+            }),
       createProfilerRunName('getGraphQLObjectTypeResolversToGenerate')
     );
 

@@ -20,12 +20,14 @@ export type GraphQLObjectTypeResolversToGenerate = Record<
 >;
 
 export const getGraphQLObjectTypeResolversToGenerate = ({
+  mode,
   tsMorphProject,
   typesSourceFile,
   typeMappersMap,
   userDefinedSchemaObjectTypeMap,
   generatedTypesFileMeta,
 }: {
+  mode: 'smart' | 'fast';
   tsMorphProject: Project;
   typesSourceFile: SourceFile;
   typeMappersMap: TypeMappersMap;
@@ -65,6 +67,108 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
     {}
   );
 
+  if (mode === 'fast') {
+    // 1. Get property map of all schema types
+    const resolverTypesMap: Record<
+      string, // Schema type
+      { node: Node; properties: NodePropertyMap }
+    > = {};
+
+    const syntaxList = typesSourceFile.getChildAtIndex(0); // Assumption: There is a root node in this file that contain all exports
+    if (!syntaxList) {
+      throw new Error(
+        `Root node of generated types file doesn't exist. This likely means the file is empty. This shouldn't happen.`
+      );
+    }
+    // Assumption: All resolvers exports are 1 level below root node i.e. we can use syntaxList.getChildren()
+    for (const node of syntaxList.getChildren()) {
+      if (
+        node.isKind(SyntaxKind.TypeAliasDeclaration) ||
+        node.isKind(SyntaxKind.InterfaceDeclaration)
+      ) {
+        const identifierName = node.getNameNode().getText(); // e.g. UserResolvers, BookResolvers
+        const schemaType = generatedSchemaTypeNameMap[identifierName]; // schemaType examples: User, Book
+
+        if (schemaType && typeMappersMap[schemaType]) {
+          resolverTypesMap[schemaType] = {
+            node,
+            properties: getNodePropertyMap({ node }),
+          };
+        }
+      }
+    }
+
+    // 3. Find resolvers to generate and add reason
+    const result: GraphQLObjectTypeResolversToGenerate = {};
+    typeMappersEntries.forEach(([_, { schemaType, mapper }]) => {
+      const resolverType = resolverTypesMap[schemaType];
+      if (!resolverType) {
+        return;
+      }
+
+      const mapperOriginalDeclarationNode =
+        mustGetMapperOriginalDeclarationNode({
+          tsMorphProject,
+          mapper,
+        });
+      const mapperPropsMap = getNodePropertyMap({
+        node: mapperOriginalDeclarationNode,
+      });
+
+      Object.values(resolverType.properties).forEach((resolverTypeProp) => {
+        result[schemaType] = result[schemaType] || {};
+        const resolverTypePropName = resolverTypeProp.name;
+
+        const mapperPropIdentifier = `${mapper.name}.${resolverTypePropName}`;
+        const schemaTypePropIdentifier = `${schemaType}.${resolverTypePropName}`;
+
+        // 1. Generated resolvers types may have one or more of these meta resolvers
+        // A mapper would most likely never have these resolvers, so we skip them
+        // Otherwise, these resolvers will always be generated
+        const metaResolvers: Record<string, boolean> = {
+          __isTypeOf: true,
+          __resolveReference: true,
+        };
+        if (metaResolvers[resolverTypePropName]) {
+          return;
+        }
+
+        const mapperProp = mapperPropsMap[resolverTypePropName];
+        // 2. If mapper does not have a field in resolver type, add missing resolver
+        if (!mapperProp) {
+          result[schemaType][resolverTypePropName] = {
+            resolverName: resolverTypePropName,
+            resolverDeclaration: `async (_parent, _arg, _ctx) => { /* ${schemaTypePropIdentifier} resolver is required because ${schemaTypePropIdentifier} exists but ${mapperPropIdentifier} does not */ }`,
+          };
+          return;
+        }
+
+        // 3. If mapper and resolver props have the same name, compare their types
+        const sourceType = mapperProp.type;
+
+        // A resolver type may look like this:
+        // `book?: Resolver<Maybe<ResolversTypes['Book']>, ParentType, ContextType>;`
+        const targetType = resolverTypeProp.type // type is `Resolver<Maybe<ResolversTypes['Book']>, ParentType, ContextType> | undefined` because book resolver is optional
+          .getNonNullableType() // removing nullable, it becomes `Resolver<Maybe<ResolversTypes['Book']>, ParentType, ContextType>`
+          .getAliasTypeArguments()[0]; // first type argument is `Maybe<ResolversTypes['Book']>`
+
+        if (sourceType.isAssignableTo(targetType)) {
+          return;
+        }
+
+        result[schemaType][resolverTypePropName] = {
+          resolverName: resolverTypePropName,
+          resolverDeclaration: `({ ${resolverTypePropName} }, _arg, _ctx) => {
+                /* ${schemaTypePropIdentifier} resolver is required because ${schemaTypePropIdentifier} and ${mapperPropIdentifier} are not compatible */
+                return ${resolverTypePropName}
+              }`,
+        };
+      });
+    });
+
+    return result;
+  }
+
   // 1. Get property map of all schema types
   const schemaResolversTypePropertyMap: Record<string, NodePropertyMap> = {};
 
@@ -77,10 +181,7 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
     const schemaType = generatedSchemaTypeNameMap[identifierName];
 
     if (schemaType && userDefinedSchemaObjectTypeMap[schemaType]) {
-      schemaResolversTypePropertyMap[schemaType] = getNodePropertyMap({
-        tsMorphProject,
-        node,
-      });
+      schemaResolversTypePropertyMap[schemaType] = getNodePropertyMap({ node });
     }
   };
   typesSourceFile
@@ -105,7 +206,6 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
       mapper,
     });
     const typeMapperPropertyMap = getNodePropertyMap({
-      tsMorphProject,
       node: originalDeclarationNode,
     });
 
