@@ -1,0 +1,20 @@
+scalar DateTime
+
+type Query {
+  # Simple: "query" -> "query.ts"
+  query: RandomResult!
+  # Strange: "api-query.ts"
+  APIQuery: RandomResult!
+}
+
+type Mutation {
+  # Strange: "prefixed-api-mutation.ts"
+  prefixedAPIMutation: RandomResult!
+}
+
+type RandomResult {
+  id: ID!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
