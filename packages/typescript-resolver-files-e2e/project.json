@@ -298,9 +298,6 @@
         "parallel": false
       },
       "dependsOn": ["^build"]
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint"
     }
   }
 }

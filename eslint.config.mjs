@@ -1,19 +1,27 @@
-import { FlatCompat } from '@eslint/eslintrc';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import js from '@eslint/js';
-import nxEslintPlugin from '@nx/eslint-plugin';
+import { defineConfig } from 'eslint/config';
+import nx from '@nx/eslint-plugin';
+import my from '@eddeee888/eslint-plugin';
 
-const compat = new FlatCompat({
-  baseDirectory: dirname(fileURLToPath(import.meta.url)),
-  recommendedConfig: js.configs.recommended,
-});
-
-export default [
+export default defineConfig(
+  ...nx.configs['flat/base'],
+  ...nx.configs['flat/typescript'],
+  ...nx.configs['flat/javascript'],
+  ...my.configs.typescript,
   {
-    ignores: ['**/dist'],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+      },
+    },
   },
-  { plugins: { '@nx': nxEslintPlugin } },
+  {
+    ignores: [
+      '**/dist',
+      'eslint.config.mjs',
+      'packages/typescript-resolver-files-e2e/src/**/*.generated.*',
+      'packages/typescript-resolver-files-e2e/src/**/*.gen.*',
+    ],
+  },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
@@ -32,45 +40,6 @@ export default [
       ],
     },
   },
-  ...compat
-    .config({
-      extends: [
-        'plugin:@nx/typescript',
-        // FIXME: change to flat config
-        //'plugin:@eddeee888/typescript'
-      ],
-    })
-    .map((config) => ({
-      ...config,
-      files: ['**/*.ts', '**/*.tsx', '**/*.cts', '**/*.mts'],
-      rules: {
-        ...config.rules,
-      },
-    })),
-  ...compat
-    .config({
-      extends: ['plugin:@nx/javascript'],
-    })
-    .map((config) => ({
-      ...config,
-      files: ['**/*.js', '**/*.jsx', '**/*.cjs', '**/*.mjs'],
-      rules: {
-        ...config.rules,
-      },
-    })),
-  ...compat
-    .config({
-      env: {
-        jest: true,
-      },
-    })
-    .map((config) => ({
-      ...config,
-      files: ['**/*.spec.ts', '**/*.spec.tsx', '**/*.spec.js', '**/*.spec.jsx'],
-      rules: {
-        ...config.rules,
-      },
-    })),
   {
     files: ['**/*.json'],
     // Override or add rules here
@@ -78,11 +47,5 @@ export default [
     languageOptions: {
       parser: await import('jsonc-eslint-parser'),
     },
-  },
-  {
-    ignores: [
-      'packages/typescript-resolver-files-e2e/src/**/*.generated.*',
-      'packages/typescript-resolver-files-e2e/src/**/*.gen.*',
-    ],
-  },
-];
+  }
+);
