@@ -384,7 +384,7 @@ const createGqlTagImport = ({
   baseOutputDir: string;
   presetConfig: TypedPresetConfig;
   tsSourceFile: SourceFile;
-}) => {
+}): void => {
   const gqlTagModule =
     presetConfig.gqlTag.importType === 'absolute'
       ? presetConfig.gqlTag.importFrom
@@ -428,7 +428,7 @@ const createDoc = ({
   documentNodeName: string;
   documentSDL: string;
   exportDoc: boolean;
-}) => {
+}): void => {
   const importDeclarations = tsSourceFile.getImportDeclarations();
 
   // Find insertIndex, which is after the last import declaration
