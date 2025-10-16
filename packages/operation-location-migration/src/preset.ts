@@ -351,7 +351,9 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
       );
     });
 
-    return tsProject.getSourceFiles().map((tsSourceFile) => {
+    return tsProject.getSourceFiles()
+    .filter((sf) => sf.getFullText().trim().length > 0)
+    .map((tsSourceFile) => {
       return {
         filename: tsSourceFile.getFilePath(),
         pluginMap: { add: addPlugin },
