@@ -292,11 +292,16 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
             // Remove import specifier of hooks...
             functionToReplace.importSpecifierNode.remove();
 
+            const namedImports =
+              functionToReplace.importDeclarationNode.getNamedImports();
+            if (!namedImports) {
+              throw new Error(
+                `No namedImports for ${functionToReplace.callExpression.getText()}`
+              );
+            }
+
             // and if no specifiers left, remove the whole import declaration
-            if (
-              functionToReplace.importDeclarationNode.getNamedImports()
-                .length === 0
-            ) {
+            if (namedImports.length === 0) {
               functionToReplace.importDeclarationNode.remove();
             }
 
@@ -430,10 +435,16 @@ const createDoc = ({
   exportDoc: boolean;
 }): void => {
   const importDeclarations = tsSourceFile.getImportDeclarations();
+  if (!importDeclarations) {
+    throw new Error(`No importDeclarations for ${tsSourceFile.getFilePath()}`);
+  }
 
   // Find insertIndex, which is after the last import declaration
   const insertPos = importDeclarations[importDeclarations.length - 1].getEnd();
   const statements = tsSourceFile.getStatementsWithComments();
+  if (!statements) {
+    throw new Error(`No statements for ${tsSourceFile.getFilePath()}`);
+  }
   let insertIndex = statements.findIndex((stmt) => stmt.getStart() > insertPos);
 
   // If insertIndex is -1, it means the import statement is already the last one the page
