@@ -45,6 +45,16 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
       tsConfigFilePath: absoluteTsConfigFilePath,
     });
 
+    const baseHooksToMutate: Record<
+      'useQuery',
+      Record<
+        string, // string is an array of this format `<operation result name>.<operation variables name>` e.g. `BookQuery.BookQueryVariables`
+        {
+          importDocFrom: string; // FIXME: We are only doing this for `near-operation-file` setup (for co-location, this'd be null) because a use case was raised.
+          documentNodeName: string;
+        }
+      >
+    > = { useQuery: {} };
     const hooksToReplace: Record<
       string,
       {
@@ -148,6 +158,17 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
               documentNodeName,
               documentSDL,
             };
+
+            if (targetStyle === 'near-operation-file') {
+              baseHooksToMutate.useQuery[
+                `${pascalCase(node.name.value)}Query.${pascalCase(
+                  node.name.value
+                )}QueryVariables`
+              ] = {
+                documentNodeName,
+                importDocFrom: importDocFrom as string, // FIXME: a bit gross to typecast here but it's for a POC
+              };
+            }
           } else {
             // Mutation & Subscription
             const hookName = `use${pascalCase(node.name.value)}${pascalCase(
@@ -204,10 +225,16 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
             callExpression: CallExpression | null;
           }
         >;
+        callExpressionsToMutate: {
+          documentNodeName: string;
+          importDocFrom: string;
+          callExpression: CallExpression;
+        }[];
       } = {
         hasNodeToReplace: false,
         needsToImport: new Set(),
         functionsToReplace: {},
+        callExpressionsToMutate: [],
       };
 
       tsSourceFile.getImportDeclarations().forEach((node) => {
@@ -235,6 +262,7 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
             return;
           }
 
+          // If found generated hooks to replace, do it
           if (
             hooksToReplace[calledFunctionName] &&
             fileMetadata.functionsToReplace[calledFunctionName]
@@ -246,6 +274,25 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
               hooksToReplace[calledFunctionName].hookType
             );
           }
+
+          // If found base hooks to replace, do it
+          if (calledFunctionName === 'useQuery') {
+            const resultAndVariableTypesText = callExpression
+              .getTypeArguments()
+              .map((n) => n.getText())
+              .join('.');
+
+            const hookToMutate =
+              baseHooksToMutate['useQuery'][resultAndVariableTypesText];
+            if (hookToMutate) {
+              fileMetadata.hasNodeToReplace = true;
+              fileMetadata.callExpressionsToMutate.push({
+                documentNodeName: hookToMutate.documentNodeName,
+                importDocFrom: hookToMutate.importDocFrom,
+                callExpression,
+              });
+            }
+          }
         });
 
       if (!fileMetadata.hasNodeToReplace) {
@@ -253,14 +300,15 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
       }
 
       // Codemod files to co-locate the document nodes
-      tsSourceFile.addImportDeclaration({
-        moduleSpecifier: presetConfig.hooksImportFrom,
-        namedImports: Array.from(fileMetadata.needsToImport).map(
-          (importName) => ({
+      const hooksToImport = Array.from(fileMetadata.needsToImport);
+      if (hooksToImport.length > 0) {
+        tsSourceFile.addImportDeclaration({
+          moduleSpecifier: presetConfig.hooksImportFrom,
+          namedImports: hooksToImport.map((importName) => ({
             name: importName,
-          })
-        ),
-      });
+          })),
+        });
+      }
 
       // Only bring in gql tag if target style co-location.
       // For near-operation-file style, the gql tag is imported in the near-operation-file i.e. no need to import in the component file.
@@ -329,6 +377,32 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
                 documentNodeName
               );
             }
+          }
+        }
+      );
+
+      fileMetadata.callExpressionsToMutate.forEach(
+        ({ importDocFrom, documentNodeName, callExpression }) => {
+          // A call expression may look like this:
+          // useQuery<MeQuery,MeQueryVariables>(ME_DOC);
+          //
+          // The target is:
+          // useQuery(MeDoc); // Note: MeDoc is the one generated automatically by graphql(``)
+          //
+          // To convert it, we must:
+          // 1. remove the type arguments MeQuery,MeQueryVariables
+          // 2. Replace the old doc variable (in the first param slot) with the new doc
+          callExpression
+            .getTypeArguments()
+            .forEach((node) => callExpression.removeTypeArgument(node)); // FIXME: maybe remove imports in the future? However, users can just remove unused imports
+
+          const oldDoc = callExpression.getArguments()[0];
+          if (oldDoc) {
+            nearOperationFileImports[importDocFrom] ||= new Set();
+            nearOperationFileImports[importDocFrom].add(documentNodeName);
+
+            callExpression.removeArgument(oldDoc); // FIXME: maybe remove imports in the future? However, users can just remove unused imports
+            callExpression.insertArgument(0, documentNodeName);
           }
         }
       );
