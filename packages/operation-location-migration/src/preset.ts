@@ -170,7 +170,9 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
 
     Object.entries(nearOperationFilesToCreate).forEach(([filename, docs]) => {
       let gqlTagImported = false;
-      const tsSourceFile = tsProject.createSourceFile(filename);
+      const tsSourceFile = tsProject.createSourceFile(filename, undefined, {
+        overwrite: true,
+      });
 
       docs
         .reverse() // createDoc inserts docs after imports i.e. the first imported doc ends up at the bottom. So we reverse the order here to ensure the same order in the end.
