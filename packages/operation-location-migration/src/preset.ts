@@ -79,7 +79,12 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
         return;
       }
 
-      const nearOperationDocFilename = `${documentFilename}.ts`; // FIXME: this is assuming near-operation-file are .graphql;
+      const documentFileExt = path.extname(documentFilename);
+
+      const nearOperationDocFilename =
+        documentFileExt === '.graphql' || documentFileExt === '.gql' // FIXME: this is assuming users are only using `.graphql` or `.gql` if they use non-JS/TS extensions. If there are more cases in the future, we can add an option;
+          ? `${documentFilename}.ts`
+          : documentFilename;
 
       visit(documentFile.document, {
         FragmentDefinition(node) {
