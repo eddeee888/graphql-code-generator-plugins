@@ -201,6 +201,7 @@
           "nx graphql-codegen typescript-resolver-files-e2e -c test-resolvers-auto-wireup --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-federation --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-deep-modules --verbose",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-module-naming-mode-all --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-complex-synth-generic-wrapper --verbose"
         ],
         "parallel": false
@@ -279,6 +280,9 @@
         },
         "test-deep-modules": {
           "configFile": "{projectRoot}/src/test-deep-modules/codegen.ts"
+        },
+        "test-module-naming-mode-all": {
+          "configFile": "{projectRoot}/src/test-module-naming-mode-all/codegen.ts"
         },
         "test-complex-synth-generic-wrapper": {
           "configFile": "{projectRoot}/src/test-complex-synth-generic-wrapper/codegen.ts"
