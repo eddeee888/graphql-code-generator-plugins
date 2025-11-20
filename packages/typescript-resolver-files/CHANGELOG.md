@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.14.1
+
+### Patch Changes
+
+- 1591c8d: Add moduleNamingMode option
+
 ## 0.14.0
 
 ### Minor Changes
