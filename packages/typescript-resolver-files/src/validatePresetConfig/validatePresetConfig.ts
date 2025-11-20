@@ -41,7 +41,7 @@ type NormalizedResolverGeneration = {
   interface: string | string[];
   enum: string | string[];
 };
-export type ModuleNamingMode = number;
+export type ModuleNamingMode = number | 'all';
 
 export type ScalarsOverridesType = string | { input: string; output: string };
 
@@ -500,6 +500,10 @@ const parseModuleNamingMode = (
     // By default, for backwards compatibility prior to `moduleNamingMode`, we
     // select the last directory in a path.
     return -1;
+  }
+
+  if (moduleNamingMode === 'all') {
+    return 'all';
   }
 
   if (typeof moduleNamingMode === 'string') {

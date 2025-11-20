@@ -59,6 +59,10 @@ const selectModuleName = ({
   moduleNamingMode: ModuleNamingMode;
   relativePathFromBaseToModule: string[];
 }): string => {
+  if (moduleNamingMode === 'all') {
+    return relativePathFromBaseToModule.join('_');
+  }
+
   const wrappedModuleNamingMode =
     moduleNamingMode >= 0
       ? moduleNamingMode
