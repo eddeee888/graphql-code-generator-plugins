@@ -351,16 +351,19 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
       );
     });
 
-    return tsProject.getSourceFiles().map((tsSourceFile) => {
-      return {
-        filename: tsSourceFile.getFilePath(),
-        pluginMap: { add: addPlugin },
-        plugins: [{ add: { content: tsSourceFile.getFullText() } }],
-        config: {},
-        schema,
-        documents: [],
-      };
-    });
+    return tsProject
+      .getSourceFiles()
+      .filter((sf) => sf.getFullText().trim().length > 0)
+      .map((tsSourceFile) => {
+        return {
+          filename: tsSourceFile.getFilePath(),
+          pluginMap: { add: addPlugin },
+          plugins: [{ add: { content: tsSourceFile.getFullText() } }],
+          config: {},
+          schema,
+          documents: [],
+        };
+      });
   },
 };
 
