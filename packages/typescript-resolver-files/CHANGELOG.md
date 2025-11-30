@@ -1,5 +1,30 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.14.1
+
+### Patch Changes
+
+- 1591c8d: Add moduleNamingMode option
+
+## 0.14.0
+
+### Minor Changes
+
+- e0476b3: Add fixObjectTypeResolvers `fast` mode (experimental)
+
+  This is now the default static analysis mode. If you see behaviour or runtime issues, please set `fixObjectTypeResolvers: smart` and file a report at <https://github.com/eddeee888/graphql-code-generator-plugins/issues>
+
+## 0.13.0
+
+### Minor Changes
+
+- f14a549: Bump codegen packages major version
+
+### Patch Changes
+
+- Updated dependencies [f14a549]
+  - @eddeee888/gcg-server-config@0.3.0
+
 ## 0.12.2
 
 ### Patch Changes

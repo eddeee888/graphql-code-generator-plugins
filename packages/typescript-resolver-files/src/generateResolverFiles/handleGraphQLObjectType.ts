@@ -67,7 +67,12 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
 
   // __isTypeOf is required to resolve abstract types, should user chooses this approach.
   // TODO: Run static analysis to enforce only one __isTypeOf per Object type, so users cannot accidentally implement/override it across modules
-  if (hasFieldsToPick) {
+  if (
+    hasFieldsToPick &&
+    generatedTypesFileMeta.generatedResolverTypes.userDefined[
+      normalizedResolverName.base
+    ].hasIsTypeOf
+  ) {
     fieldsToPick.push('__isTypeOf');
   }
 

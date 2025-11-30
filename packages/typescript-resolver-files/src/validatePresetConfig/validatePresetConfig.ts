@@ -25,10 +25,10 @@ type ParsedTypesPluginsConfig = Omit<
 type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
 export type TypeDefsFileMode = 'merged' | 'mergedWhitelisted' | 'modules';
-type StringFixObjectTypeResolvers = 'smart' | 'disabled';
+type StringFixObjectTypeResolvers = 'smart' | 'fast' | 'disabled';
 type NormalizedFixObjectTypeResolvers = {
-  object: 'smart' | 'disabled';
-  enum: 'smart' | 'disabled';
+  object: 'smart' | 'fast' | 'disabled';
+  enum: 'smart' | 'fast' | 'disabled';
 };
 type StringResolverGeneration = 'disabled' | 'recommended' | 'minimal' | 'all';
 type NormalizedResolverGeneration = {
@@ -41,7 +41,7 @@ type NormalizedResolverGeneration = {
   interface: string | string[];
   enum: string | string[];
 };
-export type ModuleNamingMode = number;
+export type ModuleNamingMode = number | 'all';
 
 export type ScalarsOverridesType = string | { input: string; output: string };
 
@@ -144,7 +144,7 @@ export const validatePresetConfig = ({
   externalResolvers = {},
   typesPluginsConfig = {},
   tsConfigFilePath = './tsconfig.json',
-  fixObjectTypeResolvers = 'smart',
+  fixObjectTypeResolvers = 'fast',
   emitLegacyCommonJSImports = true,
 }: RawPresetConfig): ParsedPresetConfig => {
   if (mode !== 'merged' && mode !== 'modules') {
@@ -159,11 +159,12 @@ export const validatePresetConfig = ({
   if (
     typeof fixObjectTypeResolvers !== 'object' &&
     fixObjectTypeResolvers !== 'smart' &&
+    fixObjectTypeResolvers !== 'fast' &&
     fixObjectTypeResolvers !== 'disabled'
   ) {
     throw new Error(
       fmt.error(
-        'presetConfig.fixObjectTypeResolvers must be an object, "smart" or "disabled" (default is "smart")',
+        'presetConfig.fixObjectTypeResolvers must be an object, "smart", "fast" or "disabled" (default is "fast")',
         'Validation'
       )
     );
@@ -422,22 +423,16 @@ const parseResolverGeneration = (
 const parseFixObjectTypeResolvers = (
   fixObjectTypeResolvers: StringFixObjectTypeResolvers | Record<string, string>
 ): NormalizedFixObjectTypeResolvers => {
-  if (fixObjectTypeResolvers === 'smart') {
+  if (typeof fixObjectTypeResolvers === 'string') {
     return {
-      object: 'smart',
-      enum: 'smart',
+      object: fixObjectTypeResolvers,
+      enum: fixObjectTypeResolvers,
     };
   }
 
-  if (fixObjectTypeResolvers === 'disabled') {
-    return {
-      object: 'disabled',
-      enum: 'disabled',
-    };
-  }
-
-  const allowedOptions: Record<string, 'smart' | 'disabled'> = {
+  const allowedOptions: Record<string, 'smart' | 'fast' | 'disabled'> = {
     smart: 'smart',
+    fast: 'fast',
     disabled: 'disabled',
   };
 
@@ -505,6 +500,10 @@ const parseModuleNamingMode = (
     // By default, for backwards compatibility prior to `moduleNamingMode`, we
     // select the last directory in a path.
     return -1;
+  }
+
+  if (moduleNamingMode === 'all') {
+    return 'all';
   }
 
   if (typeof moduleNamingMode === 'string') {

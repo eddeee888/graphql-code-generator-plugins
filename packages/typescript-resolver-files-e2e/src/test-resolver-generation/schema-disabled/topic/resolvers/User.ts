@@ -8,7 +8,7 @@ import type { UserResolvers } from './../../types.generated';
  *
  * If you want to skip this file generation, remove the mapper or update the pattern in the `resolverGeneration.object` config.
  */
-export const User: Pick<UserResolvers, 'topics' | '__isTypeOf'> = {
+export const User: Pick<UserResolvers, 'topics'> = {
   /* Implement User resolver logic here */
   topics: async (_parent, _arg, _ctx) => {
     /* User.topics resolver is required because User.topics exists but UserMapper.topics does not */

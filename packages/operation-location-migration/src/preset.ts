@@ -221,8 +221,13 @@ export const preset: Types.OutputPreset<TypedPresetConfig> = {
         .getDescendantsOfKind(SyntaxKind.CallExpression)
         .forEach((callExpression) => {
           const calledFunctionName = callExpression
-            .getFirstDescendantByKindOrThrow(SyntaxKind.Identifier)
-            .getText();
+            .getFirstDescendantByKind(SyntaxKind.Identifier)
+            ?.getText();
+
+          if (!calledFunctionName) {
+            return;
+          }
+
           if (
             hooksToReplace[calledFunctionName] &&
             fileMetadata.functionsToReplace[calledFunctionName]
@@ -381,7 +386,7 @@ const createGqlTagImport = ({
   baseOutputDir: string;
   presetConfig: TypedPresetConfig;
   tsSourceFile: SourceFile;
-}) => {
+}): void => {
   const gqlTagModule =
     presetConfig.gqlTag.importType === 'absolute'
       ? presetConfig.gqlTag.importFrom
@@ -425,7 +430,7 @@ const createDoc = ({
   documentNodeName: string;
   documentSDL: string;
   exportDoc: boolean;
-}) => {
+}): void => {
   const importDeclarations = tsSourceFile.getImportDeclarations();
 
   // Find insertIndex, which is after the last import declaration

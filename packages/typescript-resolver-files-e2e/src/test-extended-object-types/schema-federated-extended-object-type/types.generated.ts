@@ -217,7 +217,12 @@ export type GraphQLRecursivePick<T, S> = {
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+export type Resolver<
+  TResult,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
+> =
   | ResolverFn<TResult, TParent, TContext, TArgs>
   | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
@@ -281,22 +286,29 @@ export type SubscriptionObject<
 export type SubscriptionResolver<
   TResult,
   TKey extends string,
-  TParent = {},
-  TContext = {},
-  TArgs = {}
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
 > =
   | ((
       ...args: any[]
     ) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+export type TypeResolveFn<
+  TTypes,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>
+> = (
   parent: TParent,
   context: TContext,
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
+export type IsTypeOfResolverFn<
+  T = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>
+> = (
   obj: T,
   context: TContext,
   info: GraphQLResolveInfo
@@ -305,10 +317,10 @@ export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
 export type NextResolverFn<T> = () => Promise<T>;
 
 export type DirectiveResolverFn<
-  TResult = {},
-  TParent = {},
-  TContext = {},
-  TArgs = {}
+  TResult = Record<PropertyKey, never>,
+  TParent = Record<PropertyKey, never>,
+  TContext = Record<PropertyKey, never>,
+  TArgs = Record<PropertyKey, never>
 > = (
   next: NextResolverFn<TResult>,
   parent: TParent,
@@ -316,6 +328,19 @@ export type DirectiveResolverFn<
   context: TContext,
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
+
+/** Mapping of federation types */
+export type FederationTypes = {
+  ForeignType: ForeignType;
+};
+
+/** Mapping of federation reference types */
+export type FederationReferenceTypes = {
+  ForeignType: { __typename: 'ForeignType' } & GraphQLRecursivePick<
+    FederationTypes['ForeignType'],
+    { id: true }
+  >;
+};
 
 /** Mapping of union types */
 export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
@@ -376,7 +401,7 @@ export type ResolversTypes = {
     Omit<ForeignType, 'topics'> & { topics: Array<ResolversTypes['Topic']> }
   >;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
-  Mutation: ResolverTypeWrapper<{}>;
+  Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   PaginationInput: PaginationInput;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PaginationResult: ResolverTypeWrapper<PaginationResult>;
@@ -384,10 +409,10 @@ export type ResolversTypes = {
     Omit<PayloadError, 'error'> & { error: ResolversTypes['ErrorType'] }
   >;
   Profile: ResolverTypeWrapper<Profile>;
-  Query: ResolverTypeWrapper<{}>;
+  Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   SomeRandomScalar: ResolverTypeWrapper<Scalars['SomeRandomScalar']['output']>;
-  Subscription: ResolverTypeWrapper<{}>;
+  Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Topic: ResolverTypeWrapper<TopicMapper>;
   TopicByIdPayload: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>['TopicByIdPayload']
@@ -432,20 +457,22 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   DateTime: Scalars['DateTime']['output'];
   Error: ResolversInterfaceTypes<ResolversParentTypes>['Error'];
-  ForeignType: Omit<ForeignType, 'topics'> & {
-    topics: Array<ResolversParentTypes['Topic']>;
-  };
+  ForeignType:
+    | (Omit<ForeignType, 'topics'> & {
+        topics: Array<ResolversParentTypes['Topic']>;
+      })
+    | FederationReferenceTypes['ForeignType'];
   ID: Scalars['ID']['output'];
-  Mutation: {};
+  Mutation: Record<PropertyKey, never>;
   PaginationInput: PaginationInput;
   Int: Scalars['Int']['output'];
   PaginationResult: PaginationResult;
   PayloadError: PayloadError;
   Profile: Profile;
-  Query: {};
+  Query: Record<PropertyKey, never>;
   String: Scalars['String']['output'];
   SomeRandomScalar: Scalars['SomeRandomScalar']['output'];
-  Subscription: {};
+  Subscription: Record<PropertyKey, never>;
   Topic: TopicMapper;
   TopicByIdPayload: ResolversUnionTypes<ResolversParentTypes>['TopicByIdPayload'];
   TopicByIdResult: Omit<TopicByIdResult, 'result'> & {
@@ -482,7 +509,6 @@ export type ErrorResolvers<
   ParentType extends ResolversParentTypes['Error'] = ResolversParentTypes['Error']
 > = {
   __resolveType?: TypeResolveFn<'PayloadError', ParentType, ContextType>;
-  error?: Resolver<ResolversTypes['ErrorType'], ParentType, ContextType>;
 };
 
 export type ErrorTypeResolvers = EnumResolverSignature<
@@ -497,20 +523,17 @@ export type ErrorTypeResolvers = EnumResolverSignature<
 
 export type ForeignTypeResolvers<
   ContextType = any,
-  ParentType extends ResolversParentTypes['ForeignType'] = ResolversParentTypes['ForeignType']
+  ParentType extends ResolversParentTypes['ForeignType'] = ResolversParentTypes['ForeignType'],
+  FederationReferenceType extends FederationReferenceTypes['ForeignType'] = FederationReferenceTypes['ForeignType']
 > = {
   __resolveReference?: ReferenceResolver<
-    Maybe<ResolversTypes['ForeignType']>,
-    { __typename: 'ForeignType' } & GraphQLRecursivePick<
-      ParentType,
-      { id: true }
-    >,
+    Maybe<ResolversTypes['ForeignType']> | FederationReferenceType,
+    FederationReferenceType,
     ContextType
   >;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   topics?: Resolver<Array<ResolversTypes['Topic']>, ParentType, ContextType>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<
@@ -538,7 +561,6 @@ export type PaginationResultResolvers<
   currentPage?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   recordsPerPage?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalPageCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type PayloadErrorResolvers<
@@ -555,7 +577,6 @@ export type ProfileResolvers<
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<
@@ -609,7 +630,6 @@ export type TopicResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TopicByIdPayloadResolvers<
@@ -716,7 +736,6 @@ export type UserResolvers<
   avatar?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type UserPayloadResolvers<

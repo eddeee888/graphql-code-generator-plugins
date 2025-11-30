@@ -32,10 +32,7 @@ describe('getNodePropertyMap', () => {
       (node) => Node.isTypeAliasDeclaration(node) && node.getName() === 'User'
     );
 
-    const nodePropertyMap = getNodePropertyMap({
-      tsMorphProject: project,
-      node: userDeclarationNode,
-    });
+    const nodePropertyMap = getNodePropertyMap({ node: userDeclarationNode });
 
     expect(nodePropertyMap.__typename.name).toBe('__typename');
 
@@ -76,10 +73,7 @@ describe('getNodePropertyMap', () => {
       (node) => Node.isClassDeclaration(node) && node.getName() === 'User'
     );
 
-    const nodePropertyMap = getNodePropertyMap({
-      tsMorphProject: project,
-      node: userDeclarationNode,
-    });
+    const nodePropertyMap = getNodePropertyMap({ node: userDeclarationNode });
 
     expect(nodePropertyMap._id).toBe(undefined);
     expect(nodePropertyMap.id).toBe(undefined);
@@ -110,10 +104,7 @@ describe('getNodePropertyMap', () => {
         descendant.getName() === 'UserMapper'
     );
 
-    const nodePropertyMap = getNodePropertyMap({
-      tsMorphProject: project,
-      node,
-    });
+    const nodePropertyMap = getNodePropertyMap({ node });
 
     expect(nodePropertyMap.id.name).toBe('id');
 

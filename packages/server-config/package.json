@@ -1,6 +1,6 @@
 {
   "name": "@eddeee888/gcg-server-config",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/eddeee888/graphql-code-generator-plugins.git",
@@ -24,8 +24,8 @@
   "author": "Eddy Nguyen <ch@eddeee888.me>",
   "license": "MIT",
   "dependencies": {
-    "@graphql-codegen/typescript": "^4.1.3",
-    "@graphql-codegen/typescript-resolvers": "^4.4.2",
+    "@graphql-codegen/typescript": "^5.0.1",
+    "@graphql-codegen/typescript-resolvers": "^5.0.1",
     "tslib": "^2.3.0"
   },
   "publishConfig": {

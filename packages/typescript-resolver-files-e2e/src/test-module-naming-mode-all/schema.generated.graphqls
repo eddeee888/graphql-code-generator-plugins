@@ -1,0 +1,14 @@
+type Profile {
+  id: ID!
+  slug: String
+}
+
+type Query {
+  me: User
+}
+
+type User {
+  id: ID!
+  name: String
+  profile: Profile
+}

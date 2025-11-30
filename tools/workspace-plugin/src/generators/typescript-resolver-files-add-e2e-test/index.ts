@@ -1,10 +1,10 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import {
-  Tree,
+  type Tree,
   formatFiles,
   generateFiles,
-  ProjectConfiguration,
+  type ProjectConfiguration,
   readProjectConfiguration,
   updateProjectConfiguration,
 } from '@nx/devkit';
@@ -54,7 +54,8 @@ const addFiles = (tree: Tree, options: NormalizedSchema): void => {
 
 const updateProjectConfig = (tree: Tree, options: NormalizedSchema): void => {
   const e2eRunCommands: string[] =
-    options.projectConfig.targets?.['e2e-run']?.options?.['commands'];
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    options.projectConfig.targets?.['e2e-run']?.options?.commands;
   if (!e2eRunCommands) {
     throw new Error('Unable to find `e2e-run` commands in project.json.');
   }
@@ -83,8 +84,8 @@ const updateProjectConfig = (tree: Tree, options: NormalizedSchema): void => {
   };
   e2eCleanupConfig[options.testFullName] = {
     commands: [
-      `rimraf -g \"{projectRoot}/src/${options.testFullName}/**/resolvers/\"`,
-      `rimraf -g \"{projectRoot}/src/${options.testFullName}/**/*.generated.*\"`,
+      `rimraf -g "{projectRoot}/src/${options.testFullName}/**/resolvers/"`,
+      `rimraf -g "{projectRoot}/src/${options.testFullName}/**/*.generated.*"`,
     ],
     parallel: false,
   };

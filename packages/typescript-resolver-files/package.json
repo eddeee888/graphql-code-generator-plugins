@@ -1,6 +1,6 @@
 {
   "name": "@eddeee888/gcg-typescript-resolver-files",
-  "version": "0.12.2",
+  "version": "0.14.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/eddeee888/graphql-code-generator-plugins.git",
@@ -27,12 +27,12 @@
     "graphql": "^15.0.0 || ^16.0.0"
   },
   "dependencies": {
-    "@eddeee888/gcg-server-config": "0.2.3",
-    "@graphql-codegen/add": "^5.0.3",
-    "@graphql-codegen/plugin-helpers": "^5.1.0",
-    "@graphql-codegen/schema-ast": "^4.1.0",
-    "@graphql-codegen/typescript": "^4.1.3",
-    "@graphql-codegen/typescript-resolvers": "^4.4.2",
+    "@eddeee888/gcg-server-config": "0.3.0",
+    "@graphql-codegen/add": "^6.0.0",
+    "@graphql-codegen/plugin-helpers": "^6.0.0",
+    "@graphql-codegen/schema-ast": "^5.0.0",
+    "@graphql-codegen/typescript": "^5.0.1",
+    "@graphql-codegen/typescript-resolvers": "^5.0.1",
     "@graphql-tools/merge": "^9.0.4",
     "@graphql-tools/utils": "^10.0.0",
     "micromatch": "^4.0.0",
