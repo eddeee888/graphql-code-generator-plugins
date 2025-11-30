@@ -1,5 +1,11 @@
 # @eddeee888/gcg-operation-location-migration
 
+## 0.1.2
+
+### Patch Changes
+
+- f084ebe: Fix empty file breaking codemod
+
 ## 0.1.1
 
 ### Patch Changes
