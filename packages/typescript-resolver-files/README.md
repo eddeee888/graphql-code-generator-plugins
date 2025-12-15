@@ -453,11 +453,44 @@ Project's TypeScript config, relative from project root. This helps type analysi
 - For objects types: statically compares object type's mapper types' field against schema types' fields, creating resolvers if required.
 - For enum types: ensure all allowed values are present.
 
+### importExtension
+
+`` '' | `.${string}` ``(Default:`''`)
+
+Specifies the file extension to use for generated imports. This allows you to control whether imports use extensions like `.js`, `.ts`, `.mjs`, etc.
+
+**Examples:**
+
+- `''` - No extension (CommonJS-style imports)
+- `'.js'` - ESM-style with `.js` extension
+- `'.ts'` - TypeScript-style with `.ts` extension
+- `'.mjs'` - ESM with `.mjs` extension
+
+**Root-level inheritance:** You can set `importExtension` at the root level of your GraphQL Codegen config, and it will be inherited by all `generates` blocks that use this preset. Preset-level configuration will override root-level configuration.
+
+```typescript
+import type { CodegenConfig } from '@graphql-codegen/cli';
+import { defineConfig } from '@eddeee888/gcg-typescript-resolver-files';
+
+const config: CodegenConfig = {
+  schema: 'src/schema/**/schema.graphql',
+  importExtension: '.ts', // Root-level - inherited by all generates blocks
+  generates: {
+    'src/schema': defineConfig({
+      // Uses root-level '.ts' extension
+    }),
+    'src/api/schema': defineConfig({
+      importExtension: '.js', // Overrides root-level for this block
+    }),
+  },
+};
+```
+
 ### emitLegacyCommonJSImports
 
 `bool` (Default: `true`)
 
-Determines whether imports emitted should use CommonJS syntax or ESM syntax (with `.js` file endings)
+**DEPRECATED:** Use `importExtension` instead. This option is kept for backward compatibility.
 
 ## Config Examples
 

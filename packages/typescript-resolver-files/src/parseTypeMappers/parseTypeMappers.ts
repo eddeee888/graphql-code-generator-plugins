@@ -1,6 +1,7 @@
 import * as path from 'path';
 import type { Project, SyntaxKind } from 'ts-morph';
 import type { ParseSourcesResult } from '../parseSources';
+import type {ImportExtension} from '../utils';
 import { collectTypeMappersFromSourceFile } from './collectTypeMappersFromSourceFile';
 
 export interface ParseTypeMappersParams {
@@ -11,6 +12,7 @@ export interface ParseTypeMappersParams {
   typeMappersSuffix: string;
   tsMorphProject: Project;
   emitLegacyCommonJSImports: boolean;
+  importExtension: ImportExtension;
 }
 
 export interface TypeMapperDetails {
@@ -37,6 +39,7 @@ export const parseTypeMappers = ({
   typeMappersSuffix,
   tsMorphProject,
   emitLegacyCommonJSImports,
+  importExtension,
 }: ParseTypeMappersParams): TypeMappersMap => {
   const result = Object.entries(sourceMap).reduce<TypeMappersMap>(
     (res, [_, { sourcePath }]) => {
@@ -59,6 +62,7 @@ export const parseTypeMappers = ({
           typeMappersSuffix,
           resolverTypesPath,
           emitLegacyCommonJSImports,
+          importExtension
         },
         res
       );

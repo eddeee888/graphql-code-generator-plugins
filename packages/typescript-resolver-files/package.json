@@ -29,7 +29,7 @@
   "dependencies": {
     "@eddeee888/gcg-server-config": "0.3.0",
     "@graphql-codegen/add": "^6.0.0",
-    "@graphql-codegen/plugin-helpers": "^6.0.0",
+    "@graphql-codegen/plugin-helpers": "^6.1.0",
     "@graphql-codegen/schema-ast": "^5.0.0",
     "@graphql-codegen/typescript": "^5.0.1",
     "@graphql-codegen/typescript-resolvers": "^5.0.1",

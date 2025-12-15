@@ -11,7 +11,7 @@ export const handleGraphQLUnionType: GraphQLTypeHandler = (
     moduleName,
     relativePathFromBaseToModule,
   },
-  { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
+  { result, config: { resolverGeneration, emitLegacyCommonJSImports, importExtension } }
 ) => {
   if (
     !isMatchResolverNamePattern({
@@ -32,6 +32,7 @@ export const handleGraphQLUnionType: GraphQLTypeHandler = (
     moduleType: resolversTypeMeta.moduleType,
     namedImports: [resolversTypeMeta.typeNamedImport],
     emitLegacyCommonJSImports,
+    importExtension,
   });
   const variableStatement = `export const ${resolverName}: ${resolversTypeMeta.typeString} = { /* Implement ${resolverName} union logic here */ };`;
 

@@ -97,4 +97,54 @@ describe('printImportLine', () => {
     });
     expect(result).toBe("import type   { Thing } from './path/to/file';");
   });
+
+  describe('importExtension parameter', () => {
+    it('uses explicit importExtension parameter over emitLegacyCommonJSImports', () => {
+      const result = printImportLine({
+        module: './path/to/file',
+        moduleType: 'file',
+        isTypeImport: false,
+        namedImports: ['Thing'],
+        emitLegacyCommonJSImports: false,
+        importExtension: '.mjs',
+      });
+      expect(result).toBe("import    { Thing } from './path/to/file.mjs';");
+    });
+
+    it('uses custom .cjs extension when importExtension is provided', () => {
+      const result = printImportLine({
+        module: './path/to/file',
+        moduleType: 'file',
+        isTypeImport: false,
+        namedImports: ['Thing'],
+        emitLegacyCommonJSImports: true,
+        importExtension: '.cjs',
+      });
+      expect(result).toBe("import    { Thing } from './path/to/file.cjs';");
+    });
+
+    it('uses empty string when importExtension is explicitly set to empty', () => {
+      const result = printImportLine({
+        module: './path/to/file',
+        moduleType: 'file',
+        isTypeImport: false,
+        namedImports: ['Thing'],
+        emitLegacyCommonJSImports: false,
+        importExtension: '',
+      });
+      expect(result).toBe("import    { Thing } from './path/to/file';");
+    });
+
+    it('does not apply importExtension to module imports', () => {
+      const result = printImportLine({
+        module: '@org/module',
+        moduleType: 'module',
+        isTypeImport: false,
+        namedImports: ['Thing'],
+        emitLegacyCommonJSImports: false,
+        importExtension: '.mjs',
+      });
+      expect(result).toBe("import    { Thing } from '@org/module';");
+    });
+  });
 });
