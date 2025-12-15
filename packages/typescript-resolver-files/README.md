@@ -492,6 +492,8 @@ const config: CodegenConfig = {
 
 **DEPRECATED:** Use `importExtension` instead. This option is kept for backward compatibility.
 
+Determines whether imports emitted should use CommonJS syntax or ESM syntax (with `.js` file endings)
+
 ## Config Examples
 
 #### 1. Custom Config

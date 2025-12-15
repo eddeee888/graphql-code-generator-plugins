@@ -5,7 +5,7 @@ import type * as typeScriptPlugin from '@graphql-codegen/typescript';
 import type * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import type * as schemaAstPlugin from '@graphql-codegen/schema-ast';
 import type { ProjectOptions } from 'ts-morph';
-import { cwd, fmt, logger , normalizeImportExtension, type ImportExtension} from '../utils';
+import { cwd, fmt, logger, normalizeImportExtension, type ImportExtension } from '../utils';
 
 const defaultResolverRelativeTargetDirMap: Record<
   ParsedPresetConfig['mode'],

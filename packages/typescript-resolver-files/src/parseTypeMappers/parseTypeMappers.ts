@@ -1,7 +1,7 @@
 import * as path from 'path';
 import type { Project, SyntaxKind } from 'ts-morph';
 import type { ParseSourcesResult } from '../parseSources';
-import type {ImportExtension} from '../utils';
+import type { ImportExtension } from '../utils';
 import { collectTypeMappersFromSourceFile } from './collectTypeMappersFromSourceFile';
 
 export interface ParseTypeMappersParams {
