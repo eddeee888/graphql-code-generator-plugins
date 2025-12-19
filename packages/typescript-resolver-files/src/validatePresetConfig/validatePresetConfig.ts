@@ -160,8 +160,8 @@ export const validatePresetConfig = ({
   const finalEmitLegacyCommonJSImports =
     emitLegacyCommonJSImports ?? baseConfig?.emitLegacyCommonJSImports ?? true;
 
-  const finalImportExtension =
-    importExtension ?? baseConfig?.importExtension;
+  const baseImportExtension = baseConfig?.importExtension || undefined;
+  const finalImportExtension = importExtension ?? baseImportExtension;
 
   if (mode !== 'merged' && mode !== 'modules') {
     throw new Error(
