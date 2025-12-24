@@ -16,6 +16,7 @@ env:
 jobs:
   release:
     name: Release
+    if: github.event.comment == ''
     runs-on: ubuntu-24.04
     permissions:
       id-token: write # allows ODIC publishing
