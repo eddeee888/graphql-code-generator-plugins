@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.14.2
+
+### Patch Changes
+
+- 92789dd: Test
+
 ## 0.14.1
 
 ### Patch Changes
