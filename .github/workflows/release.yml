@@ -5,40 +5,151 @@ on:
     branches:
       - master
 
+  issue_comment:
+    types: [created]
+
 env:
-  npm-token: ${{ secrets.NPM_TOKEN }}
   github-token: ${{ secrets.GITHUB_TOKEN }}
   node-version: '24.x'
+  snapshot-release-tag: pr${{ github.event.issue.number }}-run${{ github.run_number }}-${{ github.run_attempt }}
 
 jobs:
   release:
     name: Release
     runs-on: ubuntu-24.04
     permissions:
+      id-token: write # allows ODIC publishing
       contents: write
       pull-requests: write
 
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.node-version }}
           cache: yarn
           cache-dependency-path: '**/yarn.lock'
 
-      - name: Install packages
-        run: yarn install --prefer-offline
+      - run: yarn install --prefer-offline
 
-      - name: Create Release Pull Request or Publish to NPM
-        id: changesets
-        uses: changesets/action@v1.5.3
+      # - name: Create Release Pull Request or Publish to NPM
+      #   id: changesets
+      #   uses: changesets/action@v1.5.3
+      #   with:
+      #     publish: yarn release
+      #     commit: 'chore(release): update packages versions'
+      #     title: 'Upcoming Release Changes'
+      #   env:
+      #     GITHUB_TOKEN: ${{ env.github-token }}
+
+  release-snapshot-check:
+    if: github.event.comment != ''
+    runs-on: ubuntu-24.04
+    permissions:
+      pull-requests: write
+    outputs:
+      triggered: ${{ steps.check.outputs.triggered }}
+    steps:
+      - name: Acknowledge deployment request to commenter
+        id: check
+        uses: khan/pull-request-comment-trigger@v1.1.0
         with:
-          publish: yarn release
-          commit: 'chore(release): update packages versions'
-          title: 'Upcoming Release Changes'
+          trigger: '/release-snapshot'
+          reaction: rocket
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
-          NPM_TOKEN: ${{ env.npm-token }}
+
+      - name: Validate user
+        if: ${{ steps.check.outputs.triggered == 'true' }}
+        run: |
+          if [[ "${AUTHOR_ASSOCIATION}" != 'OWNER' ]]
+          then
+            echo "User authorization failed"
+            exit 1
+          else
+            echo "User authorization successful"
+            exit 0
+          fi
+        env:
+          AUTHOR_ASSOCIATION: ${{ github.event.comment.author_association }}
+
+      - name: Report failure
+        if: failure()
+        uses: octokit/request-action@v2.4.0
+        with:
+          route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          issue_number: ${{ github.event.issue.number }}
+          body: '❌ No permission to release snapshot'
+        env:
+          GITHUB_TOKEN: ${{ env.github-token }}
+
+  release-snapshot:
+    runs-on: ubuntu-24.04
+    needs: release-snapshot-check
+    permissions:
+      id-token: write # allows ODIC publishing
+      contents: read
+      pull-requests: write # allows posting a message to the PR about success/error
+    if: needs.release-snapshot-check.outputs.triggered == 'true'
+    steps:
+      - name: Get Pull Request ref
+        id: get_pull_request_ref
+        uses: octokit/request-action@v2.4.0
+        with:
+          route: GET /repos/{owner}/{repo}/pulls/{issue_number}
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          issue_number: ${{ github.event.issue.number }}
+        env:
+          GITHUB_TOKEN: ${{ env.github-token }}
+
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          repository: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.repo.full_name }}
+          ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.node-version }}
+          registry-url: 'https://registry.npmjs.org'
+          cache: yarn
+          cache-dependency-path: '**/yarn.lock'
+
+      - run: yarn install --prefer-offline
+
+      - name: Deploy snapshot
+        run: |
+          yarn changeset version --snapshot $RELEASE_TAG
+          yarn nx run-many --target=build
+          yarn changeset publish --tag $RELEASE_TAG --no-git-tag
+        env:
+          GITHUB_TOKEN: ${{ env.github-token }}
+          RELEASE_TAG: ${{ env.snapshot-release-tag }}
+
+      - name: Report success
+        if: success()
+        uses: octokit/request-action@v2.4.0
+        with:
+          route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          issue_number: ${{ github.event.issue.number }}
+          body: '✅ Successfully published package/s with tag `${{ env.snapshot-release-tag }}`!'
+        env:
+          GITHUB_TOKEN: ${{ env.github-token }}
+
+      - name: Report failure
+        if: failure()
+        uses: octokit/request-action@v2.4.0
+        with:
+          route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          issue_number: ${{ github.event.issue.number }}
+          body: '❌ Failed to publish package/s with tag `${{ env.snapshot-release-tag }}`'
+        env:
+          GITHUB_TOKEN: ${{ env.github-token }}
