@@ -4,14 +4,14 @@ on:
   workflow_call:
 
 env:
-  node-version: '22.x'
+  node-version: '24.x'
 
 jobs:
   operation-location-migration:
     strategy:
       matrix:
         os: [ubuntu-22.04, windows-latest]
-        node-version: [20.x, 22.x]
+        node-version: [20.x, 22.x, 24.x]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository
