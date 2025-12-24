@@ -3,7 +3,7 @@
   "version": "0.14.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eddeee888/graphql-code-generator-plugins.git",
+    "url": "git+https://github.com/eddeee888/graphql-code-generator-plugins.git",
     "directory": "packages/typescript-resolver-files"
   },
   "homepage": "https://github.com/eddeee888/graphql-code-generator-plugins/blob/master/packages/typescript-resolver-files/README.md",
