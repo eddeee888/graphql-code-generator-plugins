@@ -25,6 +25,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
       typeMappersMap,
       graphQLObjectTypeResolversToGenerate,
       emitLegacyCommonJSImports,
+      importExtension,
     },
   }
 ) => {
@@ -136,6 +137,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     moduleType: resolversTypeMeta.moduleType,
     namedImports: [resolversTypeMeta.typeNamedImport],
     emitLegacyCommonJSImports,
+    importExtension
   });
 
   result.files[fieldFilePath] = {

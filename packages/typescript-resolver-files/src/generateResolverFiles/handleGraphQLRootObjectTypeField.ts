@@ -19,7 +19,7 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
     moduleName,
     relativePathFromBaseToModule,
   },
-  { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
+  { result, config: { resolverGeneration, emitLegacyCommonJSImports, importExtension } }
 ) => {
   if (
     (belongsToRootObject === 'Query' &&
@@ -72,6 +72,7 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
     moduleType: resolversTypeMeta.moduleType,
     namedImports: [resolversTypeMeta.typeNamedImport],
     emitLegacyCommonJSImports,
+    importExtension
   });
 
   result.files[fieldFilePath] = {

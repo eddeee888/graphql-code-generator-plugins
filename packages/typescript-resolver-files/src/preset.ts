@@ -35,6 +35,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
     schemaAst,
     presetConfig: rawPresetConfig,
     baseOutputDir,
+    config: baseConfig,
     profiler = createNoopProfiler(),
   }) => {
     if (!schemaAst) {
@@ -71,7 +72,8 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       tsMorphProjectOptions,
       fixObjectTypeResolvers,
       emitLegacyCommonJSImports,
-    } = validatePresetConfig(rawPresetConfig);
+      importExtension
+    } = validatePresetConfig(rawPresetConfig, baseConfig);
 
     const resolverTypesPath = path.posix.join(
       baseOutputDir,
@@ -101,6 +103,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           typeMappersSuffix,
           tsMorphProject,
           emitLegacyCommonJSImports,
+          importExtension
         }),
       createProfilerRunName('parseTypeMappers')
     );
@@ -267,6 +270,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
               ...mergedConfig.unmanagedResolvers,
             },
             emitLegacyCommonJSImports,
+            importExtension,
             generatedTypesFileMeta,
           },
           result,

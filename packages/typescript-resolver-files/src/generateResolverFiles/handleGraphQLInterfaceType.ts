@@ -11,7 +11,7 @@ export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
     moduleName,
     relativePathFromBaseToModule,
   },
-  { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
+  { result, config: { resolverGeneration, emitLegacyCommonJSImports, importExtension } }
 ) => {
   if (
     !isMatchResolverNamePattern({
@@ -34,6 +34,7 @@ export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
     moduleType: resolversTypeMeta.moduleType,
     namedImports: [resolversTypeMeta.typeNamedImport],
     emitLegacyCommonJSImports,
+    importExtension
   });
   const variableStatement = `export const ${resolverName}: ${resolverTypeString} = { /* Implement ${resolverName} interface logic here */ };`;
 

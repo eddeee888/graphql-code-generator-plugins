@@ -12,7 +12,7 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
     moduleName,
     relativePathFromBaseToModule,
   },
-  { result, config: { resolverGeneration, emitLegacyCommonJSImports } }
+  { result, config: { resolverGeneration, emitLegacyCommonJSImports, importExtension } }
 ) => {
   if (
     !isMatchResolverNamePattern({
@@ -33,6 +33,7 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
     moduleType: 'module',
     namedImports: [graphQLScalarType],
     emitLegacyCommonJSImports,
+    importExtension
   });
   const variableStatement = `export const ${resolverName} = new ${graphQLScalarType}({
     name: '${resolverName}',

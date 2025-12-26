@@ -174,6 +174,13 @@
             "rimraf -g \"{projectRoot}/src/test-complex-synth-generic-wrapper/**/*.generated.*\""
           ],
           "parallel": false
+        },
+        "test-import-extension-ts": {
+          "commands": [
+            "rimraf -g \"{projectRoot}/src/test-import-extension-ts/**/resolvers/\"",
+            "rimraf -g \"{projectRoot}/src/test-import-extension-ts/**/*.generated.*\""
+          ],
+          "parallel": false
         }
       }
     },
@@ -202,7 +209,8 @@
           "nx graphql-codegen typescript-resolver-files-e2e -c test-federation --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-deep-modules --verbose",
           "nx graphql-codegen typescript-resolver-files-e2e -c test-module-naming-mode-all --verbose",
-          "nx graphql-codegen typescript-resolver-files-e2e -c test-complex-synth-generic-wrapper --verbose"
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-complex-synth-generic-wrapper --verbose",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-import-extension-ts --verbose"
         ],
         "parallel": false
       },
@@ -286,6 +294,9 @@
         },
         "test-complex-synth-generic-wrapper": {
           "configFile": "{projectRoot}/src/test-complex-synth-generic-wrapper/codegen.ts"
+        },
+        "test-import-extension-ts": {
+          "configFile": "{projectRoot}/src/test-import-extension-ts/codegen.ts"
         }
       },
       "dependsOn": ["prepare-e2e-modules"]

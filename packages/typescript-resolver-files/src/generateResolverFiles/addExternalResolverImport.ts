@@ -28,7 +28,7 @@ export const addExternalResolverImport = (
   params: AddExternalResolverImportParams,
   {
     result,
-    config: { emitLegacyCommonJSImports },
+    config: { emitLegacyCommonJSImports, importExtension },
   }: GenerateResolverFilesContext
 ): void => {
   const { importIdentifier, identifierUsage, moduleImport } =
@@ -47,6 +47,7 @@ export const addExternalResolverImport = (
         namedImports: [],
         defaultImport: undefined,
         emitLegacyCommonJSImports,
+        importExtension,
       },
       identifierUsages: [],
     } satisfies GenerateResolverFilesContext['result']['externalImports'][number]);

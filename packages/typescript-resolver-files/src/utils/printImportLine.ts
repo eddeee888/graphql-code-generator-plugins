@@ -1,3 +1,5 @@
+import { normalizeImportExtension, type ImportExtension } from "./normalizeImportExtension";
+
 export interface ImportLineMeta {
   isTypeImport: boolean;
   module: string;
@@ -12,7 +14,9 @@ export interface ImportLineMeta {
   moduleType: 'file' | 'module' | 'preserve';
   namedImports: (string | { propertyName: string; identifierName: string })[];
   defaultImport?: string;
+  /** @deprecated Use importExtension instead */
   emitLegacyCommonJSImports: boolean;
+  importExtension?: ImportExtension;
 }
 
 export function printImportLine({
@@ -22,6 +26,7 @@ export function printImportLine({
   namedImports,
   defaultImport,
   emitLegacyCommonJSImports,
+  importExtension,
 }: ImportLineMeta): string {
   const typeImportKeyword = isTypeImport ? 'type' : '';
   const hasDefaultImport = Boolean(defaultImport);
@@ -33,7 +38,9 @@ export function printImportLine({
   let fileExt = '';
   if (moduleType !== 'preserve') {
     const isFile = moduleType === 'file';
-    fileExt = emitLegacyCommonJSImports || !isFile ? '' : '.js';
+    if (isFile) {
+      fileExt = normalizeImportExtension(importExtension, emitLegacyCommonJSImports);
+    }  
   }
 
   return `import ${typeImportKeyword} ${defaultImport || ''} ${
