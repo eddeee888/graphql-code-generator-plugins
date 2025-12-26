@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.15.0
+
+### Minor Changes
+
+- a5de01f: add importExtension configuration option
+
 ## 0.14.1
 
 ### Patch Changes
