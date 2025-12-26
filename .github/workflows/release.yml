@@ -135,8 +135,8 @@ jobs:
         id: get_snapshot_versions
         run: |
           PACKAGES=(
-            "@eddeee888/operation-location-migration"
-            "@eddeee888/@eddeee888/gcg-server-config"
+            "@eddeee888/gcg-operation-location-migration"
+            "@eddeee888/gcg-server-config"
             "@eddeee888/gcg-typescript-resolver-files"
           )
 
