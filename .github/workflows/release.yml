@@ -143,8 +143,10 @@ jobs:
           echo "versions<<EOF" >> $GITHUB_OUTPUT
           for pkg in "${PACKAGES[@]}"; do
             version=$(npm view "$pkg" dist-tags.alpha)
-            echo "$pkg@$version\n" >> $GITHUB_OUTPUT
+            echo "" >> $GITHUB_OUTPUT
+            echo "$pkg@$version" >> $GITHUB_OUTPUT
           done
+          echo "" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Report success
