@@ -1,6 +1,6 @@
 {
   "name": "@eddeee888/gcg-typescript-resolver-files",
-  "version": "0.14.1",
+  "version": "0.15.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eddeee888/graphql-code-generator-plugins.git",
