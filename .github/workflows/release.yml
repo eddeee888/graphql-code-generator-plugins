@@ -123,10 +123,11 @@ jobs:
       - run: yarn install --prefer-offline
 
       - name: Deploy snapshot
+        id: deploy_snapshot
         run: |
           yarn changeset version --snapshot $RELEASE_TAG
           yarn nx run-many --target=build
-          yarn changeset publish --tag $RELEASE_TAG --no-git-tag
+          yarn changeset publish --tag alpha --no-git-tag >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
           RELEASE_TAG: ${{ env.snapshot-release-tag }}
@@ -139,7 +140,7 @@ jobs:
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
           issue_number: ${{ github.event.issue.number }}
-          body: '✅ Successfully published package/s with tag `${{ env.snapshot-release-tag }}`!'
+          body: '✅ Successfully published package/s:\n ```${{ steps.deploy_snapshot.outputs }}```'
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
 
