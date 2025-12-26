@@ -123,19 +123,29 @@ jobs:
       - run: yarn install --prefer-offline
 
       - name: Deploy snapshot
-        id: deploy_snapshot
         run: |
           yarn changeset version --snapshot $RELEASE_TAG
           yarn nx run-many --target=build
-          yarn changeset publish --tag alpha --no-git-tag >> snapshot_response
-          {
-            echo "snapshot_response<<EOF"
-            cat snapshot_response
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
+          yarn changeset publish --tag alpha --no-git-tag
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
           RELEASE_TAG: ${{ env.snapshot-release-tag }}
+
+      - name: Get snapshot versions
+        id: get_snapshot_versions
+        run: |
+          PACKAGES=(
+            "@eddeee888/operation-location-migration"
+            "@eddeee888/@eddeee888/gcg-server-config"
+            "@eddeee888/gcg-typescript-resolver-files"
+          )
+
+          echo "versions<<EOF" >> $GITHUB_OUTPUT
+          for pkg in "${PACKAGES[@]}"; do
+            version=$(npm view "$pkg" dist-tags.alpha)
+            echo "- \`$pkg@$version\`"
+          done
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Report success
         if: success()
@@ -145,7 +155,7 @@ jobs:
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
           issue_number: ${{ github.event.issue.number }}
-          body: '✅ Successfully published package/s:\n ```${{ steps.deploy_snapshot.outputs.snapshot_response }}```'
+          body: '✅ Successfully published package/s:\n ```${{ steps.get_snapshot_versions.outputs.versions }}```'
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
 
