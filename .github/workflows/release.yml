@@ -155,7 +155,12 @@ jobs:
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
           issue_number: ${{ github.event.issue.number }}
-          body: '✅ Successfully published package/s:\n ```${{ steps.get_snapshot_versions.outputs.versions }}```'
+          body: |
+            ✅ **Snapshot published**
+
+            ```bash
+            ${{ steps.get_snapshot_versions.outputs.versions }}
+            ```
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
 
