@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { type SourceFile, type Identifier, SyntaxKind } from 'ts-morph';
-import { normalizeRelativePath } from '../utils';
+import { normalizeRelativePath, normalizeImportExtension, type ImportExtension } from '../utils';
 import type { TypeMappersMap } from './parseTypeMappers';
 
 export const collectTypeMappersFromSourceFile = (
@@ -9,11 +9,13 @@ export const collectTypeMappersFromSourceFile = (
     typeMappersSuffix,
     resolverTypesPath,
     emitLegacyCommonJSImports,
+    importExtension,
   }: {
     typeMappersSourceFile: SourceFile;
     typeMappersSuffix: string;
     resolverTypesPath: string;
     emitLegacyCommonJSImports: boolean;
+    importExtension?: ImportExtension;
   },
   result: TypeMappersMap
 ): void => {
@@ -31,6 +33,7 @@ export const collectTypeMappersFromSourceFile = (
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
         emitLegacyCommonJSImports,
+        importExtension
       },
       result
     );
@@ -52,6 +55,7 @@ export const collectTypeMappersFromSourceFile = (
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
         emitLegacyCommonJSImports,
+        importExtension
       },
       result
     );
@@ -78,6 +82,7 @@ export const collectTypeMappersFromSourceFile = (
           typeMappersFilePath: typeMappersSourceFile.getFilePath(),
           resolverTypesPath,
           emitLegacyCommonJSImports,
+          importExtension
         },
         result
       );
@@ -102,6 +107,7 @@ export const collectTypeMappersFromSourceFile = (
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
         emitLegacyCommonJSImports,
+        importExtension
       },
       result
     );
@@ -116,6 +122,7 @@ const addTypeMapperDetailsIfValid = (
     typeMappersFilePath,
     resolverTypesPath,
     emitLegacyCommonJSImports,
+    importExtension
   }: {
     kind:
       | SyntaxKind.InterfaceDeclaration
@@ -127,6 +134,7 @@ const addTypeMapperDetailsIfValid = (
     typeMappersFilePath: string;
     resolverTypesPath: string;
     emitLegacyCommonJSImports: boolean;
+    importExtension?: ImportExtension;
   },
   result: TypeMappersMap
 ): void => {
@@ -161,7 +169,7 @@ const addTypeMapperDetailsIfValid = (
     )
   );
 
-  const fileExtension = emitLegacyCommonJSImports ? '' : '.js';
+  const fileExtension = normalizeImportExtension(importExtension, emitLegacyCommonJSImports);
   const configImportPath = `${relativeImportPathFromResolverTypesToSourceFile}${fileExtension}#${identifierName}`;
 
   if (result[schemaType]) {

@@ -2,7 +2,7 @@ import type { SourceFile, Project } from 'ts-morph';
 import type * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import type { GraphQLObjectTypeResolversToGenerate } from '../getGraphQLObjectTypeResolversToGenerate';
 import type { TypeMappersMap } from '../parseTypeMappers';
-import type { ImportLineMeta, RootObjectType } from '../utils';
+import type { ImportExtension, ImportLineMeta, RootObjectType } from '../utils';
 import type { ParsedPresetConfig } from '../validatePresetConfig';
 import type { NormalizedResolverName } from '../parseGraphQLSchema';
 import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
@@ -148,6 +148,7 @@ export interface GenerateResolverFilesContext {
     graphQLObjectTypeResolversToGenerate: GraphQLObjectTypeResolversToGenerate;
     fixObjectTypeResolvers: ParsedPresetConfig['fixObjectTypeResolvers'];
     emitLegacyCommonJSImports: boolean;
+    importExtension: ImportExtension;
     generatedTypesFileMeta: GeneratedTypesFileMeta;
   };
   result: {

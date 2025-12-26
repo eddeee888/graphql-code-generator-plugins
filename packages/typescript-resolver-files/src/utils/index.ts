@@ -9,3 +9,4 @@ export * from './printImportLine';
 export * from './normalizeRelativePath';
 export * from './relativeModulePath';
 export * from './isMatchResolverNamePattern';
+export * from './normalizeImportExtension';

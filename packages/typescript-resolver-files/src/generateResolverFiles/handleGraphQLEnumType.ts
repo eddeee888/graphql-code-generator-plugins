@@ -17,7 +17,7 @@ export const handleGraphQLEnumType: GraphQLTypeHandler<
   },
   {
     result,
-    config: { typeMappersMap, resolverGeneration, emitLegacyCommonJSImports },
+    config: { typeMappersMap, resolverGeneration, emitLegacyCommonJSImports, importExtension },
   }
 ) => {
   const matchedPatternToGenerate = isMatchResolverNamePattern({
@@ -56,6 +56,7 @@ export const handleGraphQLEnumType: GraphQLTypeHandler<
     moduleType: resolversTypeMeta.moduleType,
     namedImports: [resolversTypeMeta.typeNamedImport],
     emitLegacyCommonJSImports,
+    importExtension,
   });
 
   const variableStatement = `${forcedGenerationWarning}export const ${resolverName}: ${
