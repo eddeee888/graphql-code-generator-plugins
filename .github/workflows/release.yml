@@ -128,7 +128,11 @@ jobs:
           yarn changeset version --snapshot $RELEASE_TAG
           yarn nx run-many --target=build
           yarn changeset publish --tag alpha --no-git-tag >> snapshot_response
-          echo "snapshot_response=$(cat snapshot_response)" >> "$GITHUB_OUTPUT"
+          {
+            echo "snapshot_response<<EOF"
+            cat snapshot_response
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
           RELEASE_TAG: ${{ env.snapshot-release-tag }}
