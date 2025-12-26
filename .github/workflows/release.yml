@@ -127,7 +127,8 @@ jobs:
         run: |
           yarn changeset version --snapshot $RELEASE_TAG
           yarn nx run-many --target=build
-          yarn changeset publish --tag alpha --no-git-tag >> "$GITHUB_OUTPUT"
+          yarn changeset publish --tag alpha --no-git-tag >> snapshot_response
+          echo "handle=$(cat snapshot_response)" >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
           RELEASE_TAG: ${{ env.snapshot-release-tag }}
@@ -140,7 +141,7 @@ jobs:
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
           issue_number: ${{ github.event.issue.number }}
-          body: '✅ Successfully published package/s:\n ```${{ steps.deploy_snapshot.outputs }}```'
+          body: '✅ Successfully published package/s:\n ```${{ steps.deploy_snapshot.outputs.snapshot_response }}```'
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
 
