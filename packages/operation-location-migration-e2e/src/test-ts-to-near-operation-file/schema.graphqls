@@ -1,0 +1,22 @@
+type Query {
+  me: User
+  user(id: ID): User
+}
+
+type Mutation {
+  updateUser(input: UpdateUserInput!): User!
+}
+
+type Subscription {
+  userChanges(id: ID): User
+}
+
+input UpdateUserInput {
+  id: ID!
+  name: String!
+}
+
+type User {
+  id: ID!
+  name: String!
+}

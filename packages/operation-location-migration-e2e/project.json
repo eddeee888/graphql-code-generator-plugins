@@ -18,6 +18,8 @@
           "nx graphql-codegen operation-location-migration-e2e --verbose -c test-near-operation-file-to-near-operation-file-migrate",
           "nx test-setup operation-location-migration-e2e -c test-apollo-support",
           "nx graphql-codegen operation-location-migration-e2e --verbose -c test-apollo-support-migrate",
+          "nx test-setup operation-location-migration-e2e -c test-ts-to-near-operation-file",
+          "nx graphql-codegen operation-location-migration-e2e --verbose -c test-ts-to-near-operation-file-migrate",
           "bash tools/testing/bin/assert-e2e.sh \"{projectRoot}/src/**/*.ts\""
         ],
         "parallel": false
@@ -48,6 +50,13 @@
           "commands": [
             "nx test-setup operation-location-migration-e2e -c test-apollo-support",
             "nx graphql-codegen operation-location-migration-e2e --verbose -c test-apollo-support-migrate",
+            "bash tools/testing/bin/assert-e2e.sh \"{projectRoot}/src/**/*.ts\""
+          ]
+        },
+        "test-ts-to-near-operation-file": {
+          "commands": [
+            "nx test-setup operation-location-migration-e2e -c test-ts-to-near-operation-file",
+            "nx graphql-codegen operation-location-migration-e2e --verbose -c test-ts-to-near-operation-file-migrate",
             "bash tools/testing/bin/assert-e2e.sh \"{projectRoot}/src/**/*.ts\""
           ]
         }
@@ -84,6 +93,12 @@
             "rimraf -g \"{projectRoot}/src/test-apollo-support/**/*.graphql.ts\"",
             "nx graphql-codegen operation-location-migration-e2e --verbose -c test-apollo-support-setup"
           ]
+        },
+        "test-ts-to-near-operation-file": {
+          "commands": [
+            "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-ts-to-near-operation-file/testSetup.ts",
+            "nx graphql-codegen operation-location-migration-e2e --verbose -c test-ts-to-near-operation-file-setup"
+          ]
         }
       }
     },
@@ -114,6 +129,12 @@
         },
         "test-apollo-support-migrate": {
           "configFile": "{projectRoot}/src/test-apollo-support/codegen.migrate.mts"
+        },
+        "test-ts-to-near-operation-file-setup": {
+          "configFile": "{projectRoot}/src/test-ts-to-near-operation-file/codegen.setup.mts"
+        },
+        "test-ts-to-near-operation-file-migrate": {
+          "configFile": "{projectRoot}/src/test-ts-to-near-operation-file/codegen.migrate.mts"
         }
       },
       "dependsOn": ["prepare-e2e-modules"]
