@@ -1,5 +1,11 @@
 # @eddeee888/gcg-server-config
 
+## 0.3.1
+
+### Patch Changes
+
+- eb89da1: Sync/bump Codegen package versions to avoid type issues
+
 ## 0.3.0
 
 ### Minor Changes

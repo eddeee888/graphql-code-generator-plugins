@@ -1,5 +1,13 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.15.1
+
+### Patch Changes
+
+- eb89da1: Sync/bump Codegen package versions to avoid type issues
+- Updated dependencies [eb89da1]
+  - @eddeee888/gcg-server-config@0.3.1
+
 ## 0.15.0
 
 ### Minor Changes
