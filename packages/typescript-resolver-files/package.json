@@ -28,16 +28,16 @@
   },
   "dependencies": {
     "@eddeee888/gcg-server-config": "0.3.0",
-    "@graphql-codegen/add": "^6.0.0",
-    "@graphql-codegen/plugin-helpers": "^6.1.0",
-    "@graphql-codegen/schema-ast": "^5.0.0",
-    "@graphql-codegen/typescript": "^5.0.1",
-    "@graphql-codegen/typescript-resolvers": "^5.0.1",
-    "@graphql-tools/merge": "^9.0.4",
-    "@graphql-tools/utils": "^10.0.0",
+    "@graphql-codegen/add": "^6.0.1",
+    "@graphql-codegen/plugin-helpers": "^6.3.0",
+    "@graphql-codegen/schema-ast": "^5.0.2",
+    "@graphql-codegen/typescript": "^5.0.10",
+    "@graphql-codegen/typescript-resolvers": "^5.1.8",
+    "@graphql-tools/merge": "^9.1.8",
+    "@graphql-tools/utils": "^11.0.1",
     "micromatch": "^4.0.0",
     "ts-morph": "^22.0.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.8.0"
   },
   "publishConfig": {
     "directory": "../../dist/packages/typescript-resolver-files"

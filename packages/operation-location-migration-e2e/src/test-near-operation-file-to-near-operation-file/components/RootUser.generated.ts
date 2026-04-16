@@ -41,6 +41,9 @@ export function useRootUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<R
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<RootUserQuery, RootUserQueryVariables>(RootUserDocument, options);
         }
+// @ts-ignore
+export function useRootUserSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RootUserQuery, RootUserQueryVariables>): Apollo.UseSuspenseQueryResult<RootUserQuery, RootUserQueryVariables>;
+export function useRootUserSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RootUserQuery, RootUserQueryVariables>): Apollo.UseSuspenseQueryResult<RootUserQuery | undefined, RootUserQueryVariables>;
 export function useRootUserSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RootUserQuery, RootUserQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<RootUserQuery, RootUserQueryVariables>(RootUserDocument, options);
