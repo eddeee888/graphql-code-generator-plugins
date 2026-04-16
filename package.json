@@ -7,7 +7,7 @@
   },
   "private": true,
   "dependencies": {
-    "tslib": "2.8.0"
+    "tslib": "2.8.1"
   },
   "devDependencies": {
     "@changesets/cli": "2.29.5",
