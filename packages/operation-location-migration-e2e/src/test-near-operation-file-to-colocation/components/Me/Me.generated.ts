@@ -1,13 +1,17 @@
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 import * as Types from '../types.generated';
 
 import { gql } from '@apollo/client';
 import { UserFragmentFragmentDoc } from '../User.fragment.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type MeQueryVariables = Types.Exact<{ [key: string]: never; }>;
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, name: string } | null };
+export type MeQuery = { me: { id: string, name: string } | null };
 
 
 export const MeDocument = gql`

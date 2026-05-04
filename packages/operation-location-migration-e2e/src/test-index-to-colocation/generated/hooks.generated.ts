@@ -1,12 +1,11 @@
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -59,31 +58,36 @@ export type User = {
   name: Scalars['String']['output'];
 };
 
+export type UpdateUserInput = {
+  id: string | number;
+  name: string;
+};
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', name: string } | null };
+export type MeQuery = { me: { name: string } | null };
 
-export type UserFragmentFragment = { __typename?: 'User', name: string };
+export type UserFragmentFragment = { name: string };
 
 export type UserQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
+  id: string | number;
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user?: { __typename: 'User' } | null };
+export type UserQuery = { user: { __typename: 'User' } | null };
 
 export type UpdateUserMutationVariables = Exact<{
   input: UpdateUserInput;
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, name: string } };
+export type UpdateUserMutation = { updateUser: { id: string, name: string } };
 
 export type UserChangesSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserChangesSubscription = { __typename?: 'Subscription', userChanges?: { __typename?: 'User', id: string, name: string } | null };
+export type UserChangesSubscription = { userChanges: { id: string, name: string } | null };
 
 export const UserFragmentFragmentDoc = gql`
     fragment UserFragment on User {
