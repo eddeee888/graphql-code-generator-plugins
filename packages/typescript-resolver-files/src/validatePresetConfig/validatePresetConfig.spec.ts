@@ -42,6 +42,7 @@ const defaultExpected: ParsedPresetConfig = {
   blacklistedModules: [],
   tsMorphProjectOptions: {
     skipAddingFilesFromTsConfig: true,
+    tsConfigFilePath: expect.any(String), // this'd be a local path, so no need to test
   },
   fixObjectTypeResolvers: {
     object: 'fast',
