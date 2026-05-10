@@ -5,7 +5,7 @@ import {
 } from './validatePresetConfig';
 
 beforeEach(() => {
-  jest.resetAllMocks();
+  vi.resetAllMocks();
 });
 
 const defaultExpected: ParsedPresetConfig = {
@@ -48,7 +48,7 @@ const defaultExpected: ParsedPresetConfig = {
     enum: 'fast',
   },
   emitLegacyCommonJSImports: true,
-  importExtension:'',
+  importExtension: '',
 };
 
 describe('validatePresetConfig - general', () => {
@@ -479,10 +479,7 @@ describe('validatePresetConfig - importExtension', () => {
 
   describe('base config inheritance', () => {
     it('inherits importExtension from base config when not specified in preset', () => {
-      const parsed = validatePresetConfig(
-        {},
-        { importExtension: '.ts' }
-      );
+      const parsed = validatePresetConfig({}, { importExtension: '.ts' });
 
       expect(parsed).toEqual({
         ...defaultExpected,
@@ -549,7 +546,7 @@ describe('validatePresetConfig - importExtension', () => {
 
       expect(parsed).toEqual({
         ...defaultExpected,
-        emitLegacyCommonJSImports: false, 
+        emitLegacyCommonJSImports: false,
         importExtension: '.ts',
       });
     });
@@ -562,7 +559,7 @@ describe('validatePresetConfig - importExtension', () => {
 
       expect(parsed).toEqual({
         ...defaultExpected,
-        emitLegacyCommonJSImports: false, 
+        emitLegacyCommonJSImports: false,
         importExtension: '.mts',
       });
     });
