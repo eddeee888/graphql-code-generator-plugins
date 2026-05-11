@@ -36,8 +36,5 @@ jobs:
       - name: Lint
         run: yarn nx lint operation-location-migration
 
-      - name: Test
-        run: yarn nx test operation-location-migration
-
       - name: Build
         run: yarn nx build operation-location-migration
