@@ -1,25 +1,29 @@
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 import * as Types from '../types.generated';
 
 import { gql } from '@apollo/client';
 import { UserFragmentFragmentDoc } from '../User.fragment.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type UserQueryVariables = Types.Exact<{
-  id: Types.Scalars['ID']['input'];
+export type UserQueryVariables = Exact<{
+  id: string | number;
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name: string } | null };
+export type UserQuery = { user: { id: string, name: string } | null };
 
-export type UpdateUserMutationVariables = Types.Exact<{ [key: string]: never; }>;
-
-
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'User', id: string, name: string } };
-
-export type UserChangesSubscriptionVariables = Types.Exact<{ [key: string]: never; }>;
+export type UpdateUserMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserChangesSubscription = { __typename?: 'Subscription', userChanges?: { __typename?: 'User', id: string, name: string } | null };
+export type UpdateUserMutation = { updateUser: { id: string, name: string } };
+
+export type UserChangesSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserChangesSubscription = { userChanges: { id: string, name: string } | null };
 
 
 export const UserDocument = gql`
