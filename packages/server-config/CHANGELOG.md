@@ -1,5 +1,15 @@
 # @eddeee888/gcg-server-config
 
+## 0.4.0
+
+### Minor Changes
+
+- b49fb8a: Drop Node 20 support
+
+### Patch Changes
+
+- b49fb8a: Bump codegen packages
+
 ## 0.3.1
 
 ### Patch Changes
