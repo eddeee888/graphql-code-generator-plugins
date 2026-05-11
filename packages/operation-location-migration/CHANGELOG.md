@@ -1,5 +1,15 @@
 # @eddeee888/gcg-operation-location-migration
 
+## 0.2.0
+
+### Minor Changes
+
+- b49fb8a: Drop Node 20 support
+
+### Patch Changes
+
+- b49fb8a: Bump codegen packages
+
 ## 0.1.2
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.16.0
+
+### Minor Changes
+
+- b49fb8a: Drop Node 20 support
+
+### Patch Changes
+
+- b49fb8a: Bump codegen packages
+- Updated dependencies [b49fb8a]
+- Updated dependencies [b49fb8a]
+  - @eddeee888/gcg-server-config@0.4.0
+
 ## 0.15.1
 
 ### Patch Changes
