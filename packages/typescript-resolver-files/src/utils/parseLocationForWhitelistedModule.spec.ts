@@ -120,8 +120,6 @@ describe('parseLocationForWhitelistedModule', () => {
         blacklistedModules: [],
         whitelistedModules: [],
       } as unknown as ParseLocationForWhitelistedModule)
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find /path/to/module10/schema.graphqls in sourceMap"`
-    );
+    ).toThrowErrorMatchingInlineSnapshot(`[Error: Unable to find /path/to/module10/schema.graphqls in sourceMap]`);
   });
 });

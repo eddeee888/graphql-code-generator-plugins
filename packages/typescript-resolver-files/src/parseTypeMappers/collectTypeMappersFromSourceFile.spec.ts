@@ -781,9 +781,9 @@ describe('collectTypeMappersFromSourceFile', () => {
         result
       )
     ).toThrowErrorMatchingInlineSnapshot(`
-      "GraphQL type "User" has duplicated "UserTypeMapper" mappers:
+      [Error: GraphQL type "User" has duplicated "UserTypeMapper" mappers:
         - ./module2/schema.mappers#UserTypeMapper
-        - ./module1/schema.mappers#UserTypeMapper"
+        - ./module1/schema.mappers#UserTypeMapper]
     `);
   });
 });
