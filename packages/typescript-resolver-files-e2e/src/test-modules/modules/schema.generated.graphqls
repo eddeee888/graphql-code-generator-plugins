@@ -44,9 +44,7 @@ type Query {
   book(id: ID!): Book
   me: UserPayload!
   topicById(id: ID!): TopicByIdPayload!
-  topicsCreatedByUser(
-    input: TopicsCreatedByUserInput!
-  ): TopicsCreatedByUserPayload!
+  topicsCreatedByUser(input: TopicsCreatedByUserInput!): TopicsCreatedByUserPayload!
   userByAccountName(accountName: String!): UserPayload!
 }
 

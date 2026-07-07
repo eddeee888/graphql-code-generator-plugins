@@ -76,9 +76,7 @@ type Query {
   me: UserPayload!
   pet(id: ID!): PetResult!
   topicById(id: ID!): TopicByIdPayload!
-  topicsCreatedByUser(
-    input: TopicsCreatedByUserInput!
-  ): TopicsCreatedByUserPayload!
+  topicsCreatedByUser(input: TopicsCreatedByUserInput!): TopicsCreatedByUserPayload!
   userByAccountName(accountName: String!): UserPayload!
 }
 

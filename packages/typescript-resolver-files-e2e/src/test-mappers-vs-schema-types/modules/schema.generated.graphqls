@@ -54,9 +54,7 @@ type Query {
   account: Account!
   me: UserPayload!
   topicById(id: ID!): TopicByIdPayload!
-  topicsCreatedByUser(
-    input: TopicsCreatedByUserInput!
-  ): TopicsCreatedByUserPayload!
+  topicsCreatedByUser(input: TopicsCreatedByUserInput!): TopicsCreatedByUserPayload!
   userByAccountName(accountName: String!): UserPayload!
 }
 
