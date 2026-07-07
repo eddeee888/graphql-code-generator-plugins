@@ -1,4 +1,3 @@
-import type { TopicByIdPayloadResolvers } from './../../types.generated';
-export const TopicByIdPayload: TopicByIdPayloadResolvers = {
-  /* Implement TopicByIdPayload union logic here */
-};
+
+    import type   { TopicByIdPayloadResolvers } from './../../types.generated';
+    export const TopicByIdPayload: TopicByIdPayloadResolvers = { /* Implement TopicByIdPayload union logic here */ };

@@ -1,5 +1,6 @@
-import type { UserResolvers } from './../../types.generated';
+import type   { UserResolvers } from './../../types.generated';
 /* This file has been created on filesystem by @workspace/testing#createTestSetup */
 export const User: Pick<UserResolvers, 'pets'> = {
-  /* Implement User resolver logic here */
-};
+    /* Implement User resolver logic here */
+  };
+

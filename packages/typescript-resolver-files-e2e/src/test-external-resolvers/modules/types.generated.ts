@@ -1,34 +1,26 @@
-import {
-  GraphQLResolveInfo,
-  GraphQLScalarType,
-  GraphQLScalarTypeConfig,
-} from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { ErrorTypeMapper } from './base/base.mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-export type EnumResolverSignature<T, AllowedValues = any> = {
-  [key in keyof T]?: AllowedValues;
-};
-export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
-  [P in K]-?: NonNullable<T[P]>;
-};
+export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?: AllowedValues };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string | number };
-  String: { input: string; output: string };
-  Boolean: { input: boolean; output: boolean };
-  Int: { input: number; output: number };
-  Float: { input: number; output: number };
-  AbsoluteDefault: { input: bigint; output: bigint };
-  BigIntNamedWithAlias: { input: unknown; output: unknown };
-  BigIntSameNamedWithAlias: { input: unknown; output: unknown };
-  DateTime: { input: Date | string; output: Date | string };
-  DateTimeNamedImport: { input: unknown; output: unknown };
-  DateTimeSameNamedImport: { input: unknown; output: unknown };
-  RelativeDefault: { input: unknown; output: unknown };
-  RelativeNamedImport: { input: number; output: number };
-  RelativeNamedImportWithAlias: { input: string; output: string };
+  ID: { input: string; output: string | number; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  AbsoluteDefault: { input: bigint; output: bigint; }
+  BigIntNamedWithAlias: { input: unknown; output: unknown; }
+  BigIntSameNamedWithAlias: { input: unknown; output: unknown; }
+  DateTime: { input: Date | string; output: Date | string; }
+  DateTimeNamedImport: { input: unknown; output: unknown; }
+  DateTimeSameNamedImport: { input: unknown; output: unknown; }
+  RelativeDefault: { input: unknown; output: unknown; }
+  RelativeNamedImport: { input: number; output: number; }
+  RelativeNamedImportWithAlias: { input: string; output: string; }
 };
 
 export type Error = {
@@ -47,9 +39,11 @@ export type Mutation = {
   topicEdit: TopicEditPayload;
 };
 
+
 export type MutationtopicCreateArgs = {
   input: TopicCreateInput;
 };
+
 
 export type MutationtopicEditArgs = {
   input: TopicEditInput;
@@ -81,13 +75,16 @@ export type Query = {
   userByAccountName: UserPayload;
 };
 
+
 export type QuerytopicByIdArgs = {
   id: Scalars['ID']['input'];
 };
 
+
 export type QuerytopicsCreatedByUserArgs = {
   input: TopicsCreatedByUserInput;
 };
+
 
 export type QueryuserByAccountNameArgs = {
   accountName: Scalars['String']['input'];
@@ -148,9 +145,7 @@ export type TopicsCreatedByUserInput = {
   userId: Scalars['ID']['input'];
 };
 
-export type TopicsCreatedByUserPayload =
-  | StandardError
-  | TopicsCreatedByUserResult;
+export type TopicsCreatedByUserPayload = StandardError | TopicsCreatedByUserResult;
 
 export type TopicsCreatedByUserResult = {
   __typename?: 'TopicsCreatedByUserResult';
@@ -176,19 +171,15 @@ export type UserResult = {
   result?: Maybe<User>;
 };
 
+
+
 export type ResolverTypeWrapper<T> = Promise<T> | T;
+
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<
-  TResult,
-  TParent = Record<PropertyKey, never>,
-  TContext = Record<PropertyKey, never>,
-  TArgs = Record<PropertyKey, never>
-> =
-  | ResolverFn<TResult, TParent, TContext, TArgs>
-  | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -211,25 +202,9 @@ export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
-export interface SubscriptionSubscriberObject<
-  TResult,
-  TKey extends string,
-  TParent,
-  TContext,
-  TArgs
-> {
-  subscribe: SubscriptionSubscribeFn<
-    { [key in TKey]: TResult },
-    TParent,
-    TContext,
-    TArgs
-  >;
-  resolve?: SubscriptionResolveFn<
-    TResult,
-    { [key in TKey]: TResult },
-    TContext,
-    TArgs
-  >;
+export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
+  subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
+  resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
 }
 
 export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
@@ -237,55 +212,25 @@ export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
   resolve: SubscriptionResolveFn<TResult, any, TContext, TArgs>;
 }
 
-export type SubscriptionObject<
-  TResult,
-  TKey extends string,
-  TParent,
-  TContext,
-  TArgs
-> =
+export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, TArgs> =
   | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
-export type SubscriptionResolver<
-  TResult,
-  TKey extends string,
-  TParent = Record<PropertyKey, never>,
-  TContext = Record<PropertyKey, never>,
-  TArgs = Record<PropertyKey, never>
-> =
-  | ((
-      ...args: any[]
-    ) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
+export type SubscriptionResolver<TResult, TKey extends string, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
+  | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<
-  TTypes,
-  TParent = Record<PropertyKey, never>,
-  TContext = Record<PropertyKey, never>
-> = (
+export type TypeResolveFn<TTypes, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (
   parent: TParent,
   context: TContext,
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<
-  T = Record<PropertyKey, never>,
-  TContext = Record<PropertyKey, never>
-> = (
-  obj: T,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<
-  TResult = Record<PropertyKey, never>,
-  TParent = Record<PropertyKey, never>,
-  TContext = Record<PropertyKey, never>,
-  TArgs = Record<PropertyKey, never>
-> = (
+export type DirectiveResolverFn<TResult = Record<PropertyKey, never>, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = (
   next: NextResolverFn<TResult>,
   parent: TParent,
   args: TArgs,
@@ -293,59 +238,45 @@ export type DirectiveResolverFn<
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+
+
 /** Mapping of union types */
 export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
   TopicByIdPayload:
-    | (Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & {
-        __typename: 'StandardError';
-      })
-    | (TopicByIdResult & { __typename: 'TopicByIdResult' });
+    | ( Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & { __typename: 'StandardError' } )
+    | ( TopicByIdResult & { __typename: 'TopicByIdResult' } )
+  ;
   TopicCreatePayload:
-    | (Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & {
-        __typename: 'StandardError';
-      })
-    | (TopicCreateResult & { __typename: 'TopicCreateResult' });
+    | ( Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & { __typename: 'StandardError' } )
+    | ( TopicCreateResult & { __typename: 'TopicCreateResult' } )
+  ;
   TopicEditPayload:
-    | (Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & {
-        __typename: 'StandardError';
-      })
-    | (TopicEditResult & { __typename: 'TopicEditResult' });
+    | ( Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & { __typename: 'StandardError' } )
+    | ( TopicEditResult & { __typename: 'TopicEditResult' } )
+  ;
   TopicsCreatedByUserPayload:
-    | (Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & {
-        __typename: 'StandardError';
-      })
-    | (TopicsCreatedByUserResult & { __typename: 'TopicsCreatedByUserResult' });
+    | ( Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & { __typename: 'StandardError' } )
+    | ( TopicsCreatedByUserResult & { __typename: 'TopicsCreatedByUserResult' } )
+  ;
   UserPayload:
-    | (Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & {
-        __typename: 'StandardError';
-      })
-    | (UserResult & { __typename: 'UserResult' });
+    | ( Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & { __typename: 'StandardError' } )
+    | ( UserResult & { __typename: 'UserResult' } )
+  ;
 };
 
 /** Mapping of interface types */
-export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
-  {
-    Error: Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & {
-      __typename: 'StandardError';
-    };
-  };
+export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
+  Error: ( Omit<StandardError, 'error'> & { error: _RefType['ErrorType'] } & { __typename: 'StandardError' } );
+};
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   AbsoluteDefault: ResolverTypeWrapper<Scalars['AbsoluteDefault']['output']>;
-  BigIntNamedWithAlias: ResolverTypeWrapper<
-    Scalars['BigIntNamedWithAlias']['output']
-  >;
-  BigIntSameNamedWithAlias: ResolverTypeWrapper<
-    Scalars['BigIntSameNamedWithAlias']['output']
-  >;
+  BigIntNamedWithAlias: ResolverTypeWrapper<Scalars['BigIntNamedWithAlias']['output']>;
+  BigIntSameNamedWithAlias: ResolverTypeWrapper<Scalars['BigIntSameNamedWithAlias']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
-  DateTimeNamedImport: ResolverTypeWrapper<
-    Scalars['DateTimeNamedImport']['output']
-  >;
-  DateTimeSameNamedImport: ResolverTypeWrapper<
-    Scalars['DateTimeSameNamedImport']['output']
-  >;
+  DateTimeNamedImport: ResolverTypeWrapper<Scalars['DateTimeNamedImport']['output']>;
+  DateTimeSameNamedImport: ResolverTypeWrapper<Scalars['DateTimeSameNamedImport']['output']>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Error']>;
   ErrorType: ResolverTypeWrapper<ErrorTypeMapper>;
   Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
@@ -357,40 +288,24 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   RelativeDefault: ResolverTypeWrapper<Scalars['RelativeDefault']['output']>;
-  RelativeNamedImport: ResolverTypeWrapper<
-    Scalars['RelativeNamedImport']['output']
-  >;
-  RelativeNamedImportWithAlias: ResolverTypeWrapper<
-    Scalars['RelativeNamedImportWithAlias']['output']
-  >;
-  StandardError: ResolverTypeWrapper<
-    Omit<StandardError, 'error'> & { error: ResolversTypes['ErrorType'] }
-  >;
+  RelativeNamedImport: ResolverTypeWrapper<Scalars['RelativeNamedImport']['output']>;
+  RelativeNamedImportWithAlias: ResolverTypeWrapper<Scalars['RelativeNamedImportWithAlias']['output']>;
+  StandardError: ResolverTypeWrapper<Omit<StandardError, 'error'> & { error: ResolversTypes['ErrorType'] }>;
   Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Topic: ResolverTypeWrapper<Topic>;
-  TopicByIdPayload: ResolverTypeWrapper<
-    ResolversUnionTypes<ResolversTypes>['TopicByIdPayload']
-  >;
+  TopicByIdPayload: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['TopicByIdPayload']>;
   TopicByIdResult: ResolverTypeWrapper<TopicByIdResult>;
   TopicCreateInput: TopicCreateInput;
-  TopicCreatePayload: ResolverTypeWrapper<
-    ResolversUnionTypes<ResolversTypes>['TopicCreatePayload']
-  >;
+  TopicCreatePayload: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['TopicCreatePayload']>;
   TopicCreateResult: ResolverTypeWrapper<TopicCreateResult>;
   TopicEditInput: TopicEditInput;
-  TopicEditPayload: ResolverTypeWrapper<
-    ResolversUnionTypes<ResolversTypes>['TopicEditPayload']
-  >;
+  TopicEditPayload: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['TopicEditPayload']>;
   TopicEditResult: ResolverTypeWrapper<TopicEditResult>;
   TopicsCreatedByUserInput: TopicsCreatedByUserInput;
-  TopicsCreatedByUserPayload: ResolverTypeWrapper<
-    ResolversUnionTypes<ResolversTypes>['TopicsCreatedByUserPayload']
-  >;
+  TopicsCreatedByUserPayload: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['TopicsCreatedByUserPayload']>;
   TopicsCreatedByUserResult: ResolverTypeWrapper<TopicsCreatedByUserResult>;
   User: ResolverTypeWrapper<User>;
-  UserPayload: ResolverTypeWrapper<
-    ResolversUnionTypes<ResolversTypes>['UserPayload']
-  >;
+  UserPayload: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['UserPayload']>;
   UserResult: ResolverTypeWrapper<UserResult>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
 };
@@ -435,161 +350,81 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
 };
 
-export interface AbsoluteDefaultScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes['AbsoluteDefault'], any> {
+export interface AbsoluteDefaultScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['AbsoluteDefault'], any> {
   name: 'AbsoluteDefault';
 }
 
-export interface BigIntNamedWithAliasScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes['BigIntNamedWithAlias'], any> {
+export interface BigIntNamedWithAliasScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['BigIntNamedWithAlias'], any> {
   name: 'BigIntNamedWithAlias';
 }
 
-export interface BigIntSameNamedWithAliasScalarConfig
-  extends GraphQLScalarTypeConfig<
-    ResolversTypes['BigIntSameNamedWithAlias'],
-    any
-  > {
+export interface BigIntSameNamedWithAliasScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['BigIntSameNamedWithAlias'], any> {
   name: 'BigIntSameNamedWithAlias';
 }
 
-export interface DateTimeScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
+export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
   name: 'DateTime';
 }
 
-export interface DateTimeNamedImportScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes['DateTimeNamedImport'], any> {
+export interface DateTimeNamedImportScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTimeNamedImport'], any> {
   name: 'DateTimeNamedImport';
 }
 
-export interface DateTimeSameNamedImportScalarConfig
-  extends GraphQLScalarTypeConfig<
-    ResolversTypes['DateTimeSameNamedImport'],
-    any
-  > {
+export interface DateTimeSameNamedImportScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTimeSameNamedImport'], any> {
   name: 'DateTimeSameNamedImport';
 }
 
-export type ErrorResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['Error'] = ResolversParentTypes['Error']
-> = {
+export type ErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['Error'] = ResolversParentTypes['Error']> = {
   __resolveType?: TypeResolveFn<'StandardError', ParentType, ContextType>;
 };
 
-export type ErrorTypeResolvers = EnumResolverSignature<
-  {
-    FORBIDDEN_ERROR?: any;
-    INPUT_VALIDATION_ERROR?: any;
-    NOT_FOUND?: any;
-    UNEXPECTED_ERROR?: any;
-  },
-  ResolversTypes['ErrorType']
->;
+export type ErrorTypeResolvers = EnumResolverSignature<{ FORBIDDEN_ERROR?: any, INPUT_VALIDATION_ERROR?: any, NOT_FOUND?: any, UNEXPECTED_ERROR?: any }, ResolversTypes['ErrorType']>;
 
-export type MutationResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
-> = {
-  topicCreate?: Resolver<
-    ResolversTypes['TopicCreatePayload'],
-    ParentType,
-    ContextType,
-    RequireFields<MutationtopicCreateArgs, 'input'>
-  >;
-  topicEdit?: Resolver<
-    ResolversTypes['TopicEditPayload'],
-    ParentType,
-    ContextType,
-    RequireFields<MutationtopicEditArgs, 'input'>
-  >;
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  topicCreate?: Resolver<ResolversTypes['TopicCreatePayload'], ParentType, ContextType, RequireFields<MutationtopicCreateArgs, 'input'>>;
+  topicEdit?: Resolver<ResolversTypes['TopicEditPayload'], ParentType, ContextType, RequireFields<MutationtopicEditArgs, 'input'>>;
 };
 
-export type PaginationResultResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['PaginationResult'] = ResolversParentTypes['PaginationResult']
-> = {
+export type PaginationResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginationResult'] = ResolversParentTypes['PaginationResult']> = {
   currentPage?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   recordsPerPage?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalPageCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
 };
 
-export type ProfileResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']
-> = {
+export type ProfileResolvers<ContextType = any, ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
 };
 
-export type QueryResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
-> = {
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   me?: Resolver<ResolversTypes['UserPayload'], ParentType, ContextType>;
-  topicById?: Resolver<
-    ResolversTypes['TopicByIdPayload'],
-    ParentType,
-    ContextType,
-    RequireFields<QuerytopicByIdArgs, 'id'>
-  >;
-  topicsCreatedByUser?: Resolver<
-    ResolversTypes['TopicsCreatedByUserPayload'],
-    ParentType,
-    ContextType,
-    RequireFields<QuerytopicsCreatedByUserArgs, 'input'>
-  >;
-  userByAccountName?: Resolver<
-    ResolversTypes['UserPayload'],
-    ParentType,
-    ContextType,
-    RequireFields<QueryuserByAccountNameArgs, 'accountName'>
-  >;
+  topicById?: Resolver<ResolversTypes['TopicByIdPayload'], ParentType, ContextType, RequireFields<QuerytopicByIdArgs, 'id'>>;
+  topicsCreatedByUser?: Resolver<ResolversTypes['TopicsCreatedByUserPayload'], ParentType, ContextType, RequireFields<QuerytopicsCreatedByUserArgs, 'input'>>;
+  userByAccountName?: Resolver<ResolversTypes['UserPayload'], ParentType, ContextType, RequireFields<QueryuserByAccountNameArgs, 'accountName'>>;
 };
 
-export interface RelativeDefaultScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes['RelativeDefault'], any> {
+export interface RelativeDefaultScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['RelativeDefault'], any> {
   name: 'RelativeDefault';
 }
 
-export interface RelativeNamedImportScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes['RelativeNamedImport'], any> {
+export interface RelativeNamedImportScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['RelativeNamedImport'], any> {
   name: 'RelativeNamedImport';
 }
 
-export interface RelativeNamedImportWithAliasScalarConfig
-  extends GraphQLScalarTypeConfig<
-    ResolversTypes['RelativeNamedImportWithAlias'],
-    any
-  > {
+export interface RelativeNamedImportWithAliasScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['RelativeNamedImportWithAlias'], any> {
   name: 'RelativeNamedImportWithAlias';
 }
 
-export type StandardErrorResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['StandardError'] = ResolversParentTypes['StandardError']
-> = {
+export type StandardErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['StandardError'] = ResolversParentTypes['StandardError']> = {
   error?: Resolver<ResolversTypes['ErrorType'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SubscriptionResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']
-> = {
-  profileChanges?: SubscriptionResolver<
-    ResolversTypes['Profile'],
-    'profileChanges',
-    ParentType,
-    ContextType
-  >;
+export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
+  profileChanges?: SubscriptionResolver<ResolversTypes['Profile'], "profileChanges", ParentType, ContextType>;
 };
 
-export type TopicResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['Topic'] = ResolversParentTypes['Topic']
-> = {
+export type TopicResolvers<ContextType = any, ParentType extends ResolversParentTypes['Topic'] = ResolversParentTypes['Topic']> = {
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   creator?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -597,127 +432,58 @@ export type TopicResolvers<
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
-export type TopicByIdPayloadResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['TopicByIdPayload'] = ResolversParentTypes['TopicByIdPayload']
-> = {
-  __resolveType?: TypeResolveFn<
-    'StandardError' | 'TopicByIdResult',
-    ParentType,
-    ContextType
-  >;
+export type TopicByIdPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['TopicByIdPayload'] = ResolversParentTypes['TopicByIdPayload']> = {
+  __resolveType?: TypeResolveFn<'StandardError' | 'TopicByIdResult', ParentType, ContextType>;
 };
 
-export type TopicByIdResultResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['TopicByIdResult'] = ResolversParentTypes['TopicByIdResult']
-> = {
+export type TopicByIdResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['TopicByIdResult'] = ResolversParentTypes['TopicByIdResult']> = {
   result?: Resolver<Maybe<ResolversTypes['Topic']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TopicCreatePayloadResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['TopicCreatePayload'] = ResolversParentTypes['TopicCreatePayload']
-> = {
-  __resolveType?: TypeResolveFn<
-    'StandardError' | 'TopicCreateResult',
-    ParentType,
-    ContextType
-  >;
+export type TopicCreatePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['TopicCreatePayload'] = ResolversParentTypes['TopicCreatePayload']> = {
+  __resolveType?: TypeResolveFn<'StandardError' | 'TopicCreateResult', ParentType, ContextType>;
 };
 
-export type TopicCreateResultResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['TopicCreateResult'] = ResolversParentTypes['TopicCreateResult']
-> = {
+export type TopicCreateResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['TopicCreateResult'] = ResolversParentTypes['TopicCreateResult']> = {
   result?: Resolver<ResolversTypes['Topic'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TopicEditPayloadResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['TopicEditPayload'] = ResolversParentTypes['TopicEditPayload']
-> = {
-  __resolveType?: TypeResolveFn<
-    'StandardError' | 'TopicEditResult',
-    ParentType,
-    ContextType
-  >;
+export type TopicEditPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['TopicEditPayload'] = ResolversParentTypes['TopicEditPayload']> = {
+  __resolveType?: TypeResolveFn<'StandardError' | 'TopicEditResult', ParentType, ContextType>;
 };
 
-export type TopicEditResultResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['TopicEditResult'] = ResolversParentTypes['TopicEditResult']
-> = {
+export type TopicEditResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['TopicEditResult'] = ResolversParentTypes['TopicEditResult']> = {
   result?: Resolver<ResolversTypes['Topic'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TopicsCreatedByUserPayloadResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['TopicsCreatedByUserPayload'] = ResolversParentTypes['TopicsCreatedByUserPayload']
-> = {
-  __resolveType?: TypeResolveFn<
-    'StandardError' | 'TopicsCreatedByUserResult',
-    ParentType,
-    ContextType
-  >;
+export type TopicsCreatedByUserPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['TopicsCreatedByUserPayload'] = ResolversParentTypes['TopicsCreatedByUserPayload']> = {
+  __resolveType?: TypeResolveFn<'StandardError' | 'TopicsCreatedByUserResult', ParentType, ContextType>;
 };
 
-export type TopicsCreatedByUserResultResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['TopicsCreatedByUserResult'] = ResolversParentTypes['TopicsCreatedByUserResult']
-> = {
+export type TopicsCreatedByUserResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['TopicsCreatedByUserResult'] = ResolversParentTypes['TopicsCreatedByUserResult']> = {
   result?: Resolver<Array<ResolversTypes['Topic']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UserResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
-> = {
-  accountGitHub?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
-  accountLinkedIn?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  accountGitHub?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  accountLinkedIn?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   accountName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  accountTwitter?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
-  accountWebsite?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
+  accountTwitter?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  accountWebsite?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   avatar?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
-export type UserPayloadResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['UserPayload'] = ResolversParentTypes['UserPayload']
-> = {
-  __resolveType?: TypeResolveFn<
-    'StandardError' | 'UserResult',
-    ParentType,
-    ContextType
-  >;
+export type UserPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserPayload'] = ResolversParentTypes['UserPayload']> = {
+  __resolveType?: TypeResolveFn<'StandardError' | 'UserResult', ParentType, ContextType>;
 };
 
-export type UserResultResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['UserResult'] = ResolversParentTypes['UserResult']
-> = {
+export type UserResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserResult'] = ResolversParentTypes['UserResult']> = {
   result?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -753,3 +519,4 @@ export type Resolvers<ContextType = any> = {
   UserPayload?: UserPayloadResolvers<ContextType>;
   UserResult?: UserResultResolvers<ContextType>;
 };
+
