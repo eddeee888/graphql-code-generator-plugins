@@ -1790,10 +1790,10 @@
     tslib "^2.4.1"
     typescript-eslint "^8.46.1"
 
-"@eddeee888/nx-graphql-code-generator@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@eddeee888/nx-graphql-code-generator/-/nx-graphql-code-generator-2.0.0.tgz#5af5d422fbaa4641f86a7ef488de98470fc438b3"
-  integrity sha512-twsccxqRkrm+r+ygsiIhsv3xHZ5FbypvDFnyM6ITQJCLRYTKKv/ZzIJFuJkPlMUwVhcdaNYhi+pITEEorMSNgA==
+"@eddeee888/nx-graphql-code-generator@2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@eddeee888/nx-graphql-code-generator/-/nx-graphql-code-generator-2.1.0.tgz#3500c84d8689d4868ce01dfe8a024d625c6dfc5e"
+  integrity sha512-3TD6YgJqsB5GtaQHsSJHdhjl8b3MVdgkl51D+KDZ2y2R0yMWb3I2fDEFFeB1WX43bBJMARinReLq/wnSVyzCFw==
   dependencies:
     "@nx/devkit" "^20.0.0"
     semver "^7.5.4"
@@ -2376,20 +2376,12 @@
   resolved "https://registry.yarnpkg.com/@fastify/busboy/-/busboy-3.2.0.tgz#13ed8212f3b9ba697611529d15347f8528058cea"
   integrity sha512-m9FVDXU3GT2ITSe0UaMA5rU3QkfC/UXtCU8y0gSN/GugTqtVldOBWIB5V6V3sbmenVZUIpU6f+mPEO2+m5iTaA==
 
-"@graphql-codegen/add@7.1.0", "@graphql-codegen/add@^7.1.0":
+"@graphql-codegen/add@7.1.0", "@graphql-codegen/add@^7.0.0", "@graphql-codegen/add@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/add/-/add-7.1.0.tgz#aec3e82b914ef76740b08a209e478ff9afe8c22d"
   integrity sha512-bytJg1kel5zfgK3JSYbGwtpbNe6F9OPZSR6DiMDe9RVxblAgl6w4zEEPd/mM3rhNJ1VmGYLbNnf5e1eUfXQEbg==
   dependencies:
     "@graphql-codegen/plugin-helpers" "^7.1.0"
-    tslib "^2.8.0"
-
-"@graphql-codegen/add@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/add/-/add-7.0.0.tgz#ec4854030d2e091dd2f8abf8ede7fd1f73364b19"
-  integrity sha512-fQGlUQd0BpoevCTOKi3b7M+kuXCI13udXmJrIh1QMtTCLXUTYGgsubNVcPLr0cVjVwyBK/ZRgwtxdCmkVXqTwQ==
-  dependencies:
-    "@graphql-codegen/plugin-helpers" "^7.0.0"
     tslib "^2.8.0"
 
 "@graphql-codegen/cli@7.2.0":
@@ -2485,7 +2477,7 @@
     parse-filepath "^1.0.2"
     tslib "^2.8.1"
 
-"@graphql-codegen/plugin-helpers@7.1.0", "@graphql-codegen/plugin-helpers@^7.1.0":
+"@graphql-codegen/plugin-helpers@7.1.0", "@graphql-codegen/plugin-helpers@^7.0.0", "@graphql-codegen/plugin-helpers@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-7.1.0.tgz#cc28ad447ae8fc8be6a49f7eb0166910dff0aca0"
   integrity sha512-ieJH7kZ5oSZKBPJs7CvHMrFY/CLYLklqv74ir93qMwRna6geZsbIMoJzTDBXohxcQTITiProiYSGrEtZjIpYGg==
@@ -2503,17 +2495,6 @@
   dependencies:
     "@graphql-tools/utils" "^11.0.0"
     change-case-all "1.0.15"
-    common-tags "1.8.2"
-    import-from "4.0.0"
-    tslib "^2.8.0"
-
-"@graphql-codegen/plugin-helpers@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-7.0.0.tgz#c2e1e563075fcffa0533624eef6b313106d2ab0f"
-  integrity sha512-w7Oa8fH8B1ID9yFoV7qfmKdBxQtjfSHmHffJx6bOhgKyEbD6xVSplK+J6O2sefY5GUdCSx0F+tupBYQjJ7kyvg==
-  dependencies:
-    "@graphql-tools/utils" "^11.0.0"
-    change-case-all "^2.1.0"
     common-tags "1.8.2"
     import-from "4.0.0"
     tslib "^2.8.0"
@@ -2599,23 +2580,7 @@
     parse-filepath "^1.0.2"
     tslib "^2.8.0"
 
-"@graphql-codegen/visitor-plugin-common@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-7.0.0.tgz#973b95994449e3f440fcbb5ddebe2b42c5ab28e8"
-  integrity sha512-fHVzAaH3atPbIniVqKGOgDdu60oUYGqVz9hqj+ejgM1oWUMYdJb3D3oAgXxdCOM05z4DI0A9/u3kQuTr5WnRQw==
-  dependencies:
-    "@graphql-codegen/plugin-helpers" "^7.0.0"
-    "@graphql-tools/optimize" "^2.0.0"
-    "@graphql-tools/relay-operation-optimizer" "^7.1.1"
-    "@graphql-tools/utils" "^11.0.0"
-    auto-bind "^5.0.0"
-    change-case-all "^2.1.0"
-    dependency-graph "^1.0.0"
-    graphql-tag "^2.11.0"
-    parse-filepath "^1.0.2"
-    tslib "^2.8.0"
-
-"@graphql-codegen/visitor-plugin-common@^7.2.0":
+"@graphql-codegen/visitor-plugin-common@^7.0.0", "@graphql-codegen/visitor-plugin-common@^7.2.0":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-7.2.0.tgz#f22355a37c8761385a5029352bdf86fe87ad9a6c"
   integrity sha512-qqtTY8taONuxlR0HvD8z+zgWC3CfJ47M2rATx+geWNIN8v8Itc5TflHYxjkWAtNL6E3q7WZRY5P7se+2S3EjBg==
