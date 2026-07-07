@@ -2902,44 +2902,12 @@
     p-limit "3.1.0"
     tslib "^2.4.0"
 
-"@graphql-tools/merge@9.1.11", "@graphql-tools/merge@^9.1.11":
+"@graphql-tools/merge@9.1.11", "@graphql-tools/merge@^9.0.0", "@graphql-tools/merge@^9.0.3", "@graphql-tools/merge@^9.0.6", "@graphql-tools/merge@^9.1.1", "@graphql-tools/merge@^9.1.11", "@graphql-tools/merge@^9.1.6", "@graphql-tools/merge@^9.1.8":
   version "9.1.11"
   resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-9.1.11.tgz#a39e4f1e7db7bc81d51f35f13ffe3084aac2335e"
   integrity sha512-APuOIPBUm9NQQCl1qfKC39zclR1p8UVsEhCg9t9nYF3kSe859F9/wq4VmBqiz/ETuABS7Bm7WA+yDYWC6HoD8A==
   dependencies:
     "@graphql-tools/utils" "^11.2.0"
-    tslib "^2.4.0"
-
-"@graphql-tools/merge@^9.0.0", "@graphql-tools/merge@^9.0.3":
-  version "9.0.3"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-9.0.3.tgz#4d0b467132e6f788b69fab803d31480b8ce4b61a"
-  integrity sha512-FeKv9lKLMwqDu0pQjPpF59GY3HReUkWXKsMIuMuJQOKh9BETu7zPEFUELvcw8w+lwZkl4ileJsHXC9+AnsT2Lw==
-  dependencies:
-    "@graphql-tools/utils" "^10.0.13"
-    tslib "^2.4.0"
-
-"@graphql-tools/merge@^9.0.6", "@graphql-tools/merge@^9.1.8":
-  version "9.1.8"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-9.1.8.tgz#87444b98abeecfa78f5d698d86de6ccba5e90a88"
-  integrity sha512-25V7WDrODo1cPrmuUCrqf5qlMA4a/Ow4aHaqJ1MnTUaluwsV3UiqzCHWux3HSLb0H63mkoZiuOrU5xJhxRcoCg==
-  dependencies:
-    "@graphql-tools/utils" "^11.0.1"
-    tslib "^2.4.0"
-
-"@graphql-tools/merge@^9.1.1":
-  version "9.1.1"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-9.1.1.tgz#6a51775f5ba6bdef213def1fd277536f9468b44c"
-  integrity sha512-BJ5/7Y7GOhTuvzzO5tSBFL4NGr7PVqTJY3KeIDlVTT8YLcTXtBR+hlrC3uyEym7Ragn+zyWdHeJ9ev+nRX1X2w==
-  dependencies:
-    "@graphql-tools/utils" "^10.9.1"
-    tslib "^2.4.0"
-
-"@graphql-tools/merge@^9.1.6":
-  version "9.1.6"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-9.1.6.tgz#95eb8bb5ae314bc07a62938b7a1b8c2622e1dc32"
-  integrity sha512-bTnP+4oom4nDjmkS3Ykbe+ljAp/RIiWP3R35COMmuucS24iQxGLa9Hn8VMkLIoaoPxgz6xk+dbC43jtkNsFoBw==
-  dependencies:
-    "@graphql-tools/utils" "^10.11.0"
     tslib "^2.4.0"
 
 "@graphql-tools/optimize@^2.0.0":
