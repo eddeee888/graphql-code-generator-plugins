@@ -5,9 +5,6 @@ const baseDir =
   'packages/typescript-resolver-files-e2e/src/test-federation/schema-base';
 
 const config: CodegenConfig = {
-  hooks: {
-    afterAllFileWrite: ['prettier --write'],
-  },
   generates: {
     [`${baseDir}/subgraph-products`]: defineConfig(
       {

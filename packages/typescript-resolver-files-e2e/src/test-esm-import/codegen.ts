@@ -6,9 +6,6 @@ const config: CodegenConfig = {
     'packages/typescript-resolver-files-e2e/src/test-esm-import/**/*.graphqls',
     'packages/typescript-resolver-files-e2e/src/test-esm-import/**/*.graphqls.ts',
   ],
-  hooks: {
-    afterAllFileWrite: ['prettier --write'],
-  },
   generates: {
     'packages/typescript-resolver-files-e2e/src/test-esm-import/schema':
       defineConfig({ emitLegacyCommonJSImports: false }),

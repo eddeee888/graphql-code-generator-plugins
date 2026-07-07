@@ -2,9 +2,6 @@
 schema:
   - packages/typescript-resolver-files-e2e/src/test-modules-typedefs-file-mode/**/*.graphqls
   - packages/typescript-resolver-files-e2e/src/test-modules-typedefs-file-mode/**/*.graphqls.ts
-hooks:
-  afterAllFileWrite:
-    - prettier --write
 generates:
   packages/typescript-resolver-files-e2e/src/test-modules-typedefs-file-mode/modules:
     preset: '@eddeee888/gcg-typescript-resolver-files'

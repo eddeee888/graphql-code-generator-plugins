@@ -6,7 +6,6 @@ const config: CodegenConfig = {
     'packages/typescript-resolver-files-e2e/src/test-modules/**/*.graphqls',
     'packages/typescript-resolver-files-e2e/src/test-modules/**/*.graphqls.ts',
   ],
-  hooks: { afterAllFileWrite: ['prettier --write'] },
   generates: {
     'packages/typescript-resolver-files-e2e/src/test-modules/modules':
       defineConfig({

@@ -7,7 +7,6 @@ const config: CodegenConfig = {
   schema: [
     `${projectRoot}/src/test-mappers-vs-schema-types-advanced/**/*.graphqls`,
   ],
-  hooks: { afterAllFileWrite: ['prettier --write'] },
   generates: {
     [`${projectRoot}/src/test-mappers-vs-schema-types-advanced/modules`]:
       defineConfig({
