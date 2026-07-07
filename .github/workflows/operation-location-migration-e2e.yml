@@ -27,16 +27,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Restore node_modules cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-            packages/*/node_modules
-            tools/*/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            node-modules-${{ runner.os }}-
+      - name: Use graphql@16 # packages like `typescript-react-apollo` are not compatible with graphql@17
+        run: yarn add -DEW graphql@16
 
       - name: e2e
         run: yarn nx e2e operation-location-migration-e2e
