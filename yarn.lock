@@ -2902,10 +2902,10 @@
     p-limit "3.1.0"
     tslib "^2.4.0"
 
-"@graphql-tools/merge@9.1.11", "@graphql-tools/merge@^9.0.0", "@graphql-tools/merge@^9.0.3", "@graphql-tools/merge@^9.0.6", "@graphql-tools/merge@^9.1.1", "@graphql-tools/merge@^9.1.11", "@graphql-tools/merge@^9.1.6", "@graphql-tools/merge@^9.1.8":
-  version "9.1.11"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-9.1.11.tgz#a39e4f1e7db7bc81d51f35f13ffe3084aac2335e"
-  integrity sha512-APuOIPBUm9NQQCl1qfKC39zclR1p8UVsEhCg9t9nYF3kSe859F9/wq4VmBqiz/ETuABS7Bm7WA+yDYWC6HoD8A==
+"@graphql-tools/merge@9.2.0", "@graphql-tools/merge@^9.0.0", "@graphql-tools/merge@^9.0.3", "@graphql-tools/merge@^9.0.6", "@graphql-tools/merge@^9.1.1", "@graphql-tools/merge@^9.1.6", "@graphql-tools/merge@^9.1.8", "@graphql-tools/merge@^9.2.0":
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-9.2.0.tgz#42a210c1f8ec0ab86b868b3c6da383cd214188ce"
+  integrity sha512-kChDH/sOxm3TCICup5NgTiz/aJBk+5GAuC0lfJS8FcRfsqZvlCkNwpsYTGAATBCJMrgZ9+csRugCjS97jPcNMw==
   dependencies:
     "@graphql-tools/utils" "^11.2.0"
     tslib "^2.4.0"

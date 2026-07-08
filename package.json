@@ -22,7 +22,7 @@
     "@graphql-codegen/typescript": "6.1.0",
     "@graphql-codegen/typescript-react-apollo": "4.4.2",
     "@graphql-codegen/typescript-resolvers": "6.1.0",
-    "@graphql-tools/merge": "9.1.11",
+    "@graphql-tools/merge": "9.2.0",
     "@nx/devkit": "21.3.1",
     "@nx/eslint": "21.3.1",
     "@nx/eslint-plugin": "21.3.1",
