@@ -1,5 +1,11 @@
 # @eddeee888/gcg-server-config
 
+## 0.5.0
+
+### Minor Changes
+
+- 324f084: Support graphql@17
+
 ## 0.4.0
 
 ### Minor Changes
