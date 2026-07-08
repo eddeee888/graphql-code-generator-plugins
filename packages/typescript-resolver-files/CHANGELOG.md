@@ -1,5 +1,16 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.17.0
+
+### Minor Changes
+
+- 324f084: Support graphql@17
+
+### Patch Changes
+
+- Updated dependencies [324f084]
+  - @eddeee888/gcg-server-config@0.5.0
+
 ## 0.16.0
 
 ### Minor Changes
