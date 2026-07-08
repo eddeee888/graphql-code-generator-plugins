@@ -24,17 +24,17 @@
   "author": "Eddy Nguyen <ch@eddeee888.me>",
   "license": "MIT",
   "peerDependencies": {
-    "graphql": "^15.0.0 || ^16.0.0"
+    "graphql": "^15.0.0 || ^16.0.0 || ^17.0.0"
   },
   "dependencies": {
     "@eddeee888/gcg-server-config": "0.4.0",
-    "@graphql-codegen/add": "^7.0.0",
-    "@graphql-codegen/plugin-helpers": "^7.0.0",
-    "@graphql-codegen/schema-ast": "^6.0.0",
-    "@graphql-codegen/typescript": "^6.0.0",
-    "@graphql-codegen/typescript-resolvers": "^6.0.0",
-    "@graphql-tools/merge": "^9.1.8",
-    "@graphql-tools/utils": "^11.0.1",
+    "@graphql-codegen/add": "^7.1.0",
+    "@graphql-codegen/plugin-helpers": "^7.1.0",
+    "@graphql-codegen/schema-ast": "^6.1.0",
+    "@graphql-codegen/typescript": "^6.1.0",
+    "@graphql-codegen/typescript-resolvers": "^6.1.0",
+    "@graphql-tools/merge": "^9.2.0",
+    "@graphql-tools/utils": "^11.2.0",
     "micromatch": "^4.0.0",
     "ts-morph": "^22.0.0",
     "tslib": "^2.8.0"

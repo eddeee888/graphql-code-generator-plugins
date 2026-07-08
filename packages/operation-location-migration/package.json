@@ -22,11 +22,11 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "peerDependencies": {
-    "graphql": "^15.0.0 || ^16.0.0"
+    "graphql": "^15.0.0 || ^16.0.0 || ^17.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/add": "^7.0.0",
-    "@graphql-codegen/plugin-helpers": "^7.0.0",
+    "@graphql-codegen/add": "^7.1.0",
+    "@graphql-codegen/plugin-helpers": "^7.1.0",
     "@swc/helpers": "~0.5.11",
     "change-case-all": "^1.0.0",
     "ts-morph": "^22.0.0"

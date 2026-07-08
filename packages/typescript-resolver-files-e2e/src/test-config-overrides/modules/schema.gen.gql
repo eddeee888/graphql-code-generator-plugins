@@ -19,8 +19,8 @@ directive @deprecated(
   """
   Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax, as specified by [CommonMark](https://commonmark.org/).
   """
-  reason: String = "No longer supported"
-) on FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION | ENUM_VALUE
+  reason: String! = "No longer supported"
+) on FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION | ENUM_VALUE | DIRECTIVE_DEFINITION
 
 """Exposes a URL that specifies the behavior of this scalar."""
 directive @specifiedBy(
@@ -56,7 +56,7 @@ type __Schema {
   subscriptionType: __Type
 
   """A list of all directives supported by this server."""
-  directives: [__Directive!]!
+  directives(includeDeprecated: Boolean! = false): [__Directive!]!
 }
 
 """
@@ -69,11 +69,11 @@ type __Type {
   name: String
   description: String
   specifiedByURL: String
-  fields(includeDeprecated: Boolean = false): [__Field!]
+  fields(includeDeprecated: Boolean! = false): [__Field!]
   interfaces: [__Type!]
   possibleTypes: [__Type!]
-  enumValues(includeDeprecated: Boolean = false): [__EnumValue!]
-  inputFields(includeDeprecated: Boolean = false): [__InputValue!]
+  enumValues(includeDeprecated: Boolean! = false): [__EnumValue!]
+  inputFields(includeDeprecated: Boolean! = false): [__InputValue!]
   ofType: __Type
   isOneOf: Boolean
 }
@@ -117,7 +117,7 @@ Object and Interface types are described by a list of Fields, each of which has 
 type __Field {
   name: String!
   description: String
-  args(includeDeprecated: Boolean = false): [__InputValue!]!
+  args(includeDeprecated: Boolean! = false): [__InputValue!]!
   type: __Type!
   isDeprecated: Boolean!
   deprecationReason: String
@@ -159,7 +159,9 @@ type __Directive {
   description: String
   isRepeatable: Boolean!
   locations: [__DirectiveLocation!]!
-  args(includeDeprecated: Boolean = false): [__InputValue!]!
+  args(includeDeprecated: Boolean! = false): [__InputValue!]!
+  isDeprecated: Boolean!
+  deprecationReason: String
 }
 
 """
@@ -187,8 +189,11 @@ enum __DirectiveLocation {
   """Location adjacent to an inline fragment."""
   INLINE_FRAGMENT
 
-  """Location adjacent to a variable definition."""
+  """Location adjacent to an operation variable definition."""
   VARIABLE_DEFINITION
+
+  """Location adjacent to a fragment variable definition."""
+  FRAGMENT_VARIABLE_DEFINITION
 
   """Location adjacent to a schema definition."""
   SCHEMA
@@ -222,6 +227,9 @@ enum __DirectiveLocation {
 
   """Location adjacent to an input object field definition."""
   INPUT_FIELD_DEFINITION
+
+  """Location adjacent to a directive definition."""
+  DIRECTIVE_DEFINITION
 }
 scalar BigInt
 
