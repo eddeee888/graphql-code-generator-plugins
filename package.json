@@ -10,7 +10,7 @@
     "tslib": "2.8.1"
   },
   "devDependencies": {
-    "@changesets/cli": "2.29.5",
+    "@changesets/cli": "2.31.0",
     "@eddeee888/eslint-plugin": "1.0.0",
     "@eddeee888/nx-graphql-code-generator": "2.1.0",
     "@eslint/eslintrc": "3.3.1",
