@@ -50,7 +50,7 @@
     "jest": "30.0.4",
     "jest-environment-jsdom": "30.0.4",
     "jest-environment-node": "30.0.4",
-    "jiti": "2.4.2",
+    "jiti": "2.7.0",
     "jsonc-eslint-parser": "^2.1.0",
     "micromatch": "4.0.5",
     "nx": "21.3.1",
