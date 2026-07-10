@@ -6761,10 +6761,10 @@ graphql-config@^5.1.6:
     string-env-interpolation "^1.0.1"
     tslib "^2.4.0"
 
-graphql-scalars@1.24.0:
-  version "1.24.0"
-  resolved "https://registry.yarnpkg.com/graphql-scalars/-/graphql-scalars-1.24.0.tgz#4153d310179f5cfd33c749ba4a77a1fb450d717d"
-  integrity sha512-olbFN39m0XsHHESACUdd7jWU/lGxMMS1B7NZ8XqpqhKZrjBxzeGYAnQ4Ax//huYds771wb7gCznA+65QDuUa+g==
+graphql-scalars@1.25.0:
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/graphql-scalars/-/graphql-scalars-1.25.0.tgz#88f2891d60942c420286a2e76a29abfe645ac899"
+  integrity sha512-b0xyXZeRFkne4Eq7NAnL400gStGqG/Sx9VqX0A05nHyEbv57UJnWKsjNnrpVqv5e/8N1MUxkt0wwcRXbiyKcFg==
   dependencies:
     tslib "^2.5.0"
 
