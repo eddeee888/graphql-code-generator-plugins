@@ -48,7 +48,7 @@
     "graphql": "17.0.2",
     "graphql-scalars": "1.25.0",
     "jest": "30.0.4",
-    "jest-environment-jsdom": "30.0.4",
+    "jest-environment-jsdom": "30.4.1",
     "jest-environment-node": "30.0.4",
     "jiti": "2.4.2",
     "jsonc-eslint-parser": "^2.1.0",
