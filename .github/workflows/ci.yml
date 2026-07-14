@@ -35,7 +35,7 @@ jobs:
         run: yarn install --prefer-offline --frozen-lockfile
 
       - name: Cache node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         id: cache-node-modules
         with:
           path: |
@@ -67,7 +67,7 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Restore node_modules cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             node_modules
