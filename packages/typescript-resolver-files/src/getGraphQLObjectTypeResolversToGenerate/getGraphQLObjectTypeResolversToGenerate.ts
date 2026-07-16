@@ -10,9 +10,14 @@ import {
   Node,
 } from 'ts-morph';
 import type { TypeMapperDetails, TypeMappersMap } from '../parseTypeMappers';
-import { type NodePropertyMap, getNodePropertyMap } from './getNodePropertyMap';
+import {
+  type NodePropertyMap,
+  getNodePropertyMap,
+  isNodeTypeUnresolved,
+} from './getNodePropertyMap';
 import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
 import type { GeneratedTypesFileMeta } from '../generateResolverFiles';
+import { logger } from '../utils';
 
 export type GraphQLObjectTypeResolversToGenerate = Record<
   string,
@@ -111,6 +116,17 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
           tsMorphProject,
           mapper,
         });
+
+      // If the mapper's type cannot be resolved (e.g. it aliases a type from an
+      // unresolvable import), it reports zero properties, which is
+      // indistinguishable from an empty mapper. Generating stubs here would
+      // overwrite hand-maintained resolvers with broken ones, so we skip this
+      // mapper and warn instead. See issue #446.
+      if (isNodeTypeUnresolved({ node: mapperOriginalDeclarationNode })) {
+        logger.warn(getUnresolvedMapperWarning({ mapper, schemaType }));
+        return;
+      }
+
       const mapperPropsMap = getNodePropertyMap({
         node: mapperOriginalDeclarationNode,
       });
@@ -205,6 +221,17 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
       tsMorphProject,
       mapper,
     });
+
+    // If the mapper's type cannot be resolved (e.g. it aliases a type from an
+    // unresolvable import), it reports zero properties, which is
+    // indistinguishable from an empty mapper. Generating stubs here would
+    // overwrite hand-maintained resolvers with broken ones, so we skip this
+    // mapper and warn instead. See issue #446.
+    if (isNodeTypeUnresolved({ node: originalDeclarationNode })) {
+      logger.warn(getUnresolvedMapperWarning({ mapper, schemaType }));
+      return;
+    }
+
     const typeMapperPropertyMap = getNodePropertyMap({
       node: originalDeclarationNode,
     });
@@ -265,6 +292,16 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
   });
 
   return result;
+};
+
+const getUnresolvedMapperWarning = ({
+  mapper,
+  schemaType,
+}: {
+  mapper: TypeMapperDetails['mapper'];
+  schemaType: string;
+}): string => {
+  return `Skipping resolver generation for schema type "${schemaType}" because its mapper "${mapper.name}" (${mapper.filename}) could not be resolved. This usually means the mapper aliases a type from an import that does not exist yet (e.g. a generated client that has not been generated). Existing resolvers are left untouched. Fix the unresolved import and re-run codegen.`;
 };
 
 const mustGetMapperOriginalDeclarationNode = ({

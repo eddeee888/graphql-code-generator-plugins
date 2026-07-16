@@ -1,5 +1,5 @@
 import { Project, Node } from 'ts-morph';
-import { getNodePropertyMap } from './getNodePropertyMap';
+import { getNodePropertyMap, isNodeTypeUnresolved } from './getNodePropertyMap';
 
 describe('getNodePropertyMap', () => {
   it('correctly resolves property map of a typical types.generated.ts', () => {
@@ -111,5 +111,81 @@ describe('getNodePropertyMap', () => {
     expect(nodePropertyMap.name.name).toBe('name');
 
     expect(nodePropertyMap.role.name).toBe('role');
+  });
+});
+
+describe('isNodeTypeUnresolved', () => {
+  it('returns true when a type alias mapper aliases a type from an unresolvable import', () => {
+    const project = new Project();
+    const sourceFile = project.createSourceFile(
+      '/path/to/mappers.ts',
+      `import type { User } from './does-not-exist';
+      export type UserMapper = User;`
+    );
+
+    const node = sourceFile.getFirstDescendant(
+      (descendant) =>
+        Node.isTypeAliasDeclaration(descendant) &&
+        descendant.getName() === 'UserMapper'
+    );
+
+    expect(isNodeTypeUnresolved({ node })).toBe(true);
+  });
+
+  it('returns false for a mapper that genuinely has no properties (empty object type)', () => {
+    const project = new Project();
+    const sourceFile = project.createSourceFile(
+      '/path/to/mappers.ts',
+      `export type EmptyMapper = {};`
+    );
+
+    const node = sourceFile.getFirstDescendant(
+      (descendant) =>
+        Node.isTypeAliasDeclaration(descendant) &&
+        descendant.getName() === 'EmptyMapper'
+    );
+
+    expect(isNodeTypeUnresolved({ node })).toBe(false);
+  });
+
+  it('returns false for an explicit `any` mapper (not an error type)', () => {
+    const project = new Project();
+    const sourceFile = project.createSourceFile(
+      '/path/to/mappers.ts',
+      `export type AnyMapper = any;`
+    );
+
+    const node = sourceFile.getFirstDescendant(
+      (descendant) =>
+        Node.isTypeAliasDeclaration(descendant) &&
+        descendant.getName() === 'AnyMapper'
+    );
+
+    expect(isNodeTypeUnresolved({ node })).toBe(false);
+  });
+
+  it('returns false for a mapper whose imported type resolves', () => {
+    const project = new Project();
+    project.createSourceFile(
+      '/path/to/user.ts',
+      `export type User = { id: string; name: string };`
+    );
+    const sourceFile = project.createSourceFile(
+      '/path/to/mappers.ts',
+      `import type { User } from './user';
+      export type UserMapper = User;`
+    );
+
+    const node = sourceFile.getFirstDescendant(
+      (descendant) =>
+        Node.isTypeAliasDeclaration(descendant) &&
+        descendant.getName() === 'UserMapper'
+    );
+
+    expect(isNodeTypeUnresolved({ node })).toBe(false);
+  });
+
+  it('returns false when node is undefined', () => {
+    expect(isNodeTypeUnresolved({ node: undefined })).toBe(false);
   });
 });
