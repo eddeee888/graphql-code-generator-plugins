@@ -56,6 +56,39 @@ export const getNodePropertyMap = ({
   return nodePropertyMap;
 };
 
+/**
+ * Detects whether a node's type failed to resolve i.e. it is the TypeScript
+ * *error type*. This happens when a mapper aliases a type coming from an import
+ * that cannot be resolved (e.g. a client that has not been generated yet, or a
+ * module that is not installed on a fresh checkout).
+ *
+ * This must be distinguished from a mapper that genuinely has no properties
+ * (e.g. `type Mapper = {}`): both report zero properties via `getProperties()`,
+ * but only the unresolved one should stop resolver generation. If we treated an
+ * unresolved type as "empty", `getGraphQLObjectTypeResolversToGenerate` would
+ * inject a stub for every field and silently overwrite hand-maintained
+ * resolvers. See https://github.com/eddeee888/graphql-code-generator-plugins/issues/446
+ *
+ * The error type is an intrinsic type named `error`. This is distinct from a
+ * real `any` (`intrinsicName === 'any'`) and from an empty object type (which
+ * is not an intrinsic type at all), so this check does not misfire on those.
+ */
+export const isNodeTypeUnresolved = ({
+  node,
+}: {
+  node: Node | undefined;
+}): boolean => {
+  if (!node) {
+    return false;
+  }
+
+  const { intrinsicName } = node.getType().compilerType as {
+    intrinsicName?: string;
+  };
+
+  return intrinsicName === 'error';
+};
+
 const collectClassNodeProperties = (
   classNode: ClassDeclaration,
   result: NodePropertyMapValue[]
