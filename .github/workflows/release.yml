@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ env.node-version }}
           cache: yarn
@@ -113,7 +113,7 @@ jobs:
           repository: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.repo.full_name }}
           ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ env.node-version }}
           registry-url: 'https://registry.npmjs.org'
