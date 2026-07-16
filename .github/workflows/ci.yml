@@ -22,7 +22,7 @@ jobs:
     name: Install Dependencies
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
@@ -57,7 +57,7 @@ jobs:
       affected-operation-location-migration-e2e: ${{ steps.affected.outputs.operation-location-migration-e2e }}
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
