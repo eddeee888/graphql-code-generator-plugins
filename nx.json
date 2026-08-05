@@ -25,8 +25,10 @@
     "@nx/eslint:lint": {
       "inputs": [
         "default",
+        "^default",
         "{workspaceRoot}/.eslintrc.json",
-        "{workspaceRoot}/eslint.config.mjs"
+        "{workspaceRoot}/eslint.config.mjs",
+        "{workspaceRoot}/tools/eslint-rules/**/*"
       ],
       "cache": true,
       "outputs": ["{options.outputFile}"],
@@ -79,7 +81,6 @@
       "plugin": "@nx/vite/plugin",
       "options": {
         "buildTargetName": "build",
-        "testTargetName": "test",
         "serveTargetName": "serve",
         "devTargetName": "dev",
         "previewTargetName": "preview",
@@ -88,7 +89,14 @@
         "buildDepsTargetName": "build-deps",
         "watchDepsTargetName": "watch-deps"
       }
+    },
+    {
+      "plugin": "@nx/vitest",
+      "options": {
+        "testTargetName": "test"
+      }
     }
   ],
-  "analytics": false
+  "analytics": false,
+  "neverConnectToCloud": true
 }
