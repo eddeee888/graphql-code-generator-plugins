@@ -1,6 +1,6 @@
 import type { Types } from '@graphql-codegen/plugin-helpers';
 import * as addPlugin from '@graphql-codegen/add';
-import type { AddPluginConfig } from '@graphql-codegen/add/typings/config';
+import type { AddPluginConfig } from '@graphql-codegen/add';
 import * as typeScriptPlugin from '@graphql-codegen/typescript';
 import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import type { GraphQLSchema } from 'graphql';
