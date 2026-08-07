@@ -3,7 +3,11 @@
     "rootDir": ".",
     "baseUrl": ".",
     "module": "commonjs",
-    "strict": true
+    "strict": true,
+    "noUncheckedSideEffectImports": false,
+    "types": ["*"],
+    "esModuleInterop": false,
+    "ignoreDeprecations": "6.0"
   },
   "include": ["./components/**/*.ts", "./gql/**/*.ts"]
 }
