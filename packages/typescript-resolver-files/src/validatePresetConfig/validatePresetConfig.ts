@@ -1,11 +1,17 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import type { AddPluginConfig } from '@graphql-codegen/add/typings/config';
+import type { AddPluginConfig } from '@graphql-codegen/add';
 import type * as typeScriptPlugin from '@graphql-codegen/typescript';
 import type * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
 import type * as schemaAstPlugin from '@graphql-codegen/schema-ast';
 import type { ProjectOptions } from 'ts-morph';
-import { cwd, fmt, logger, normalizeImportExtension, type ImportExtension } from '../utils';
+import {
+  cwd,
+  fmt,
+  logger,
+  normalizeImportExtension,
+  type ImportExtension,
+} from '../utils';
 
 const defaultResolverRelativeTargetDirMap: Record<
   ParsedPresetConfig['mode'],
@@ -126,32 +132,33 @@ export interface TypedPresetConfig extends RawPresetConfig {
     | { path: string; config: schemaAstPlugin.SchemaASTConfig };
 }
 
-export const validatePresetConfig = ({
-  add,
-  resolverTypesPath = './types.generated.ts',
-  resolverRelativeTargetDir,
-  resolverMainFile = 'resolvers.generated.ts',
-  resolverMainFileMode = 'merged',
-  resolverGeneration = 'recommended',
-  typeDefsFilePath = defaultTypeDefsFilePath,
-  typeDefsFileMode: inputTypeDefsFileMode = 'merged',
-  mappersRelativeTargetDir = './',
-  mappersFileExtension = '.mappers.ts',
-  mappersSuffix = 'Mapper',
-  moduleNamingMode = 'last',
-  mergeSchema,
-  scalarsModule = 'graphql-scalars',
-  scalarsOverrides = {},
-  mode = 'modules',
-  whitelistedModules,
-  blacklistedModules,
-  externalResolvers = {},
-  typesPluginsConfig = {},
-  tsConfigFilePath = './tsconfig.json',
-  fixObjectTypeResolvers = 'fast',
-  emitLegacyCommonJSImports,
-  importExtension,
-}: RawPresetConfig,
+export const validatePresetConfig = (
+  {
+    add,
+    resolverTypesPath = './types.generated.ts',
+    resolverRelativeTargetDir,
+    resolverMainFile = 'resolvers.generated.ts',
+    resolverMainFileMode = 'merged',
+    resolverGeneration = 'recommended',
+    typeDefsFilePath = defaultTypeDefsFilePath,
+    typeDefsFileMode: inputTypeDefsFileMode = 'merged',
+    mappersRelativeTargetDir = './',
+    mappersFileExtension = '.mappers.ts',
+    mappersSuffix = 'Mapper',
+    moduleNamingMode = 'last',
+    mergeSchema,
+    scalarsModule = 'graphql-scalars',
+    scalarsOverrides = {},
+    mode = 'modules',
+    whitelistedModules,
+    blacklistedModules,
+    externalResolvers = {},
+    typesPluginsConfig = {},
+    tsConfigFilePath = './tsconfig.json',
+    fixObjectTypeResolvers = 'fast',
+    emitLegacyCommonJSImports,
+    importExtension,
+  }: RawPresetConfig,
   baseConfig?: {
     emitLegacyCommonJSImports?: boolean;
     importExtension?: ImportExtension;
@@ -319,9 +326,12 @@ export const validatePresetConfig = ({
   }
 
   const validatedAdd = validateAddOption(add);
-  
-  const normalizedImportExtension = normalizeImportExtension(finalImportExtension, finalEmitLegacyCommonJSImports);
-  
+
+  const normalizedImportExtension = normalizeImportExtension(
+    finalImportExtension,
+    finalEmitLegacyCommonJSImports
+  );
+
   return {
     add: validatedAdd,
     resolverTypesPath,

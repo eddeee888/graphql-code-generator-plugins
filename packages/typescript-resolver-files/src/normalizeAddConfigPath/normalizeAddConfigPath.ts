@@ -1,5 +1,5 @@
 import * as path from 'path';
-import type { AddPluginConfig } from '@graphql-codegen/add/typings/config';
+import type { AddPluginConfig } from '@graphql-codegen/add';
 
 /**
  * normalizeAddConfigPath

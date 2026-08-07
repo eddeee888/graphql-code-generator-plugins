@@ -24,7 +24,12 @@
       ],
       "@workspace/testing": ["tools/testing/src/index.ts"],
       "@workspace/workspace-plugin": ["tools/workspace-plugin/src/index.ts"]
-    }
+    },
+    "strict": false,
+    "noUncheckedSideEffectImports": false,
+    "types": ["*"],
+    "esModuleInterop": false,
+    "ignoreDeprecations": "6.0"
   },
   "exclude": ["node_modules", "tmp"]
 }
