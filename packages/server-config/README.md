@@ -5,7 +5,7 @@ This library has the recommended default options used by the server preset `@edd
 ## Installation
 
 ```shell
-yarn add -D @eddeee888/gcg-server-config
+pnpm add -D @eddeee888/gcg-server-config
 ```
 
 ## Usage

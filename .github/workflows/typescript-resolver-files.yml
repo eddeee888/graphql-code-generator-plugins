@@ -3,41 +3,26 @@ name: typescript-resolver-files
 on:
   workflow_call:
 
-env:
-  node-version: '24.x'
-
 jobs:
   typescript-resolver-files:
     strategy:
       matrix:
         os: [ubuntu-22.04, windows-latest]
-        node-version: [22.x, 24.x]
+        node-version: [22, 24]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v7
-
-      - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v7
+      - uses: actions/checkout@v7
         with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Restore node_modules cache
-        uses: actions/cache@v6
+          fetch-depth: 0
+      - uses: pnpm/setup@v2
         with:
-          path: |
-            node_modules
-            packages/*/node_modules
-            tools/*/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            node-modules-${{ runner.os }}-
+          runtime: node@${{ matrix.node-version }}
 
       - name: Lint
-        run: yarn nx lint typescript-resolver-files
+        run: pnpm nx lint typescript-resolver-files
 
       - name: Test
-        run: yarn nx test typescript-resolver-files
+        run: pnpm nx test typescript-resolver-files
 
       - name: Build
-        run: yarn nx build typescript-resolver-files
+        run: pnpm nx build typescript-resolver-files

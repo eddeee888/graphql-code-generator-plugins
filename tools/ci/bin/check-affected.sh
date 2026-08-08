@@ -21,7 +21,7 @@ if [ -z "$baseBranch" ]; then
   exit 1
 fi
 
-affected=$(yarn --silent nx show projects --affected --type=$projectType --base=$baseBranch --select=projects)
+affected=$(pnpm --silent nx show projects --affected --type=$projectType --base=$baseBranch --select=projects)
 
 if [ -z "$affected" ]; then
   echo "false"

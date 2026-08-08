@@ -10,7 +10,7 @@ For example:
 ## Installation
 
 ```sh
-yarn add -D @eddeee888/gcg-operation-location-migration
+pnpm add -D @eddeee888/gcg-operation-location-migration
 ```
 
 ## Usage

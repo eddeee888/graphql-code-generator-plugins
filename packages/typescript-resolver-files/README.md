@@ -5,8 +5,8 @@ This [GraphQL Code Generator](https://www.the-guild.dev/graphql/codegen) plugin 
 This relies on types generated from [@graphql-codegen/typescript](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript) and [@graphql-codegen/typescript-resolvers](https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-resolvers) plugins.
 
 ```bash
-yarn add -D @graphql-codegen/cli @eddeee888/gcg-typescript-resolver-files
-yarn add graphql-scalars
+pnpm add -D @graphql-codegen/cli @eddeee888/gcg-typescript-resolver-files
+pnpm add graphql-scalars
 ```
 
 ## Features
@@ -259,7 +259,7 @@ defineConfig({
 Hint: To see why certain files are skipped, run codegen command with `DEBUG` turned on:
 
 ```
-DEBUG="@eddeee888/gcg-typescript-resolver-files" yarn graphql-codegen
+DEBUG="@eddeee888/gcg-typescript-resolver-files" pnpm graphql-codegen
 ```
 
 ### typeDefsFileMode

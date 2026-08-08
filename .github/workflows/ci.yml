@@ -10,9 +10,6 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  node-version: '24.x'
-
 jobs:
   install-deps:
     strategy:
@@ -21,30 +18,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     name: Install Dependencies
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v7
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: ${{ env.node-version }}
-          cache: yarn
-          cache-dependency-path: '**/yarn.lock'
-
-      - name: Install deps
-        run: yarn install --prefer-offline --frozen-lockfile
-
-      - name: Cache node_modules
-        uses: actions/cache@v6
-        id: cache-node-modules
-        with:
-          path: |
-            node_modules
-            packages/*/node_modules
-            tools/*/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            node-modules-${{ runner.os }}-
+      - uses: actions/checkout@v7
+      - uses: pnpm/setup@v2
 
   precheck:
     name: Check jobs to run
@@ -60,23 +35,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: ${{ env.node-version }}
-
-      - name: Restore node_modules cache
-        uses: actions/cache@v6
-        with:
-          path: |
-            node_modules
-            packages/*/node_modules
-            tools/*/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            node-modules-${{ runner.os }}-
-
+      - uses: pnpm/setup@v2
       - name: Check affected projects
         id: affected
         run: |

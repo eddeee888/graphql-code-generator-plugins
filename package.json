@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "release": "pnpm nx run-many --target=build --all && yarn changeset publish"
+    "release": "pnpm nx run-many --target=build --all && pnpm changeset publish"
   },
   "type": "module",
   "private": true,
@@ -62,5 +62,14 @@
   "nx": {
     "includedScripts": []
   },
-  "packageManager": "pnpm@11.7.0"
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^24.0.0"
+    },
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.7.0"
+    }
+  }
 }

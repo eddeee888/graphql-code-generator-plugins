@@ -3,32 +3,23 @@ name: operation-location-migration-e2e
 on:
   workflow_call:
 
-env:
-  node-version: '24.x'
-
 jobs:
   operation-location-migration-e2e:
     strategy:
       matrix:
         os: [ubuntu-22.04, windows-latest]
-        node-version: [22.x, 24.x]
+        node-version: [22, 24]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v7
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-
-      - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v7
+      - uses: pnpm/setup@v2
         with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Use graphql@16 # packages like `typescript-react-apollo` are not compatible with graphql@17
-        run: yarn add -DEW graphql@16
+          runtime: node@${{ matrix.node-version }}
 
       - name: e2e
-        run: yarn nx e2e operation-location-migration-e2e
+        run: pnpm nx e2e operation-location-migration-e2e
