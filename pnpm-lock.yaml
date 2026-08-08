@@ -403,8 +403,8 @@ importers:
   packages/typescript-resolver-files:
     dependencies:
       '@eddeee888/gcg-server-config':
-        specifier: 0.5.0
-        version: 0.5.0(graphql@17.0.2)
+        specifier: workspace:*
+        version: link:../server-config/packages/server-config
       '@graphql-codegen/add':
         specifier: ^7.1.0
         version: 7.1.0(graphql@17.0.2)
@@ -1146,9 +1146,6 @@ packages:
 
   '@eddeee888/eslint-plugin@1.0.0':
     resolution: {integrity: sha512-WmYvr0uOkP4QZ7XScWmOfOh34fVMoFtodBFNZAiPkOg3cZUokHk2qrxrQvqy5n6ozfFLQT4VT9UIvUqFu1BVUQ==}
-
-  '@eddeee888/gcg-server-config@0.5.0':
-    resolution: {integrity: sha512-o5fZ6eppaPbIFFSGALp8zpQ6yvexjsGhLeXQfKAFk5y8EWP+lNSW6WxcuGykN96DS+2zfEA9km5kbHcVydeAKA==}
 
   '@eddeee888/nx-graphql-code-generator@2.1.0':
     resolution: {integrity: sha512-3TD6YgJqsB5GtaQHsSJHdhjl8b3MVdgkl51D+KDZ2y2R0yMWb3I2fDEFFeB1WX43bBJMARinReLq/wnSVyzCFw==}
@@ -7356,15 +7353,6 @@ snapshots:
       - jiti
       - supports-color
       - typescript
-
-  '@eddeee888/gcg-server-config@0.5.0(graphql@17.0.2)':
-    dependencies:
-      '@graphql-codegen/typescript': 6.1.0(graphql@17.0.2)
-      '@graphql-codegen/typescript-resolvers': 6.1.0(graphql@17.0.2)
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - graphql
-      - graphql-sock
 
   '@eddeee888/nx-graphql-code-generator@2.1.0(@graphql-codegen/cli@7.2.0(@types/node@22.20.1)(graphql@17.0.2)(typescript@6.0.3))(nx@23.1.1(@swc-node/register@1.12.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.28)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))':
     dependencies:
