@@ -1,0 +1,11 @@
+{
+  "name": "typescript-resolver-files-e2e",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@eddeee888/gcg-typescript-resolver-files": "workspace:*",
+    "@workspace/testing": "workspace:*"
+  }
+}
