@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "release": "yarn nx run-many --target=build --all && yarn changeset publish"
+    "release": "pnpm nx run-many --target=build --all && yarn changeset publish"
   },
   "private": true,
   "dependencies": {
@@ -58,12 +58,8 @@
     "vite": "8.2.0",
     "vitest": "4.1.9"
   },
-  "workspaces": [
-    "packages/**",
-    "tools/*"
-  ],
   "nx": {
     "includedScripts": []
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "pnpm@11.7.0"
 }

@@ -1,35 +1,23 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": ".",
-    "rootDir": ".",
-    "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "composite": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
     "importHelpers": true,
-    "target": "es2015",
-    "module": "esnext",
-    "lib": ["es2017", "dom"],
+    "isolatedModules": true,
+    "lib": ["es2022"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-    "paths": {
-      "@eddeee888/gcg-operation-location-migration": [
-        "packages/operation-location-migration/src/index.ts"
-      ],
-      "@eddeee888/gcg-server-config": ["packages/server-config/src/index.ts"],
-      "@eddeee888/gcg-typescript-resolver-files": [
-        "packages/typescript-resolver-files/src/index.ts"
-      ],
-      "@workspace/testing": ["tools/testing/src/index.ts"],
-      "@workspace/workspace-plugin": ["tools/workspace-plugin/src/index.ts"]
-    },
-    "strict": false,
+    "strict": true,
+    "target": "es2022",
+    "customConditions": ["@workspace/source"],
     "noUncheckedSideEffectImports": false,
-    "types": ["*"],
-    "esModuleInterop": false,
-    "ignoreDeprecations": "6.0"
-  },
-  "exclude": ["node_modules", "tmp"]
+    "types": ["*"]
+  }
 }
