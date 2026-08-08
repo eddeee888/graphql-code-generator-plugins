@@ -180,7 +180,7 @@ importers:
     devDependencies:
       '@eddeee888/gcg-operation-location-migration':
         specifier: workspace:*
-        version: link:../operation-location-migration/packages/operation-location-migration
+        version: link:../operation-location-migration
       '@graphql-codegen/typescript-operations':
         specifier: 6.1.5
         version: 6.1.5(graphql@17.0.2)
@@ -199,7 +199,7 @@ importers:
       tslib:
         specifier: ^2.8.0
         version: 2.8.1
-    publishDirectory: ../../dist/packages/server-config
+    publishDirectory: packages/operation-location-migration
 
   packages/typescript-resolver-files:
     dependencies:

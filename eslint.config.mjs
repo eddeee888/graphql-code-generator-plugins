@@ -23,6 +23,8 @@ export default defineConfig(
       'eslint.config.mjs',
       'packages/typescript-resolver-files-e2e/src/**/*.generated.*',
       'packages/typescript-resolver-files-e2e/src/**/*.gen.*',
+      '**/codegen.*.ts',
+      '**/codegen.*.mts',
     ],
   },
   {

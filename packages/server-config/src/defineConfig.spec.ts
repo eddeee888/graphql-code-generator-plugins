@@ -1,4 +1,4 @@
-import { type ServerConfig, defineConfig } from './defineConfig';
+import { type ServerConfig, defineConfig } from './defineConfig.js';
 
 const defaultServerConfig: ServerConfig = {
   enumsAsTypes: true,
