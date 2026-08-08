@@ -71,7 +71,7 @@ export type UserSuspenseQueryHookResult = ReturnType<typeof useUserSuspenseQuery
 export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
 export const UpdateUserDocument = gql`
     mutation UpdateUser {
-  updateUser(input: {id: "100", name: "Tom"}) {
+  updateUser(input: { id: "100", name: "Tom" }) {
     id
     name
   }

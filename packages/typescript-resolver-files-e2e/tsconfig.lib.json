@@ -11,5 +11,10 @@
     }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/testSetup.ts"]
+  "exclude": ["src/**/testSetup.ts"],
+  "references": [
+    {
+      "path": "../../tools/testing/tsconfig.lib.json"
+    }
+  ]
 }

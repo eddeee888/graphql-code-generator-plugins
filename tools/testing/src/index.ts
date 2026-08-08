@@ -1,1 +1,1 @@
-export { createTestSetup } from './createTestSetup';
+export { createTestSetup } from './createTestSetup.js';

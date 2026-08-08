@@ -1,7 +1,7 @@
 import { createTestSetup } from '@workspace/testing';
 
 createTestSetup({
-  baseDir: __dirname,
+  baseDir: import.meta.dirname,
   files: [
     {
       file: 'components/MeComponent.lazy-query.ts',

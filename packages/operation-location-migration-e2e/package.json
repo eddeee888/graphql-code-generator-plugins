@@ -1,0 +1,12 @@
+{
+  "name": "operation-location-migration-e2e",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@eddeee888/gcg-operation-location-migration": "workspace:*",
+    "@graphql-codegen/typescript-operations": "6.1.5",
+    "@workspace/testing": "workspace:*"
+  }
+}

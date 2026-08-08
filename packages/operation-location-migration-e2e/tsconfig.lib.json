@@ -9,6 +9,9 @@
   "exclude": ["src/**/testSetup.ts"],
   "references": [
     {
+      "path": "../../tools/testing/tsconfig.lib.json"
+    },
+    {
       "path": "../operation-location-migration/tsconfig.lib.json"
     }
   ]

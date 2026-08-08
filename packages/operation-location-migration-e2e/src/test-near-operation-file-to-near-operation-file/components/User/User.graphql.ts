@@ -10,7 +10,7 @@ query User($id: ID!) {
 
 export const UpdateUserDoc = graphql(`
 mutation UpdateUser {
-  updateUser(input: {id: "100", name: "Tom"}) {
+  updateUser(input: { id: "100", name: "Tom" }) {
     id
     name
   }
