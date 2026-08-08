@@ -1,5 +1,5 @@
-import { normalizeRelativePath } from '../utils';
-import type { GenerateResolverFilesContext } from './types';
+import { normalizeRelativePath } from '../utils/index.js';
+import type { GenerateResolverFilesContext } from './types.js';
 
 interface AddExternalResolverImportParams {
   moduleName: string;

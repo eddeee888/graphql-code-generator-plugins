@@ -3,38 +3,21 @@ name: operation-location-migration
 on:
   workflow_call:
 
-env:
-  node-version: '24.x'
-
 jobs:
   operation-location-migration:
     strategy:
       matrix:
         os: [ubuntu-22.04, windows-latest]
-        node-version: [22.x, 24.x]
+        node-version: [22, 24]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v7
-
-      - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v7
+      - uses: actions/checkout@v7
+      - uses: pnpm/setup@v2
         with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Restore node_modules cache
-        uses: actions/cache@v6
-        with:
-          path: |
-            node_modules
-            packages/*/node_modules
-            tools/*/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            node-modules-${{ runner.os }}-
+          runtime: node@${{ matrix.node-version }}
 
       - name: Lint
-        run: yarn nx lint operation-location-migration
+        run: pnpm nx lint operation-location-migration
 
       - name: Build
-        run: yarn nx build operation-location-migration
+        run: pnpm nx build operation-location-migration

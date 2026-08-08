@@ -1,6 +1,6 @@
 import { type PropertyAssignment, type SourceFile, SyntaxKind } from 'ts-morph';
-import type { ObjectTypeFile } from './types';
-import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier';
+import type { ObjectTypeFile } from './types.js';
+import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier.js';
 
 export type AddedPropertyAssignmentNodes = Record<
   string, // SourceFile's filename

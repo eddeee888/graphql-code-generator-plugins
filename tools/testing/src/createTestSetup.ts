@@ -10,7 +10,7 @@ export const createTestSetup = ({
     | string
     | { file: string; content: string; disableDefaultComment?: boolean }
   )[];
-}) => {
+}): void => {
   try {
     files.forEach((item) => {
       let filename: string;
@@ -22,7 +22,7 @@ export const createTestSetup = ({
       } else {
         filename = path.join(baseDir, item.file);
         content = item.content;
-        disableDefaultComment = item.disableDefaultComment;
+        disableDefaultComment = item.disableDefaultComment || false;
       }
 
       const dir = path.dirname(filename);

@@ -4,8 +4,8 @@ import {
   printImportLine,
   relativeModulePath,
   type RootObjectType,
-} from '../utils';
-import type { GenerateResolverFilesContext } from './types';
+} from '../utils/index.js';
+import type { GenerateResolverFilesContext } from './types.js';
 
 interface FileDetails {
   importLines: string[];

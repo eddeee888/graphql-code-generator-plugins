@@ -1,4 +1,7 @@
-import { normalizeImportExtension, type ImportExtension } from "./normalizeImportExtension";
+import {
+  normalizeImportExtension,
+  type ImportExtension,
+} from './normalizeImportExtension.js';
 
 export interface ImportLineMeta {
   isTypeImport: boolean;
@@ -39,8 +42,11 @@ export function printImportLine({
   if (moduleType !== 'preserve') {
     const isFile = moduleType === 'file';
     if (isFile) {
-      fileExt = normalizeImportExtension(importExtension, emitLegacyCommonJSImports);
-    }  
+      fileExt = normalizeImportExtension(
+        importExtension,
+        emitLegacyCommonJSImports
+      );
+    }
   }
 
   return `import ${typeImportKeyword} ${defaultImport || ''} ${

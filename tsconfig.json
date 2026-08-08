@@ -1,0 +1,29 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/operation-location-migration"
+    },
+    {
+      "path": "./packages/operation-location-migration-e2e"
+    },
+    {
+      "path": "./packages/server-config"
+    },
+    {
+      "path": "./packages/typescript-resolver-files"
+    },
+    {
+      "path": "./packages/typescript-resolver-files-e2e"
+    },
+    {
+      "path": "./tools/workspace-plugin"
+    },
+    {
+      "path": "./tools/testing"
+    }
+  ],
+  "compilerOptions": {}
+}

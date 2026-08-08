@@ -1,5 +1,5 @@
 import { Project } from 'ts-morph';
-import { getImportStatementWithExpectedNamedImport } from './getImportStatementWithExpectedNamedImport';
+import { getImportStatementWithExpectedNamedImport } from './getImportStatementWithExpectedNamedImport.js';
 
 describe('getImportStatementWithExpectedNamedImport', () => {
   it('returns import statement if found for objectType files', () => {

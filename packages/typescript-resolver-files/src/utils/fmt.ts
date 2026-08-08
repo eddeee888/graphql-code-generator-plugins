@@ -1,4 +1,4 @@
-import { presetName } from '../preset';
+import { presetName } from '../preset.js';
 
 /**
  * Shared message formatter

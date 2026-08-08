@@ -7,5 +7,10 @@
   "access": "public",
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
-  "ignore": ["@workspace/workspace-plugin"]
+  "ignore": [
+    "operation-location-migration-e2e",
+    "typescript-resolver-files-e2e",
+    "@workspace/workspace-plugin",
+    "@workspace/testing"
+  ]
 }

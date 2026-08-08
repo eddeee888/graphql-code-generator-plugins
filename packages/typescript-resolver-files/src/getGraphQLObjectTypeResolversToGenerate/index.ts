@@ -1,1 +1,1 @@
-export * from './getGraphQLObjectTypeResolversToGenerate';
+export * from './getGraphQLObjectTypeResolversToGenerate.js';

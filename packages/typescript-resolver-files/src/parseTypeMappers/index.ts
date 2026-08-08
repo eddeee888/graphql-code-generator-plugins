@@ -1,1 +1,1 @@
-export * from './parseTypeMappers';
+export * from './parseTypeMappers.js';

@@ -1,8 +1,8 @@
 import * as path from 'path';
 import type { Location } from 'graphql';
-import { parseLocationForWhitelistedModule } from '../utils';
-import type { ParsedPresetConfig } from '../validatePresetConfig';
-import type { ParseSourcesResult } from '../parseSources';
+import { parseLocationForWhitelistedModule } from '../utils/index.js';
+import type { ParsedPresetConfig } from '../validatePresetConfig/index.js';
+import type { ParseSourcesResult } from '../parseSources/index.js';
 
 interface ParseLocationForOutputDirParams {
   nestedDirs: string[];

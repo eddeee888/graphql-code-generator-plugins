@@ -1,8 +1,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
     "types": ["node"]
   },
-  "include": ["src/**/testSetup.ts"]
+  "include": ["src/**/testSetup.ts"],
+  "exclude": ["src/**/*.ts"]
 }

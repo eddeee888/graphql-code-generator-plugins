@@ -7,12 +7,5 @@
       "path": "./tsconfig.lib.json"
     }
   ],
-  "compilerOptions": {
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "esModuleInterop": true,
-    "ignoreDeprecations": "6.0"
-  }
+  "compilerOptions": {}
 }

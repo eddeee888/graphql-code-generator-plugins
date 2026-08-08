@@ -1,5 +1,9 @@
-import { printImportLine, isMatchResolverNamePattern, logger } from '../utils';
-import type { GraphQLTypeHandler } from './types';
+import {
+  printImportLine,
+  isMatchResolverNamePattern,
+  logger,
+} from '../utils/index.js';
+import type { GraphQLTypeHandler } from './types.js';
 
 const graphQLScalarType = 'GraphQLScalarType';
 
@@ -12,7 +16,10 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
     moduleName,
     relativePathFromBaseToModule,
   },
-  { result, config: { resolverGeneration, emitLegacyCommonJSImports, importExtension } }
+  {
+    result,
+    config: { resolverGeneration, emitLegacyCommonJSImports, importExtension },
+  }
 ) => {
   if (
     !isMatchResolverNamePattern({
@@ -33,7 +40,7 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
     moduleType: 'module',
     namedImports: [graphQLScalarType],
     emitLegacyCommonJSImports,
-    importExtension
+    importExtension,
   });
   const variableStatement = `export const ${resolverName} = new ${graphQLScalarType}({
     name: '${resolverName}',

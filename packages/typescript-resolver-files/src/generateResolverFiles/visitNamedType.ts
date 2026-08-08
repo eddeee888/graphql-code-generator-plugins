@@ -1,6 +1,9 @@
-import type { GraphQLTypeHandler, GenerateResolverFilesContext } from './types';
-import { addExternalResolverImport } from './addExternalResolverImport';
-import type { ResolverDetails } from '../parseGraphQLSchema';
+import type {
+  GraphQLTypeHandler,
+  GenerateResolverFilesContext,
+} from './types.js';
+import { addExternalResolverImport } from './addExternalResolverImport.js';
+import type { ResolverDetails } from '../parseGraphQLSchema/index.js';
 
 export const visitNamedType = <T = null>(
   {

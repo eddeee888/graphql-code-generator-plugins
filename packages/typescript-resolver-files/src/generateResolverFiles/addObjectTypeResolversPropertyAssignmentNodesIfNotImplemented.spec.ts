@@ -3,7 +3,7 @@ import { Project } from 'ts-morph';
 import {
   type AddedPropertyAssignmentNodes,
   addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented,
-} from './addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented';
+} from './addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented.js';
 import type { ObjectTypeFile } from './types';
 
 const createFilePath = (filePath: string): string =>

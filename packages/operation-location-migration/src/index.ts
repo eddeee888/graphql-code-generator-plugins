@@ -1,2 +1,2 @@
-export { defineConfig } from './defineConfig';
-export { preset } from './preset';
+export { defineConfig } from './defineConfig.js';
+export { preset } from './preset.js';

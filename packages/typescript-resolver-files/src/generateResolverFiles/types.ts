@@ -1,11 +1,15 @@
 import type { SourceFile, Project } from 'ts-morph';
 import type * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolvers';
-import type { GraphQLObjectTypeResolversToGenerate } from '../getGraphQLObjectTypeResolversToGenerate';
-import type { TypeMappersMap } from '../parseTypeMappers';
-import type { ImportExtension, ImportLineMeta, RootObjectType } from '../utils';
-import type { ParsedPresetConfig } from '../validatePresetConfig';
-import type { NormalizedResolverName } from '../parseGraphQLSchema';
-import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
+import type { GraphQLObjectTypeResolversToGenerate } from '../getGraphQLObjectTypeResolversToGenerate/index.js';
+import type { TypeMappersMap } from '../parseTypeMappers/index.js';
+import type {
+  ImportExtension,
+  ImportLineMeta,
+  RootObjectType,
+} from '../utils/index.js';
+import type { ParsedPresetConfig } from '../validatePresetConfig/index.js';
+import type { NormalizedResolverName } from '../parseGraphQLSchema/index.js';
+import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema/index.js';
 
 export type GeneratedTypesFileMeta = {
   generatedResolverTypes: NonNullable<

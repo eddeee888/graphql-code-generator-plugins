@@ -1,5 +1,9 @@
-import { printImportLine, isMatchResolverNamePattern, logger } from '../utils';
-import type { GraphQLTypeHandler } from './types';
+import {
+  printImportLine,
+  isMatchResolverNamePattern,
+  logger,
+} from '../utils/index.js';
+import type { GraphQLTypeHandler } from './types.js';
 
 export const handleGraphQLUnionType: GraphQLTypeHandler = (
   {
@@ -11,7 +15,10 @@ export const handleGraphQLUnionType: GraphQLTypeHandler = (
     moduleName,
     relativePathFromBaseToModule,
   },
-  { result, config: { resolverGeneration, emitLegacyCommonJSImports, importExtension } }
+  {
+    result,
+    config: { resolverGeneration, emitLegacyCommonJSImports, importExtension },
+  }
 ) => {
   if (
     !isMatchResolverNamePattern({

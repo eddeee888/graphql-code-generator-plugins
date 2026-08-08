@@ -4,21 +4,5 @@
   "sourceRoot": "packages/typescript-resolver-files/src",
   "projectType": "library",
   "tags": [],
-  "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/typescript-resolver-files",
-        "tsConfig": "packages/typescript-resolver-files/tsconfig.lib.json",
-        "packageJson": "packages/typescript-resolver-files/package.json",
-        "main": "packages/typescript-resolver-files/src/index.ts",
-        "assets": ["packages/typescript-resolver-files/README.md"],
-        "clean": true
-      }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint"
-    }
-  }
+  "targets": {}
 }

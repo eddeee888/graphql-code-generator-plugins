@@ -1,5 +1,5 @@
 import { Project } from 'ts-morph';
-import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier';
+import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier.js';
 
 describe('getVariableStatementWithExpectedIdentifier()', () => {
   it('gets VariableStatement node and isExported=true if found', () => {

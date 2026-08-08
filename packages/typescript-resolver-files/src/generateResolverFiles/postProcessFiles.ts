@@ -1,14 +1,14 @@
 import type { SourceFile } from 'ts-morph';
 import * as path from 'path';
-import { cwd } from '../utils';
-import type { ResolverFile, GenerateResolverFilesContext } from './types';
-import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier';
+import { cwd } from '../utils/index.js';
+import type { ResolverFile, GenerateResolverFilesContext } from './types.js';
+import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier.js';
 import {
   type AddedPropertyAssignmentNodes,
   addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented,
-} from './addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented';
-import { ensureEnumTypeResolversAreGenerated } from './ensureEnumTypeResolversAreGenerated';
-import { getImportStatementWithExpectedNamedImport } from './getImportStatementWithExpectedNamedImport';
+} from './addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented.js';
+import { ensureEnumTypeResolversAreGenerated } from './ensureEnumTypeResolversAreGenerated.js';
+import { getImportStatementWithExpectedNamedImport } from './getImportStatementWithExpectedNamedImport.js';
 
 /**
  * postProcessFiles does static analysis on existing files OR to-be-generated files

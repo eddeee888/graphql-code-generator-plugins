@@ -1,9 +1,9 @@
 import * as path from 'path';
-import type { StandardFile } from '../generateResolverFiles';
-import type { ParseSourcesResult } from '../parseSources';
-import { cwd, isWhitelistedModule } from '../utils';
-import type { TypeDefsFileMode } from '../validatePresetConfig';
-import { generateTypeDefsContent } from './generateTypeDefsContent';
+import type { StandardFile } from '../generateResolverFiles/index.js';
+import type { ParseSourcesResult } from '../parseSources/index.js';
+import { cwd, isWhitelistedModule } from '../utils/index.js';
+import type { TypeDefsFileMode } from '../validatePresetConfig/index.js';
+import { generateTypeDefsContent } from './generateTypeDefsContent.js';
 
 interface GenerateTypeDefsFilesParams {
   baseOutputDir: string;

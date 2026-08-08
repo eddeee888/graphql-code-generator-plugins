@@ -1,1 +1,1 @@
-export * from './validateAndMergeParsedConfigs';
+export * from './validateAndMergeParsedConfigs.js';

@@ -6,7 +6,7 @@ import * as typeScriptResolversPlugin from '@graphql-codegen/typescript-resolver
 import type { GraphQLSchema } from 'graphql';
 import type { SourceFile, Project } from 'ts-morph';
 import type { ServerConfig } from '@eddeee888/gcg-server-config';
-import type { GeneratedTypesFileMeta } from '../generateResolverFiles';
+import type { GeneratedTypesFileMeta } from '../generateResolverFiles/index.js';
 
 export const addVirtualTypesFileToTsMorphProject = async ({
   tsMorphProject,

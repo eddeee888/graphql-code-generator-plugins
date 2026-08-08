@@ -1,9 +1,9 @@
-import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
+import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema/index.js';
 import type {
   ParsedPresetConfig,
   ScalarsOverridesType,
-} from '../validatePresetConfig';
-import { fmt } from '../utils';
+} from '../validatePresetConfig/index.js';
+import { fmt } from '../utils/index.js';
 
 interface MergedConfig {
   userDefinedSchemaTypeMap: ParsedGraphQLSchemaMeta['userDefinedSchemaTypeMap'];

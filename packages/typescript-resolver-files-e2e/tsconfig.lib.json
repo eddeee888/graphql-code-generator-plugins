@@ -1,15 +1,21 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc",
+    "outDir": "dist",
     "declaration": true,
     "types": ["node"],
     "paths": {
-      "mock_node_modules/*": [
-        "packages/typescript-resolver-files-e2e/mock_node_modules/*"
-      ]
+      "mock_node_modules/*": ["./mock_node_modules/*"]
     }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/testSetup.ts"]
+  "exclude": ["src/**/testSetup.ts"],
+  "references": [
+    {
+      "path": "../../tools/testing/tsconfig.lib.json"
+    },
+    {
+      "path": "../typescript-resolver-files/tsconfig.lib.json"
+    }
+  ]
 }

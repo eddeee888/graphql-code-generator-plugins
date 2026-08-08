@@ -1,1 +1,1 @@
-export * from './parseSources';
+export * from './parseSources.js';

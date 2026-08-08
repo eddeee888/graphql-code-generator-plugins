@@ -17,9 +17,14 @@ export default defineConfig(
   {
     ignores: [
       '**/dist',
+      '**/build',
+      '**/vite.config.*.timestamp*',
+      '**/vitest.config.*.timestamp*',
       'eslint.config.mjs',
       'packages/typescript-resolver-files-e2e/src/**/*.generated.*',
       'packages/typescript-resolver-files-e2e/src/**/*.gen.*',
+      '**/codegen.*.ts',
+      '**/codegen.*.mts',
     ],
   },
   {
@@ -29,7 +34,7 @@ export default defineConfig(
         'error',
         {
           enforceBuildableLibDependency: true,
-          allow: [],
+          allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$'],
           depConstraints: [
             {
               sourceTag: '*',
@@ -38,14 +43,6 @@ export default defineConfig(
           ],
         },
       ],
-    },
-  },
-  {
-    files: ['**/*.json'],
-    // Override or add rules here
-    rules: {},
-    languageOptions: {
-      parser: await import('jsonc-eslint-parser'),
     },
   }
 );

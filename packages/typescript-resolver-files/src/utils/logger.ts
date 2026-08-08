@@ -1,5 +1,5 @@
-import { presetName } from '../preset';
-import { fmt } from './fmt';
+import { presetName } from '../preset.js';
+import { fmt } from './fmt.js';
 
 export const logger = {
   debug: (...args: Parameters<(typeof fmt)['debug']>) => {
