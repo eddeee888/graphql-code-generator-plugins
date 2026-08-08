@@ -1,6 +1,9 @@
 import type { Location } from 'graphql';
-import type { ParseSourcesResult, ParsedSource } from '../parseSources';
-import { isWhitelistedModule } from './isWhitelistedModule';
+import type {
+  ParseSourcesResult,
+  ParsedSource,
+} from '../parseSources/index.js';
+import { isWhitelistedModule } from './isWhitelistedModule.js';
 
 export interface ParseLocationForWhitelistedModule {
   location: Location | undefined;

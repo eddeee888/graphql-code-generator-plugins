@@ -13,22 +13,22 @@ import {
   isInterfaceType,
   isEnumType,
 } from 'graphql';
-import type { ParseSourcesResult } from '../parseSources';
-import type { TypeMappersMap } from '../parseTypeMappers';
+import type { ParseSourcesResult } from '../parseSources/index.js';
+import type { TypeMappersMap } from '../parseTypeMappers/index.js';
 import type {
   ParsedPresetConfig,
   ScalarsOverridesType,
-} from '../validatePresetConfig';
+} from '../validatePresetConfig/index.js';
 import {
   logger,
   isNativeNamedType,
   isRootObjectType,
   relativeModulePath,
   type RootObjectType,
-} from '../utils';
-import { parseLocationForOutputDir } from './parseLocationForOutputDir';
-import { normalizeResolverName } from './normalizeResolverName';
-import type { GeneratedTypesFileMeta } from '../generateResolverFiles';
+} from '../utils/index.js';
+import { parseLocationForOutputDir } from './parseLocationForOutputDir.js';
+import { normalizeResolverName } from './normalizeResolverName.js';
+import type { GeneratedTypesFileMeta } from '../generateResolverFiles/index.js';
 
 interface ParseGraphQLSchemaParams {
   schemaAst: GraphQLSchema;

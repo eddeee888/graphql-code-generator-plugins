@@ -1,8 +1,8 @@
 import * as path from 'path';
 import type { Project, SyntaxKind } from 'ts-morph';
-import type { ParseSourcesResult } from '../parseSources';
-import type { ImportExtension } from '../utils';
-import { collectTypeMappersFromSourceFile } from './collectTypeMappersFromSourceFile';
+import type { ParseSourcesResult } from '../parseSources/index.js';
+import type { ImportExtension } from '../utils/index.js';
+import { collectTypeMappersFromSourceFile } from './collectTypeMappersFromSourceFile.js';
 
 export interface ParseTypeMappersParams {
   sourceMap: ParseSourcesResult['sourceMap'];
@@ -62,7 +62,7 @@ export const parseTypeMappers = ({
           typeMappersSuffix,
           resolverTypesPath,
           emitLegacyCommonJSImports,
-          importExtension
+          importExtension,
         },
         res
       );

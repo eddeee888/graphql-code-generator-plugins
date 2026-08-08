@@ -9,10 +9,16 @@ import {
   SyntaxKind,
   Node,
 } from 'ts-morph';
-import type { TypeMapperDetails, TypeMappersMap } from '../parseTypeMappers';
-import { type NodePropertyMap, getNodePropertyMap } from './getNodePropertyMap';
-import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema';
-import type { GeneratedTypesFileMeta } from '../generateResolverFiles';
+import type {
+  TypeMapperDetails,
+  TypeMappersMap,
+} from '../parseTypeMappers/index.js';
+import {
+  type NodePropertyMap,
+  getNodePropertyMap,
+} from './getNodePropertyMap.js';
+import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema/index.js';
+import type { GeneratedTypesFileMeta } from '../generateResolverFiles/index.js';
 
 export type GraphQLObjectTypeResolversToGenerate = Record<
   string,

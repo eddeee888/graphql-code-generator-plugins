@@ -1,5 +1,9 @@
-import type { GraphQLTypeHandler } from './types';
-import { printImportLine, isMatchResolverNamePattern, logger } from '../utils';
+import type { GraphQLTypeHandler } from './types.js';
+import {
+  printImportLine,
+  isMatchResolverNamePattern,
+  logger,
+} from '../utils/index.js';
 
 export const handleGraphQLObjectType: GraphQLTypeHandler<
   null,
@@ -137,7 +141,7 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     moduleType: resolversTypeMeta.moduleType,
     namedImports: [resolversTypeMeta.typeNamedImport],
     emitLegacyCommonJSImports,
-    importExtension
+    importExtension,
   });
 
   result.files[fieldFilePath] = {

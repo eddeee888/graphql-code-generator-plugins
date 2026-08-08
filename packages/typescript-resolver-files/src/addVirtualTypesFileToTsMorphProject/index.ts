@@ -1,1 +1,1 @@
-export * from './addVirtualTypesFileToTsMorphProject';
+export * from './addVirtualTypesFileToTsMorphProject.js';

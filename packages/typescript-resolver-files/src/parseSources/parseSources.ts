@@ -1,6 +1,6 @@
 import * as path from 'path';
 import type { Source } from '@graphql-tools/utils';
-import type { ModuleNamingMode } from '../validatePresetConfig';
+import type { ModuleNamingMode } from '../validatePresetConfig/index.js';
 
 export interface ParsedSource {
   source: Source;

@@ -1,5 +1,5 @@
 import { Project, Node } from 'ts-morph';
-import { getNodePropertyMap } from './getNodePropertyMap';
+import { getNodePropertyMap } from './getNodePropertyMap.js';
 
 describe('getNodePropertyMap', () => {
   it('correctly resolves property map of a typical types.generated.ts', () => {

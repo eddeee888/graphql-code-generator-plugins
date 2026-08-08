@@ -2,7 +2,7 @@ import {
   type RawPresetConfig,
   type ParsedPresetConfig,
   validatePresetConfig,
-} from './validatePresetConfig';
+} from './validatePresetConfig.js';
 
 beforeEach(() => {
   vi.resetAllMocks();

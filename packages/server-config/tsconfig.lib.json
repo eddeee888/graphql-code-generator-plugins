@@ -8,6 +8,6 @@
     "declaration": true,
     "types": ["node"]
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["vite.config.ts", "src/**/*.spec.ts"]
+  "exclude": ["vite.config.ts", "src/**/*.spec.ts"],
+  "include": ["src/**/*.ts"]
 }

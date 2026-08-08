@@ -1,5 +1,5 @@
 import type { ImportDeclaration, SourceFile } from 'ts-morph';
-import type { ResolverFile } from './types';
+import type { ResolverFile } from './types.js';
 
 export const getImportStatementWithExpectedNamedImport = (
   sourceFile: SourceFile,

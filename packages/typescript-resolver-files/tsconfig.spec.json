@@ -1,16 +1,20 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc",
-    "module": "commonjs",
-    "moduleResolution": "bundler",
+    "outDir": "./out-tsc/vitest",
     "types": [
       "vitest/globals",
       "vitest/importMeta",
       "vite/client",
       "node",
       "vitest"
-    ]
+    ],
+    "rootDir": "."
   },
-  "include": ["vite.config.ts", "src/**/*.spec.ts"]
+  "include": ["vite.config.ts", "src/**/*.spec.ts"],
+  "references": [
+    {
+      "path": "./tsconfig.lib.json"
+    }
+  ]
 }

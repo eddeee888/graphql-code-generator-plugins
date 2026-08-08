@@ -9,23 +9,23 @@ import {
 } from '@graphql-codegen/plugin-helpers';
 import { Project } from 'ts-morph';
 import { defineConfig as defineServerConfig } from '@eddeee888/gcg-server-config';
-import { parseSources } from './parseSources';
-import { parseGraphQLSchema } from './parseGraphQLSchema';
+import { parseSources } from './parseSources/index.js';
+import { parseGraphQLSchema } from './parseGraphQLSchema/index.js';
 import {
   type GenerateResolverFilesContext,
   generateResolverFiles,
-} from './generateResolverFiles';
-import { generateTypeDefsFiles } from './generateTypeDefsFiles';
-import { getGraphQLObjectTypeResolversToGenerate } from './getGraphQLObjectTypeResolversToGenerate';
-import { addVirtualTypesFileToTsMorphProject } from './addVirtualTypesFileToTsMorphProject';
-import { parseTypeMappers } from './parseTypeMappers';
+} from './generateResolverFiles/index.js';
+import { generateTypeDefsFiles } from './generateTypeDefsFiles/index.js';
+import { getGraphQLObjectTypeResolversToGenerate } from './getGraphQLObjectTypeResolversToGenerate/index.js';
+import { addVirtualTypesFileToTsMorphProject } from './addVirtualTypesFileToTsMorphProject/index.js';
+import { parseTypeMappers } from './parseTypeMappers/index.js';
 import {
   type RawPresetConfig,
   validatePresetConfig,
-} from './validatePresetConfig';
-import { validateAndMergeParsedConfigs } from './validateAndMergeParsedConfigs';
-import { normalizeAddConfigPath } from './normalizeAddConfigPath';
-import { logger } from './utils';
+} from './validatePresetConfig/index.js';
+import { validateAndMergeParsedConfigs } from './validateAndMergeParsedConfigs/index.js';
+import { normalizeAddConfigPath } from './normalizeAddConfigPath/index.js';
+import { logger } from './utils/index.js';
 
 export const presetName = '@eddeee888/gcg-typescript-resolver-files';
 
@@ -72,7 +72,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       tsMorphProjectOptions,
       fixObjectTypeResolvers,
       emitLegacyCommonJSImports,
-      importExtension
+      importExtension,
     } = validatePresetConfig(rawPresetConfig, baseConfig);
 
     const resolverTypesPath = path.posix.join(
@@ -103,7 +103,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           typeMappersSuffix,
           tsMorphProject,
           emitLegacyCommonJSImports,
-          importExtension
+          importExtension,
         }),
       createProfilerRunName('parseTypeMappers')
     );

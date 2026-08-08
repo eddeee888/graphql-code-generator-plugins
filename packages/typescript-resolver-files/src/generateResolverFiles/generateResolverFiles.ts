@@ -1,13 +1,13 @@
-import { addResolverMainFiles } from './addResolverMainFiles';
-import { postProcessFiles } from './postProcessFiles';
-import { handleGraphQLRootObjectTypeField } from './handleGraphQLRootObjectTypeField';
-import { handleGraphQLObjectType } from './handleGraphQLObjectType';
-import { handleGraphQLUnionType } from './handleGraphQLUnionType';
-import { handleGraphQLScalarType } from './handleGraphQLScalarType';
-import { handleGraphQLInterfaceType } from './handleGraphQLInterfaceType';
-import { handleGraphQLEnumType } from './handleGraphQLEnumType';
-import { visitNamedType } from './visitNamedType';
-import type { GenerateResolverFilesContext } from './types';
+import { addResolverMainFiles } from './addResolverMainFiles.js';
+import { postProcessFiles } from './postProcessFiles.js';
+import { handleGraphQLRootObjectTypeField } from './handleGraphQLRootObjectTypeField.js';
+import { handleGraphQLObjectType } from './handleGraphQLObjectType.js';
+import { handleGraphQLUnionType } from './handleGraphQLUnionType.js';
+import { handleGraphQLScalarType } from './handleGraphQLScalarType.js';
+import { handleGraphQLInterfaceType } from './handleGraphQLInterfaceType.js';
+import { handleGraphQLEnumType } from './handleGraphQLEnumType.js';
+import { visitNamedType } from './visitNamedType.js';
+import type { GenerateResolverFilesContext } from './types.js';
 
 export const generateResolverFiles = (
   ctx: GenerateResolverFilesContext

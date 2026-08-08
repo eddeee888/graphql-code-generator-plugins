@@ -11,7 +11,7 @@ import {
   logger,
   normalizeImportExtension,
   type ImportExtension,
-} from '../utils';
+} from '../utils/index.js';
 
 const defaultResolverRelativeTargetDirMap: Record<
   ParsedPresetConfig['mode'],

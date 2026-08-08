@@ -1,1 +1,1 @@
-export * from './validatePresetConfig';
+export * from './validatePresetConfig.js';

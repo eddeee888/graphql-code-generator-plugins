@@ -2,8 +2,11 @@ import * as path from 'path';
 import {
   type ParseLocationForWhitelistedModule,
   parseLocationForWhitelistedModule,
-} from './parseLocationForWhitelistedModule';
-import type { ParsedSource, ParseSourcesResult } from '../parseSources';
+} from './parseLocationForWhitelistedModule.js';
+import type {
+  ParsedSource,
+  ParseSourcesResult,
+} from '../parseSources/index.js';
 
 const createPartialLocation = (
   moduleName: string
@@ -120,6 +123,8 @@ describe('parseLocationForWhitelistedModule', () => {
         blacklistedModules: [],
         whitelistedModules: [],
       } as unknown as ParseLocationForWhitelistedModule)
-    ).toThrowErrorMatchingInlineSnapshot(`[Error: Unable to find /path/to/module10/schema.graphqls in sourceMap]`);
+    ).toThrowErrorMatchingInlineSnapshot(
+      `[Error: Unable to find /path/to/module10/schema.graphqls in sourceMap]`
+    );
   });
 });

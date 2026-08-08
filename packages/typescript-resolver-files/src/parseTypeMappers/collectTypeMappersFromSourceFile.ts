@@ -1,7 +1,11 @@
 import * as path from 'path';
 import { type SourceFile, type Identifier, SyntaxKind } from 'ts-morph';
-import { normalizeRelativePath, normalizeImportExtension, type ImportExtension } from '../utils';
-import type { TypeMappersMap } from './parseTypeMappers';
+import {
+  normalizeRelativePath,
+  normalizeImportExtension,
+  type ImportExtension,
+} from '../utils/index.js';
+import type { TypeMappersMap } from './parseTypeMappers.js';
 
 export const collectTypeMappersFromSourceFile = (
   {
@@ -33,7 +37,7 @@ export const collectTypeMappersFromSourceFile = (
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
         emitLegacyCommonJSImports,
-        importExtension
+        importExtension,
       },
       result
     );
@@ -55,7 +59,7 @@ export const collectTypeMappersFromSourceFile = (
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
         emitLegacyCommonJSImports,
-        importExtension
+        importExtension,
       },
       result
     );
@@ -82,7 +86,7 @@ export const collectTypeMappersFromSourceFile = (
           typeMappersFilePath: typeMappersSourceFile.getFilePath(),
           resolverTypesPath,
           emitLegacyCommonJSImports,
-          importExtension
+          importExtension,
         },
         result
       );
@@ -107,7 +111,7 @@ export const collectTypeMappersFromSourceFile = (
         typeMappersFilePath: typeMappersSourceFile.getFilePath(),
         resolverTypesPath,
         emitLegacyCommonJSImports,
-        importExtension
+        importExtension,
       },
       result
     );
@@ -122,7 +126,7 @@ const addTypeMapperDetailsIfValid = (
     typeMappersFilePath,
     resolverTypesPath,
     emitLegacyCommonJSImports,
-    importExtension
+    importExtension,
   }: {
     kind:
       | SyntaxKind.InterfaceDeclaration
@@ -169,7 +173,10 @@ const addTypeMapperDetailsIfValid = (
     )
   );
 
-  const fileExtension = normalizeImportExtension(importExtension, emitLegacyCommonJSImports);
+  const fileExtension = normalizeImportExtension(
+    importExtension,
+    emitLegacyCommonJSImports
+  );
   const configImportPath = `${relativeImportPathFromResolverTypesToSourceFile}${fileExtension}#${identifierName}`;
 
   if (result[schemaType]) {

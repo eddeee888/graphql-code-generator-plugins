@@ -1,7 +1,7 @@
 import * as path from 'path';
 import type { Types } from '@graphql-codegen/plugin-helpers';
-import type { TypedPresetConfig } from './validatePresetConfig';
-import { preset } from './preset';
+import type { TypedPresetConfig } from './validatePresetConfig/index.js';
+import { preset } from './preset.js';
 
 export const defineConfig = (
   presetConfig: TypedPresetConfig = {},

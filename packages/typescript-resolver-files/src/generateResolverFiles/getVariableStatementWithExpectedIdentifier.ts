@@ -1,5 +1,5 @@
 import type { SourceFile, VariableStatement } from 'ts-morph';
-import type { ResolverFile } from './types';
+import type { ResolverFile } from './types.js';
 
 export const getVariableStatementWithExpectedIdentifier = (
   sourceFile: SourceFile,

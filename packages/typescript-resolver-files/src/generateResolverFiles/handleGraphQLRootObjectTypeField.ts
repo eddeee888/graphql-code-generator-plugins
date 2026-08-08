@@ -3,8 +3,8 @@ import {
   isMatchResolverNamePattern,
   logger,
   type RootObjectType,
-} from '../utils';
-import type { GraphQLTypeHandler } from './types';
+} from '../utils/index.js';
+import type { GraphQLTypeHandler } from './types.js';
 
 export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
   RootObjectType
@@ -19,7 +19,10 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
     moduleName,
     relativePathFromBaseToModule,
   },
-  { result, config: { resolverGeneration, emitLegacyCommonJSImports, importExtension } }
+  {
+    result,
+    config: { resolverGeneration, emitLegacyCommonJSImports, importExtension },
+  }
 ) => {
   if (
     (belongsToRootObject === 'Query' &&
@@ -72,7 +75,7 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
     moduleType: resolversTypeMeta.moduleType,
     namedImports: [resolversTypeMeta.typeNamedImport],
     emitLegacyCommonJSImports,
-    importExtension
+    importExtension,
   });
 
   result.files[fieldFilePath] = {

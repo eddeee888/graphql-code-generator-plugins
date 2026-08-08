@@ -1,6 +1,6 @@
 import { SyntaxKind, type SourceFile } from 'ts-morph';
-import type { EnumResolverFile } from './types';
-import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier';
+import type { EnumResolverFile } from './types.js';
+import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier.js';
 
 export const ensureEnumTypeResolversAreGenerated = (
   sourceFile: SourceFile,

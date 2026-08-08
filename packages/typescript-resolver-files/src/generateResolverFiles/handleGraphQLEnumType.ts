@@ -1,5 +1,9 @@
-import { isMatchResolverNamePattern, logger, printImportLine } from '../utils';
-import type { GraphQLTypeHandler } from './types';
+import {
+  isMatchResolverNamePattern,
+  logger,
+  printImportLine,
+} from '../utils/index.js';
+import type { GraphQLTypeHandler } from './types.js';
 
 export const handleGraphQLEnumType: GraphQLTypeHandler<
   null,
@@ -17,7 +21,12 @@ export const handleGraphQLEnumType: GraphQLTypeHandler<
   },
   {
     result,
-    config: { typeMappersMap, resolverGeneration, emitLegacyCommonJSImports, importExtension },
+    config: {
+      typeMappersMap,
+      resolverGeneration,
+      emitLegacyCommonJSImports,
+      importExtension,
+    },
   }
 ) => {
   const matchedPatternToGenerate = isMatchResolverNamePattern({

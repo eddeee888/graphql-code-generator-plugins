@@ -1,1 +1,1 @@
-export * from './generateTypeDefsFiles';
+export * from './generateTypeDefsFiles.js';

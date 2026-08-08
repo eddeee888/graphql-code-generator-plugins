@@ -1,1 +1,1 @@
-export * from './normalizeAddConfigPath';
+export * from './normalizeAddConfigPath.js';

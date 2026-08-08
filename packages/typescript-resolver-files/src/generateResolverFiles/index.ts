@@ -1,2 +1,2 @@
-export { generateResolverFiles } from './generateResolverFiles';
-export type * from './types';
+export { generateResolverFiles } from './generateResolverFiles.js';
+export type * from './types.js';
