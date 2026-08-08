@@ -25,9 +25,9 @@
           "rimraf -g \"{projectRoot}/src/**/*.generated.*\"",
           "rimraf -g \"{projectRoot}/src/**/*.gen.*\"",
           "rimraf -g \"{projectRoot}/src/**/generated\"",
-          "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-mappers-vs-schema-types/testSetup.ts",
-          "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-mappers-vs-schema-types-advanced/testSetup.ts",
-          "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-resolvers-auto-wireup/testSetup.ts"
+          "tsx --conditions=@workspace/source --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-mappers-vs-schema-types/testSetup.ts",
+          "tsx --conditions=@workspace/source --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-mappers-vs-schema-types-advanced/testSetup.ts",
+          "tsx --conditions=@workspace/source --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-resolvers-auto-wireup/testSetup.ts"
         ],
         "parallel": false
       },
@@ -78,7 +78,7 @@
           "commands": [
             "rimraf -g \"{projectRoot}/src/test-mappers-vs-schema-types/**/resolvers/\"",
             "rimraf -g \"{projectRoot}/src/test-mappers-vs-schema-types/**/*.generated.*\"",
-            "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-mappers-vs-schema-types/testSetup.ts"
+            "tsx --conditions=@workspace/source --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-mappers-vs-schema-types/testSetup.ts"
           ],
           "parallel": false
         },
@@ -86,7 +86,7 @@
           "commands": [
             "rimraf -g \"{projectRoot}/src/test-mappers-vs-schema-types-advanced/**/resolvers/\"",
             "rimraf -g \"{projectRoot}/src/test-mappers-vs-schema-types-advanced/**/*.generated.*\"",
-            "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-mappers-vs-schema-types-advanced/testSetup.ts"
+            "tsx --conditions=@workspace/source --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-mappers-vs-schema-types-advanced/testSetup.ts"
           ],
           "parallel": false
         },
@@ -150,7 +150,7 @@
           "commands": [
             "rimraf -g \"{projectRoot}/src/test-resolvers-auto-wireup/**/resolvers/\"",
             "rimraf -g \"{projectRoot}/src/test-resolvers-auto-wireup/**/*.generated.*\"",
-            "tsx --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-resolvers-auto-wireup/testSetup.ts"
+            "tsx --conditions=@workspace/source --tsconfig={projectRoot}/tsconfig.json {projectRoot}/src/test-resolvers-auto-wireup/testSetup.ts"
           ],
           "parallel": false
         },
@@ -298,21 +298,7 @@
         "test-import-extension-ts": {
           "configFile": "{projectRoot}/src/test-import-extension-ts/codegen.ts"
         }
-      },
-      "dependsOn": ["prepare-e2e-modules"]
-    },
-    "prepare-e2e-modules": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "rimraf node_modules/@eddeee888/gcg-server-config",
-          "cp -r dist/packages/server-config node_modules/@eddeee888/gcg-server-config",
-          "rimraf node_modules/@eddeee888/gcg-typescript-resolver-files",
-          "cp -r dist/packages/typescript-resolver-files node_modules/@eddeee888/gcg-typescript-resolver-files"
-        ],
-        "parallel": false
-      },
-      "dependsOn": ["^build"]
+      }
     }
   }
 }
