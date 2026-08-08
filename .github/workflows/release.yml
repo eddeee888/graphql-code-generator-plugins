@@ -25,14 +25,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version: ${{ env.node-version }}
-          cache: pnpm
-          cache-dependency-path: '**/pnpm-lock.yaml'
-
-      - run: pnpm install --frozen-lockfile
+      - uses: pnpm/setup@v2
 
       - name: Create Release Pull Request or Publish to NPM
         id: changesets
@@ -112,15 +105,7 @@ jobs:
           persist-credentials: true
           repository: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.repo.full_name }}
           ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version: ${{ env.node-version }}
-          registry-url: 'https://registry.npmjs.org'
-          cache: pnpm
-          cache-dependency-path: '**/pnpm-lock.yaml'
-
-      - run: pnpm install --frozen-lockfile
+      - uses: pnpm/setup@v2
 
       - name: Deploy snapshot
         run: |
