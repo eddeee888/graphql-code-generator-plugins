@@ -298,7 +298,8 @@
         "test-import-extension-ts": {
           "configFile": "{projectRoot}/src/test-import-extension-ts/codegen.ts"
         }
-      }
+      },
+      "dependsOn": ["^build"]
     }
   }
 }

@@ -115,7 +115,8 @@
         "test-apollo-support-migrate": {
           "configFile": "{projectRoot}/src/test-apollo-support/codegen.migrate.mts"
         }
-      }
+      },
+      "dependsOn": ["^build"]
     }
   }
 }
