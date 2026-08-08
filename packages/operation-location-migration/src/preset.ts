@@ -13,7 +13,7 @@ import {
   SyntaxKind,
   Node,
 } from 'ts-morph';
-import type { TypedPresetConfig } from './config';
+import type { TypedPresetConfig } from './config.js';
 
 /**
  * TODO:

@@ -5,6 +5,7 @@
   "scripts": {
     "release": "pnpm nx run-many --target=build --all && yarn changeset publish"
   },
+  "type": "module",
   "private": true,
   "dependencies": {
     "tslib": "2.8.1"

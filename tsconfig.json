@@ -17,6 +17,12 @@
     },
     {
       "path": "./packages/typescript-resolver-files-e2e"
+    },
+    {
+      "path": "./tools/workspace-plugin"
+    },
+    {
+      "path": "./tools/testing"
     }
   ],
   "compilerOptions": {}

@@ -18,20 +18,34 @@
   ],
   "author": "Eddy Nguyen <ch@eddeee888.me>",
   "license": "MIT",
-  "type": "commonjs",
+  "type": "module",
   "main": "./src/index.js",
-  "types": "./src/index.d.ts",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@workspace/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
   "peerDependencies": {
     "graphql": "^15.0.0 || ^16.0.0 || ^17.0.0"
   },
   "dependencies": {
     "@graphql-codegen/add": "^7.1.0",
     "@graphql-codegen/plugin-helpers": "^7.1.0",
-    "@swc/helpers": "~0.5.11",
     "change-case-all": "^1.0.0",
-    "ts-morph": "^22.0.0"
+    "ts-morph": "^22.0.0",
+    "tslib": "^2.3.0"
   },
   "publishConfig": {
-    "directory": "../../dist/packages/operation-location-migration"
-  }
+    "directory": "packages/operation-location-migration"
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ]
 }

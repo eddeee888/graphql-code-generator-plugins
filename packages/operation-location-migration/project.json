@@ -4,19 +4,5 @@
   "sourceRoot": "packages/operation-location-migration/src",
   "projectType": "library",
   "tags": [],
-  "targets": {
-    "build": {
-      "executor": "@nx/js:swc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/operation-location-migration",
-        "main": "packages/operation-location-migration/src/index.ts",
-        "tsConfig": "packages/operation-location-migration/tsconfig.lib.json",
-        "assets": ["packages/operation-location-migration/*.md"]
-      }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint"
-    }
-  }
+  "targets": {}
 }
