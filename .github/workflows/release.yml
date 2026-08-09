@@ -125,7 +125,7 @@ jobs:
 
           echo "versions<<EOF" >> $GITHUB_OUTPUT
           for pkg in "${PACKAGES[@]}"; do
-            version=$(npm view "$pkg" dist-tags.alpha)
+            version=$(pnpm view "$pkg" dist-tags.alpha)
             echo "" >> $GITHUB_OUTPUT
             echo "$pkg@$version" >> $GITHUB_OUTPUT
           done
