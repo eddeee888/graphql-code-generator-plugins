@@ -1,5 +1,11 @@
 # @eddeee888/gcg-operation-location-migration
 
+## 0.4.0
+
+### Minor Changes
+
+- 04295b4: Migrate to ESM
+
 ## 0.3.0
 
 ### Minor Changes
