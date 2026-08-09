@@ -1,7 +1,5 @@
 # GraphQL Code Generator Plugins
 
-Test
-
 ## Overview
 
 List of [GraphQL Code Generator](https://www.the-guild.dev/graphql/codegen) plugins that complements the official plugins.
