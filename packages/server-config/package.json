@@ -41,9 +41,6 @@
     "@graphql-codegen/typescript-resolvers": "^6.1.0",
     "tslib": "^2.8.0"
   },
-  "publishConfig": {
-    "directory": "packages/server-config"
-  },
   "files": [
     "dist",
     "!**/*.tsbuildinfo"

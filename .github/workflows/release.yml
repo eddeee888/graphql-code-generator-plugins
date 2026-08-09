@@ -29,11 +29,9 @@ jobs:
 
       - name: Create Release Pull Request or Publish to NPM
         id: changesets
-        uses: changesets/action@v1.9.0
+        uses: changesets/action@v2.0.0-next.4
         with:
-          publish: pnpm release
-          commit: 'chore(release): update packages versions'
-          title: 'Upcoming Release Changes'
+          publish-script: pnpm release
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
 
