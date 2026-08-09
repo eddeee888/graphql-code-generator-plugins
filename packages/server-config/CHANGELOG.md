@@ -1,5 +1,11 @@
 # @eddeee888/gcg-server-config
 
+## 0.6.0
+
+### Minor Changes
+
+- 04295b4: Migrate to ESM
+
 ## 0.5.0
 
 ### Minor Changes

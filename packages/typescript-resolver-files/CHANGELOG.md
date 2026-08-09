@@ -1,5 +1,16 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.18.0
+
+### Minor Changes
+
+- 04295b4: Migrate to ESM
+
+### Patch Changes
+
+- Updated dependencies [04295b4]
+  - @eddeee888/gcg-server-config@0.6.0
+
 ## 0.17.0
 
 ### Minor Changes
