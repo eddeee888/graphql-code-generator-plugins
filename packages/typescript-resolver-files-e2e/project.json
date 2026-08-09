@@ -6,6 +6,7 @@
   "tags": [],
   "implicitDependencies": ["typescript-resolver-files"],
   "targets": {
+    "build": { "command": "echo noop" },
     "e2e": {
       "executor": "nx:run-commands",
       "options": {

@@ -6,6 +6,7 @@
   "tags": [],
   "implicitDependencies": ["operation-location-migration"],
   "targets": {
+    "build": { "command": "echo noop" },
     "e2e": {
       "executor": "nx:run-commands",
       "options": {

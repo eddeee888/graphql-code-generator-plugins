@@ -2,6 +2,6 @@
   "name": "@workspace/workspace-plugin",
   "version": "0.0.1",
   "private": true,
-  "type": "commonjs",
+  "type": "module",
   "generators": "./generators.json"
 }

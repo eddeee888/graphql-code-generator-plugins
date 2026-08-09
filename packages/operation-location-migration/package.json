@@ -41,9 +41,6 @@
     "ts-morph": "^22.0.0",
     "tslib": "^2.3.0"
   },
-  "publishConfig": {
-    "directory": "packages/operation-location-migration"
-  },
   "files": [
     "dist",
     "!**/*.tsbuildinfo"
