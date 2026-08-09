@@ -21,6 +21,10 @@
       "inputs": ["production", "^production"],
       "cache": true
     },
+    "test": {
+      "dependsOn": ["^build"],
+      "cache": true
+    },
     "@nx/eslint:lint": {
       "inputs": [
         "default",
