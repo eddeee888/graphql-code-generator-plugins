@@ -8,7 +8,7 @@ import {
   readProjectConfiguration,
   updateProjectConfiguration,
 } from '@nx/devkit';
-import type { TypescriptResolverFilesAddE2ETestSchema } from './schema';
+import type { TypescriptResolverFilesAddE2ETestSchema } from './schema.js';
 
 interface NormalizedSchema extends TypescriptResolverFilesAddE2ETestSchema {
   projectName: string;
