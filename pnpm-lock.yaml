@@ -419,10 +419,10 @@ importers:
         specifier: ^6.1.0
         version: 6.1.0(graphql@17.0.2)
       '@graphql-tools/merge':
-        specifier: ^9.2.0
-        version: 9.2.0(graphql@17.0.2)
+        specifier: ^9.2.2
+        version: 9.2.2(graphql@17.0.2)
       '@graphql-tools/utils':
-        specifier: ^11.2.0
+        specifier: ^11.2.2
         version: 11.2.2(graphql@17.0.2)
       graphql:
         specifier: ^15.0.0 || ^16.0.0 || ^17.0.0
@@ -10866,7 +10866,7 @@ snapshots:
       '@graphql-tools/graphql-file-loader': 8.1.18(graphql@17.0.2)
       '@graphql-tools/json-file-loader': 8.0.32(graphql@17.0.2)
       '@graphql-tools/load': 8.1.15(graphql@17.0.2)
-      '@graphql-tools/merge': 9.2.0(graphql@17.0.2)
+      '@graphql-tools/merge': 9.2.2(graphql@17.0.2)
       '@graphql-tools/url-loader': 9.1.6(@types/node@22.20.1)(graphql@17.0.2)
       '@graphql-tools/utils': 11.2.2(graphql@17.0.2)
       cosmiconfig: 8.3.6(typescript@6.0.3)
