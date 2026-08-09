@@ -1,5 +1,5 @@
-import { defineConfig } from './defineConfig';
-import { preset as defaultPreset } from './preset';
+import { defineConfig } from './defineConfig.js';
+import { preset as defaultPreset } from './preset.js';
 
 describe('defineConfig()', () => {
   it('returns default values correctly', () => {

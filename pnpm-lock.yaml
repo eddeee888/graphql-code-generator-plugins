@@ -404,7 +404,7 @@ importers:
     dependencies:
       '@eddeee888/gcg-server-config':
         specifier: workspace:*
-        version: link:../server-config/packages/server-config
+        version: link:../server-config
       '@graphql-codegen/add':
         specifier: ^7.1.0
         version: 7.1.0(graphql@17.0.2)
