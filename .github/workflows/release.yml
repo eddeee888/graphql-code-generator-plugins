@@ -10,7 +10,6 @@ on:
 
 env:
   github-token: ${{ secrets.GITHUB_TOKEN }}
-  node-version: '24.x'
   snapshot-release-tag: pr${{ github.event.issue.number }}-run${{ github.run_number }}-${{ github.run_attempt }}
 
 jobs:
