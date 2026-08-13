@@ -362,8 +362,8 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0(graphql@17.0.2)
       change-case-all:
-        specifier: ^1.0.0
-        version: 1.0.15
+        specifier: ^2.0.0
+        version: 2.1.0
       graphql:
         specifier: ^15.0.0 || ^16.0.0 || ^17.0.0
         version: 17.0.2
