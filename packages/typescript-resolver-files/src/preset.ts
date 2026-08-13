@@ -29,6 +29,8 @@ import { logger } from './utils/index.js';
 
 export const presetName = '@eddeee888/gcg-typescript-resolver-files';
 
+let tsMorphProject: Project;
+
 export const preset: Types.OutputPreset<RawPresetConfig> = {
   buildGeneratesSection: async ({
     schema,
@@ -88,10 +90,12 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       moduleNamingMode,
     });
 
-    const tsMorphProject = await profiler.run(
-      async () => new Project(tsMorphProjectOptions),
-      createProfilerRunName('Initialising ts-morph project')
-    );
+    if (!tsMorphProject) {
+      tsMorphProject = await profiler.run(
+        async () => new Project(tsMorphProjectOptions),
+        createProfilerRunName('Initialising ts-morph project')
+      );
+    }
 
     const typeMappersMap = await profiler.run(
       async () =>
