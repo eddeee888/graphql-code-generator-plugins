@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.18.1
+
+### Patch Changes
+
+- e408cc5: Only include dist in release
+
 ## 0.18.0
 
 ### Minor Changes
