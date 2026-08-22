@@ -145,21 +145,21 @@ export const postProcessFiles = ({
         }
       );
     });
+
+    // 4. Apply to result files the updated content done in step 2. and 3. above
+    sourceFilesToProcess.forEach(({ sourceFile, resolverFile }) => {
+      const normalizedRelativePath = path.posix.relative(
+        cwd(),
+        sourceFile.getFilePath()
+      );
+
+      // Overwrite existing files with fixes
+      result.files[normalizedRelativePath] = {
+        ...resolverFile,
+        content: sourceFile.getText(),
+      };
+    });
   }
-
-  // 4. Apply to result files the updated content done in step 2. and 3. above
-  sourceFilesToProcess.forEach(({ sourceFile, resolverFile }) => {
-    const normalizedRelativePath = path.posix.relative(
-      cwd(),
-      sourceFile.getFilePath()
-    );
-
-    // Overwrite existing files with fixes
-    result.files[normalizedRelativePath] = {
-      ...resolverFile,
-      content: sourceFile.getText(),
-    };
-  });
 };
 
 /**
