@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.18.2
+
+### Patch Changes
+
+- e353487: Set `overwrite.removeStaleFiles=false` (available in `@graphql-codegen/plugin-helpers` v7.2.0) to avoid scenario where resolver files are removed incorrectly.
+
 ## 0.18.1
 
 ### Patch Changes
