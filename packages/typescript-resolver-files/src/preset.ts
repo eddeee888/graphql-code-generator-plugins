@@ -95,6 +95,12 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         async () => new Project(tsMorphProjectOptions),
         createProfilerRunName('Initialising ts-morph project')
       );
+    } else {
+      await profiler.run(async () => {
+        tsMorphProject
+          .getSourceFiles()
+          .forEach((sourceFile) => sourceFile.refreshFromFileSystemSync());
+      }, createProfilerRunName('Refreshing ts-morph project files'));
     }
 
     const typeMappersMap = await profiler.run(
