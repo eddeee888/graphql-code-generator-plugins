@@ -12,7 +12,7 @@ export const defineConfig = (
   } = {}
 ): Pick<
   Types.ConfiguredOutput,
-  'preset' | 'presetConfig' | 'watchPattern' | 'schema' | 'hooks'
+  'preset' | 'presetConfig' | 'watchPattern' | 'schema' | 'hooks' | 'overwrite'
 > => {
   const { schema, baseOutputDir = '', hooks } = context;
 
@@ -33,5 +33,13 @@ export const defineConfig = (
     watchPattern,
     schema,
     hooks,
+    overwrite: {
+      // Server Preset needs to update existing resolver files
+      updateExistingFiles: true,
+      // When watching, it's common to avoid sending all files to Codegen to write to fs.
+      // When that happens, previously tracked files are marked as stale and gets removed wrongly.
+      // Therefore, we don't remove stale files.
+      removeStaleFiles: false,
+    },
   };
 };
