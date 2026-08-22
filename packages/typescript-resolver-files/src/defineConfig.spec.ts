@@ -9,6 +9,10 @@ describe('defineConfig()', () => {
       preset: defaultPreset,
       presetConfig: {},
       watchPattern: ['**/*.mappers.ts'],
+      overwrite: {
+        removeStaleFiles: false,
+        updateExistingFiles: true,
+      },
     });
   });
 
@@ -19,6 +23,10 @@ describe('defineConfig()', () => {
       preset: defaultPreset,
       presetConfig: {},
       watchPattern: ['src/schema/**/*.mappers.ts'],
+      overwrite: {
+        removeStaleFiles: false,
+        updateExistingFiles: true,
+      },
     });
   });
 
@@ -30,6 +38,10 @@ describe('defineConfig()', () => {
       presetConfig: {},
       watchPattern: ['**/*.mappers.ts'],
       schema: ['src/**/*.graphqls'],
+      overwrite: {
+        removeStaleFiles: false,
+        updateExistingFiles: true,
+      },
     });
   });
 
@@ -44,6 +56,10 @@ describe('defineConfig()', () => {
       presetConfig: {},
       watchPattern: ['**/*.mappers.ts'],
       hooks: { afterAllFileWrite: ['prettier --write'] },
+      overwrite: {
+        removeStaleFiles: false,
+        updateExistingFiles: true,
+      },
     });
   });
 
