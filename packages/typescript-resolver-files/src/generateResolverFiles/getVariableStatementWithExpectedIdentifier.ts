@@ -10,6 +10,7 @@ export const getVariableStatementWithExpectedIdentifier = (
 } => {
   let isExported = false;
 
+  sourceFile.refreshFromFileSystemSync();
   const variableStatementWithExpectedIdentifier =
     sourceFile.getVariableStatement((statement) => {
       let hasExpectedIdentifier = false;
