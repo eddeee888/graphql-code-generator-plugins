@@ -8,3 +8,4 @@ allowBuilds:
   unrs-resolver: true
 minimumReleaseAgeExclude:
   - '@graphql-codegen/typescript-react-apollo@4.4.3-alpha-20260808101442-e439530add2acc6e119f54b148ccb537e4d0a7ec'
+  - '@graphql-codegen/plugin-helpers@7.2.0'

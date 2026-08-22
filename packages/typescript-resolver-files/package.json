@@ -42,7 +42,7 @@
   "dependencies": {
     "@eddeee888/gcg-server-config": "workspace:*",
     "@graphql-codegen/add": "^7.1.0",
-    "@graphql-codegen/plugin-helpers": "^7.1.0",
+    "@graphql-codegen/plugin-helpers": "^7.2.0",
     "@graphql-codegen/schema-ast": "^6.1.0",
     "@graphql-codegen/typescript": "^6.1.0",
     "@graphql-codegen/typescript-resolvers": "^6.1.0",
