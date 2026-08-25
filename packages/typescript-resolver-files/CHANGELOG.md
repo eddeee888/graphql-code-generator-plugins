@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.18.3
+
+### Patch Changes
+
+- d5d480a: Keep ts-morph project reference between watches
+
 ## 0.18.2
 
 ### Patch Changes
