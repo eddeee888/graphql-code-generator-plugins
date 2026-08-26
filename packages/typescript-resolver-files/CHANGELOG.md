@@ -1,5 +1,11 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.18.4
+
+### Patch Changes
+
+- 67492b9: Bump @graphql-codegen/plugin-helpers to latest
+
 ## 0.18.3
 
 ### Patch Changes
