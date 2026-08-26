@@ -17,6 +17,7 @@ const config: CodegenConfig = {
   generates: {
     [modulesDir]: defineConfig({
       tsConfigFilePath,
+      resolverGeneration: 'minimal',
     }),
   },
 };
