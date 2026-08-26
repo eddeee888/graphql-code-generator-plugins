@@ -4,5 +4,13 @@
   "sourceRoot": "packages/typescript-resolver-files/src",
   "projectType": "library",
   "tags": [],
-  "targets": {}
+  "targets": {
+    "benchmark": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{workspaceRoot}",
+        "command": "tsx --conditions=@workspace/source packages/typescript-resolver-files/benchmark/run.ts {args.preset} {args.iterations}"
+      }
+    }
+  }
 }

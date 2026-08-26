@@ -5,6 +5,10 @@ dist
 tmp
 out-tsc
 
+# benchmark harness (generated workload + codegen profiler traces)
+packages/typescript-resolver-files/benchmark/.workload
+codegen-*.json
+
 # dependencies
 node_modules
 
