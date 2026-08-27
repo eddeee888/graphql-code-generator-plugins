@@ -1,6 +1,10 @@
-import { type PropertyAssignment, type SourceFile, SyntaxKind } from 'ts-morph';
+import {
+  type PropertyAssignment,
+  type SourceFile,
+  type VariableStatement,
+  SyntaxKind,
+} from 'ts-morph';
 import type { ObjectTypeFile } from './types.js';
-import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier.js';
 
 export type AddedPropertyAssignmentNodes = Record<
   string, // SourceFile's filename
@@ -20,11 +24,15 @@ export type AddedPropertyAssignmentNodes = Record<
 export const addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented = ({
   addedPropertyAssignmentNodes,
   sourceFile,
+  variableStatement,
   resolverFile,
   mode,
 }: {
   addedPropertyAssignmentNodes: AddedPropertyAssignmentNodes;
   sourceFile: SourceFile;
+  // Resolved once by the caller (ensureExportedResolver) and passed in, to avoid
+  // scanning the source file for the same variable statement a second time.
+  variableStatement: VariableStatement | undefined;
   resolverFile: ObjectTypeFile;
   mode: 'smart' | 'fast';
 }): void => {
@@ -36,11 +44,6 @@ export const addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented = ({
   if (!Object.keys(resolversToGenerate).length) {
     return;
   }
-
-  const { variableStatement } = getVariableStatementWithExpectedIdentifier(
-    sourceFile,
-    resolverFile
-  );
 
   if (!variableStatement) {
     throw new Error(
@@ -59,72 +62,45 @@ export const addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented = ({
   > = { ...resolversToGenerate };
 
   /**
-   * PropertyAssignment
+   * Mark a resolver as implemented if the object literal already has a member
+   * with that name, in any of these forms (single traversal over the statement):
    * ```
    * const name = () => {};
    * const OutputType = {
-   *   id: () => {},
-   *   name: name,
+   *   id: () => {},   // PropertyAssignment
+   *   greet(){},      // MethodDeclaration
+   *   name,           // ShorthandPropertyAssignment
    * }
    * ```
    */
-  variableStatement
-    .getDescendantsOfKind(SyntaxKind.PropertyAssignment)
-    .forEach((propertyAssignment) => {
-      const resolverName = propertyAssignment.getName();
+  variableStatement.forEachDescendant((node) => {
+    if (
+      node.isKind(SyntaxKind.PropertyAssignment) ||
+      node.isKind(SyntaxKind.MethodDeclaration) ||
+      node.isKind(SyntaxKind.ShorthandPropertyAssignment)
+    ) {
+      const resolverName = node.getName();
       if (resolversData[resolverName]) {
         resolversData[resolverName].implemented = true;
       }
-    });
+    }
+  });
 
-  /**
-   * MethodDeclaration
-   * ```
-   * const OutputType = {
-   *   id(){},
-   * }
-   * ```
-   */
-  variableStatement
-    .getDescendantsOfKind(SyntaxKind.MethodDeclaration)
-    .forEach((methodDeclaration) => {
-      const resolverName = methodDeclaration.getName();
-      if (resolversData[resolverName]) {
-        resolversData[resolverName].implemented = true;
-      }
-    });
-
-  /**
-   * ShorthandPropertyAssignment example:
-   * ```
-   * const id = () => {};
-   * const OutputType = {
-   *   id,
-   * }
-   * ```
-   */
-  variableStatement
-    .getDescendantsOfKind(SyntaxKind.ShorthandPropertyAssignment)
-    .forEach((propertyAssignment) => {
-      const resolverName = propertyAssignment.getName();
-      if (resolversData[resolverName]) {
-        resolversData[resolverName].implemented = true;
-      }
-    });
-
-  // 2. Add missing resolver properties if they haven't been implemented
+  // 2. Add missing resolver properties if they haven't been implemented.
+  // Resolve the object literal once, not once per added property.
+  const objectLiteralExpression = variableStatement.getDescendantsOfKind(
+    SyntaxKind.ObjectLiteralExpression
+  )[0];
   Object.values(resolversData).forEach(
     ({ resolverName, resolverDeclaration, implemented }) => {
       if (implemented) {
         return;
       }
 
-      const addedNode = variableStatement
-        .getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)[0]
-        .addPropertyAssignment({
-          name: resolverName,
-          initializer: resolverDeclaration,
-        });
+      const addedNode = objectLiteralExpression.addPropertyAssignment({
+        name: resolverName,
+        initializer: resolverDeclaration,
+      });
 
       if (mode === 'fast') {
         resolverFile.filesystem.contentUpdated = true;
