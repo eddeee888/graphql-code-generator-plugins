@@ -4,6 +4,7 @@ import {
   type AddedPropertyAssignmentNodes,
   addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented,
 } from './addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented.js';
+import { getVariableStatementWithExpectedIdentifier } from './getVariableStatementWithExpectedIdentifier.js';
 import type { ObjectTypeFile } from './types';
 
 const createFilePath = (filePath: string): string =>
@@ -174,10 +175,15 @@ describe('addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented() - mode
         },
       },
     };
+    const { variableStatement } = getVariableStatementWithExpectedIdentifier(
+      sourceFile,
+      resolverFile
+    );
     addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented({
       mode: 'smart',
       addedPropertyAssignmentNodes,
       sourceFile,
+      variableStatement,
       resolverFile,
     });
 
@@ -362,10 +368,15 @@ describe('addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented() - mode
         resolversToGenerate: {},
       },
     };
+    const { variableStatement } = getVariableStatementWithExpectedIdentifier(
+      sourceFile,
+      resolverFile
+    );
     addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented({
       mode: 'smart',
       addedPropertyAssignmentNodes,
       sourceFile,
+      variableStatement,
       resolverFile,
     });
 
@@ -546,10 +557,15 @@ describe('addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented() - mode
     };
 
     const addedPropertyAssignmentNodes: AddedPropertyAssignmentNodes = {};
+    const { variableStatement } = getVariableStatementWithExpectedIdentifier(
+      sourceFile,
+      resolverFile
+    );
     addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented({
       mode: 'smart',
       addedPropertyAssignmentNodes,
       sourceFile,
+      variableStatement,
       resolverFile,
     });
 
@@ -756,10 +772,15 @@ describe('addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented() - mode
         },
       },
     };
+    const { variableStatement } = getVariableStatementWithExpectedIdentifier(
+      sourceFile,
+      resolverFile
+    );
     addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented({
       mode: 'fast',
       addedPropertyAssignmentNodes,
       sourceFile,
+      variableStatement,
       resolverFile,
     });
 
@@ -944,10 +965,15 @@ describe('addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented() - mode
         resolversToGenerate: {},
       },
     };
+    const { variableStatement } = getVariableStatementWithExpectedIdentifier(
+      sourceFile,
+      resolverFile
+    );
     addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented({
       mode: 'fast',
       addedPropertyAssignmentNodes,
       sourceFile,
+      variableStatement,
       resolverFile,
     });
 
@@ -1128,10 +1154,15 @@ describe('addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented() - mode
     };
 
     const addedPropertyAssignmentNodes: AddedPropertyAssignmentNodes = {};
+    const { variableStatement } = getVariableStatementWithExpectedIdentifier(
+      sourceFile,
+      resolverFile
+    );
     addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented({
       mode: 'fast',
       addedPropertyAssignmentNodes,
       sourceFile,
+      variableStatement,
       resolverFile,
     });
 
