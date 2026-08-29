@@ -19,11 +19,14 @@ import {
 } from './getNodePropertyMap.js';
 import type { ParsedGraphQLSchemaMeta } from '../parseGraphQLSchema/index.js';
 import type { GeneratedTypesFileMeta } from '../generateResolverFiles/index.js';
+import { createCache } from './cache.js';
 
 export type GraphQLObjectTypeResolversToGenerate = Record<
   string,
   Record<string, { resolverName: string; resolverDeclaration: string }>
 >;
+
+const cache = createCache();
 
 export const getGraphQLObjectTypeResolversToGenerate = ({
   mode,
@@ -43,6 +46,18 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
   const typeMappersEntries = Object.entries(typeMappersMap);
   if (typeMappersEntries.length === 0) {
     return {};
+  }
+
+  const cacheKey = cache.createCacheKey({
+    mode,
+    typesSourceFile,
+    typeMappersMap,
+    tsMorphProject,
+  });
+
+  const cachedResult = cache.get(cacheKey);
+  if (cachedResult) {
+    return cachedResult;
   }
 
   /**
@@ -73,6 +88,7 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
     {}
   );
 
+  // "Fast" mode
   if (mode === 'fast') {
     // 1. Get property map of all schema types
     const resolverTypesMap: Record<
@@ -172,9 +188,11 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
       });
     });
 
-    return result;
+    const newResult = cache.updateCache(cacheKey, result);
+    return newResult;
   }
 
+  // "Smart" mode
   // 1. Get property map of all schema types
   const schemaResolversTypePropertyMap: Record<string, NodePropertyMap> = {};
 
@@ -269,8 +287,8 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
       }
     );
   });
-
-  return result;
+  const newResult = cache.updateCache(cacheKey, result);
+  return newResult;
 };
 
 const mustGetMapperOriginalDeclarationNode = ({
