@@ -22,36 +22,63 @@ type Cache = {
   }): string;
 };
 
+/**
+ * Maximum number of entries kept in the cache. Each entry corresponds to one
+ * distinct `(mode + types file + mappers)` state. A long watch session can visit
+ * many such states, and separate `generates` targets each contribute their own
+ * key, so we keep the N most-recently-used entries and evict the rest to bound
+ * memory. N is comfortably larger than the number of concurrent targets a single
+ * codegen run has.
+ */
+const MAX_CACHE_ENTRIES = 50;
+
 export const createCache = (): Cache => {
   /**
-   * Cache of the previous run's result, so the ts-morph type-checker work is
-   * skipped when nothing it depends on has changed (e.g. a watch re-run where only
-   * a resolver implementation file was edited). This function is a pure function of
+   * Cache of previous runs' results, so the ts-morph type-checker work is skipped
+   * when nothing it depends on has changed (e.g. a watch re-run where only a
+   * resolver implementation file was edited). The result is a pure function of
    * - `mode`
    * - the generated types file
    * - the mapper file contents
    *
-   * so the key is a hash of exactly those. Persisted at module scope;
-   * reused only on an exact key match, so it can never go stale.
+   * so the key is a hash of exactly those. Reused only on an exact key match, so
+   * it can never go stale. A `Map` is used because its insertion order gives a
+   * cheap LRU: the first key is the least-recently-used.
    */
-  const resultCache: Record<string, GraphQLObjectTypeResolversToGenerate> = {};
+  const resultCache = new Map<string, GraphQLObjectTypeResolversToGenerate>();
 
   return {
     get(key) {
-      const result = resultCache[key];
-      if (!result) {
+      const result = resultCache.get(key);
+      if (result === undefined) {
         return undefined;
       }
+
+      // Mark as most-recently-used by re-inserting at the end.
+      resultCache.delete(key);
+      resultCache.set(key, result);
 
       return structuredClone(result);
     },
     /**
-     * updateCache
+     * set
      * Create a structured clone in the cache
      * because downstream can update the value object
      */
     set(key, value) {
-      resultCache[key] = structuredClone(value);
+      // Re-insert so this key becomes the most-recently-used entry.
+      resultCache.delete(key);
+      resultCache.set(key, structuredClone(value));
+
+      // Evict least-recently-used entries beyond the cap.
+      while (resultCache.size > MAX_CACHE_ENTRIES) {
+        const lruKey = resultCache.keys().next().value;
+        if (lruKey === undefined) {
+          break;
+        }
+        resultCache.delete(lruKey);
+      }
+
       return value;
     },
 
