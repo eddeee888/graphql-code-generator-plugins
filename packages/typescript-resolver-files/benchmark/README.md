@@ -29,13 +29,18 @@ Presets (in `generateSchema.ts`): `small` (~20 types), `medium` (~100),
 
 ### What it measures
 
-Each iteration runs in a fresh child process and does codegen **twice**:
+Each iteration runs in a fresh child process and does codegen **three times**:
 
 - **COLD** — nothing generated yet (true first run / CI).
-- **WARM** — output already on disk and the preset's module-level ts-morph
-  `Project` singleton reused (i.e. a `--watch` re-run).
+- **WARM, cache hit** — output on disk + the preset's module-level ts-morph
+  `Project` reused, and nothing changed, so the phase-7 result cache hits (a
+  `--watch` re-run after editing a resolver implementation).
+- **WARM, cache miss** — a mapper file is edited between runs, so the phase-7
+  cache key changes and `getGraphQLObjectTypeResolversToGenerate` recomputes (a
+  `--watch` re-run after editing a mapper). Cheaper than COLD because ts-morph is
+  already warm, but not free like the cache hit.
 
-The runner prints a per-phase median/min/max table for both, plus two totals:
+The runner prints a per-phase median/min/max table for each, plus two totals:
 `preset phases subtotal` (work inside the preset) and `total generate() wall`
 (the whole pipeline, including downstream plugin rendering + file writes). The
 gap between them is downstream codegen cost.
