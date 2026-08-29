@@ -235,6 +235,10 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           plugins: [{ add: { content: meta.content } }],
           config: {},
           schema,
+          // Pass schemaAst so codegen-core reuses the prebuilt schema instead of
+          // rebuilding one per output (O(types) each -> O(types^2) overall). This
+          // is an `add`-only output, so the schema doesn't affect its content.
+          schemaAst,
           documents: [],
         };
         generatesSection.push(typeDefsFile);
@@ -308,6 +312,10 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
             plugins: [{ add: { content } }],
             config: {},
             schema,
+            // Pass schemaAst so codegen-core reuses the prebuilt schema instead of
+            // rebuilding one per output (O(types) each -> O(types^2) overall). This
+            // is an `add`-only output, so the schema doesn't affect its content.
+            schemaAst,
             documents: [],
           };
         });

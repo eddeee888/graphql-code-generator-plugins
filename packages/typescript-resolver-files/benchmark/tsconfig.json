@@ -1,0 +1,12 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "composite": false,
+    "declaration": false,
+    "emitDeclarationOnly": false,
+    "types": ["node"]
+  },
+  "include": ["*.ts"],
+  "exclude": [".workload"]
+}

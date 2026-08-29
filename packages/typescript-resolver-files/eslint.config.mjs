@@ -1,6 +1,8 @@
 import baseConfig from '../../eslint.config.mjs';
 
 export default [
+  // Generated benchmark workload output is not source; never lint it.
+  { ignores: ['**/.workload/**'] },
   ...baseConfig,
   {
     files: ['**/*.json'],
@@ -9,6 +11,7 @@ export default [
         'error',
         {
           ignoredFiles: [
+            '{projectRoot}/benchmark/**/*.ts',
             '{projectRoot}/eslint.config.mjs',
             '{projectRoot}/vite.config.ts',
           ],
