@@ -5,7 +5,7 @@ import type { GraphQLObjectTypeResolversToGenerate } from './getGraphQLObjectTyp
 
 type Cache = {
   get(key: string): GraphQLObjectTypeResolversToGenerate | undefined;
-  updateCache(
+  set(
     key: string,
     value: GraphQLObjectTypeResolversToGenerate
   ): GraphQLObjectTypeResolversToGenerate;
@@ -50,7 +50,7 @@ export const createCache = (): Cache => {
      * Create a structured clone in the cache
      * because downstream can update the value object
      */
-    updateCache(key, value) {
+    set(key, value) {
       resultCache[key] = structuredClone(value);
       return value;
     },

@@ -188,7 +188,7 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
       });
     });
 
-    const newResult = cache.updateCache(cacheKey, result);
+    const newResult = cache.set(cacheKey, result);
     return newResult;
   }
 
@@ -287,7 +287,7 @@ export const getGraphQLObjectTypeResolversToGenerate = ({
       }
     );
   });
-  const newResult = cache.updateCache(cacheKey, result);
+  const newResult = cache.set(cacheKey, result);
   return newResult;
 };
 
