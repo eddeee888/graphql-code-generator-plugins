@@ -21,6 +21,8 @@
  */
 import { spawnSync } from 'child_process';
 import { performance } from 'perf_hooks';
+import * as fs from 'fs';
+import * as path from 'path';
 import { CodegenContext, generate } from '@graphql-codegen/cli';
 import config from './codegen.js';
 import {
@@ -67,7 +69,33 @@ interface SingleResult {
   stats: { modules: number; types: number; mappers: number };
   cold: RunTimings;
   warm: RunTimings;
+  warmMapperChanged: RunTimings;
 }
+
+/**
+ * Edit one mapper file on disk so its contents (and therefore the phase-7 cache
+ * key) change. Used to measure the cache-miss path: the ts-morph project is still
+ * warm, but `getGraphQLObjectTypeResolversToGenerate` must recompute.
+ */
+const changeOneMapperFile = (modulesDir: string): void => {
+  for (const entry of fs.readdirSync(modulesDir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    const dir = path.join(modulesDir, entry.name);
+    const mapperFile = fs
+      .readdirSync(dir)
+      .find((f) => f.endsWith('.mappers.ts'));
+    if (mapperFile) {
+      fs.appendFileSync(
+        path.join(dir, mapperFile),
+        `\n// benchmark: mapper edited at ${Date.now()}\n`
+      );
+      return;
+    }
+  }
+  throw new Error('No mapper file found to edit');
+};
 
 /**
  * Run codegen once against the current on-disk state, returning the wall time
@@ -96,10 +124,13 @@ const runProfiledGenerate = async (): Promise<RunTimings> => {
 };
 
 /**
- * Produce one data point for a preset: (re)generate the workload fresh, then
- * measure a COLD run (nothing generated yet) immediately followed by a WARM run
- * (output on disk + the preset's ts-morph Project singleton reused, i.e. a watch
- * re-run). Runs in its own process so COLD is genuinely cold.
+ * Produce one data point for a preset. In its own process (so COLD is genuinely
+ * cold), measure three runs:
+ *  - COLD: nothing generated yet.
+ *  - WARM: output on disk + the ts-morph Project singleton reused, and nothing
+ *    changed -> the phase-7 cache HITS (watch re-run after editing a resolver).
+ *  - WARM + mapper changed: a mapper file is edited between runs, so the phase-7
+ *    cache MISSES and it recomputes (watch re-run after editing a mapper).
  */
 const run = async (presetName: string): Promise<SingleResult> => {
   const preset = workloadPresets[presetName];
@@ -110,15 +141,18 @@ const run = async (presetName: string): Promise<SingleResult> => {
       ).join(', ')}`
     );
   }
-  const { stats } = generateWorkload({
+  const { modulesDir, stats } = generateWorkload({
     preset,
     workloadDir: defaultWorkloadDir(),
   });
 
   const cold = await runProfiledGenerate(); // nothing on disk -> cold
-  const warm = await runProfiledGenerate(); // output exists + singleton reused -> warm
+  const warm = await runProfiledGenerate(); // unchanged -> phase-7 cache hit
 
-  return { preset: presetName, stats, cold, warm };
+  changeOneMapperFile(modulesDir); // invalidate the phase-7 cache key
+  const warmMapperChanged = await runProfiledGenerate(); // cache miss -> recompute
+
+  return { preset: presetName, stats, cold, warm, warmMapperChanged };
 };
 
 // ---------- orchestrator ----------
@@ -235,8 +269,12 @@ const orchestrate = async (
     results.map((r) => r.cold)
   );
   printTable(
-    'WARM (watch re-run)',
+    'WARM (watch re-run, nothing changed — cache hit)',
     results.map((r) => r.warm)
+  );
+  printTable(
+    'WARM (watch re-run, mapper changed — cache miss)',
+    results.map((r) => r.warmMapperChanged)
   );
 };
 
