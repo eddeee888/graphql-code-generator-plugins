@@ -1,4 +1,4 @@
-import type { SourceFile } from 'ts-morph';
+import { type SourceFile, type VariableStatement, SyntaxKind } from 'ts-morph';
 import * as path from 'path';
 import { cwd } from '../utils/index.js';
 import type { ResolverFile, GenerateResolverFilesContext } from './types.js';
@@ -70,10 +70,8 @@ export const postProcessFiles = ({
       sourceFile.getFilePath()
     );
 
-    const { addedVariableStatement } = ensureExportedResolver(
-      sourceFile,
-      resolverFile
-    );
+    const { addedVariableStatement, variableStatement } =
+      ensureExportedResolver(sourceFile, resolverFile);
 
     if (
       resolverFile.__filetype !== 'scalarResolver' ||
@@ -92,6 +90,7 @@ export const postProcessFiles = ({
       addObjectTypeResolversPropertyAssignmentNodesIfNotImplemented({
         addedPropertyAssignmentNodes,
         sourceFile,
+        variableStatement,
         resolverFile,
         mode: fixObjectTypeResolvers.object,
       });
@@ -168,7 +167,10 @@ export const postProcessFiles = ({
 const ensureExportedResolver = (
   sourceFile: SourceFile,
   resolverFile: ResolverFile
-): { addedVariableStatement: boolean } => {
+): {
+  addedVariableStatement: boolean;
+  variableStatement: VariableStatement | undefined;
+} => {
   const { variableStatement, isExported } =
     getVariableStatementWithExpectedIdentifier(sourceFile, resolverFile);
 
@@ -242,10 +244,20 @@ const ensureExportedResolver = (
 
   if (!variableStatement) {
     // Did not find variable statement with expected identifier, add it to the end with a warning
-    sourceFile.addStatements(resolverFile.meta.variableStatement);
+    const addedStatements = sourceFile.addStatements(
+      resolverFile.meta.variableStatement
+    );
     resolverFile.filesystem.contentUpdated = true;
 
-    return { addedVariableStatement: true };
+    const addedVariableStatementNode = addedStatements.find(
+      (statement): statement is VariableStatement =>
+        statement.isKind(SyntaxKind.VariableStatement)
+    );
+
+    return {
+      addedVariableStatement: true,
+      variableStatement: addedVariableStatementNode,
+    };
   } else if (variableStatement && !isExported) {
     // If has identifier but not exported
     // Add export keyword to statement
@@ -259,10 +271,10 @@ const ensureExportedResolver = (
       resolverFile.filesystem.contentUpdated = true;
     }
     // else, if identifier's been exported do nothing
-    return { addedVariableStatement: false };
+    return { addedVariableStatement: false, variableStatement };
   }
 
-  return { addedVariableStatement: false };
+  return { addedVariableStatement: false, variableStatement };
 };
 
 /**
