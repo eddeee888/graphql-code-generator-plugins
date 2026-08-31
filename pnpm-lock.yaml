@@ -204,7 +204,7 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
-  '@graphql-codegen/cli@7.3.1': b344808ec016720bb03048ccf854992022c6a9d435ef8223a512fc48843ea8e7
+  '@graphql-codegen/cli@7.3.1': 83da0d9cc4f83ed581cc57f776ad2884d843d1e515bfddc34715b3e4fa18c91b
 
 importers:
 
@@ -222,7 +222,7 @@ importers:
         version: 1.0.0(jiti@2.7.0)(typescript@6.0.3)
       '@eddeee888/nx-graphql-code-generator':
         specifier: 2.1.0
-        version: 2.1.0(@graphql-codegen/cli@7.3.1(patch_hash=b344808ec016720bb03048ccf854992022c6a9d435ef8223a512fc48843ea8e7)(@types/node@22.20.1)(graphql@17.0.2)(typescript@6.0.3))(nx@23.1.1(@swc-node/register@1.12.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.28)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
+        version: 2.1.0(@graphql-codegen/cli@7.3.1(patch_hash=83da0d9cc4f83ed581cc57f776ad2884d843d1e515bfddc34715b3e4fa18c91b)(@types/node@22.20.1)(graphql@17.0.2)(typescript@6.0.3))(nx@23.1.1(@swc-node/register@1.12.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.28)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
       '@eslint/eslintrc':
         specifier: 3.3.1
         version: 3.3.1
@@ -231,7 +231,7 @@ importers:
         version: 7.1.0(graphql@17.0.2)
       '@graphql-codegen/cli':
         specifier: 7.3.1
-        version: 7.3.1(patch_hash=b344808ec016720bb03048ccf854992022c6a9d435ef8223a512fc48843ea8e7)(@types/node@22.20.1)(graphql@17.0.2)(typescript@6.0.3)
+        version: 7.3.1(patch_hash=83da0d9cc4f83ed581cc57f776ad2884d843d1e515bfddc34715b3e4fa18c91b)(@types/node@22.20.1)(graphql@17.0.2)(typescript@6.0.3)
       '@graphql-codegen/near-operation-file-preset':
         specifier: 5.2.1
         version: 5.2.1(graphql@17.0.2)
@@ -442,7 +442,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: ^7.3.1
-        version: 7.3.1(patch_hash=b344808ec016720bb03048ccf854992022c6a9d435ef8223a512fc48843ea8e7)(@types/node@22.20.1)(graphql@17.0.2)(typescript@6.0.3)
+        version: 7.3.1(patch_hash=83da0d9cc4f83ed581cc57f776ad2884d843d1e515bfddc34715b3e4fa18c91b)(@types/node@22.20.1)(graphql@17.0.2)(typescript@6.0.3)
 
   packages/typescript-resolver-files-e2e:
     devDependencies:
@@ -7371,9 +7371,9 @@ snapshots:
       - supports-color
       - typescript
 
-  '@eddeee888/nx-graphql-code-generator@2.1.0(@graphql-codegen/cli@7.3.1(patch_hash=b344808ec016720bb03048ccf854992022c6a9d435ef8223a512fc48843ea8e7)(@types/node@22.20.1)(graphql@17.0.2)(typescript@6.0.3))(nx@23.1.1(@swc-node/register@1.12.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.28)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))':
+  '@eddeee888/nx-graphql-code-generator@2.1.0(@graphql-codegen/cli@7.3.1(patch_hash=83da0d9cc4f83ed581cc57f776ad2884d843d1e515bfddc34715b3e4fa18c91b)(@types/node@22.20.1)(graphql@17.0.2)(typescript@6.0.3))(nx@23.1.1(@swc-node/register@1.12.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.28)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))':
     dependencies:
-      '@graphql-codegen/cli': 7.3.1(patch_hash=b344808ec016720bb03048ccf854992022c6a9d435ef8223a512fc48843ea8e7)(@types/node@22.20.1)(graphql@17.0.2)(typescript@6.0.3)
+      '@graphql-codegen/cli': 7.3.1(patch_hash=83da0d9cc4f83ed581cc57f776ad2884d843d1e515bfddc34715b3e4fa18c91b)(@types/node@22.20.1)(graphql@17.0.2)(typescript@6.0.3)
       '@nx/devkit': 20.8.4(nx@23.1.1(@swc-node/register@1.12.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.28)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
       semver: 7.8.5
       tslib: 2.8.1
@@ -7590,7 +7590,7 @@ snapshots:
       graphql: 17.0.2
       tslib: 2.8.1
 
-  '@graphql-codegen/cli@7.3.1(patch_hash=b344808ec016720bb03048ccf854992022c6a9d435ef8223a512fc48843ea8e7)(@types/node@22.20.1)(graphql@17.0.2)(typescript@6.0.3)':
+  '@graphql-codegen/cli@7.3.1(patch_hash=83da0d9cc4f83ed581cc57f776ad2884d843d1e515bfddc34715b3e4fa18c91b)(@types/node@22.20.1)(graphql@17.0.2)(typescript@6.0.3)':
     dependencies:
       '@babel/generator': 7.29.8
       '@babel/template': 7.29.7

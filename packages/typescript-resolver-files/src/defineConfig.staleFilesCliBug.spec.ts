@@ -1,29 +1,95 @@
 import { createRequire } from 'module';
 import * as path from 'path';
 import { pathToFileURL } from 'url';
-import { defineConfig } from './defineConfig.js';
+import { executeCodegen } from '@graphql-codegen/cli';
 
 /**
- * `@graphql-codegen/cli`'s `overwrite` resolution (`normalizeOverwriteConfig`
- * in `generate-and-save.js`) looks up the matching `codegen.ts` `generates`
- * entry by doing an *exact* match on the per-file path Codegen is about to
- * write, then requires that entry to have a `plugins` key.
+ * `@graphql-codegen/cli` used to resolve a generated file's `overwrite` option
+ * (`normalizeOverwriteConfig` in `generate-and-save.js`) by looking the file's
+ * own path up in `config.generates`, then requiring that entry to have a
+ * `plugins` key.
  *
- * The server preset's `generates` entry is keyed by `baseOutputDir` and has
- * no `plugins` key (the preset supplies plugins internally), while every
- * file it writes lives *underneath* that key. So the exact-match lookup
- * always misses and `overwrite.removeStaleFiles: false` from `defineConfig()`
- * (defineConfig.ts) is silently ignored - Codegen falls back to the global
- * default of `removeStaleFiles: true`, deleting resolver files in watch mode.
+ * Neither holds for a preset-based output such as the server preset: its
+ * `generates` entry is keyed by `baseOutputDir` (a directory it writes many
+ * files into, and some generated paths are not even under it), and it has no
+ * `plugins` key because the preset supplies plugins itself. So the lookup
+ * always missed, and `overwrite.removeStaleFiles: false` from `defineConfig()`
+ * was silently dropped in favour of Codegen's global default of
+ * `removeStaleFiles: true` - deleting resolver files in watch mode.
  *
- * This is only reachable through `@graphql-codegen/cli`'s internals (not
- * exported publicly), so this repo carries a `pnpm patch` for
- * `@graphql-codegen/cli` (see `patches/@graphql-codegen__cli@7.3.1.patch`)
- * that fixes the lookup and exposes `normalizeOverwriteConfig` for this test.
+ * The fix carries the `generates` entry's `overwrite` on each generated file
+ * (the same way `hooks` already was), so no path matching is needed at all.
+ * This repo carries it as `patches/@graphql-codegen__cli@7.3.1.patch` until it
+ * lands upstream.
+ *
+ * These tests exercise the CLI contract with a stub preset rather than the
+ * server preset itself, so they stay independent of what the server preset
+ * happens to emit. `defineConfig.spec.ts` covers the `overwrite` value the
+ * server preset declares.
+ */
+
+const serverPresetOverwrite = {
+  removeStaleFiles: false,
+  updateExistingFiles: true,
+};
+
+const baseOutputDir = 'src/schema';
+
+// Mirrors how the server preset emits files: many outputs from one `generates`
+// entry keyed by a directory, including a path that is not under that directory.
+const generatedFilenames = [
+  `${baseOutputDir}/types.generated.ts`,
+  `${baseOutputDir}/resolvers/Query/user.ts`,
+  'resolvers/User.ts',
+];
+
+const stubPreset = {
+  buildGeneratesSection: (options: Record<string, unknown>) =>
+    generatedFilenames.map((filename) => ({
+      ...options,
+      filename,
+      plugins: [],
+      pluginMap: {},
+    })),
+};
+
+describe('overwrite propagation through @graphql-codegen/cli', () => {
+  it('tags every file a preset generates with the generates entry’s overwrite', async () => {
+    const { result, error } = await executeCodegen({
+      schema: 'type Query { user: User } type User { id: ID! name: String }',
+      generates: {
+        // No `plugins` key, keyed by a directory - exactly the server preset's shape.
+        [baseOutputDir]: {
+          preset: stubPreset,
+          overwrite: serverPresetOverwrite,
+        },
+      },
+    } as never);
+
+    expect(error).toBeNull();
+    expect(result.map((file) => file.filename)).toEqual(generatedFilenames);
+
+    for (const file of result) {
+      expect({
+        filename: file.filename,
+        overwrite: (file as { overwrite?: unknown }).overwrite,
+      }).toEqual({
+        filename: file.filename,
+        overwrite: serverPresetOverwrite,
+      });
+    }
+  });
+});
+
+/**
+ * `normalizeOverwriteConfig` is internal to `generate-and-save.js`; the patch
+ * adds a named export so the resolution rules can be asserted directly.
  */
 async function loadNormalizeOverwriteConfig() {
   const require = createRequire(import.meta.url);
-  const cliPackageJsonPath = require.resolve('@graphql-codegen/cli/package.json');
+  const cliPackageJsonPath = require.resolve(
+    '@graphql-codegen/cli/package.json'
+  );
   const generateAndSavePath = path.join(
     path.dirname(cliPackageJsonPath),
     'esm',
@@ -31,72 +97,47 @@ async function loadNormalizeOverwriteConfig() {
   );
   const mod = await import(pathToFileURL(generateAndSavePath).href);
   return mod.normalizeOverwriteConfig as (
-    config: { overwrite?: unknown; generates: Record<string, unknown> },
-    outputPath: string
+    config: { overwrite?: unknown },
+    fileOutput: { filename: string; overwrite?: unknown }
   ) => { removeStaleFiles: boolean; updateExistingFiles: boolean };
 }
 
-describe('server preset overwrite vs @graphql-codegen/cli stale file detection', () => {
-  it('honors defineConfig()’s overwrite for a file nested under baseOutputDir', async () => {
+describe('normalizeOverwriteConfig()', () => {
+  it('uses the overwrite carried on the generated file', async () => {
     const normalizeOverwriteConfig = await loadNormalizeOverwriteConfig();
-    const baseOutputDir = 'src/schema';
-    const outputConfig = defineConfig({}, { baseOutputDir });
-
-    const config = {
-      overwrite: true, // global default codegen.ts would otherwise fall back to
-      generates: {
-        [baseOutputDir]: outputConfig,
-      },
-    };
-
-    // A file the server preset actually writes, nested under baseOutputDir.
-    const generatedFilePath = path.posix.join(
-      baseOutputDir,
-      'base',
-      'resolvers',
-      'Query',
-      'user.ts'
-    );
-
-    expect(normalizeOverwriteConfig(config, generatedFilePath)).toEqual({
-      removeStaleFiles: false,
-      updateExistingFiles: true,
-    });
-  });
-
-  it('still honors an exact-match generates key (non-preset outputs)', async () => {
-    const normalizeOverwriteConfig = await loadNormalizeOverwriteConfig();
-    const outputPath = 'src/generated.ts';
-    const config = {
-      overwrite: true,
-      generates: {
-        [outputPath]: {
-          plugins: ['typescript'],
-          overwrite: { removeStaleFiles: false, updateExistingFiles: false },
-        },
-      },
-    };
-
-    expect(normalizeOverwriteConfig(config, outputPath)).toEqual({
-      removeStaleFiles: false,
-      updateExistingFiles: false,
-    });
-  });
-
-  it('falls back to the global overwrite for a path outside any generates entry', async () => {
-    const normalizeOverwriteConfig = await loadNormalizeOverwriteConfig();
-    const config = {
-      overwrite: { removeStaleFiles: false, updateExistingFiles: false },
-      generates: {
-        'src/schema': defineConfig({}, { baseOutputDir: 'src/schema' }),
-      },
-    };
 
     expect(
-      normalizeOverwriteConfig(config, 'some/unrelated/file.ts')
-    ).toEqual({
-      removeStaleFiles: false,
-      updateExistingFiles: false,
+      normalizeOverwriteConfig(
+        { overwrite: true },
+        {
+          filename: `${baseOutputDir}/resolvers/Query/user.ts`,
+          overwrite: serverPresetOverwrite,
+        }
+      )
+    ).toEqual(serverPresetOverwrite);
+  });
+
+  it('falls back to the global overwrite when the file carries none', async () => {
+    const normalizeOverwriteConfig = await loadNormalizeOverwriteConfig();
+
+    expect(
+      normalizeOverwriteConfig(
+        { overwrite: { removeStaleFiles: false } },
+        { filename: 'src/generated.ts' }
+      )
+    ).toEqual({ removeStaleFiles: false, updateExistingFiles: true });
+  });
+
+  it('expands the boolean shorthand', async () => {
+    const normalizeOverwriteConfig = await loadNormalizeOverwriteConfig();
+
+    expect(
+      normalizeOverwriteConfig({}, { filename: 'a.ts', overwrite: false })
+    ).toEqual({ removeStaleFiles: false, updateExistingFiles: false });
+
+    expect(normalizeOverwriteConfig({}, { filename: 'a.ts' })).toEqual({
+      removeStaleFiles: true,
+      updateExistingFiles: true,
     });
   });
 });

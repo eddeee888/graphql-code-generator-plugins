@@ -1,92 +1,203 @@
+diff --git a/cjs/codegen.js b/cjs/codegen.js
+index 27e313bd7b700a4827567fd72b6328d0ca9a87c8..1d735b17f596cf5c2716cde521123ab08173567c 100644
+--- a/cjs/codegen.js
++++ b/cjs/codegen.js
+@@ -378,6 +378,11 @@ async function executeCodegen(input) {
+                                                 filename: outputArgs.filename,
+                                                 content: output,
+                                                 hooks: outputConfig.hooks || {},
++                                                // Carry the `generates` entry's `overwrite` on the file
++                                                // itself. A preset writes many files under one entry keyed
++                                                // by its base output dir, so the entry cannot be recovered
++                                                // from the generated file's path later on.
++                                                overwrite: outputConfig.overwrite,
+                                             });
+                                         };
+                                         await context.profiler.run(() => Promise.all(outputs.map(process)), `Codegen: ${filename}`);
 diff --git a/cjs/generate-and-save.js b/cjs/generate-and-save.js
-index 0fe6eb8d696e70248b7e4bf14d70c180a128affc..cba87434315f05b10621931f9e960cf117a17546 100644
+index 0fe6eb8d696e70248b7e4bf14d70c180a128affc..3ec481027a1ba66d0dc3054498ee09d833b6eea3 100644
 --- a/cjs/generate-and-save.js
 +++ b/cjs/generate-and-save.js
-@@ -135,7 +135,7 @@ async function generate(input, saveToFile = true) {
- function normalizeOverwriteConfig(config, outputPath) {
-     const overwrite = (function getOverwriteOption() {
-         const { overwrite: result = true } = config;
+@@ -17,13 +17,14 @@ async function generate(input, saveToFile = true) {
+     const context = (0, config_js_1.ensureContext)(input);
+     const config = context.getConfig();
+     await context.profiler.run(() => (0, hooks_js_1.lifecycleHooks)(config.hooks).afterStart(), 'Lifecycle: afterStart');
+-    let previouslyGeneratedFilenames = [];
++    let previouslyGeneratedFiles = [];
+     function removeStaleFiles(config, generationResult) {
+         const filenames = generationResult.map(o => o.filename);
+         // find stale files from previous build which are not present in current build
+-        const staleFilenames = previouslyGeneratedFilenames.filter(f => !filenames.includes(f));
+-        for (const filename of staleFilenames) {
+-            if (normalizeOverwriteConfig(config, filename).removeStaleFiles) {
++        const staleFiles = previouslyGeneratedFiles.filter(f => !filenames.includes(f.filename));
++        for (const staleFile of staleFiles) {
++            const { filename } = staleFile;
++            if (normalizeOverwriteConfig(config, staleFile).removeStaleFiles) {
+                 (0, file_system_js_1.unlinkFile)(filename, err => {
+                     const prettyFilename = filename.replace(`${input.cwd || process.cwd()}/`, '');
+                     if (err) {
+@@ -35,7 +36,12 @@ async function generate(input, saveToFile = true) {
+                 });
+             }
+         }
+-        previouslyGeneratedFilenames = filenames;
++        // Keep each file's own `overwrite` around so a file that disappears in a
++        // later run is still judged by the `generates` entry that produced it.
++        previouslyGeneratedFiles = generationResult.map(({ filename, overwrite }) => ({
++            filename,
++            overwrite,
++        }));
+     }
+     const recentOutputHash = new Map();
+     async function writeOutput(generationResult) {
+@@ -55,7 +61,7 @@ async function generate(input, saveToFile = true) {
+             if (previousHash) {
+                 recentOutputHash.set(result.filename, previousHash);
+             }
+-            if (!normalizeOverwriteConfig(config, result.filename).updateExistingFiles && exists) {
++            if (!normalizeOverwriteConfig(config, result).updateExistingFiles && exists) {
+                 return;
+             }
+             let content = result.content || '';
+@@ -132,19 +138,13 @@ async function generate(input, saveToFile = true) {
+     await writeProfilerOutput();
+     return outputFiles;
+ }
+-function normalizeOverwriteConfig(config, outputPath) {
+-    const overwrite = (function getOverwriteOption() {
+-        const { overwrite: result = true } = config;
 -        const outputConfig = config.generates[outputPath];
-+        const outputConfig = findOutputConfig(config.generates, outputPath);
-         if (!outputConfig) {
-             (0, debugging_js_1.debugLog)(`Couldn't find a config of ${outputPath}`);
-             return result;
-@@ -160,9 +160,30 @@ function normalizeOverwriteConfig(config, outputPath) {
+-        if (!outputConfig) {
+-            (0, debugging_js_1.debugLog)(`Couldn't find a config of ${outputPath}`);
+-            return result;
+-        }
+-        if (isConfiguredOutput(outputConfig) && outputConfig.overwrite !== undefined) {
+-            return outputConfig.overwrite;
+-        }
+-        return result;
+-    })();
++function normalizeOverwriteConfig(config, fileOutput) {
++    // `fileOutput.overwrite` is carried over from the `generates` entry that
++    // produced this file (see `codegen.js`). Looking it up by output path here
++    // does not work: a preset writes many files underneath a single `generates`
++    // entry keyed by its base output dir, so no `generates` key ever equals the
++    // path of a file the preset generated.
++    const overwrite = fileOutput.overwrite ?? config.overwrite ?? true;
+     if (overwrite === true) {
+         return {
+             removeStaleFiles: true,
+@@ -160,9 +160,7 @@ function normalizeOverwriteConfig(config, outputPath) {
      const { removeStaleFiles = true, updateExistingFiles = true } = overwrite;
      return { removeStaleFiles, updateExistingFiles };
  }
-+function findOutputConfig(generates, outputPath) {
-+    if (generates[outputPath]) {
-+        return generates[outputPath];
-+    }
-+    // Presets (e.g. the server preset from @eddeee888/gcg-typescript-resolver-files)
-+    // write many files nested under a single `generates` entry keyed by the
-+    // preset's base output directory, so an exact match against the per-file
-+    // `outputPath` never succeeds. Fall back to the longest `generates` key
-+    // that is a path-prefix of `outputPath`.
-+    let bestMatch;
-+    let bestMatchKeyLength = -1;
-+    for (const key of Object.keys(generates)) {
-+        const isPrefix = outputPath === key || outputPath.startsWith(`${key}/`);
-+        if (isPrefix && key.length > bestMatchKeyLength) {
-+            bestMatch = generates[key];
-+            bestMatchKeyLength = key.length;
-+        }
-+    }
-+    return bestMatch;
-+}
- function isConfiguredOutput(output) {
+-function isConfiguredOutput(output) {
 -    return typeof output.plugins !== 'undefined';
-+    return typeof output.plugins !== 'undefined' || typeof output.preset !== 'undefined';
- }
+-}
 +exports.normalizeOverwriteConfig = normalizeOverwriteConfig;
  async function hashFile(filePath) {
      try {
          return hash(await (0, file_system_js_1.readFile)(filePath));
+diff --git a/esm/codegen.js b/esm/codegen.js
+index 4b6a854da1fdf7303e2a82908ea6db375ca13e17..125f30b63655cb4a19d943e27047aca6422ad559 100644
+--- a/esm/codegen.js
++++ b/esm/codegen.js
+@@ -374,6 +374,11 @@ export async function executeCodegen(input) {
+                                                 filename: outputArgs.filename,
+                                                 content: output,
+                                                 hooks: outputConfig.hooks || {},
++                                                // Carry the `generates` entry's `overwrite` on the file
++                                                // itself. A preset writes many files under one entry keyed
++                                                // by its base output dir, so the entry cannot be recovered
++                                                // from the generated file's path later on.
++                                                overwrite: outputConfig.overwrite,
+                                             });
+                                         };
+                                         await context.profiler.run(() => Promise.all(outputs.map(process)), `Codegen: ${filename}`);
 diff --git a/esm/generate-and-save.js b/esm/generate-and-save.js
-index be32dbb79ebe8adaae8f98454d63c70eef4b3ca6..bc8bfbeb4c408ce03e9581509d47069913026965 100644
+index be32dbb79ebe8adaae8f98454d63c70eef4b3ca6..648d7056a05cbcf4b4681df59b555d53457c10b8 100644
 --- a/esm/generate-and-save.js
 +++ b/esm/generate-and-save.js
-@@ -131,7 +131,7 @@ export async function generate(input, saveToFile = true) {
- function normalizeOverwriteConfig(config, outputPath) {
-     const overwrite = (function getOverwriteOption() {
-         const { overwrite: result = true } = config;
+@@ -13,13 +13,14 @@ export async function generate(input, saveToFile = true) {
+     const context = ensureContext(input);
+     const config = context.getConfig();
+     await context.profiler.run(() => lifecycleHooks(config.hooks).afterStart(), 'Lifecycle: afterStart');
+-    let previouslyGeneratedFilenames = [];
++    let previouslyGeneratedFiles = [];
+     function removeStaleFiles(config, generationResult) {
+         const filenames = generationResult.map(o => o.filename);
+         // find stale files from previous build which are not present in current build
+-        const staleFilenames = previouslyGeneratedFilenames.filter(f => !filenames.includes(f));
+-        for (const filename of staleFilenames) {
+-            if (normalizeOverwriteConfig(config, filename).removeStaleFiles) {
++        const staleFiles = previouslyGeneratedFiles.filter(f => !filenames.includes(f.filename));
++        for (const staleFile of staleFiles) {
++            const { filename } = staleFile;
++            if (normalizeOverwriteConfig(config, staleFile).removeStaleFiles) {
+                 unlinkFile(filename, err => {
+                     const prettyFilename = filename.replace(`${input.cwd || process.cwd()}/`, '');
+                     if (err) {
+@@ -31,7 +32,12 @@ export async function generate(input, saveToFile = true) {
+                 });
+             }
+         }
+-        previouslyGeneratedFilenames = filenames;
++        // Keep each file's own `overwrite` around so a file that disappears in a
++        // later run is still judged by the `generates` entry that produced it.
++        previouslyGeneratedFiles = generationResult.map(({ filename, overwrite }) => ({
++            filename,
++            overwrite,
++        }));
+     }
+     const recentOutputHash = new Map();
+     async function writeOutput(generationResult) {
+@@ -51,7 +57,7 @@ export async function generate(input, saveToFile = true) {
+             if (previousHash) {
+                 recentOutputHash.set(result.filename, previousHash);
+             }
+-            if (!normalizeOverwriteConfig(config, result.filename).updateExistingFiles && exists) {
++            if (!normalizeOverwriteConfig(config, result).updateExistingFiles && exists) {
+                 return;
+             }
+             let content = result.content || '';
+@@ -128,19 +134,13 @@ export async function generate(input, saveToFile = true) {
+     await writeProfilerOutput();
+     return outputFiles;
+ }
+-function normalizeOverwriteConfig(config, outputPath) {
+-    const overwrite = (function getOverwriteOption() {
+-        const { overwrite: result = true } = config;
 -        const outputConfig = config.generates[outputPath];
-+        const outputConfig = findOutputConfig(config.generates, outputPath);
-         if (!outputConfig) {
-             debugLog(`Couldn't find a config of ${outputPath}`);
-             return result;
-@@ -156,8 +156,28 @@ function normalizeOverwriteConfig(config, outputPath) {
+-        if (!outputConfig) {
+-            debugLog(`Couldn't find a config of ${outputPath}`);
+-            return result;
+-        }
+-        if (isConfiguredOutput(outputConfig) && outputConfig.overwrite !== undefined) {
+-            return outputConfig.overwrite;
+-        }
+-        return result;
+-    })();
++function normalizeOverwriteConfig(config, fileOutput) {
++    // `fileOutput.overwrite` is carried over from the `generates` entry that
++    // produced this file (see `codegen.js`). Looking it up by output path here
++    // does not work: a preset writes many files underneath a single `generates`
++    // entry keyed by its base output dir, so no `generates` key ever equals the
++    // path of a file the preset generated.
++    const overwrite = fileOutput.overwrite ?? config.overwrite ?? true;
+     if (overwrite === true) {
+         return {
+             removeStaleFiles: true,
+@@ -156,9 +156,6 @@ function normalizeOverwriteConfig(config, outputPath) {
      const { removeStaleFiles = true, updateExistingFiles = true } = overwrite;
      return { removeStaleFiles, updateExistingFiles };
  }
-+function findOutputConfig(generates, outputPath) {
-+    if (generates[outputPath]) {
-+        return generates[outputPath];
-+    }
-+    // Presets (e.g. the server preset from @eddeee888/gcg-typescript-resolver-files)
-+    // write many files nested under a single `generates` entry keyed by the
-+    // preset's base output directory, so an exact match against the per-file
-+    // `outputPath` never succeeds. Fall back to the longest `generates` key
-+    // that is a path-prefix of `outputPath`.
-+    let bestMatch;
-+    let bestMatchKeyLength = -1;
-+    for (const key of Object.keys(generates)) {
-+        const isPrefix = outputPath === key || outputPath.startsWith(`${key}/`);
-+        if (isPrefix && key.length > bestMatchKeyLength) {
-+            bestMatch = generates[key];
-+            bestMatchKeyLength = key.length;
-+        }
-+    }
-+    return bestMatch;
-+}
- function isConfiguredOutput(output) {
+-function isConfiguredOutput(output) {
 -    return typeof output.plugins !== 'undefined';
-+    return typeof output.plugins !== 'undefined' || typeof output.preset !== 'undefined';
- }
+-}
  async function hashFile(filePath) {
      try {
-@@ -172,3 +192,4 @@ async function hashFile(filePath) {
+         return hash(await readFile(filePath));
+@@ -172,3 +169,4 @@ async function hashFile(filePath) {
          throw err;
      }
  }
