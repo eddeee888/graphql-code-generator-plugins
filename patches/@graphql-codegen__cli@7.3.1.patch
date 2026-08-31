@@ -1,0 +1,93 @@
+diff --git a/cjs/generate-and-save.js b/cjs/generate-and-save.js
+index 0fe6eb8d696e70248b7e4bf14d70c180a128affc..cba87434315f05b10621931f9e960cf117a17546 100644
+--- a/cjs/generate-and-save.js
++++ b/cjs/generate-and-save.js
+@@ -135,7 +135,7 @@ async function generate(input, saveToFile = true) {
+ function normalizeOverwriteConfig(config, outputPath) {
+     const overwrite = (function getOverwriteOption() {
+         const { overwrite: result = true } = config;
+-        const outputConfig = config.generates[outputPath];
++        const outputConfig = findOutputConfig(config.generates, outputPath);
+         if (!outputConfig) {
+             (0, debugging_js_1.debugLog)(`Couldn't find a config of ${outputPath}`);
+             return result;
+@@ -160,9 +160,30 @@ function normalizeOverwriteConfig(config, outputPath) {
+     const { removeStaleFiles = true, updateExistingFiles = true } = overwrite;
+     return { removeStaleFiles, updateExistingFiles };
+ }
++function findOutputConfig(generates, outputPath) {
++    if (generates[outputPath]) {
++        return generates[outputPath];
++    }
++    // Presets (e.g. the server preset from @eddeee888/gcg-typescript-resolver-files)
++    // write many files nested under a single `generates` entry keyed by the
++    // preset's base output directory, so an exact match against the per-file
++    // `outputPath` never succeeds. Fall back to the longest `generates` key
++    // that is a path-prefix of `outputPath`.
++    let bestMatch;
++    let bestMatchKeyLength = -1;
++    for (const key of Object.keys(generates)) {
++        const isPrefix = outputPath === key || outputPath.startsWith(`${key}/`);
++        if (isPrefix && key.length > bestMatchKeyLength) {
++            bestMatch = generates[key];
++            bestMatchKeyLength = key.length;
++        }
++    }
++    return bestMatch;
++}
+ function isConfiguredOutput(output) {
+-    return typeof output.plugins !== 'undefined';
++    return typeof output.plugins !== 'undefined' || typeof output.preset !== 'undefined';
+ }
++exports.normalizeOverwriteConfig = normalizeOverwriteConfig;
+ async function hashFile(filePath) {
+     try {
+         return hash(await (0, file_system_js_1.readFile)(filePath));
+diff --git a/esm/generate-and-save.js b/esm/generate-and-save.js
+index be32dbb79ebe8adaae8f98454d63c70eef4b3ca6..bc8bfbeb4c408ce03e9581509d47069913026965 100644
+--- a/esm/generate-and-save.js
++++ b/esm/generate-and-save.js
+@@ -131,7 +131,7 @@ export async function generate(input, saveToFile = true) {
+ function normalizeOverwriteConfig(config, outputPath) {
+     const overwrite = (function getOverwriteOption() {
+         const { overwrite: result = true } = config;
+-        const outputConfig = config.generates[outputPath];
++        const outputConfig = findOutputConfig(config.generates, outputPath);
+         if (!outputConfig) {
+             debugLog(`Couldn't find a config of ${outputPath}`);
+             return result;
+@@ -156,8 +156,28 @@ function normalizeOverwriteConfig(config, outputPath) {
+     const { removeStaleFiles = true, updateExistingFiles = true } = overwrite;
+     return { removeStaleFiles, updateExistingFiles };
+ }
++function findOutputConfig(generates, outputPath) {
++    if (generates[outputPath]) {
++        return generates[outputPath];
++    }
++    // Presets (e.g. the server preset from @eddeee888/gcg-typescript-resolver-files)
++    // write many files nested under a single `generates` entry keyed by the
++    // preset's base output directory, so an exact match against the per-file
++    // `outputPath` never succeeds. Fall back to the longest `generates` key
++    // that is a path-prefix of `outputPath`.
++    let bestMatch;
++    let bestMatchKeyLength = -1;
++    for (const key of Object.keys(generates)) {
++        const isPrefix = outputPath === key || outputPath.startsWith(`${key}/`);
++        if (isPrefix && key.length > bestMatchKeyLength) {
++            bestMatch = generates[key];
++            bestMatchKeyLength = key.length;
++        }
++    }
++    return bestMatch;
++}
+ function isConfiguredOutput(output) {
+-    return typeof output.plugins !== 'undefined';
++    return typeof output.plugins !== 'undefined' || typeof output.preset !== 'undefined';
+ }
+ async function hashFile(filePath) {
+     try {
+@@ -172,3 +192,4 @@ async function hashFile(filePath) {
+         throw err;
+     }
+ }
++export { normalizeOverwriteConfig };
