@@ -6,3 +6,6 @@ allowBuilds:
   esbuild: true
   nx: true
   unrs-resolver: true
+minimumReleaseAgeExclude:
+  - '@graphql-codegen/cli'
+  - '@graphql-codegen/plugin-helpers'
