@@ -7660,7 +7660,7 @@ snapshots:
   '@graphql-codegen/gql-tag-operations@6.1.0(graphql@17.0.2)':
     dependencies:
       '@graphql-codegen/plugin-helpers': 7.2.1(graphql@17.0.2)
-      '@graphql-codegen/visitor-plugin-common': 7.2.3(graphql@17.0.2)
+      '@graphql-codegen/visitor-plugin-common': 7.2.5(graphql@17.0.2)
       '@graphql-tools/utils': 11.2.2(graphql@17.0.2)
       auto-bind: 5.0.1
       graphql: 17.0.2
@@ -7713,7 +7713,7 @@ snapshots:
   '@graphql-codegen/typed-document-node@7.1.0(graphql@17.0.2)':
     dependencies:
       '@graphql-codegen/plugin-helpers': 7.2.1(graphql@17.0.2)
-      '@graphql-codegen/visitor-plugin-common': 7.2.3(graphql@17.0.2)
+      '@graphql-codegen/visitor-plugin-common': 7.2.5(graphql@17.0.2)
       auto-bind: 5.0.1
       change-case-all: 2.1.0
       graphql: 17.0.2
