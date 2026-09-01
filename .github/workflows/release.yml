@@ -116,20 +116,39 @@ jobs:
       - name: Get snapshot versions
         id: get_snapshot_versions
         run: |
+          # pkg name -> local package dir
           PACKAGES=(
-            "@eddeee888/gcg-operation-location-migration"
-            "@eddeee888/gcg-server-config"
-            "@eddeee888/gcg-typescript-resolver-files"
+            "@eddeee888/gcg-operation-location-migration:packages/operation-location-migration"
+            "@eddeee888/gcg-server-config:packages/server-config"
+            "@eddeee888/gcg-typescript-resolver-files:packages/typescript-resolver-files"
           )
 
           echo "versions<<EOF" >> $GITHUB_OUTPUT
-          for pkg in "${PACKAGES[@]}"; do
-            version=$(pnpm view "$pkg" dist-tags.alpha)
+          for entry in "${PACKAGES[@]}"; do
+            pkg="${entry%%:*}"  # part before the first ":"
+            dir="${entry##*:}"  # part after the last ":"
+            local_version=$(node -p "require('./$dir/package.json').version")
+
+            if [[ "$local_version" != 0.0.0-"$RELEASE_TAG"-* ]]; then
+              # Not touched by this PR's changesets, so nothing was published for it
+              # this run - leave it out of the comment entirely.
+              continue
+            fi
+
+            # Published in this run: `changeset version --snapshot` already wrote this
+            # exact version to package.json, so use it directly instead of asking the
+            # registry - `pnpm view`/npm's dist-tags read can lag a few seconds behind
+            # a publish and return the previous alpha version instead of the one we
+            # just published.
+            version="$local_version"
+
             echo "" >> $GITHUB_OUTPUT
             echo "$pkg@$version" >> $GITHUB_OUTPUT
           done
           echo "" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
+        env:
+          RELEASE_TAG: ${{ env.snapshot-release-tag }}
 
       - name: Report success
         if: success()
