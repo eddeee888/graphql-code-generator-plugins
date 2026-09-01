@@ -125,8 +125,8 @@ jobs:
 
           echo "versions<<EOF" >> $GITHUB_OUTPUT
           for entry in "${PACKAGES[@]}"; do
-            pkg="${entry%%:*}"
-            dir="${entry##*:}"
+            pkg="${entry%%:*}"  # part before the first ":"
+            dir="${entry##*:}"  # part after the last ":"
             local_version=$(node -p "require('./$dir/package.json').version")
 
             if [[ "$local_version" == 0.0.0-"$RELEASE_TAG"-* ]]; then
