@@ -21,7 +21,7 @@
     "@graphql-codegen/plugin-helpers": "7.2.1",
     "@graphql-codegen/schema-ast": "6.1.0",
     "@graphql-codegen/typescript": "6.1.0",
-    "@graphql-codegen/typescript-react-apollo": "5.0.0",
+    "@graphql-codegen/typescript-react-apollo": "4.4.3-alpha-20260808101442-e439530add2acc6e119f54b148ccb537e4d0a7ec",
     "@graphql-codegen/typescript-resolvers": "6.1.0",
     "@graphql-tools/merge": "9.2.0",
     "@nx/devkit": "23.1.1",

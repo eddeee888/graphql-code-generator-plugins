@@ -242,8 +242,8 @@ importers:
         specifier: 6.1.0
         version: 6.1.0(graphql@17.0.2)
       '@graphql-codegen/typescript-react-apollo':
-        specifier: 5.0.0
-        version: 5.0.0(graphql@17.0.2)
+        specifier: 4.4.3-alpha-20260808101442-e439530add2acc6e119f54b148ccb537e4d0a7ec
+        version: 4.4.3-alpha-20260808101442-e439530add2acc6e119f54b148ccb537e4d0a7ec(graphql@17.0.2)
       '@graphql-codegen/typescript-resolvers':
         specifier: 6.1.0
         version: 6.1.0(graphql@17.0.2)
@@ -1507,8 +1507,8 @@ packages:
       graphql-sock:
         optional: true
 
-  '@graphql-codegen/typescript-react-apollo@5.0.0':
-    resolution: {integrity: sha512-fjMCr4OkoGRHaZSDlOmPNdl0E7T8A1ueedvrHjGp3ayia+8c3MHYSwMOyJ87z4piK3waMUuz+fB4hVSyqU9Fog==}
+  '@graphql-codegen/typescript-react-apollo@4.4.3-alpha-20260808101442-e439530add2acc6e119f54b148ccb537e4d0a7ec':
+    resolution: {integrity: sha512-q/Jf6Dc+RGEcH3knYwuxm0vXNo4katWUGkqE0vv1Dc+/iPcOdtQ6380GB1zEei0XSRK2RTmzensieJN3JwHIOg==}
     engines: {node: '>= 16.0.0'}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
@@ -1528,6 +1528,12 @@ packages:
     engines: {node: '>=16'}
     peerDependencies:
       graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+
+  '@graphql-codegen/visitor-plugin-common@6.3.0':
+    resolution: {integrity: sha512-vGBoE+4huzZyNhyGSAhXAkdROHlwKxxuziZm4XtP1mxe7nuI+VgyOmXebafLijbmuDsptPXQN0C/htL54O8hrg==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
   '@graphql-codegen/visitor-plugin-common@7.2.3':
     resolution: {integrity: sha512-uP7lF8vAbOLefjrkLyz85dcDTfOkw0TV1xY+sFFvVK6cguTjWIokxxwWRgEeKaghWyOMvyFd6WXN4kqQxdVIiQ==}
@@ -7731,10 +7737,10 @@ snapshots:
       graphql: 17.0.2
       tslib: 2.8.1
 
-  '@graphql-codegen/typescript-react-apollo@5.0.0(graphql@17.0.2)':
+  '@graphql-codegen/typescript-react-apollo@4.4.3-alpha-20260808101442-e439530add2acc6e119f54b148ccb537e4d0a7ec(graphql@17.0.2)':
     dependencies:
       '@graphql-codegen/plugin-helpers': 6.3.0(graphql@17.0.2)
-      '@graphql-codegen/visitor-plugin-common': 7.2.5(graphql@17.0.2)
+      '@graphql-codegen/visitor-plugin-common': 6.3.0(graphql@17.0.2)
       auto-bind: 4.0.0
       change-case-all: 1.0.15
       graphql: 17.0.2
@@ -7757,6 +7763,20 @@ snapshots:
       '@graphql-codegen/visitor-plugin-common': 7.2.3(graphql@17.0.2)
       auto-bind: 5.0.1
       graphql: 17.0.2
+      tslib: 2.8.1
+
+  '@graphql-codegen/visitor-plugin-common@6.3.0(graphql@17.0.2)':
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 6.3.0(graphql@17.0.2)
+      '@graphql-tools/optimize': 2.0.0(graphql@17.0.2)
+      '@graphql-tools/relay-operation-optimizer': 7.1.8(graphql@17.0.2)
+      '@graphql-tools/utils': 11.2.2(graphql@17.0.2)
+      auto-bind: 4.0.0
+      change-case-all: 1.0.15
+      dependency-graph: 1.0.0
+      graphql: 17.0.2
+      graphql-tag: 2.12.7(graphql@17.0.2)
+      parse-filepath: 1.0.2
       tslib: 2.8.1
 
   '@graphql-codegen/visitor-plugin-common@7.2.3(graphql@17.0.2)':
