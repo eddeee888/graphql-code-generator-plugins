@@ -317,6 +317,12 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
             // is an `add`-only output, so the schema doesn't affect its content.
             schemaAst,
             documents: [],
+            // Forces Codegen to compare generated content vs on disk, instead of in-memory cache
+            // This avoids situation where resolver files are content on disk are updated,
+            // and goes out of sync with the in-memory cache version, and can lead to generated
+            // content not getting written to disk
+            // https://github.com/dotansimha/graphql-code-generator/pull/10928
+            contentComparison: 'disk',
           };
         });
     logger.debug(
