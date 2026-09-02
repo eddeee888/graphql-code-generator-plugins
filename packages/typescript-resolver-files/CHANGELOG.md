@@ -1,5 +1,27 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.19.0
+
+### Minor Changes
+
+- 72b8232: Add LRU cache for resolver types vs mappers type check
+
+  Resolver types vs mappers check is the most expensive check in this plugin. We need this to determine which resolvers need to be added to avoid runtime errors.
+
+  Previously in watch mode, we run this expensive check every run, even if the schema or mappers don't change. Adding a LRU cache helps said scenario by re-using a previously parsed data.
+
+  This ensures the codemod scenarios, where schema or mappers don't change, run as efficiently as possible:
+
+  - ensuring resolver exports exist
+  - ensuring resolvers are injected correctly to avoid runtime issues
+  - etc.
+
+### Patch Changes
+
+- cb43fb2: Fix bad re-parses and looping
+- a36d487: Pass `schemaAst` from parent to every built generates block to avoid re-parsing schema -> schema AST
+- 78bd189: Use contentComparison=disk on generated resolver files because these are often have edits that bypasses cache, leading to unexpected behaviours. Related PR: https://github.com/dotansimha/graphql-code-generator/pull/10928
+
 ## 0.18.4
 
 ### Patch Changes
