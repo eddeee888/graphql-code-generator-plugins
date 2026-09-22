@@ -1,3 +1,6 @@
+export type { MappedResolveErrorMapper } from 'does-not-exist';
+export type MappedResolveEmptyObjectMapper = {};
+
 export type UserMapper = {
   id: number;
 

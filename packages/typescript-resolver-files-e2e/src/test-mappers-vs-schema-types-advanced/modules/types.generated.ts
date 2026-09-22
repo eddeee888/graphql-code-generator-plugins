@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { BookMapper, UserMapper } from './test/schema.mappers';
+import { BookMapper, MappedResolveEmptyObjectMapper, MappedResolveErrorMapper, UserMapper } from './test/schema.mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
 /** All built-in and custom scalars, mapped to their actual values */
@@ -17,6 +17,18 @@ export type Book = {
   name: Scalars['String']['output'];
   nextBookInSeries: Book;
   relatedBooks: Array<Book>;
+};
+
+export type MappedResolveEmptyObject = {
+  __typename?: 'MappedResolveEmptyObject';
+  field: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+};
+
+export type MappedResolveError = {
+  __typename?: 'MappedResolveError';
+  field: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
 };
 
 export type NotMapped = {
@@ -127,6 +139,8 @@ export type ResolversTypes = {
   Book: ResolverTypeWrapper<BookMapper>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  MappedResolveEmptyObject: ResolverTypeWrapper<MappedResolveEmptyObjectMapper>;
+  MappedResolveError: ResolverTypeWrapper<MappedResolveErrorMapper>;
   NotMapped: ResolverTypeWrapper<NotMapped>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   User: ResolverTypeWrapper<UserMapper>;
@@ -138,6 +152,8 @@ export type ResolversParentTypes = {
   Book: BookMapper;
   ID: Scalars['ID']['output'];
   String: Scalars['String']['output'];
+  MappedResolveEmptyObject: MappedResolveEmptyObjectMapper;
+  MappedResolveError: MappedResolveErrorMapper;
   NotMapped: NotMapped;
   Query: Record<PropertyKey, never>;
   User: UserMapper;
@@ -149,6 +165,16 @@ export type BookResolvers<ContextType = any, ParentType extends ResolversParentT
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   nextBookInSeries?: Resolver<ResolversTypes['Book'], ParentType, ContextType>;
   relatedBooks?: Resolver<Array<ResolversTypes['Book']>, ParentType, ContextType>;
+};
+
+export type MappedResolveEmptyObjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['MappedResolveEmptyObject'] = ResolversParentTypes['MappedResolveEmptyObject']> = {
+  field?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+};
+
+export type MappedResolveErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['MappedResolveError'] = ResolversParentTypes['MappedResolveError']> = {
+  field?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
 export type NotMappedResolvers<ContextType = any, ParentType extends ResolversParentTypes['NotMapped'] = ResolversParentTypes['NotMapped']> = {
@@ -182,6 +208,8 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type Resolvers<ContextType = any> = {
   Book?: BookResolvers<ContextType>;
+  MappedResolveEmptyObject?: MappedResolveEmptyObjectResolvers<ContextType>;
+  MappedResolveError?: MappedResolveErrorResolvers<ContextType>;
   NotMapped?: NotMappedResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

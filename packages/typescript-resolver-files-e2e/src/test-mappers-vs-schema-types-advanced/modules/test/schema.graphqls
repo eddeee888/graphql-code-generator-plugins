@@ -39,6 +39,16 @@ type Book {
   nextBookInSeries: Book!
 }
 
+type MappedResolveEmptyObject {
+  id: ID!
+  field: String!
+}
+
+type MappedResolveError {
+  id: ID!
+  field: String!
+}
+
 type NotMapped {
   id: ID!
 }
