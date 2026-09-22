@@ -1,5 +1,5 @@
 ---
-'@eddeee888/gcg-typescript-resolver-files': patch
+'@eddeee888/gcg-typescript-resolver-files': minor
 ---
 
 Fix `fixObjectTypeResolvers` treating an unresolvable mapper type as an empty mapper and injecting a stub for every field
