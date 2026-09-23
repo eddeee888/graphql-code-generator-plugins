@@ -1,5 +1,11 @@
 # @eddeee888/gcg-operation-location-migration
 
+## 0.5.0
+
+### Minor Changes
+
+- 3984d76: Bump ts-morph to ^28.0.0
+
 ## 0.4.0
 
 ### Minor Changes
