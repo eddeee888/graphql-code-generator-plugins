@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { type SourceFile, type Identifier, SyntaxKind } from 'ts-morph';
+import { type SourceFile, type Identifier, Node, SyntaxKind } from 'ts-morph';
 import {
   normalizeRelativePath,
   normalizeImportExtension,
@@ -76,6 +76,12 @@ export const collectTypeMappersFromSourceFile = (
       const aliasNode = namedExport.getAliasNode();
       if (aliasNode) {
         identifierNode = aliasNode;
+      }
+
+      if (!Node.isIdentifier(identifierNode)) {
+        // A string-literal export name (e.g. `export { Foo as "not-an-identifier" }`)
+        // can never reference a valid TS type, so it can't be a type mapper.
+        return;
       }
 
       addTypeMapperDetailsIfValid(

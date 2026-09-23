@@ -38,7 +38,7 @@
     "@graphql-codegen/add": "^7.1.0",
     "@graphql-codegen/plugin-helpers": "^7.1.0",
     "change-case-all": "^1.0.0",
-    "ts-morph": "^22.0.0",
+    "ts-morph": "^28.0.0",
     "tslib": "^2.3.0"
   },
   "files": [

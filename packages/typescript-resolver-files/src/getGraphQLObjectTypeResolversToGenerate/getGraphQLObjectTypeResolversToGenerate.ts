@@ -361,6 +361,12 @@ const mustGetMapperOriginalDeclarationNode = ({
           }
         }
 
+        if (identifierNode && !Node.isIdentifier(identifierNode)) {
+          // A string-literal export name can never reference a valid TS type,
+          // so it can't be a type mapper.
+          continue;
+        }
+
         if (identifierNode?.getText() === mapper.name) {
           return {
             declarationNode: descendant,
