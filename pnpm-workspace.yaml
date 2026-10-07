@@ -2,7 +2,18 @@ packages:
   - 'packages/*'
   - 'tools/*'
 allowBuilds:
+  '@parcel/watcher': false
   '@swc/core': true
   esbuild: true
   nx: true
   unrs-resolver: true
+minimumReleaseAgeExclude:
+  - '@graphql-codegen/cli'
+  - '@graphql-codegen/client-preset'
+  - '@graphql-codegen/core'
+  - '@graphql-codegen/gql-tag-operations'
+  - '@graphql-codegen/plugin-helpers'
+  - '@graphql-codegen/schema-ast'
+  - '@graphql-codegen/typescript-resolvers'
+  - '@graphql-codegen/visitor-plugin-common'
+  - graphql-config
