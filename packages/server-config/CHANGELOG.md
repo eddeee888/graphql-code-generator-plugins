@@ -1,5 +1,11 @@
 # @eddeee888/gcg-server-config
 
+## 0.6.1
+
+### Patch Changes
+
+- 2df03b5: Bump @graphql-codegen/\* dependencies to their latest versions to remove GHSA-7mx3-vvmw-hjmv from the dependency tree
+
 ## 0.6.0
 
 ### Minor Changes
