@@ -69,7 +69,7 @@ const generateVirtualTypesFile = async ({
   const addResultAsComplextOutput =
     convertPluginOutputToComplextPluginOutput(addResult);
 
-  const print = (value: string[] | undefined): string =>
+  const print = (value: (string | null)[] | undefined): string =>
     value ? value.join('\n') : '';
 
   return {
