@@ -1,5 +1,15 @@
 # @eddeee888/gcg-operation-location-migration
 
+## 0.5.0
+
+### Minor Changes
+
+- 3984d76: Bump ts-morph to ^28.0.0
+
+### Patch Changes
+
+- 2df03b5: Bump @graphql-codegen/\* dependencies to their latest versions to remove GHSA-7mx3-vvmw-hjmv from the dependency tree
+
 ## 0.4.0
 
 ### Minor Changes
