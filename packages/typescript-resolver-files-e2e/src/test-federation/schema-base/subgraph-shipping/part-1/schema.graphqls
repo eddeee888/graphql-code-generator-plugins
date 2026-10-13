@@ -1,0 +1,15 @@
+type Query {
+  cheapestProduct: Product @provides(fields: "name")
+}
+
+type Product @key(fields: "upc") {
+  upc: String!
+  weight: Int @external
+  shippingEstimate: Int @requires(fields: "weight")
+}
+
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.3"
+    import: ["@key", "@external", "@requires", "@provides"]
+  )
