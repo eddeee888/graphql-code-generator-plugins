@@ -8,7 +8,6 @@ describe('printImportLine', () => {
       isTypeImport: false,
       namedImports: [],
       defaultImport: 'DefaultImport',
-      emitLegacyCommonJSImports: true,
     });
     expect(result).toBe("import  DefaultImport   from './path/to/file';");
   });
@@ -19,7 +18,6 @@ describe('printImportLine', () => {
       moduleType: 'file',
       isTypeImport: false,
       namedImports: ['Thing'],
-      emitLegacyCommonJSImports: true,
     });
     expect(result).toBe("import    { Thing } from './path/to/file';");
   });
@@ -30,7 +28,6 @@ describe('printImportLine', () => {
       moduleType: 'file',
       isTypeImport: false,
       namedImports: [{ propertyName: 'Thing', identifierName: 'OtherThing' }],
-      emitLegacyCommonJSImports: true,
     });
     expect(result).toBe(
       "import    { Thing as OtherThing } from './path/to/file';"
@@ -47,7 +44,6 @@ describe('printImportLine', () => {
         { propertyName: 'Thing', identifierName: 'OtherThing' },
         'ThingTwo',
       ],
-      emitLegacyCommonJSImports: true,
     });
     expect(result).toBe(
       "import  DefaultThing , { Thing as OtherThing,ThingTwo } from './path/to/file';"
@@ -60,7 +56,7 @@ describe('printImportLine', () => {
       moduleType: 'file',
       isTypeImport: false,
       namedImports: ['Thing'],
-      emitLegacyCommonJSImports: false,
+      importExtension: '.js',
     });
     expect(result).toBe("import    { Thing } from './path/to/file.js';");
   });
@@ -71,7 +67,6 @@ describe('printImportLine', () => {
       moduleType: 'module',
       isTypeImport: false,
       namedImports: ['Thing'],
-      emitLegacyCommonJSImports: false,
     });
     expect(result).toBe("import    { Thing } from '@org/module';");
   });
@@ -82,7 +77,6 @@ describe('printImportLine', () => {
       moduleType: 'preserve',
       isTypeImport: false,
       namedImports: ['Thing'],
-      emitLegacyCommonJSImports: true,
     });
     expect(result).toBe("import    { Thing } from 'absolute/path/to/file.js';");
   });
@@ -93,31 +87,17 @@ describe('printImportLine', () => {
       moduleType: 'file',
       isTypeImport: true,
       namedImports: ['Thing'],
-      emitLegacyCommonJSImports: true,
     });
     expect(result).toBe("import type   { Thing } from './path/to/file';");
   });
 
   describe('importExtension parameter', () => {
-    it('uses explicit importExtension parameter over emitLegacyCommonJSImports', () => {
-      const result = printImportLine({
-        module: './path/to/file',
-        moduleType: 'file',
-        isTypeImport: false,
-        namedImports: ['Thing'],
-        emitLegacyCommonJSImports: false,
-        importExtension: '.mjs',
-      });
-      expect(result).toBe("import    { Thing } from './path/to/file.mjs';");
-    });
-
     it('uses custom .cjs extension when importExtension is provided', () => {
       const result = printImportLine({
         module: './path/to/file',
         moduleType: 'file',
         isTypeImport: false,
         namedImports: ['Thing'],
-        emitLegacyCommonJSImports: true,
         importExtension: '.cjs',
       });
       expect(result).toBe("import    { Thing } from './path/to/file.cjs';");
@@ -129,7 +109,6 @@ describe('printImportLine', () => {
         moduleType: 'file',
         isTypeImport: false,
         namedImports: ['Thing'],
-        emitLegacyCommonJSImports: false,
         importExtension: '',
       });
       expect(result).toBe("import    { Thing } from './path/to/file';");
@@ -141,7 +120,6 @@ describe('printImportLine', () => {
         moduleType: 'module',
         isTypeImport: false,
         namedImports: ['Thing'],
-        emitLegacyCommonJSImports: false,
         importExtension: '.mjs',
       });
       expect(result).toBe("import    { Thing } from '@org/module';");

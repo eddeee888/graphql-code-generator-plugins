@@ -85,7 +85,6 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        emitLegacyCommonJSImports: true,
       },
       result
     );
@@ -241,7 +240,6 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        emitLegacyCommonJSImports: true,
       },
       result
     );
@@ -358,7 +356,6 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        emitLegacyCommonJSImports: true,
       },
       result
     );
@@ -454,7 +451,6 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        emitLegacyCommonJSImports: true,
       },
       result
     );
@@ -611,7 +607,6 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMappersSourceFile: billingMapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        emitLegacyCommonJSImports: true,
       },
       result
     );
@@ -625,7 +620,6 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMappersSourceFile: addressMapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        emitLegacyCommonJSImports: true,
       },
       result
     );
@@ -641,7 +635,6 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMappersSourceFile: preferenceMapperFile,
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        emitLegacyCommonJSImports: true,
       },
       result
     );
@@ -655,7 +648,7 @@ describe('collectTypeMappersFromSourceFile', () => {
     });
   });
 
-  it('mutates the result with .js extensions in configImportPath for mapper files when emitLegacyCommonJSImports=false', () => {
+  it('mutates the result with .js extensions in configImportPath for mapper files when importExtension=.js', () => {
     const project = new Project({
       compilerOptions: {
         paths: {
@@ -704,7 +697,7 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMappersSourceFile: mapperFile,
         typeMappersSuffix: 'Mapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        emitLegacyCommonJSImports: false,
+        importExtension: '.js',
       },
       result
     );
@@ -765,7 +758,6 @@ describe('collectTypeMappersFromSourceFile', () => {
         typeMappersSourceFile: project.getSourceFiles()[0],
         typeMappersSuffix: 'TypeMapper',
         resolverTypesPath: '/path/to/schemas/types.generated.ts',
-        emitLegacyCommonJSImports: true,
       },
       result
     );
@@ -776,7 +768,6 @@ describe('collectTypeMappersFromSourceFile', () => {
           typeMappersSourceFile: project.getSourceFiles()[1],
           typeMappersSuffix: 'TypeMapper',
           resolverTypesPath: '/path/to/schemas/types.generated.ts',
-          emitLegacyCommonJSImports: true,
         },
         result
       )

@@ -18,7 +18,7 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
   },
   {
     result,
-    config: { resolverGeneration, emitLegacyCommonJSImports, importExtension },
+    config: { resolverGeneration, importExtension },
   }
 ) => {
   if (
@@ -39,7 +39,6 @@ export const handleGraphQLScalarType: GraphQLTypeHandler = (
     module: 'graphql',
     moduleType: 'module',
     namedImports: [graphQLScalarType],
-    emitLegacyCommonJSImports,
     importExtension,
   });
   const variableStatement = `export const ${resolverName} = new ${graphQLScalarType}({

@@ -8,7 +8,7 @@ const config: CodegenConfig = {
   ],
   generates: {
     'packages/typescript-resolver-files-e2e/src/test-esm-import/schema':
-      defineConfig({ emitLegacyCommonJSImports: false }),
+      defineConfig({ importExtension: '.js' }),
   },
 };
 

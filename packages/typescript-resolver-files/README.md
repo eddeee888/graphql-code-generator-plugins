@@ -466,6 +466,8 @@ Specifies the file extension to use for generated imports. This allows you to co
 - `'.ts'` - TypeScript-style with `.ts` extension
 - `'.mjs'` - ESM with `.mjs` extension
 
+`importExtension` replaces the removed `emitLegacyCommonJSImports` option: use `'.js'` for ESM imports, or leave it unset for CommonJS-style imports.
+
 **Root-level inheritance:** You can set `importExtension` at the root level of your GraphQL Codegen config, and it will be inherited by all `generates` blocks that use this preset. Preset-level configuration will override root-level configuration.
 
 ```typescript
@@ -485,14 +487,6 @@ const config: CodegenConfig = {
   },
 };
 ```
-
-### emitLegacyCommonJSImports
-
-`bool` (Default: `true`)
-
-**DEPRECATED:** Use `importExtension` instead. This option is kept for backward compatibility.
-
-Determines whether imports emitted should use CommonJS syntax or ESM syntax (with `.js` file endings)
 
 ## Config Examples
 

@@ -9,7 +9,6 @@ import {
   cwd,
   fmt,
   logger,
-  normalizeImportExtension,
   type ImportExtension,
 } from '../utils/index.js';
 
@@ -26,7 +25,7 @@ const defaultScalarsModule = 'graphql-scalars';
 type ParsedTypesPluginsConfig = Omit<
   typeScriptPlugin.TypeScriptPluginConfig &
     typeScriptResolversPlugin.TypeScriptResolversPluginConfig,
-  'scalars' | 'emitLegacyCommonJSImports' | 'importExtension'
+  'scalars' | 'importExtension'
 >;
 type ConfigMode = 'merged' | 'modules';
 type ResolverMainFileMode = 'merged' | 'modules';
@@ -79,8 +78,6 @@ export interface ParsedPresetConfig {
   typesPluginsConfig: ParsedTypesPluginsConfig;
   tsMorphProjectOptions: ProjectOptions;
   fixObjectTypeResolvers: NormalizedFixObjectTypeResolvers;
-  /** @deprecated Use importExtension instead */
-  emitLegacyCommonJSImports: boolean;
   importExtension: ImportExtension;
 }
 
@@ -111,8 +108,6 @@ export interface RawPresetConfig {
     typeScriptResolversPlugin.TypeScriptResolversPluginConfig;
   tsConfigFilePath?: string;
   fixObjectTypeResolvers?: string | Record<string, string>;
-  /** @deprecated Use importExtension instead */
-  emitLegacyCommonJSImports?: boolean;
   importExtension?: ImportExtension;
 }
 
@@ -156,19 +151,14 @@ export const validatePresetConfig = (
     typesPluginsConfig = {},
     tsConfigFilePath = './tsconfig.json',
     fixObjectTypeResolvers = 'fast',
-    emitLegacyCommonJSImports,
     importExtension,
   }: RawPresetConfig,
   baseConfig?: {
-    emitLegacyCommonJSImports?: boolean;
     importExtension?: ImportExtension;
   }
 ): ParsedPresetConfig => {
-  const finalEmitLegacyCommonJSImports =
-    emitLegacyCommonJSImports ?? baseConfig?.emitLegacyCommonJSImports ?? true;
-
-  const baseImportExtension = baseConfig?.importExtension || undefined;
-  const finalImportExtension = importExtension ?? baseImportExtension;
+  const finalImportExtension =
+    importExtension ?? baseConfig?.importExtension ?? '';
 
   if (mode !== 'merged' && mode !== 'modules') {
     throw new Error(
@@ -327,11 +317,6 @@ export const validatePresetConfig = (
 
   const validatedAdd = validateAddOption(add);
 
-  const normalizedImportExtension = normalizeImportExtension(
-    finalImportExtension,
-    finalEmitLegacyCommonJSImports
-  );
-
   return {
     add: validatedAdd,
     resolverTypesPath,
@@ -355,8 +340,7 @@ export const validatePresetConfig = (
     typesPluginsConfig: validatedTypesPluginsConfig,
     tsMorphProjectOptions,
     fixObjectTypeResolvers: parseFixObjectTypeResolvers(fixObjectTypeResolvers),
-    emitLegacyCommonJSImports: finalEmitLegacyCommonJSImports,
-    importExtension: normalizedImportExtension,
+    importExtension: finalImportExtension,
   };
 };
 
@@ -372,15 +356,6 @@ const validateTypesPluginsConfig = (
     );
   }
 
-  if ('emitLegacyCommonJSImports' in config) {
-    throw new Error(
-      fmt.error(
-        'presetConfig.typesPluginsConfig.emitLegacyCommonJSImports is not supported. Use presetConfig.emitLegacyCommonJSImports instead.',
-        'Validation'
-      )
-    );
-  }
-
   if ('importExtension' in config) {
     throw new Error(
       fmt.error(
@@ -390,7 +365,7 @@ const validateTypesPluginsConfig = (
     );
   }
 
-  const { scalars: _, emitLegacyCommonJSImports: __, ...rest } = config;
+  const { scalars: _, ...rest } = config;
 
   return rest;
 };

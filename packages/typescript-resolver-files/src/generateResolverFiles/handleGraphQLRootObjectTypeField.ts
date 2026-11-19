@@ -21,7 +21,7 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
   },
   {
     result,
-    config: { resolverGeneration, emitLegacyCommonJSImports, importExtension },
+    config: { resolverGeneration, importExtension },
   }
 ) => {
   if (
@@ -74,7 +74,6 @@ export const handleGraphQLRootObjectTypeField: GraphQLTypeHandler<
     module: resolversTypeMeta.module,
     moduleType: resolversTypeMeta.moduleType,
     namedImports: [resolversTypeMeta.typeNamedImport],
-    emitLegacyCommonJSImports,
     importExtension,
   });
 
