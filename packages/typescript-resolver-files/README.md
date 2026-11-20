@@ -466,7 +466,6 @@ Specifies the file extension to use for generated imports. This allows you to co
 - `'.ts'` - TypeScript-style with `.ts` extension
 - `'.mjs'` - ESM with `.mjs` extension
 
-
 **Root-level inheritance:** You can set `importExtension` at the root level of your GraphQL Codegen config, and it will be inherited by all `generates` blocks that use this preset. Preset-level configuration will override root-level configuration.
 
 ```typescript
