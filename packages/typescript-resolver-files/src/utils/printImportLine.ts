@@ -1,4 +1,4 @@
-import type { ImportExtension } from './normalizeImportExtension.js';
+export type ImportExtension = '' | `.${string}`;
 
 export interface ImportLineMeta {
   isTypeImport: boolean;
