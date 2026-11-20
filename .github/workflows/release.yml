@@ -5,12 +5,8 @@ on:
     branches:
       - master
 
-  # `/release-snapshot` PR comments start a `workflow_dispatch` run of this workflow.
-  # npm rejects trusted publishing (OIDC) tokens from `issue_comment` runs,
-  # so snapshots are only published from `workflow_dispatch`.
-  issue_comment:
-    types: [created]
-
+  # Snapshot releases: run this workflow manually with a PR number.
+  # npm rejects trusted publishing (OIDC) tokens from `issue_comment` runs.
   workflow_dispatch:
     inputs:
       pr:
@@ -41,72 +37,6 @@ jobs:
         uses: changesets/action@v2.0.0-next.4
         with:
           publish-script: pnpm release
-        env:
-          GITHUB_TOKEN: ${{ env.github-token }}
-
-  release-snapshot-trigger:
-    if: github.event_name == 'issue_comment' && github.event.issue.pull_request
-    runs-on: ubuntu-24.04
-    permissions:
-      actions: write # allows starting the workflow_dispatch run
-      pull-requests: write
-    steps:
-      - name: Acknowledge deployment request to commenter
-        id: check
-        uses: khan/pull-request-comment-trigger@v1.1.0
-        with:
-          trigger: '/release-snapshot'
-          prefix_only: true
-          reaction: rocket
-        env:
-          GITHUB_TOKEN: ${{ env.github-token }}
-
-      - name: Validate user
-        id: validate
-        if: ${{ steps.check.outputs.triggered == 'true' }}
-        run: |
-          if [[ "${AUTHOR_ASSOCIATION}" != 'OWNER' ]]
-          then
-            echo "User authorization failed"
-            exit 1
-          else
-            echo "User authorization successful"
-            exit 0
-          fi
-        env:
-          AUTHOR_ASSOCIATION: ${{ github.event.comment.author_association }}
-
-      - name: Start snapshot release
-        id: start
-        if: ${{ steps.check.outputs.triggered == 'true' }}
-        run: gh workflow run release.yml --repo "$REPO" --ref "$DEFAULT_BRANCH" -f pr="$PR_NUMBER"
-        env:
-          GH_TOKEN: ${{ env.github-token }}
-          REPO: ${{ github.repository }}
-          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
-          PR_NUMBER: ${{ github.event.issue.number }}
-
-      - name: Report permission failure
-        if: failure() && steps.validate.outcome == 'failure'
-        uses: octokit/request-action@v3.0.0
-        with:
-          route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
-          issue_number: ${{ github.event.issue.number }}
-          body: '❌ No permission to release snapshot'
-        env:
-          GITHUB_TOKEN: ${{ env.github-token }}
-
-      - name: Report start failure
-        if: failure() && steps.start.outcome == 'failure'
-        uses: octokit/request-action@v3.0.0
-        with:
-          route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
-          issue_number: ${{ github.event.issue.number }}
-          body: '❌ Failed to start snapshot release'
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
 
