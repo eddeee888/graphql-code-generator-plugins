@@ -1,5 +1,11 @@
 # @eddeee888/gcg-operation-location-migration
 
+## 0.6.0
+
+### Minor Changes
+
+- 466f293: Bump @graphql-codegen/add and @graphql-codegen/plugin-helpers to ^8.0.0. graphql 15 support is dropped (peer is now `^16.0.0 || ^17.0.0`) and Node >=22.18.0 is required.
+
 ## 0.5.0
 
 ### Minor Changes

@@ -1,5 +1,17 @@
 # @eddeee888/gcg-typescript-resolver-files
 
+## 0.21.0
+
+### Minor Changes
+
+- 466f293: Remove the deprecated `emitLegacyCommonJSImports` preset option because @graphql-codegen/typescript 7 removed it. Use `importExtension` instead: `'.js'` for the old `emitLegacyCommonJSImports: false`, or leave it unset for the old `emitLegacyCommonJSImports: true`.
+- 466f293: Bump @graphql-codegen/add to ^8.0.0, @graphql-codegen/plugin-helpers to ^8.0.0, @graphql-codegen/schema-ast to ^7.0.0, @graphql-codegen/typescript and @graphql-codegen/typescript-resolvers to ^7.0.1, @graphql-tools/merge to ^10.0.9 and @graphql-tools/utils to ^13.2.2. graphql 15 support is dropped (peer is now `^16.0.0 || ^17.0.0`) and Node >=22.18.0 is required.
+
+### Patch Changes
+
+- Updated dependencies [466f293]
+  - @eddeee888/gcg-server-config@0.7.0
+
 ## 0.20.0
 
 ### Minor Changes
