@@ -5,17 +5,27 @@ on:
     branches:
       - master
 
+  # `/release-snapshot` PR comments start a `workflow_dispatch` run of this workflow.
+  # npm rejects trusted publishing (OIDC) tokens from `issue_comment` runs,
+  # so snapshots are only published from `workflow_dispatch`.
   issue_comment:
     types: [created]
 
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: 'Pull request number to publish a snapshot of'
+        required: true
+        type: number
+
 env:
   github-token: ${{ secrets.GITHUB_TOKEN }}
-  snapshot-release-tag: pr${{ github.event.issue.number }}-run${{ github.run_number }}-${{ github.run_attempt }}
+  snapshot-release-tag: pr${{ inputs.pr }}-run${{ github.run_number }}-${{ github.run_attempt }}
 
 jobs:
   release:
     name: Release
-    if: github.event.comment == ''
+    if: github.event_name == 'push'
     runs-on: ubuntu-24.04
     permissions:
       id-token: write # allows ODIC publishing
@@ -34,24 +44,25 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
 
-  release-snapshot-check:
-    if: github.event.comment != ''
+  release-snapshot-trigger:
+    if: github.event_name == 'issue_comment' && github.event.issue.pull_request
     runs-on: ubuntu-24.04
     permissions:
+      actions: write # allows starting the workflow_dispatch run
       pull-requests: write
-    outputs:
-      triggered: ${{ steps.check.outputs.triggered }}
     steps:
       - name: Acknowledge deployment request to commenter
         id: check
         uses: khan/pull-request-comment-trigger@v1.1.0
         with:
           trigger: '/release-snapshot'
+          prefix_only: true
           reaction: rocket
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
 
       - name: Validate user
+        id: validate
         if: ${{ steps.check.outputs.triggered == 'true' }}
         run: |
           if [[ "${AUTHOR_ASSOCIATION}" != 'OWNER' ]]
@@ -65,8 +76,18 @@ jobs:
         env:
           AUTHOR_ASSOCIATION: ${{ github.event.comment.author_association }}
 
-      - name: Report failure
-        if: failure()
+      - name: Start snapshot release
+        id: start
+        if: ${{ steps.check.outputs.triggered == 'true' }}
+        run: gh workflow run release.yml --repo "$REPO" --ref "$DEFAULT_BRANCH" -f pr="$PR_NUMBER"
+        env:
+          GH_TOKEN: ${{ env.github-token }}
+          REPO: ${{ github.repository }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+
+      - name: Report permission failure
+        if: failure() && steps.validate.outcome == 'failure'
         uses: octokit/request-action@v3.0.0
         with:
           route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
@@ -77,14 +98,25 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
 
+      - name: Report start failure
+        if: failure() && steps.start.outcome == 'failure'
+        uses: octokit/request-action@v3.0.0
+        with:
+          route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          issue_number: ${{ github.event.issue.number }}
+          body: '❌ Failed to start snapshot release'
+        env:
+          GITHUB_TOKEN: ${{ env.github-token }}
+
   release-snapshot:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
-    needs: release-snapshot-check
     permissions:
       id-token: write # allows ODIC publishing
       contents: read
       pull-requests: write # allows posting a message to the PR about success/error
-    if: needs.release-snapshot-check.outputs.triggered == 'true'
     steps:
       - name: Get Pull Request ref
         id: get_pull_request_ref
@@ -93,7 +125,7 @@ jobs:
           route: GET /repos/{owner}/{repo}/pulls/{issue_number}
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
-          issue_number: ${{ github.event.issue.number }}
+          issue_number: ${{ inputs.pr }}
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
 
@@ -103,31 +135,6 @@ jobs:
           repository: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.repo.full_name }}
           ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
       - uses: pnpm/setup@v2
-
-      # Snapshot publishes fail with E404 while push-triggered releases succeed.
-      # `changeset publish` hides pnpm's "Skipped OIDC" warning, so this step runs
-      # the same OIDC token exchange pnpm does and prints npm's response.
-      # It never prints a token and never fails the job.
-      - name: Diagnose npm OIDC exchange
-        continue-on-error: true
-        run: |
-          id_token=$(curl -sS -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=npm:registry.npmjs.org" | jq -r '.value')
-          echo "::add-mask::$id_token"
-
-          payload=$(echo "$id_token" | cut -d. -f2 | tr '_-' '/+')
-          while (( ${#payload} % 4 )); do payload="$payload="; done
-          echo "ID token claims:"
-          echo "$payload" | base64 -d | jq '{iss, aud, sub, repository, event_name, ref, workflow_ref, job_workflow_ref, environment}'
-
-          response_file=$(mktemp)
-          status=$(curl -sS -o "$response_file" -w '%{http_code}' -X POST \
-            -H "Authorization: Bearer $id_token" -H 'Accept: application/json' -H 'Content-Length: 0' \
-            'https://registry.npmjs.org/-/npm/v1/oidc/token/exchange/package/@eddeee888%2fgcg-server-config')
-          echo "::add-mask::$(jq -r '.token // empty' "$response_file")"
-          echo "Exchange status: $status"
-          jq 'del(.token)' "$response_file" || true
-          rm -f "$response_file"
 
       - name: Deploy snapshot
         run: |
@@ -182,7 +189,7 @@ jobs:
           route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
-          issue_number: ${{ github.event.issue.number }}
+          issue_number: ${{ inputs.pr }}
           body: |
             ✅ **Snapshot published**
 
@@ -199,7 +206,7 @@ jobs:
           route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
-          issue_number: ${{ github.event.issue.number }}
+          issue_number: ${{ inputs.pr }}
           body: '❌ Failed to publish package/s with tag `${{ env.snapshot-release-tag }}`'
         env:
           GITHUB_TOKEN: ${{ env.github-token }}
