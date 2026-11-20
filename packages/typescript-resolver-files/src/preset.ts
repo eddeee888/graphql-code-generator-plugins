@@ -73,7 +73,6 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
       typesPluginsConfig,
       tsMorphProjectOptions,
       fixObjectTypeResolvers,
-      emitLegacyCommonJSImports,
       importExtension,
     } = validatePresetConfig(rawPresetConfig, baseConfig);
 
@@ -112,7 +111,6 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           typeMappersFileExtension,
           typeMappersSuffix,
           tsMorphProject,
-          emitLegacyCommonJSImports,
           importExtension,
         }),
       createProfilerRunName('parseTypeMappers')
@@ -151,7 +149,6 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
         interfaceImplementingType: true,
       },
       namingConvention: 'keep',
-      emitLegacyCommonJSImports,
       ...typesPluginsConfig,
       scalars: mergedConfig.scalarTypes,
       mappers: {
@@ -283,7 +280,6 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
             unmanagedResolvers: {
               ...mergedConfig.unmanagedResolvers,
             },
-            emitLegacyCommonJSImports,
             importExtension,
             generatedTypesFileMeta,
           },

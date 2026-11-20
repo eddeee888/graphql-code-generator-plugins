@@ -48,7 +48,6 @@ const defaultExpected: ParsedPresetConfig = {
     object: 'fast',
     enum: 'fast',
   },
-  emitLegacyCommonJSImports: true,
   importExtension: '',
 };
 
@@ -260,28 +259,6 @@ describe('validatePresetConfig - general', () => {
     });
   });
 
-  it('returns result.emitLegacyCommonJSImports = false if set to false', () => {
-    const parsed = validatePresetConfig({ emitLegacyCommonJSImports: false });
-
-    expect(parsed).toEqual({
-      ...defaultExpected,
-      emitLegacyCommonJSImports: false,
-      importExtension: '.js',
-    });
-  });
-
-  it('throws if config.typesPluginsConfig.emitLegacyCommonJSImports is used', () => {
-    expect(() =>
-      validatePresetConfig({
-        typesPluginsConfig: {
-          emitLegacyCommonJSImports: false,
-        },
-      })
-    ).toThrow(
-      'Validation - presetConfig.typesPluginsConfig.emitLegacyCommonJSImports is not supported. Use presetConfig.emitLegacyCommonJSImports instead.'
-    );
-  });
-
   it('throws if result.fixObjectTypeResolvers is not valid', () => {
     expect(() =>
       validatePresetConfig({ fixObjectTypeResolvers: 'not-valid-for-sure' })
@@ -455,29 +432,6 @@ describe('validatePresetConfig - importExtension', () => {
     });
   });
 
-  it('importExtension takes precedence over emitLegacyCommonJSImports when both are set', () => {
-    const parsed = validatePresetConfig({
-      importExtension: '.mjs',
-      emitLegacyCommonJSImports: false,
-    });
-
-    expect(parsed).toEqual({
-      ...defaultExpected,
-      importExtension: '.mjs',
-      emitLegacyCommonJSImports: false,
-    });
-  });
-
-  it('returns importExtension: "" when emitLegacyCommonJSImports is true (backward compatibility)', () => {
-    const parsed = validatePresetConfig({ emitLegacyCommonJSImports: true });
-
-    expect(parsed).toEqual({
-      ...defaultExpected,
-      emitLegacyCommonJSImports: true,
-      importExtension: '',
-    });
-  });
-
   describe('base config inheritance', () => {
     it('inherits importExtension from base config when not specified in preset', () => {
       const parsed = validatePresetConfig({}, { importExtension: '.ts' });
@@ -485,7 +439,6 @@ describe('validatePresetConfig - importExtension', () => {
       expect(parsed).toEqual({
         ...defaultExpected,
         importExtension: '.ts',
-        emitLegacyCommonJSImports: true,
       });
     });
 
@@ -501,32 +454,6 @@ describe('validatePresetConfig - importExtension', () => {
       });
     });
 
-    it('inherits emitLegacyCommonJSImports from base config', () => {
-      const parsed = validatePresetConfig(
-        {},
-        { emitLegacyCommonJSImports: false }
-      );
-
-      expect(parsed).toEqual({
-        ...defaultExpected,
-        emitLegacyCommonJSImports: false,
-        importExtension: '.js',
-      });
-    });
-
-    it('preset emitLegacyCommonJSImports overrides base config', () => {
-      const parsed = validatePresetConfig(
-        { emitLegacyCommonJSImports: true },
-        { emitLegacyCommonJSImports: false }
-      );
-
-      expect(parsed).toEqual({
-        ...defaultExpected,
-        emitLegacyCommonJSImports: true,
-        importExtension: '',
-      });
-    });
-
     it('uses defaults when base config is not provided', () => {
       const parsed = validatePresetConfig({});
 
@@ -537,32 +464,6 @@ describe('validatePresetConfig - importExtension', () => {
       const parsed = validatePresetConfig({}, undefined);
 
       expect(parsed).toEqual(defaultExpected);
-    });
-
-    it('preset importExtension takes precedence over base emitLegacyCommonJSImports', () => {
-      const parsed = validatePresetConfig(
-        { importExtension: '.ts' },
-        { emitLegacyCommonJSImports: false }
-      );
-
-      expect(parsed).toEqual({
-        ...defaultExpected,
-        emitLegacyCommonJSImports: false,
-        importExtension: '.ts',
-      });
-    });
-
-    it('base importExtension takes precedence over base emitLegacyCommonJSImports', () => {
-      const parsed = validatePresetConfig(
-        {},
-        { importExtension: '.mts', emitLegacyCommonJSImports: false }
-      );
-
-      expect(parsed).toEqual({
-        ...defaultExpected,
-        emitLegacyCommonJSImports: false,
-        importExtension: '.mts',
-      });
     });
   });
 });

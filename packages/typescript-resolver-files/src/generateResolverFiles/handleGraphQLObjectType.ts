@@ -28,7 +28,6 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
       resolverGeneration,
       typeMappersMap,
       graphQLObjectTypeResolversToGenerate,
-      emitLegacyCommonJSImports,
       importExtension,
     },
   }
@@ -140,7 +139,6 @@ export const handleGraphQLObjectType: GraphQLTypeHandler<
     module: resolversTypeMeta.module,
     moduleType: resolversTypeMeta.moduleType,
     namedImports: [resolversTypeMeta.typeNamedImport],
-    emitLegacyCommonJSImports,
     importExtension,
   });
 

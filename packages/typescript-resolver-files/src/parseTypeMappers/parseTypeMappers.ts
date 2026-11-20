@@ -11,7 +11,6 @@ export interface ParseTypeMappersParams {
   typeMappersFileExtension: string;
   typeMappersSuffix: string;
   tsMorphProject: Project;
-  emitLegacyCommonJSImports: boolean;
   importExtension: ImportExtension;
 }
 
@@ -38,7 +37,6 @@ export const parseTypeMappers = ({
   typeMappersFileExtension,
   typeMappersSuffix,
   tsMorphProject,
-  emitLegacyCommonJSImports,
   importExtension,
 }: ParseTypeMappersParams): TypeMappersMap => {
   const result = Object.entries(sourceMap).reduce<TypeMappersMap>(
@@ -61,7 +59,6 @@ export const parseTypeMappers = ({
           typeMappersSourceFile,
           typeMappersSuffix,
           resolverTypesPath,
-          emitLegacyCommonJSImports,
           importExtension,
         },
         res

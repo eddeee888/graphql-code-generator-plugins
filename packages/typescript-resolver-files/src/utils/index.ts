@@ -9,4 +9,3 @@ export * from './printImportLine.js';
 export * from './normalizeRelativePath.js';
 export * from './relativeModulePath.js';
 export * from './isMatchResolverNamePattern.js';
-export * from './normalizeImportExtension.js';

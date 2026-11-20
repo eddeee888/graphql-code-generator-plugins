@@ -6,7 +6,7 @@
   "type": "module",
   "devDependencies": {
     "@eddeee888/gcg-operation-location-migration": "workspace:*",
-    "@graphql-codegen/typescript-operations": "6.1.10",
+    "@graphql-codegen/typescript-operations": "7.0.1",
     "@workspace/testing": "workspace:*"
   }
 }

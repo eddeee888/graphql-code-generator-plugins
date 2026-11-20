@@ -24,7 +24,6 @@ export const handleGraphQLEnumType: GraphQLTypeHandler<
     config: {
       typeMappersMap,
       resolverGeneration,
-      emitLegacyCommonJSImports,
       importExtension,
     },
   }
@@ -64,7 +63,6 @@ export const handleGraphQLEnumType: GraphQLTypeHandler<
     module: resolversTypeMeta.module,
     moduleType: resolversTypeMeta.moduleType,
     namedImports: [resolversTypeMeta.typeNamedImport],
-    emitLegacyCommonJSImports,
     importExtension,
   });
 

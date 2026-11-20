@@ -17,7 +17,7 @@ export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
   },
   {
     result,
-    config: { resolverGeneration, emitLegacyCommonJSImports, importExtension },
+    config: { resolverGeneration, importExtension },
   }
 ) => {
   if (
@@ -40,7 +40,6 @@ export const handleGraphQLInterfaceType: GraphQLTypeHandler = (
     module: resolversTypeMeta.module,
     moduleType: resolversTypeMeta.moduleType,
     namedImports: [resolversTypeMeta.typeNamedImport],
-    emitLegacyCommonJSImports,
     importExtension,
   });
   const variableStatement = `export const ${resolverName}: ${resolverTypeString} = { /* Implement ${resolverName} interface logic here */ };`;
