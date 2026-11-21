@@ -132,6 +132,7 @@ export const preset: Types.OutputPreset<RawPresetConfig> = {
           resolverRelativeTargetDir,
           whitelistedModules,
           blacklistedModules,
+          federation: Boolean(typesPluginsConfig.federation),
         }),
       createProfilerRunName('parseGraphQLSchema')
     );

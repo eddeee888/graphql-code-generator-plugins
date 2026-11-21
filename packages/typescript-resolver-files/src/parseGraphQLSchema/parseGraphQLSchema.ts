@@ -13,6 +13,7 @@ import {
   isInterfaceType,
   isEnumType,
 } from 'graphql';
+import { ApolloFederation } from '@graphql-codegen/plugin-helpers';
 import type { ParseSourcesResult } from '../parseSources/index.js';
 import type { TypeMappersMap } from '../parseTypeMappers/index.js';
 import type {
@@ -28,6 +29,7 @@ import {
 } from '../utils/index.js';
 import { parseLocationForOutputDir } from './parseLocationForOutputDir.js';
 import { normalizeResolverName } from './normalizeResolverName.js';
+import { findFieldNamesToGenerate } from './findFieldNamesToGenerate.js';
 import type { GeneratedTypesFileMeta } from '../generateResolverFiles/index.js';
 
 interface ParseGraphQLSchemaParams {
@@ -42,6 +44,7 @@ interface ParseGraphQLSchemaParams {
   resolverRelativeTargetDir: string;
   whitelistedModules: ParsedPresetConfig['whitelistedModules'];
   blacklistedModules: ParsedPresetConfig['blacklistedModules'];
+  federation: boolean;
 }
 
 export interface ResolverDetails {
@@ -113,10 +116,16 @@ export const parseGraphQLSchema = async ({
   resolverRelativeTargetDir,
   whitelistedModules,
   blacklistedModules,
+  federation,
 }: ParseGraphQLSchemaParams): Promise<ParsedGraphQLSchemaMeta> => {
   const scalarsModuleResolverMap = scalarsModule
     ? await getScalarResolverMapFromModule(scalarsModule)
     : {};
+  const apolloFederation = new ApolloFederation({
+    enabled: federation,
+    schema: schemaAst,
+    meta: {},
+  });
 
   return Object.entries(schemaAst.getTypeMap()).reduce<ParsedGraphQLSchemaMeta>(
     (res, [schemaType, namedType]) => {
@@ -187,6 +196,7 @@ export const parseGraphQLSchema = async ({
           namedType,
           schemaType,
           result: res,
+          apolloFederation,
         });
         return res;
       }
@@ -358,6 +368,7 @@ const handleObjectType = ({
   namedType,
   schemaType,
   result,
+  apolloFederation,
 }: {
   mode: ParseGraphQLSchemaParams['mode'];
   sourceMap: ParseGraphQLSchemaParams['sourceMap'];
@@ -369,7 +380,13 @@ const handleObjectType = ({
   namedType: GraphQLObjectType;
   schemaType: string;
   result: ParsedGraphQLSchemaMeta;
+  apolloFederation: ApolloFederation;
 }): void => {
+  const fieldNamesToGenerate = findFieldNamesToGenerate({
+    namedType,
+    apolloFederation,
+  });
+
   // parse for details
   const fieldsByGraphQLModule = Object.entries(namedType.getFields()).reduce<
     Record<
@@ -379,7 +396,13 @@ const handleObjectType = ({
         firstFieldLocation: Location | undefined;
       }
     >
-  >((res, [_, fieldNode]) => {
+  >((res, [fieldName, fieldNode]) => {
+    // Fields without generated resolver types must not be picked
+    // e.g. Federation `@external` fields without a `@provides` path
+    if (!fieldNamesToGenerate.has(fieldName)) {
+      return res;
+    }
+
     const fieldLocation = fieldNode.astNode?.loc;
     const modulePath = path.dirname(fieldLocation?.source.name || '');
 

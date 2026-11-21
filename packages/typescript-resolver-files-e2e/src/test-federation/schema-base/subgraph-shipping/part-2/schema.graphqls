@@ -1,0 +1,5 @@
+extend type Product @key(fields: "upc") {
+  name: String @external
+  price: Int @external
+  tax: Int @requires(fields: "price")
+}

@@ -15,6 +15,8 @@ export default defineConfig(() => ({
     globals: true,
     environment: 'node',
     include: ['src/**/*.spec.ts'],
+    // Process `@graphql-codegen/plugin-helpers` with Vite so it resolves the same `graphql` instance as specs
+    server: { deps: { inline: ['@graphql-codegen/plugin-helpers'] } },
     reporters: ['default'],
     coverage: {
       reportsDirectory: '../../coverage/packages/typescript-resolver-files',

@@ -35,6 +35,15 @@ const config: CodegenConfig = {
       },
       { schema: `${baseDir}/subgraph-users/**/schema.graphqls` }
     ),
+
+    [`${baseDir}/subgraph-shipping`]: defineConfig(
+      {
+        typeDefsFilePath: false,
+        mergeSchema: false,
+        typesPluginsConfig: { federation: true },
+      },
+      { schema: `${baseDir}/subgraph-shipping/**/schema.graphqls` }
+    ),
   },
 };
 
